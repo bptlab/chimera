@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 
@@ -20,7 +20,7 @@ public class ConditionsJaxBean {
 		for (ConditionSet component : terminationCondition.getConditionSets()) {
 
 			List<DataObjectStateConditionJaxBean> componentJaxBean = new ArrayList<>(component.getConditions().size());
-			for (DataStateCondition condition : component.getConditions()) {
+			for (AtomicDataStateCondition condition : component.getConditions()) {
 				DataObjectStateConditionJaxBean conditionJaxBean = new DataObjectStateConditionJaxBean(condition);
 				componentJaxBean.add(conditionJaxBean);
 			}

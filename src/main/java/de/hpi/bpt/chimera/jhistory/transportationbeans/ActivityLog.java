@@ -16,7 +16,7 @@ public class ActivityLog extends LogEntry {
 		this.setLabel(activityInstance.getControlNode().getName());
 		this.setObjectReferenceId(activityInstance.getId());
 		if (oldState == null)
-			this.setOldValue("no state");
+			this.setOldValue(null);
 		else
 			this.setOldValue(oldState.getText());
 		this.setNewValue(newState.getText());

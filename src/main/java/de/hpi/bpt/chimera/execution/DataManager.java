@@ -1,20 +1,20 @@
 package de.hpi.bpt.chimera.execution;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 /**
  * I manage the data objects of a case.
@@ -33,61 +33,85 @@ public class DataManager {
 	}
 
 	/**
-	 * Create new DataObjects.
+	 * Resolve a Map of DataClass name and ObjectLifecycle name to the
+	 * corresponding DataClass and ObjectLifecycleState.
 	 * 
-	 * @param outgoingDataNodes
-	 * @param dataManagerBean
+	 * @param dataClassToStateTransitionStrings
+	 * @return Map from DataClass to ObjectLifecycleState
 	 */
-	@Deprecated
-	public void createDataObject(List<DataNode> outgoingDataNodes, DataManagerBean dataManagerBean) {
-		for (String newCreationId : dataManagerBean.getNewCreations()) {
-			for (DataNode dataNode : outgoingDataNodes) {
-				if (dataNode.getId().equals(newCreationId)) {
-					Map<String, Object> attributeValues = dataManagerBean.getDataNodeAttributeValuesById(newCreationId);
-					DataObject dataObjectInstance = new DataObject(dataNode, caseExecutioner, attributeValues);
-					this.dataObjectIdToDataObject.put(dataObjectInstance.getId(), dataObjectInstance);
-				}
+	public Map<DataClass, ObjectLifecycleState> resolveDataClassToStateTransition(Map<String, String> dataClassToStateTransitionStrings) {
+		Map<DataClass, ObjectLifecycleState> dataClassToStateTransition = new HashMap<>();
+		Map<String, DataClass> dataClassNameToDataClass = dataModel.getNameToDataClass();
+		for (Entry<String, String> dataClassNameToStateName : dataClassToStateTransitionStrings.entrySet()) {
+			String dataClassName = dataClassNameToStateName.getKey();
+			if (!dataClassNameToDataClass.containsKey(dataClassName)) {
+				// TODO: throw Exception
 			}
+			DataClass dataClass = dataClassNameToDataClass.get(dataClassName);
+			String objectLifecycleStateName = dataClassNameToStateName.getValue();
+			Map<String, ObjectLifecycleState> olcStateNameToOlcState = dataClass.getNameToObjectLifecycleState();
+			if (!olcStateNameToOlcState.containsKey(objectLifecycleStateName)) {
+				// TODO: throw exception
+			}
+			ObjectLifecycleState olcState = olcStateNameToOlcState.get(objectLifecycleStateName);
+			dataClassToStateTransition.put(dataClass, olcState);
 		}
+		return dataClassToStateTransition;
 	}
 
 	/**
-	 * Create new DataObjectInstances with the outgoing DataNodes of an specific
-	 * ControlNode.
-	 * TODO: what about input DOs?
-	 * @param controlNode
-	 */
-	@Deprecated
-	public void createDataObject(AbstractDataControlNode controlNode) {
-		/*
-		for (DataNode dataNode : controlNode.getOutgoingDataNodes()) {
-			DataObject dataObjectInstance = new DataObject(dataNode, caseExecutioner);
-			dataObjects.put(dataObjectInstance.getId(), dataObjectInstance);
-		}
-		*/
-	}
-
-	/**
-	 * Handle the transition of DataNodes.
+	 * Handle the transitions and new creations of DataObject that shell make a
+	 * transition specified in {@code dataClassToStateTransitions}. Therefore
+	 * validate if the DataClasses of these DataObjects exist in
+	 * {@code dataClassToStateTransitions} and if the the referred
+	 * {@link ObjectLifecycle} is a valid successor of the current
+	 * ObjectLifecycle of the DataObject. The ObjectLifecycleStates of the
+	 * {@code dataObjectsToTransition} make the designated transition and the
+	 * DataClasses that are in dataClassToStateTransitions but not a DataClass
+	 * of one {@code dataObjectsToTransition} lead to a new DataObject with the
+	 * referred ObjectLifecycleState.
 	 * 
-	 * @param dataManagerBean
+	 * @param dataObjectsToTransition
+	 * @param dataClassToStateTransitions
+	 * @return the List of DataObject that had a transition and were newly
+	 *         created
 	 */
-	public void transitionDataObject(List<DataNode> outgoingDataNodes, DataManagerBean dataManagerBean) {
-		for (Map.Entry<String, String> transition : dataManagerBean.getTransitions().entrySet()) {
-			String dataObjectId = transition.getKey();
-			String dataNodeId = transition.getValue();
-			if (!dataObjectIdToDataObject.containsKey(dataObjectId))
-				continue;
-			DataObject objectInstance = dataObjectIdToDataObject.get(dataObjectId);
-			for (DataNode dataNode : outgoingDataNodes) {
-				if (dataNode.getId().equals(dataNodeId)) {
-					objectInstance.setDataNode(dataNode);
-
-					Map<String, Object> attributeValues = dataManagerBean.getDataObjectAttributeValuesById(dataObjectId);
-					objectInstance.setDataAttributeValues(attributeValues);
-				}
+	public List<DataObject> handleDataObjectTransitions(List<DataObject> dataObjectsToTransition, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+		// validation
+		for (DataObject dataObject : dataObjectsToTransition) {
+			DataClass dataClass = dataObject.getDataClass();
+			if (!dataClassToStateTransitions.containsKey(dataClass)) {
+				// TODO: throw Exception
+			}
+			ObjectLifecycleState oldOlcState = dataObject.getObjectLifecycleState();
+			ObjectLifecycleState newOlcState = dataClassToStateTransitions.get(dataClass);
+			if (!newOlcState.isSuccessorOf(oldOlcState)) {
+				// TODO: throw Exception
 			}
 		}
+
+		List<DataObject> usedDataObjects = new ArrayList<>();
+		// make transitions
+		List<DataClass> workingItemDataClasses = new ArrayList<>();
+		for (DataObject workingItem : dataObjectsToTransition) {
+			ObjectLifecycleState newObjectLifecycleState = dataClassToStateTransitions.get(workingItem.getDataClass());
+			workingItem.makeObjectLifecycleTransition(newObjectLifecycleState);
+			workingItemDataClasses.add(workingItem.getDataClass());
+			usedDataObjects.add(workingItem);
+		}
+		
+		// create new DataObjects
+		List<DataClass> transitionDataClasses = new ArrayList<>(dataClassToStateTransitions.keySet());
+		transitionDataClasses.removeAll(workingItemDataClasses);
+		for (DataClass dataClass : transitionDataClasses) {
+			ObjectLifecycleState olcState = dataClassToStateTransitions.get(dataClass);
+			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
+			DataObject dataObject = new DataObject(condition, this);
+			dataObjectIdToDataObject.put(dataObject.getId(), dataObject);
+			usedDataObjects.add(dataObject);
+		}
+
+		return usedDataObjects;
 	}
 
 	/**
@@ -100,26 +124,19 @@ public class DataManager {
 	 *            locked
 	 * @return List of locked DataObjects
 	 */
-	public List<DataObject> lockDataObjects(List<String> dataObjectIds) {
+	public List<DataObject> lockDataObjects(List<DataObject> dataObjects) {
 		List<DataObject> lockedDataObjects = new ArrayList<>();
-		for (String id : dataObjectIds) {
-			if (dataObjectIdToDataObject.containsKey(id)) {
-				DataObject dataObject = dataObjectIdToDataObject.get(id);
-				if (dataObject.isLocked()) {
-					unlockDataObjects(lockedDataObjects);
-					String message = String.format("Try to lock the DataObject with id: %s, that is already locked.", id);
-					log.error(message);
-					throw new SecurityException(message);
-				}
-				dataObject.lock();
-				lockedDataObjects.add(dataObject);
-			} else {
+		for (DataObject dataObjectToLock : dataObjects) {
+			if (dataObjectToLock.isLocked()) {
 				unlockDataObjects(lockedDataObjects);
-				String message = String.format("Try to lock a DataObject with id: %s, which id is not assigned.", id);
+				String message = String.format("Try to lock the DataObject with id: %s, that is already locked.", dataObjectToLock.getId());
 				log.error(message);
-				throw new IllegalArgumentException(message);
+				throw new SecurityException(message);
 			}
+			dataObjectToLock.lock();
+			lockedDataObjects.add(dataObjectToLock);
 		}
+
 		return lockedDataObjects;
 	}
 
@@ -130,48 +147,28 @@ public class DataManager {
 	 *            - that shall be unlocked
 	 */
 	public void unlockDataObjects(List<DataObject> dataObjects) {
-		// toUnlockDataObjects.values().forEach(DataObjectInstance::unlock);
+		List<DataObject> unlockedDataObjects = new ArrayList<>();
+
 		for (DataObject dataObjectToUnlock : dataObjects) {
-			if (dataObjectIdToDataObject.containsKey(dataObjectToUnlock.getId())) {
-				dataObjectToUnlock.unlock();
+			if (!dataObjectToUnlock.isLocked()) {
+				lockDataObjects(unlockedDataObjects);
+				String message = String.format("Try to unlock the DataObject with id: %s, that is already unlocked.", dataObjectToUnlock.getId());
+				log.error(message);
+				throw new SecurityException(message);
 			}
+			dataObjectToUnlock.unlock();
+			unlockedDataObjects.add(dataObjectToUnlock);
 		}
 	}
 
-	
 	/**
-	 * Get DataObjectInstances that are instantiated by the DataNodes.
-	 * 
-	 * TODO get all DOs that fulfill the DataStateCondition of the DataNodes
-	 * 
-	 * @param dataNodesToCheck
-	 * @return List of DataObjectInstances
-	 */
-	/*
-	@Deprecated
-	public List<DataObject> getExistingDataObjects(List<DataNode> dataNodesToCheck) {
-		// create a Map of DataNode to DataObjectInstance
-		Map<DataNode, DataObject> dataNodeToInstanceAssociation = new HashMap<>();
-		for (DataObject instance : dataObjects.values())
-			dataNodeToInstanceAssociation.put(instance.getDataNode(), instance);
-		// resolve Map
-		List<DataObject> existingInstances = new ArrayList<>();
-		for (DataNode dataNode : dataNodesToCheck) {
-			if (dataNodeToInstanceAssociation.containsKey(dataNode))
-				existingInstances.add(dataNodeToInstanceAssociation.get(dataNode));
-		}
-		return existingInstances;
-	}
-	*/
-
-	/**
-	 * Get the {@link DataStateCondition}s of all unlocked {@link DataObject}s.
+	 * Get the {@link AtomicDataStateCondition}s of all unlocked {@link DataObject}s.
 	 * 
 	 * @return List of DataStateConditions which referring DataObject is
 	 *         unlocked
 	 */
-	public List<DataStateCondition> getDataStateConditions() {
-		List<DataStateCondition> existingConditions = new ArrayList<>();
+	public List<AtomicDataStateCondition> getDataStateConditions() {
+		List<AtomicDataStateCondition> existingConditions = new ArrayList<>();
 
 		for (DataObject dataObject : dataObjectIdToDataObject.values()) {
 			if (!dataObject.isLocked()) {
@@ -195,7 +192,7 @@ public class DataManager {
 	public Set<DataObject> getAvailableDataObjects(List<ConditionSet> conditionSets) {
 		Set<DataObject> availableDataObjects = new HashSet<>();
 		for (ConditionSet conditionSet : conditionSets) {
-			for (DataStateCondition condition : conditionSet.getConditions()) {
+			for (AtomicDataStateCondition condition : conditionSet.getConditions()) {
 				Set<DataObject> availableDataObjectsForCondition = getAvailableDataObjects(condition);
 				availableDataObjects.addAll(availableDataObjectsForCondition);
 			}
@@ -211,7 +208,7 @@ public class DataManager {
 	 * @param condition
 	 * @return
 	 */
-	public Set<DataObject> getAvailableDataObjects(DataStateCondition condition) {
+	public Set<DataObject> getAvailableDataObjects(AtomicDataStateCondition condition) {
 		Set<DataObject> availableDataObjects = new HashSet<>();
 
 		for (DataObject dataObject : dataObjectIdToDataObject.values()) {
@@ -245,11 +242,30 @@ public class DataManager {
 	 * @param dataObjectId
 	 * @return DataObject
 	 */
+	// TODO: make this try catch
 	public DataObject getDataObjectById(String dataObjectId) {
 		if (dataObjectIdToDataObject.containsKey(dataObjectId)) {
 			return dataObjectIdToDataObject.get(dataObjectId);
 		}
 		return null;
+	}
+
+	/**
+	 * Get a List of specific DataObjects by their ids.
+	 * 
+	 * @param dataObjectIds
+	 * @return List of DataObjects
+	 */
+	public List<DataObject> getDataObjectsById(List<String> dataObjectIds) {
+		List<DataObject> dataObjects = new ArrayList<>();
+		for (String dataObjectId : dataObjectIds) {
+			DataObject dataObject = getDataObjectById(dataObjectId);
+			if (dataObject == null) {
+
+			}
+			dataObjects.add(dataObject);
+		}
+		return dataObjects;
 	}
 
 	// GETTER & SETTER

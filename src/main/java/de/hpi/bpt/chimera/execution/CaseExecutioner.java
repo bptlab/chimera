@@ -2,8 +2,9 @@ package de.hpi.bpt.chimera.execution;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
@@ -13,8 +14,8 @@ import de.hpi.bpt.chimera.jhistory.transportationbeans.DataAttributeLog;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.DataObjectLog;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
 public class CaseExecutioner {
 	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
@@ -38,7 +39,7 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Start the Case.
+	 * Start the Case by starting all {@link FragmentInstance}s.
 	 */
 	public void startCase() {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
@@ -53,8 +54,8 @@ public class CaseExecutioner {
 	 * @param state
 	 * @return Collection of ActivityInstances
 	 */
-	public Collection<AbstractActivityInstance> getActivitiesWithState(State state) {
-		Collection<AbstractActivityInstance> activityInstances = new ArrayList<>();
+	public List<AbstractActivityInstance> getActivitiesWithState(State state) {
+		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
 			for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstances().values()) {
 				if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == state) {
@@ -79,10 +80,13 @@ public class CaseExecutioner {
 	 *            - list of {@code ids } of DataObjects that are used by the
 	 *            AbstractActivityInstance
 	 */
-	public void beginActivityInstance(String activityInstanceId, List<String> selectedDataObjectIds) {
+	public void beginActivityInstance(AbstractActivityInstance activityInstance, List<DataObject> selectedDataObjects) {
 		try {
-			AbstractActivityInstance activityInstance = getActivityInstanceWithStateAndExceptions(activityInstanceId, State.READY);
-			List<DataObject> lockedDataObjects = dataManager.lockDataObjects(selectedDataObjectIds);
+			if (!activityInstance.getState().equals(State.READY)) {
+				// TODO: exception
+			}
+
+			List<DataObject> lockedDataObjects = dataManager.lockDataObjects(selectedDataObjects);
 			activityInstance.setSelectedDataObjects(lockedDataObjects);
 			// TODO: has this to be before lock?
 			activityInstance.getFragmentInstance().skipAlternativeControlNodes(activityInstance);
@@ -95,18 +99,26 @@ public class CaseExecutioner {
 	/**
 	 * 
 	 * @param activityInstanceId
-	 * @param dataObjectTransitions
+	 * @param dataClassToStateTransition
+	 * @return List of DataObjects that made a transition and those that are
+	 *         newly created
 	 */
-	public void terminateActivityInstance(String activityInstanceId, DataManagerBean dataManagerBean) {
+	public List<DataObject> terminateActivityInstance(AbstractActivityInstance activityInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		try {
-			AbstractActivityInstance activityInstance = this.getActivityInstanceWithStateAndExceptions(activityInstanceId, State.RUNNING);
-			List<DataObject> dataObjectsToUnlock = activityInstance.getSelectedDataObjectInstances();
-			dataManager.unlockDataObjects(dataObjectsToUnlock);
-			// dataManager.transitionDataObject(controlNode.getOutgoingDataNodes(),
-			// dataManagerBean);
-			// dataManager.createDataObject(controlNode.getOutgoingDataNodes(),
-			// dataManagerBean);
+			if (!activityInstance.getState().equals(State.RUNNING)) {
+				// TODO: exception
+			}
+
+			List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
+			dataManager.unlockDataObjects(workingItems);
+			
+			List<DataObject> usedDataObject = new ArrayList<>();
+			if (!activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
+				usedDataObject = dataManager.handleDataObjectTransitions(workingItems, dataClassToStateTransitions);
+			}
+
 			activityInstance.terminate();
+			return usedDataObject;
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
@@ -179,7 +191,6 @@ public class CaseExecutioner {
 
 	// Do not implement this at the moment
 	public void startAutomaticTasks() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -200,6 +211,7 @@ public class CaseExecutioner {
 		return null;
 	}
 
+	// LOGGING
 	/**
 	 * Log the transition of the {@link State} of an
 	 * {@link AbstractActivityInstance}. Therefore only log certain
@@ -312,21 +324,5 @@ public class CaseExecutioner {
 
 	public List<DataAttributeLog> getDataAttributeLogs() {
 		return dataAttributeLogs;
-	}
-
-	/**
-	 * 
-	 * @return all AbstractActivityInstances in all FragmentInstances.
-	 */
-	public Collection<AbstractActivityInstance> getActivityInstances() {
-		Collection<AbstractActivityInstance> activityInstances = new ArrayList<>();
-		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
-			for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstances().values()) {
-				if (nodeInstance instanceof AbstractActivityInstance) {
-					activityInstances.add((AbstractActivityInstance) nodeInstance);
-				}
-			}
-		}
-		return activityInstances;
 	}
 }

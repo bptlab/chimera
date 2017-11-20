@@ -10,7 +10,7 @@ import org.apache.commons.io.IOUtils;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
@@ -57,7 +57,7 @@ public class CaseModelTestHelper {
 	 * @param objectLifecycleStateName
 	 * @return DataStateCondition
 	 */
-	public static DataStateCondition createDataStateCondition(CaseModel cm, String dataclassName, String objectLifecycleStateName) {
+	public static AtomicDataStateCondition createDataStateCondition(CaseModel cm, String dataclassName, String objectLifecycleStateName) {
 		DataClass dataclass = getDataClassByName(cm, dataclassName);
 		if (dataclass == null) {
 			return null;
@@ -67,7 +67,7 @@ public class CaseModelTestHelper {
 			return null;
 		}
 
-		return new DataStateCondition(dataclass, olcState);
+		return new AtomicDataStateCondition(dataclass, olcState);
 	}
 
 	/**

@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
@@ -65,13 +65,13 @@ public class TerminationConditionParser {
 			String dataClassName = match.group(1);
 			String objectLifecycleStateName = match.group(2);
 
-			DataStateCondition condition = new DataStateCondition();
+			AtomicDataStateCondition condition = new AtomicDataStateCondition();
 			
 			DataClass dataClass = parserHelper.getNameToDataClass(dataClassName);
 			condition.setDataClass(dataClass);
 			
 			ObjectLifecycleState objectLifecycleState = parserHelper.getNameToObjectLifecycleState(dataClass, objectLifecycleStateName);
-			condition.setState(objectLifecycleState);
+			condition.setObjectLifecycleState(objectLifecycleState);
 					
 			conditionComponent.addCondition(condition);
 		}

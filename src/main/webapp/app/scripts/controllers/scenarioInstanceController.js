@@ -17,19 +17,16 @@ angular.module('jfrontend')
             this.instances = {};
             this.instanceDetails = {};
             this.scenario = {};
-            this.activityOutputStates = {};
-            this.changeAttributeObject = {};
+            
             this.availableInput = {};
             this.selectedStates = {};
             this.activityInputAttributes = {};
             this.workingItems = {};
             this.selectedDataObjectIds = {};
             
-            // activity instance termination
-            this.availableOutput = {};
-            this.newDataObjectCreation = {};
-            this.dataObjectTransition = {};
             this.attributeValues = {};
+            this.availableOutputStates = {};
+            this.activityOutputAttributes = {};
             
             this.alerts = [];
 
@@ -200,13 +197,6 @@ angular.module('jfrontend')
                 });
             };
 
-            this.setAttribute = function (attrid, value, activityInstanceId) {
-                if (!instanceCtrl.changeAttributeObject.hasOwnProperty(activityInstanceId)) {
-                    instanceCtrl.changeAttributeObject[activityInstanceId] = {'idToValue': {}};
-                }
-                instanceCtrl.changeAttributeObject[activityInstanceId]['idToValue'][attrid] = value;
-            };
-
             // begins an activity
             this.beginActivity = function (activityInstanceId) {
                 var dataObject = {'dataobjects': []};
@@ -224,79 +214,41 @@ angular.module('jfrontend')
                     instanceCtrl.activityInputAttributes = {};
                     //reloading content so the dashboard is uptodate
                     instanceCtrl.refreshPage();
-                    $window.location.reload();
+                    // $window.location.reload();
                 }).error(function () {
                     console.log('request failed');
                 });
             };
 
             this.terminateActivity = function (activityInstanceId) {
-            	var values = {};
-                values['ids'] = [];
-                values['new_creation'] = [];
-                values['transition'] = [];
-                values['datanode_attribute_values'] = {};
-                values['dataobject_attribute_values'] = {};
-                values['transition_to_datanode'] = {};
-                instanceCtrl.availableOutput[activityInstanceId].forEach(function (datanode) {
-                	values['ids'].push(datanode.id);
-                    if (instanceCtrl.newDataObjectCreation[datanode.id]) {
-                        values['new_creation'].push(datanode.id);
-                       	values['datanode_attribute_values'][datanode.id] = instanceCtrl.attributeValues[datanode.id];
-                    } else {
-                    	values['transition'].push(instanceCtrl.dataObjectTransition[datanode.id]);
-                    	values['transition_to_datanode'][instanceCtrl.dataObjectTransition[datanode.id]] = datanode.id;
-                    	values['dataobject_attribute_values'][instanceCtrl.dataObjectTransition[datanode.id]] = instanceCtrl.attributeValues[instanceCtrl.dataObjectTransition[datanode.id]];
-                    }
-                });
-                console.log(JSON.stringify(values));
-                /*
-            	this.availableOutput[activityInstanceId].forEach(function (datanode) {
-                    if (instanceCtrl.newDataObjectCreation[datanode.id]) {
-                    	var valueMap = {};
-                        valueMap['attribute_values'] = instanceCtrl.attributeValues[datanode.id];
-                    	console.log('create ' + JSON.stringify(valueMap));
-                    	$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
-                                "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                                "/activityinstance/" + activityInstanceId + "/datanode/" + datanode.id + "/new/", JSON.stringify(valueMap)).success(function (data) {
-                            }).error(function () {
-                                console.log('DataNode creation failed.');
-                            });
-                    } else {
-                    	var valueMap = {}; 
-                    	var fromId = instanceCtrl.dataObjectTransition[datanode.id];
-                        valueMap['attribute_values'] = instanceCtrl.attributeValues[fromId];
-                        valueMap['from_id'] = fromId;
-                        valueMap['to_id'] = datanode.id;
-                    	console.log('transition: ' + JSON.stringify(valueMap));
-                    }
-                });
-                */
-                // save attribute values
-                /*
-                if (instanceCtrl.changeAttributeObject.hasOwnProperty(activityInstanceId)) {
-                    var valueMap = instanceCtrl.changeAttributeObject[activityInstanceId].idToValue;
-
-                    $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
-                        "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                        "/activityinstance/" + activityInstanceId, JSON.stringify(valueMap)).success(function (data) {
-                        console.log('Attributes changed.')
-                    }).error(function () {
-                        console.log('Saving attribute values failed.');
-                    });
-
-                    instanceCtrl.initializeDataobjectAttributelogInstances();
-                }
-				*/
-                // terminate activity with selected states
+            	var dataObjectInfos = {};
+            	// terminate activity with selected states
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                    "/activityinstance/" + activityInstanceId + "/terminate", JSON.stringify(values)).success(function (data) {
-                    instanceCtrl.instanceDetails.activityInstances = {};
+                    "/activityinstance/" + activityInstanceId + "/terminate", JSON.stringify(instanceCtrl.selectedStates)).success(function (usedDataObjects) {
+                  	
+                    // overwriting the structure of attributeValues with ids
+                    var adaptedTranisitons = {};
+                    usedDataObjects.forEach(function (dataObject) {
+                    	var dataObjectId = dataObject['id'];
+                    	var dataClassName = dataObject['dataclass']; 
+                    	adaptedTranisitons[dataObjectId] = {};
+                    	dataObject['attributeInstances'].forEach(function (dataAttribute) {
+                    		var dataAttributeId = dataAttribute['id'];
+                    		var dataAttributeName = dataAttribute['name'];
+                    		adaptedTranisitons[dataObjectId][dataAttributeId] = instanceCtrl.attributeValues[dataClassName][dataAttributeName];
+                    	});
+                    });
+                    
+                    instanceCtrl.attributeValues = adaptedTranisitons;
+                    instanceCtrl.setAttributeValues(activityInstanceId);
+                    
+                    // instanceCtrl.instanceDetails.activityInstances = {};
                     instanceCtrl.selectedStates = {};
+                    instanceCtrl.attributeValues = {};
                     //reloading content so the dashboard is uptodate
                     instanceCtrl.refreshPage();
-                    $window.location.reload();
+                    // $window.location.reload();
                 }).error(function () {
                     console.log('request failed');
                 });
@@ -376,40 +328,29 @@ angular.module('jfrontend')
             }
             
             this.getActivityOutput = function (activityInstanceId) {
-            	this.availableOutput = {};
-            	this.newDataObjectCreation = {};
                 $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
-                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/availableOutput')
-                    .success(function (data) {
-                        instanceCtrl.availableOutput[activityInstanceId] = data;
+                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/outputStates')
+                    .success(function (dataStates) {
+                        instanceCtrl.availableOutputStates[activityInstanceId] = dataStates;
                     }).error(function () {
-                    console.log('Loading activity output failed.');
-                })
-            };
-
-            // from -> to
-            this.setDataObjectTransition = function(incommingDataObjectId, dataNodeId) {
-        		// to -> from
-            	this.dataObjectTransition[dataNodeId] = incommingDataObjectId;
-            };
-            
-            this.setAttributeTransition = function(dataObjectId, attributeId, value) {
-            	if(!this.attributeValues.hasOwnProperty(dataObjectId)) {
-            		this.attributeValues[dataObjectId] = {};
-                }
-            	this.attributeValues[dataObjectId][attributeId] = value;
-            };
-            
-            this.setNewDataObjectCreation = function(id, value) {
-                 this.newDataObjectCreation[id] = value;
-            };
-            
-            this.getActivityOutputStates = function (activityInstanceId) {
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activityinstance/" + activityInstanceId + "/output").success(function (data) {
-                    instanceCtrl.activityOutputStates[activityInstanceId] = data;
-                }).error(function () {
                     console.log('Loading activity output states failed.');
                 });
+                
+                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
+                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/outputAttributes')
+                    .success(function (dataAttributes) {
+                        instanceCtrl.activityOutputAttributes[activityInstanceId] = dataAttributes;
+                    }).error(function () {
+                    console.log('Loading activity output attributes failed.');
+                });
+            };
+            
+            // set the transition for DataAttributes
+            this.setAttributeTransition = function(dataObjectIdOrDataClassName, attributeIdOrDataAttributeName, value) {
+            	if(!this.attributeValues.hasOwnProperty(dataObjectIdOrDataClassName)) {
+            		this.attributeValues[dataObjectIdOrDataClassName] = {};
+                }
+            	this.attributeValues[dataObjectIdOrDataClassName][attributeIdOrDataAttributeName] = value;
             };
 
             // TODO support referenced activities again
@@ -478,6 +419,7 @@ angular.module('jfrontend')
             };
 
             this.selectState = function (dclass, dstate) {
+            	console.log(dclass + ' ' + dstate);
                 instanceCtrl.selectedStates[dclass] = dstate;
             }
         }

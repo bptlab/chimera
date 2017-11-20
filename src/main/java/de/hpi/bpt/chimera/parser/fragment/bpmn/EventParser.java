@@ -2,8 +2,9 @@ package de.hpi.bpt.chimera.parser.fragment.bpmn;
 
 import java.util.List;
 
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.condition.MetaCondition;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
@@ -40,7 +41,8 @@ public class EventParser {
 		startEvent.setId(fragXmlWrap.getStartEvent().getId());
 		startEvent.setEventQuerry(fragXmlWrap.getStartEvent().getEventQuery());
 		sfResolver.resolveOutgoingSequenceFlow(fragXmlWrap.getStartEvent().getOutgoingSequenceFlows(), startEvent);
-		MetaCondition postCondition = dfResolver.resolveDataFlow(fragXmlWrap.getStartEvent().getOutgoingDataNodeObjectReferences());
+		List<AtomicDataStateCondition> availableOutputConditions = dfResolver.resolveDataNodeReferences(fragXmlWrap.getStartEvent().getOutgoingDataNodeObjectReferences());
+		DataStateCondition postCondition = dfResolver.parseDataStateCondition(availableOutputConditions);
 		startEvent.setPostCondition(postCondition);
 		return startEvent;
 	}
@@ -57,7 +59,8 @@ public class EventParser {
 		EndEvent endEvent = new EndEvent();
 		endEvent.setId(fragXmlWrap.getEndEvent().getId());
 		sfResolver.resolveIncomingSequenceFlow(fragXmlWrap.getEndEvent().getIncomingSequenceFlows(), endEvent);
-		MetaCondition preCondition = dfResolver.resolveDataFlow(fragXmlWrap.getEndEvent().getIncomingDataNodeObjectReferences());
+		List<AtomicDataStateCondition> availableInputConditions = dfResolver.resolveDataNodeReferences(fragXmlWrap.getEndEvent().getIncomingDataNodeObjectReferences());
+		DataStateCondition preCondition = dfResolver.parseDataStateCondition(availableInputConditions);
 		endEvent.setPreCondition(preCondition);
 		return endEvent;
 	}

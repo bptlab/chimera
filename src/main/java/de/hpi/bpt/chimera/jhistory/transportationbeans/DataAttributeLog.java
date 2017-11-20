@@ -15,11 +15,11 @@ public class DataAttributeLog extends LogEntry {
 		this.setLabel(instance.getDataAttribute().getName());
 		this.setObjectReferenceId(instance.getId());
 		if (oldValue == null)
-			this.setOldValue("empty");
+			this.setOldValue(null);
 		else
 			this.setOldValue(oldValue.toString());
 		if (newValue == null)
-			this.setOldValue("empty");
+			this.setOldValue(null);
 		else
 			this.setNewValue(newValue.toString());
 	}

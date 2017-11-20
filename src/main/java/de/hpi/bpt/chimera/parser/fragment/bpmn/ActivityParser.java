@@ -3,8 +3,9 @@ package de.hpi.bpt.chimera.parser.fragment.bpmn;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.condition.MetaCondition;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
@@ -40,9 +41,11 @@ public class ActivityParser {
 			activity.setName(xmlTask.getName());
 			sfResolver.resolveIncomingSequenceFlow(xmlTask.getIncomingSequenceFlows(), activity);
 			sfResolver.resolveOutgoingSequenceFlow(xmlTask.getOutgoingSequenceFlows(), activity);
-			MetaCondition preCondition = dfResolver.resolveDataFlow(xmlTask.getIncomingDataNodeObjectReferences());
+			List<AtomicDataStateCondition> availableInputConditions = dfResolver.resolveDataNodeReferences(xmlTask.getIncomingDataNodeObjectReferences());
+			DataStateCondition preCondition = dfResolver.parseDataStateCondition(availableInputConditions);
 			activity.setPreCondition(preCondition);
-			MetaCondition postCondition = dfResolver.resolveDataFlow(xmlTask.getOutgoingDataNodeObjectReferences());
+			List<AtomicDataStateCondition> availableOutputConditions = dfResolver.resolveDataNodeReferences(xmlTask.getOutgoingDataNodeObjectReferences());
+			DataStateCondition postCondition = dfResolver.parseDataStateCondition(availableOutputConditions);
 			activity.setPostCondition(postCondition);
 			activityList.add(activity);
 		}

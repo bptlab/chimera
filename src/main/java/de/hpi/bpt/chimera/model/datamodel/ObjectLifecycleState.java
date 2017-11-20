@@ -36,12 +36,15 @@ public class ObjectLifecycleState implements Nameable, Listable {
 	}
 
 	/**
+	 * Check if this ObjectLifecycleState is a successor of the supposed
+	 * preceding ObjectLifecycleState.
 	 * 
-	 * @param objectLifecycleState
-	 * @return true if the objectLifecycleState is a successor of this State
+	 * @param precedingObjectLifecycleState
+	 * @return true if this ObjectLifecycleState is a successor of the supposed
+	 *         preceding ObjectLifecycleState
 	 */
-	public boolean isSucceeding(ObjectLifecycleState objectLifecycleState) {
-		return successors.contains(objectLifecycleState);
+	public boolean isSuccessorOf(ObjectLifecycleState precedingObjectLifecycleState) {
+		return precedingObjectLifecycleState.getSuccessors().contains(this) && this.getPredecessors().contains(precedingObjectLifecycleState);
 	}
 
 	@Override

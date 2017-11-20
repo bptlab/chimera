@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
@@ -22,7 +22,7 @@ public class DataNode {
 
 	private String name;
 	@OneToOne(cascade = CascadeType.ALL)
-	private DataStateCondition dataObjectState;
+	private AtomicDataStateCondition dataObjectState;
 	private String jsonPath;
 
 	// GETTER & SETTER
@@ -38,10 +38,10 @@ public class DataNode {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public DataStateCondition getDataObjectState() {
+	public AtomicDataStateCondition getDataObjectState() {
 		return dataObjectState;
 	}
-	public void setDataObjectState(DataStateCondition dataObjectState) {
+	public void setDataObjectState(AtomicDataStateCondition dataObjectState) {
 		this.dataObjectState = dataObjectState;
 	}
 
@@ -58,6 +58,6 @@ public class DataNode {
 	}
 
 	public ObjectLifecycleState getObjectLifecycleState() {
-		return dataObjectState.getState();
+		return dataObjectState.getObjectLifecycleState();
 	}
 }

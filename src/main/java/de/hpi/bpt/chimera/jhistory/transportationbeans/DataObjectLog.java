@@ -17,7 +17,7 @@ public class DataObjectLog extends LogEntry {
 		this.setLabel(dataObject.getDataClass().getName());
 		this.setObjectReferenceId(dataObject.getId());
 		if (oldState == null)
-			this.setOldValue("no state");
+			this.setOldValue(null);
 		else
 			this.setOldValue(oldState.getName());
 		this.setNewValue(newState.getName());

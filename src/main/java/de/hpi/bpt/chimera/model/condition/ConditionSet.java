@@ -1,7 +1,9 @@
 package de.hpi.bpt.chimera.model.condition;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,9 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import de.hpi.bpt.chimera.execution.DataObject;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 /**
- * List of {@link DataStateCondition}{@code s} and can only be used if all
+ * List of {@link AtomicDataStateCondition}{@code s} and can only be used if all
  * conditions are represented in the {@link DataManager}
  */
 @Entity
@@ -22,41 +26,55 @@ public class ConditionSet {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	@OneToMany(cascade = CascadeType.ALL)
-	List<DataStateCondition> conditions;
+	List<AtomicDataStateCondition> conditions;
 
 	public ConditionSet() {
 		this.conditions = new ArrayList<>();
 	}
 
-	public ConditionSet(List<DataStateCondition> conditions) {
+	public ConditionSet(List<AtomicDataStateCondition> conditions) {
 		this.conditions = conditions;
 	}
 
-	public void setConditions(List<DataStateCondition> conditions) {
+	public void setConditions(List<AtomicDataStateCondition> conditions) {
 		this.conditions = conditions;
 	}
 
-	public List<DataStateCondition> getConditions() {
+	public List<AtomicDataStateCondition> getConditions() {
 		return this.conditions;
 	}
 
-	public void addCondition(DataStateCondition condition) {
+	public void addCondition(AtomicDataStateCondition condition) {
 		this.conditions.add(condition);
 	}
 
 	/**
 	 * Check whether the ConditionSet fulfills the existing
-	 * DataObjectStateCoditions. Therefore all Conditions in the ConditionSet
-	 * have to exist (And-Behavior).
+	 * AtomicDataObjectStateCoditions. Therefore all Conditions in the
+	 * ConditionSet have to exist (And-Behavior).
 	 * 
 	 * @param existingConditions
 	 * @return boolean
 	 */
-	public boolean isFulfilled(List<DataStateCondition> existingConditions) {
-		for (DataStateCondition condition : conditions) {
+	public boolean isFulfilled(List<AtomicDataStateCondition> existingConditions) {
+		for (AtomicDataStateCondition condition : conditions) {
 			if (!existingConditions.contains(condition))
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Make a Map from DataClass to ObjectLifecycleState of the
+	 * DataStateConditions in this ConditionSet.
+	 * 
+	 * @return Map from DataClass to ObjectLifecycleState
+	 */
+	public Map<DataClass, ObjectLifecycleState> getDataClassToObjectLifecycleState() {
+		Map<DataClass, ObjectLifecycleState> dataClassToObjectLifecycleState = new HashMap<>();
+		for (AtomicDataStateCondition condition : conditions) {
+			dataClassToObjectLifecycleState.put(condition.getDataClass(), condition.getObjectLifecycleState());
+		}
+		return dataClassToObjectLifecycleState;
 	}
 }

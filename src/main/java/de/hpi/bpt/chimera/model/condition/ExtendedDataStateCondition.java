@@ -1,6 +1,6 @@
 package de.hpi.bpt.chimera.model.condition;
 
-public class ExtendedDataStateCondition extends DataStateCondition {
+public class ExtendedDataStateCondition extends AtomicDataStateCondition {
 	private String jsonPath = "";
 
 	public String getJsonPath() {

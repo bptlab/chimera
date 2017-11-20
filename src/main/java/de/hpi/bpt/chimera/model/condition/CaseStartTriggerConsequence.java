@@ -16,7 +16,7 @@ public class CaseStartTriggerConsequence {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	@OneToOne(cascade = CascadeType.ALL)
-	private DataStateCondition dataObjectState;
+	private AtomicDataStateCondition dataObjectState;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataAttributeJsonPath> mapping;
 
@@ -25,16 +25,16 @@ public class CaseStartTriggerConsequence {
 	CaseStartTriggerConsequence() {
 	}
 
-	public CaseStartTriggerConsequence(DataStateCondition dataObjectStateCondition, List<DataAttributeJsonPath> dataAttributeJsonPath) {
+	public CaseStartTriggerConsequence(AtomicDataStateCondition dataObjectStateCondition, List<DataAttributeJsonPath> dataAttributeJsonPath) {
 		this.dataObjectState = dataObjectStateCondition;
 		this.mapping = dataAttributeJsonPath;
 	}
 
-	public DataStateCondition getDataObjectState() {
+	public AtomicDataStateCondition getDataObjectState() {
 		return dataObjectState;
 	}
 
-	public void setDataObjectState(DataStateCondition dataObjectState) {
+	public void setDataObjectState(AtomicDataStateCondition dataObjectState) {
 		this.dataObjectState = dataObjectState;
 	}
 

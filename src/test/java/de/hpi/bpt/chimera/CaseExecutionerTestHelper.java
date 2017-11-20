@@ -1,8 +1,11 @@
 package de.hpi.bpt.chimera;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 
 public class CaseExecutionerTestHelper {
@@ -16,12 +19,28 @@ public class CaseExecutionerTestHelper {
 	 *         occur.
 	 */
 	public static AbstractActivityInstance getActivityInstanceByName(CaseExecutioner caseExecutioner, String activityInstanceName) {
-		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getActivityInstances();
+		List<AbstractActivityInstance> activityInstances = getActivityInstances(caseExecutioner);
 		for (AbstractActivityInstance activityInstance : activityInstances) {
 			if (activityInstance.getControlNode().getName().equals(activityInstanceName)) {
 				return activityInstance;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 
+	 * @return all AbstractActivityInstances in all FragmentInstances.
+	 */
+	public static List<AbstractActivityInstance> getActivityInstances(CaseExecutioner caseExecutioner) {
+		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
+		for (FragmentInstance fragmentInstance : caseExecutioner.getCase().getFragmentInstances().values()) {
+			for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstances().values()) {
+				if (nodeInstance instanceof AbstractActivityInstance) {
+					activityInstances.add((AbstractActivityInstance) nodeInstance);
+				}
+			}
+		}
+		return activityInstances;
 	}
 }

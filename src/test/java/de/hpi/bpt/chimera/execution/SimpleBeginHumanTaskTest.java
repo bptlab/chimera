@@ -13,18 +13,21 @@ import org.junit.Test;
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.activity.HumanTaskInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 
 /**
- * Test the beginning behavior of HumanTasks.
- * Therefore parse the CaseModel with a Dataclass(name: 'dataclass',
- * ObjectLifeycle: 'State 1' -> 'State 2') and a Case with a StartEvent, an
- * EndEvent and with three consecutive HumanTask (StartEvent -> 'task 1' ->
- * 'task 2' -> 'task 3' -> EndEvent) and two DataNodes ('task 1' ->
- * 'dataclass[State 1]' -> 'task 2' & 'task 2' -> 'dataclass[State 2]' -> 'task
- * 3').
+ * Test the beginning behavior of HumanTasks. Therefore parse the CaseModel with
+ * a Dataclass(name: 'dataclass', ObjectLifeycle: 'State 1' -> 'State 2') and a
+ * Case with a StartEvent, an EndEvent and with four consecutive HumanTask
+ * (StartEvent -> task 0 ->'task 1' -> 'task 2' -> 'task 3' -> EndEvent) and two
+ * DataNodes ('task 1' -> 'dataclass[State 1]' -> 'task 2' & 'task 2' ->
+ * 'dataclass[State 2]' -> 'task 3').
  */
 public class SimpleBeginHumanTaskTest {
 	private final String filepath = "src/test/resources/execution/SimpleCaseModelWithOneControlFlowAndDataObjects";
@@ -40,18 +43,22 @@ public class SimpleBeginHumanTaskTest {
 
 	@Test
 	public void testBeginWithoutDataObjects() {
-		AbstractActivityInstance task1 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task 1");
-		assertNotNull(task1);
+		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task 0");
+		assertNotNull(task0);
 
-		assertEquals("State of ActivityInstance is not READY", State.READY, task1.getState());
-		caseExecutioner.beginActivityInstance(task1.getId(), new ArrayList<String>());
+		assertEquals("State of ActivityInstance is not READY", State.READY, task0.getState());
+		caseExecutioner.beginActivityInstance(task0, new ArrayList<DataObject>());
 		
-		assertEquals("State of ActivityInstance is not RUNNING", State.RUNNING, task1.getState());
+		assertEquals("State of ActivityInstance is not RUNNING", State.RUNNING, task0.getState());
 	}
 
 	@Test
 	public void testBeginWithDataObjects() {
-		AbstractActivityInstance task1 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task 1");
+		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task 0");
+		AbstractControlNode task1ControlNode = task0.getControlNode().getOutgoingControlNodes().get(0);
+		assertEquals("Following ControlNode is not a HumanTask", task1ControlNode.getClass(), HumanTask.class);
+
+		HumanTaskInstance task1 = (HumanTaskInstance) ControlNodeInstanceFactory.createControlNodeInstance(task1ControlNode, task0.getFragmentInstance());
 		assertNotNull(task1);
 
 		Collection<FragmentInstance> fragmentInstances = caseExecutioner.getCase().getFragmentInstances().values();
@@ -65,7 +72,7 @@ public class SimpleBeginHumanTaskTest {
 		assertNotNull(task2);
 		assertEquals("State of ActivityInstance is not CONTROLFLOW_ENABLED", State.CONTROLFLOW_ENABLED, task2.getState());
 
-		DataStateCondition condition = CaseModelTestHelper.createDataStateCondition(cm, "dataclass", "State 1");
+		AtomicDataStateCondition condition = CaseModelTestHelper.createDataStateCondition(cm, "dataclass", "State 1");
 		assertNotNull(condition);
 		DataObject dataObject = new DataObject(condition, caseExecutioner.getDataManager());
 		// TODO: this shouldn't be necessary
@@ -76,11 +83,11 @@ public class SimpleBeginHumanTaskTest {
 		fragmentInstance.updateDataFlow();
 		assertEquals("State of ActivityInstance is not READY", State.READY, task2.getState());
 
-		ArrayList<String> dataObjectIds = new ArrayList<String>(Arrays.asList(dataObject.getId()));
-		caseExecutioner.beginActivityInstance(task2.getId(), dataObjectIds);
+		ArrayList<DataObject> dataObjects = new ArrayList<>(Arrays.asList(dataObject));
+		caseExecutioner.beginActivityInstance(task2, dataObjects);
 
 		assertEquals("State of ActivityInstance is not RUNNING", State.RUNNING, task2.getState());
 		assertTrue("DataObject wasn't locked", dataObject.isLocked());
-		assertEquals("DataObject wasn't registered as selected DataObject", dataObject, task2.getSelectedDataObjectInstances().get(0));
+		assertEquals("DataObject wasn't registered as selected DataObject", dataObject, task2.getSelectedDataObjects().get(0));
 	}
 }

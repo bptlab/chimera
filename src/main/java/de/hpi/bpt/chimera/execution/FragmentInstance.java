@@ -74,6 +74,7 @@ public class FragmentInstance {
 				nodeInstance.enableControlFlow();
 			}
 		}
+		updateDataFlow();
 	}
 
 	// HELPER METHODS

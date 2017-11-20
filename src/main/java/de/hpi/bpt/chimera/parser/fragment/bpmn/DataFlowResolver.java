@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
-import de.hpi.bpt.chimera.model.condition.MetaCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
@@ -18,7 +18,7 @@ public class DataFlowResolver {
 	/**
 	 * Map from Id of DataNodeObjectReference to DataNode.
 	 */
-	private Map<String, DataStateCondition> associationMap = new HashMap<>();
+	private Map<String, AtomicDataStateCondition> associationMap = new HashMap<>();
 
 	/**
 	 * Creates a Resolver for the SequenceFlows of a certain Fragment. Therefore
@@ -30,7 +30,7 @@ public class DataFlowResolver {
 	 */
 	public DataFlowResolver(FragmentXmlWrapper fragXmlWrap, CaseModelParserHelper parserHelper) {
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.DataNode dataNodeReference : fragXmlWrap.getDataNodes()) {
-			DataStateCondition condition = new DataStateCondition();
+			AtomicDataStateCondition condition = new AtomicDataStateCondition();
 			// TODO:
 			// condition.setJsonPath(dataNodeReference.getJsonPath());
 
@@ -38,48 +38,23 @@ public class DataFlowResolver {
 			ObjectLifecycleState olcState = parserHelper.getNameToObjectLifecycleState(dataClass, dataNodeReference.getStateName());
 
 			condition.setDataClass(dataClass);
-			condition.setState(olcState);
+			condition.setObjectLifecycleState(olcState);
 
 			associationMap.put(dataNodeReference.getDataNodeObjectReferenceId(), condition);
 		}
 	}
 
 	/**
-	 * Resolves the DataFlow for a ControlNode by the ids of DataNodes, parse
-	 * them into ConditionSets.
-	 * 
-	 * @param dataNodeReferences
-	 */
-	public MetaCondition resolveDataFlow(List<String> dataNodeReferences) {
-		List<DataStateCondition> resolvedConditions = resolveDataNodeReferences(dataNodeReferences);
-
-		List<DataStateCondition> definiteConditions = getDefiniteConditions(resolvedConditions);
-		resolvedConditions.removeAll(definiteConditions);
-
-		List<List<DataStateCondition>> remainingConditions = sortRemainingConditions(resolvedConditions);
-
-		List<List<DataStateCondition>> cartesianProductOfRemainingConditions = cartesianProduct(remainingConditions);
-
-		List<ConditionSet> conditionSets = new ArrayList<>();
-		for (List<DataStateCondition> conditions : cartesianProductOfRemainingConditions) {
-			conditions.addAll(definiteConditions);
-			conditionSets.add(new ConditionSet(conditions));
-		}
-
-		return new MetaCondition(conditionSets);
-	}
-
-	/**
-	 * Get all DataStateConditions by their ids.
+	 * Get all AtomicDataStateConditions by their ids.
 	 * 
 	 * @param dataNodeReferences
 	 * @return List of DataStateCondition
 	 */
-	private List<DataStateCondition> resolveDataNodeReferences(List<String> dataNodeReferences) {
-		List<DataStateCondition> conditions = new ArrayList<>();
+	public List<AtomicDataStateCondition> resolveDataNodeReferences(List<String> dataNodeReferences) {
+		List<AtomicDataStateCondition> conditions = new ArrayList<>();
 		for (String id : dataNodeReferences) {
 			if (associationMap.containsKey(id)) {
-				DataStateCondition condition = associationMap.get(id);
+				AtomicDataStateCondition condition = associationMap.get(id);
 				conditions.add(condition);
 			}
 		}
@@ -87,29 +62,54 @@ public class DataFlowResolver {
 	}
 
 	/**
-	 * Get those DataStateConditions which DataClass (TODO: identity) does not
-	 * occur twice. These are the DataStateConditions that occur in all
-	 * ConditionSets that will be parsed. If afterwards the resolvedConditions
-	 * are empty the ControlNode will only have one ConditionSet because all
-	 * conditions are definite.
+	 * Resolves the DataFlow for a ControlNode by the ids of DataNodes, parse
+	 * them into ConditionSets.
+	 * 
+	 * @param availableConditions
+	 */
+	public DataStateCondition parseDataStateCondition(List<AtomicDataStateCondition> availableConditions) {
+		// List<AtomicDataStateCondition> resolvedConditions = resolveDataNodeReferences(availableConditions);
+
+		List<AtomicDataStateCondition> definiteConditions = getDefiniteConditions(availableConditions);
+		availableConditions.removeAll(definiteConditions);
+
+		List<List<AtomicDataStateCondition>> remainingConditions = sortRemainingConditions(availableConditions);
+
+		List<List<AtomicDataStateCondition>> cartesianProductOfRemainingConditions = cartesianProduct(remainingConditions);
+
+		List<ConditionSet> conditionSets = new ArrayList<>();
+		for (List<AtomicDataStateCondition> conditions : cartesianProductOfRemainingConditions) {
+			conditions.addAll(definiteConditions);
+			conditionSets.add(new ConditionSet(conditions));
+		}
+
+		return new DataStateCondition(conditionSets);
+	}
+
+	/**
+	 * Get those AtomicDataStateConditions which DataClass (TODO: identity) does
+	 * not occur twice. These are the AtomicDataStateConditions that occur in
+	 * all ConditionSets that will be parsed. If afterwards the
+	 * resolvedConditions are empty the ControlNode will only have one
+	 * ConditionSet because all conditions are definite.
 	 * 
 	 * @param resolvedConditions
-	 * @return List of DataStateCondition
+	 * @return List of AtomicDataStateConditions
 	 */
-	private List<DataStateCondition> getDefiniteConditions(List<DataStateCondition> resolvedConditions) {
-		Map<DataClass, DataStateCondition> dataClassToDefineCondition = new HashMap<>();
+	private List<AtomicDataStateCondition> getDefiniteConditions(List<AtomicDataStateCondition> resolvedConditions) {
+		Map<DataClass, AtomicDataStateCondition> dataClassToDefineCondition = new HashMap<>();
 
-		for (DataStateCondition condition : resolvedConditions) {
+		for (AtomicDataStateCondition condition : resolvedConditions) {
 			DataClass dataClass = condition.getDataClass();
 			if (!dataClassToDefineCondition.containsKey(dataClass)) {
 				dataClassToDefineCondition.put(dataClass, null);
 			}
 		}
 
-		for (DataStateCondition condition : resolvedConditions) {
+		for (AtomicDataStateCondition condition : resolvedConditions) {
 			DataClass dataClass = condition.getDataClass();
 			if (dataClassToDefineCondition.containsKey(dataClass)) {
-				DataStateCondition conditionInMap = dataClassToDefineCondition.get(dataClass);
+				AtomicDataStateCondition conditionInMap = dataClassToDefineCondition.get(dataClass);
 				if (conditionInMap == null) {
 					dataClassToDefineCondition.put(dataClass, condition);
 				} else {
@@ -118,7 +118,7 @@ public class DataFlowResolver {
 			}
 		}
 
-		Collection<DataStateCondition> definiteConditions = dataClassToDefineCondition.values();
+		Collection<AtomicDataStateCondition> definiteConditions = dataClassToDefineCondition.values();
 		return new ArrayList<>(definiteConditions);
 	}
 
@@ -130,22 +130,22 @@ public class DataFlowResolver {
 	 * @param resolvedConditions
 	 * @return List of List of DataStateCondition
 	 */
-	private List<List<DataStateCondition>> sortRemainingConditions(List<DataStateCondition> resolvedConditions) {
-		Map<DataClass, List<DataStateCondition>> conditionMap = new HashMap<>();
-		for (DataStateCondition remainingCondition : resolvedConditions) {
+	private List<List<AtomicDataStateCondition>> sortRemainingConditions(List<AtomicDataStateCondition> resolvedConditions) {
+		Map<DataClass, List<AtomicDataStateCondition>> conditionMap = new HashMap<>();
+		for (AtomicDataStateCondition remainingCondition : resolvedConditions) {
 			DataClass dataClass = remainingCondition.getDataClass();
 			if (conditionMap.containsKey(dataClass)) {
-				List<DataStateCondition> similiarConditions = conditionMap.get(dataClass);
+				List<AtomicDataStateCondition> similiarConditions = conditionMap.get(dataClass);
 				// TODO: check conditionSet for same identity
 				similiarConditions.add(remainingCondition);
 			} else {
-				List<DataStateCondition> conditions = new ArrayList<>();
+				List<AtomicDataStateCondition> conditions = new ArrayList<>();
 				conditions.add(remainingCondition);
 				conditionMap.put(dataClass, conditions);
 			}
 		}
-		List<List<DataStateCondition>> values = new ArrayList<>();
-		for (List<DataStateCondition> list : conditionMap.values()) {
+		List<List<AtomicDataStateCondition>> values = new ArrayList<>();
+		for (List<AtomicDataStateCondition> list : conditionMap.values()) {
 			values.add(list);
 		}
 		return values;
@@ -157,17 +157,17 @@ public class DataFlowResolver {
 	 * @param lists
 	 * @return List of List of DataStateConditions
 	 */
-	private List<List<DataStateCondition>> cartesianProduct(List<List<DataStateCondition>> lists) {
-		List<List<DataStateCondition>> resultLists = new ArrayList<>();
+	private List<List<AtomicDataStateCondition>> cartesianProduct(List<List<AtomicDataStateCondition>> lists) {
+		List<List<AtomicDataStateCondition>> resultLists = new ArrayList<>();
 		if (lists.isEmpty()) {
-			resultLists.add(new ArrayList<DataStateCondition>());
+			resultLists.add(new ArrayList<AtomicDataStateCondition>());
 			return resultLists;
 		} else {
-			List<DataStateCondition> firstList = lists.get(0);
-			List<List<DataStateCondition>> remainingLists = cartesianProduct(lists.subList(1, lists.size()));
-			for (DataStateCondition condition : firstList) {
-				for (List<DataStateCondition> remainingList : remainingLists) {
-					ArrayList<DataStateCondition> resultList = new ArrayList<>();
+			List<AtomicDataStateCondition> firstList = lists.get(0);
+			List<List<AtomicDataStateCondition>> remainingLists = cartesianProduct(lists.subList(1, lists.size()));
+			for (AtomicDataStateCondition condition : firstList) {
+				for (List<AtomicDataStateCondition> remainingList : remainingLists) {
+					ArrayList<AtomicDataStateCondition> resultList = new ArrayList<>();
 					resultList.add(condition);
 					resultList.addAll(remainingList);
 					resultLists.add(resultList);
@@ -182,8 +182,8 @@ public class DataFlowResolver {
 	 * 
 	 * @return List of DataNodes
 	 */
-	public List<DataStateCondition> getResolvedDataNodes() {
-		Collection<DataStateCondition> dataNodes = associationMap.values();
+	public List<AtomicDataStateCondition> getResolvedDataNodes() {
+		Collection<AtomicDataStateCondition> dataNodes = associationMap.values();
 		return new ArrayList<>(dataNodes);
 	}
 }

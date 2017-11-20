@@ -1,102 +1,129 @@
 package de.hpi.bpt.chimera.model.condition;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
+import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
+// TODO: think of a better name
+/**
+ * List of {@link ConditionSet}s that simulates disjunctive behavior between
+ * those ConditionSets. This means that the DataStateCondition is fulfilled if
+ * there isn't any ConditionSet or one of the ConditionSets fulfills the
+ * AtomicDataStateCondititions that exist at the moment in the running
+ * {@link Case}.
+ */
 @Entity
-public class DataStateCondition implements ConditionStatable {
+public class DataStateCondition {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
-	@OneToOne(cascade = CascadeType.ALL)
-	private DataClass dataClass;
-	@OneToOne(cascade = CascadeType.ALL)
-	private ObjectLifecycleState state;
-
-	// TODO: add Feature: JsonPath
+	@OneToMany(cascade = CascadeType.ALL)
+	List<ConditionSet> conditionSets;
 
 	public DataStateCondition() {
-		this.dataClass = null;
-		this.state = null;
+		this.conditionSets = new ArrayList<>();
 	}
 
-	public DataStateCondition(DataClass dataClass, ObjectLifecycleState state) {
-		this.dataClass = dataClass;
-		this.state = state;
+	public DataStateCondition(List<ConditionSet> conditionSets) {
+		this.conditionSets = conditionSets;
 	}
 
-	/**
-	 * Copies the condition by referring to the same DataClass and
-	 * ObjectLifecycleState.
-	 * 
-	 * @param condition
-	 */
-	public DataStateCondition(DataStateCondition condition) {
-		this.dataClass = condition.getDataClass();
-		this.state = condition.getState();
+	public List<ConditionSet> getConditionSets() {
+		return conditionSets;
 	}
 
-	@Override
-	public DataStateCondition getCondition() {
-		return this;
+	public void setConditionSets(List<ConditionSet> conditions) {
+		this.conditionSets = conditions;
 	}
 
-	public DataClass getDataClass() {
-		return dataClass;
-	}
-
-	public void setDataClass(DataClass dataClass) {
-		this.dataClass = dataClass;
-	}
-
-	public ObjectLifecycleState getState() {
-		return state;
-	}
-
-	public void setState(ObjectLifecycleState state) {
-		this.state = state;
-	}
-
-	public String getDataClassName() {
-		return dataClass.getName();
-	}
-
-	public String getStateName() {
-		return state.getName();
+	public void addConditionComponent(ConditionSet condition) {
+		this.conditionSets.add(condition);
 	}
 
 	/**
-	 * Compares the DataStateConditions by (the names of) Dataclass and
-	 * ObjectLifecycleState.
+	 * Check whether the MetaCondition fulfills the DataStateCoditions.
+	 * Therefore one ConditionSet has to be fulfilled (Or-Behavior).
 	 * 
-	 * @param condition
+	 * @param existingConditions
 	 * @return boolean
 	 */
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof ConditionStatable) {
-			DataStateCondition condition = ((ConditionStatable) o).getCondition();
-
-			// return
-			// this.getDataClassName().equals(condition.getDataClassName()) &&
-			// this.getStateName().equals(condition.getStateName());
-			return this.dataClass.equals(condition.getDataClass()) && this.state.equals(condition.getState());
+	public boolean isFulfilled(List<AtomicDataStateCondition> existingConditions) {
+		if (conditionSets.isEmpty())
+			return true;
+		for (ConditionSet component : conditionSets) {
+			if (component.isFulfilled(existingConditions)) {
+				return true;
+			}
 		}
 		return false;
 	}
 
-	// TODO: think about hashing
-
-	@Override
-	public int hashCode() {
-		return (int) (((long) this.dataClass.hashCode() + (long) this.state.hashCode()) / 2);
+	/**
+	 * Get all {@link ConditionSet} of the MetaCondition that fulfill the
+	 * existing DataStateConditions.
+	 * 
+	 * @param existingConditions
+	 *            - list of DataStateCondition that exist at the moment
+	 * @return list - of ConditionSets that fulfill the existing
+	 *         DataStateConditions
+	 */
+	public List<ConditionSet> getFulfilledConditions(List<AtomicDataStateCondition> existingConditions) {
+		List<ConditionSet> availableCondititionSets = new ArrayList<>();
+		for (ConditionSet conditionSet : conditionSets) {
+			if (conditionSet.isFulfilled(existingConditions)) {
+				availableCondititionSets.add(conditionSet);
+			}
+		}
+		return availableCondititionSets;
 	}
 
+	/**
+	 * Get all DataStateConditions that occur in the ConditionSets.
+	 * 
+	 * @return all DataStateConditions that occur in the ConditionSets
+	 */
+	public Set<AtomicDataStateCondition> getAtomicDataStateConditions() {
+		Set<AtomicDataStateCondition> atomicDataStateConditions = new HashSet<>();
+		for (ConditionSet conditionSet : conditionSets) {
+			atomicDataStateConditions.addAll(conditionSet.getConditions());
+		}
+		return atomicDataStateConditions;
+	}
+
+	/**
+	 * Get all DataStateConditions that occur in the ConditionSets associated to
+	 * their {@link DataClass}.
+	 * 
+	 * @return DataStateConditions that occur in the ConditionSets associated to
+	 *         their DataClass.
+	 */
+	public Map<DataClass, Set<AtomicDataStateCondition>> getDataClassToAtomicDataStateConditions() {
+		Map<DataClass, Set<AtomicDataStateCondition>> dataClassToAtomicDataStateConditions = new HashMap<>();
+
+		for (AtomicDataStateCondition condition : getAtomicDataStateConditions()) {
+			DataClass dataClass = condition.getDataClass();
+			if (dataClassToAtomicDataStateConditions.containsKey(dataClass)) {
+				dataClassToAtomicDataStateConditions.get(dataClass).add(condition);
+			} else {
+				dataClassToAtomicDataStateConditions.put(dataClass, new HashSet<>(Arrays.asList(condition)));
+			}
+		}
+
+		return dataClassToAtomicDataStateConditions;
+	}
 }

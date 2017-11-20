@@ -67,4 +67,17 @@ public class DataModel {
 		}
 		return dataClasses;
 	}
+
+	/**
+	 * Make a Map from name of DataClasses to the referring DataClass.
+	 * 
+	 * @return HashMap
+	 */
+	public Map<String, DataClass> getNameToDataClass() {
+		Map<String, DataClass> nameToDataClass = new HashMap<>();
+		for (DataClass dataClass : getDataClasses()) {
+			nameToDataClass.put(dataClass.getName(), dataClass);
+		}
+		return nameToDataClass;
+	}
 }

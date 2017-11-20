@@ -1,23 +1,35 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.DataManager;
 import de.hpi.bpt.chimera.execution.DataManagerBean;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
+import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataAttributeJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.beans.activity.ActivityJaxBean;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -163,12 +175,6 @@ public class ActivityRestService extends AbstractRestService {
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
-	/*
-	 * private boolean isLegalState(String state) { List<String> allowedStates =
-	 * Arrays.asList(READY, READY_DATA, READY_CF, TERMINATED, RUNNING); return
-	 * allowedStates.contains(state); }
-	 */
-
 	/**
 	 * This method is used to get all the information for an activity.
 	 * This means the label, id and a link for the input-/outputSets.
@@ -225,6 +231,15 @@ public class ActivityRestService extends AbstractRestService {
 		return Response.status(201).build();
 	}
 
+	/**
+	 * Parse the json post in a map of DataObject-Id to the a map of
+	 * DataAttributeInstance-Id to new DataAttribute-value.
+	 * 
+	 * @param post
+	 *            - JSON
+	 * @return map from DataObjectId to DataAttributeInstanceId to new
+	 *         DataAttributeInstance value
+	 */
 	private Map<String, Map<String, Object>> parseDataAttribueValues(String post) {
 		Map<String, Map<String, Object>> dataAttributeValues = new HashMap<>();
 		JSONObject dataObjectJson = new JSONObject(post);
@@ -251,7 +266,6 @@ public class ActivityRestService extends AbstractRestService {
 	 */
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/workingItems")
-	//TODO for some reason this appears to be the only endpoint with capital letters
 	public Response getWorkingItems(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
@@ -263,7 +277,7 @@ public class ActivityRestService extends AbstractRestService {
 			return activityInstanceNotFoundResponse(activityInstanceId);
 		}
 
-		List<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances();
+		List<DataObject> selectedInstances = activityInstance.getSelectedDataObjects();
 
 		JSONArray result = new JSONArray();
 		for (DataObject instance : selectedInstances) {
@@ -286,29 +300,47 @@ public class ActivityRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/begin")
-	public Response beginActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String postBody) {
+	public Response beginActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
 			return caseNotFoundResponse(cmId, caseId);
 		}
 
-		List<String> selectedDataObjectInstanceIds = new ArrayList<>();
-		JSONObject postJson = new JSONObject(postBody);
+		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+		if (activityInstance == null) {
+			return activityInstanceNotFoundResponse(activityInstanceId);
+		}
+
+		List<String> selectedDataObjectIds = parseDataObjectIds(post);
+		List<DataObject> selectedDataObjects = caseExecutioner.getDataManager().getDataObjectsById(selectedDataObjectIds);
+
+		try {
+			caseExecutioner.beginActivityInstance(activityInstance, selectedDataObjects);
+			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
+	}
+
+	/**
+	 * Parse a List of DataObjectIds of the json post with the keyword
+	 * {@code dataobjects}.
+	 * 
+	 * @param post
+	 *            - JSONString
+	 * @return List of Stings
+	 */
+	private List<String> parseDataObjectIds(String post) {
+		List<String> dataObjectIds = new ArrayList<>();
+		JSONObject postJson = new JSONObject(post);
 		if (postJson.has("dataobjects")) {
 			JSONArray dataObjectsJson = postJson.getJSONArray("dataobjects");
 			for (int i = 0; i < dataObjectsJson.length(); i++) {
-				selectedDataObjectInstanceIds.add(dataObjectsJson.getString(i));
+				String dataObjectId = dataObjectsJson.getString(i);
+				dataObjectIds.add(dataObjectId);
 			}
 		}
-		// TODO: begin of activity could fail in which case another Response needs to be sent
-		// ExecutionService.beginActivityInstance(scenarioInstanceId,
-		// activityInstanceId, selectedDataObjectIds);
-		try {
-			caseExecutioner.beginActivityInstance(activityInstanceId, selectedDataObjectInstanceIds);
-			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
-		} catch (SecurityException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
-		}
+		return dataObjectIds;
 	}
 
 	/**
@@ -328,20 +360,76 @@ public class ActivityRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
-	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String postBody) {
+	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
 			return caseNotFoundResponse(cmId, caseId);
 		}
 
-		if (caseExecutioner.getActivityInstance(activityInstanceId) == null) {
+		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+		if (activityInstance == null) {
 			return activityInstanceNotFoundResponse(activityInstanceId);
 		}
-		JSONObject postJson = new JSONObject(postBody);
-		DataManagerBean dataManagerBean = new DataManagerBean(postJson);
 
-		caseExecutioner.terminateActivityInstance(activityInstanceId, dataManagerBean);
+		try {
+			Map<String, String> dataClassToStateTransitionStrings = parseDataClassToStateTransitionStrings(post);
+			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(dataClassToStateTransitionStrings);
+			List<DataObject> usedDataObjects = caseExecutioner.terminateActivityInstance(activityInstance, dataClassToStateTransitions);
 
-		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
+			JSONArray result = parseJsonForUsedDataObjects(usedDataObjects);
+			
+			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
+	}
+	
+	/**
+	 * Parse the json body in map from dataclass of the DataObject to the new
+	 * ObjectLifecycleState.
+	 * 
+	 * @param post
+	 * @return map from DataClassName to ObjectLifecycleName
+	 */
+	Map<String, String> parseDataClassToStateTransitionStrings(String post) {
+		Map<String, String> dataClassToStateTransitionStrings = new HashMap<>();
+		
+		JSONObject transitions = new JSONObject(post);
+		
+		for (Object rawDataClass : transitions.keySet()) {
+			String dataClassName = (String) rawDataClass;
+			String olcStateName = (String) transitions.get(dataClassName);
+			dataClassToStateTransitionStrings.put(dataClassName, olcStateName);
+		}
+
+		return dataClassToStateTransitionStrings;
+	}
+
+	/**
+	 * Parse a json object for the used DataObjects during terminating an
+	 * {@link AbstractActivityInstance}. Therefore get the ids and DataClasses
+	 * by the DataObjects and the name and ids of their DataAttributeInstances
+	 * to exchange the name in the running frontend.
+	 * 
+	 * @param usedDataObjects
+	 * @return JSONArray
+	 */
+	JSONArray parseJsonForUsedDataObjects(List<DataObject> usedDataObjects) {
+		JSONArray result = new JSONArray();
+		for (DataObject dataObject : usedDataObjects) {
+			JSONObject dataObjectInfo = new JSONObject();
+			dataObjectInfo.put("id", dataObject.getId());
+			dataObjectInfo.put("dataclass", dataObject.getDataClass().getName());
+			JSONArray attributeInstanceInfo = new JSONArray();
+			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
+				JSONObject attributeInstance = new JSONObject();
+				attributeInstance.put("name", dataAttributeInstance.getDataAttribute().getName());
+				attributeInstance.put("id", dataAttributeInstance.getId());
+				attributeInstanceInfo.put(attributeInstance);
+			}
+			dataObjectInfo.put("attributeInstances", attributeInstanceInfo);
+			result.put(dataObjectInfo);
+		}
+		return result;
 	}
 }

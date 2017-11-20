@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
@@ -36,7 +36,7 @@ public class DataNodeJaxBean {
 	 */
 	private DataAttributeJaxBean[] attributeConfiguration;
 
-	public DataNodeJaxBean(DataStateCondition condition) {
+	public DataNodeJaxBean(AtomicDataStateCondition condition) {
 		// setId(condition.getId());
 		setLabel(condition.getDataClassName());
 		setDataclass(condition.getDataClassName());

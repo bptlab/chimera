@@ -1,11 +1,16 @@
 package de.hpi.bpt.chimera.execution.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 
 public abstract class AbstractActivityInstance extends ControlNodeInstance {
@@ -82,18 +87,23 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		// TODO: think about whether selected DataObjectInstances should be set
 		// here or by CaseExecutioner
 		// saved here. By CaseExecutioner should be better.
-		getFragmentInstance().updateDataFlow();
+		// getFragmentInstance().updateDataFlow();
 		// TODO: implement skipBehaviour
 		// TODO: implement creation of possible attached BoundaryEvent
 		setState(State.RUNNING);
 		if (this.isAutomaticTask && getControlNode().getPostCondition().getConditionSets().size() <= 1) {
-			terminate();
+			Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = new HashMap<>();
+			if (getControlNode().getPostCondition().getConditionSets().isEmpty()) {
+				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
+			}
+			
+			getCaseExecutioner().terminateActivityInstance(this, dataObjectToObjectLifecycleTransition);
 		}
 	}
 
 	/**
 	 * Terminate the Activity. The transition of the States of the DataClasses
-	 * is handled by the ExecutionService.
+	 * is handled by the CaseExecutioner.
 	 */
 	@Override
 	public void terminate() {
@@ -124,7 +134,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		return (Activity) super.getControlNode();
 	}
 
-	public List<DataObject> getSelectedDataObjectInstances() {
+	public List<DataObject> getSelectedDataObjects() {
 		return selectedDataObjects;
 	}
 

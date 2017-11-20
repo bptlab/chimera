@@ -11,20 +11,20 @@ import javax.persistence.OneToOne;
 
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.ExtendedDataStateCondition;
-import de.hpi.bpt.chimera.model.condition.MetaCondition;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 
 @Entity
 public abstract class AbstractDataControlNode extends AbstractControlNode {
 	private String name = "";
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private MetaCondition preCondition;
+	private DataStateCondition preCondition;
 	@OneToOne(cascade = CascadeType.ALL)
-	private MetaCondition postCondition;
+	private DataStateCondition postCondition;
 
 	public AbstractDataControlNode() {
-		this.preCondition = new MetaCondition();
-		this.postCondition = new MetaCondition();
+		this.preCondition = new DataStateCondition();
+		this.postCondition = new DataStateCondition();
 	}
 
 	// GETTER & SETTER
@@ -36,19 +36,19 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
 		this.name = name;
 	}
 
-	public MetaCondition getPreCondition() {
+	public DataStateCondition getPreCondition() {
 		return preCondition;
 	}
 
-	public void setPreCondition(MetaCondition preCondition) {
+	public void setPreCondition(DataStateCondition preCondition) {
 		this.preCondition = preCondition;
 	}
 
-	public MetaCondition getPostCondition() {
+	public DataStateCondition getPostCondition() {
 		return postCondition;
 	}
 
-	public void setPostCondition(MetaCondition postCondition) {
+	public void setPostCondition(DataStateCondition postCondition) {
 		this.postCondition = postCondition;
 	}
 }

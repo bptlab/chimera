@@ -18,19 +18,6 @@ public class DataAttributeInstance {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.setDataAttribute(attribute);
 		this.setDataObject(dataObject);
-		getCaseExecutioner().logDataAttributeTransition(this, null);
-	}
-
-	@Deprecated
-	public DataAttributeInstance(DataAttribute attribute, CaseExecutioner caseExecutioner, Object value) {
-		this.id = UUID.randomUUID().toString().replace("-", "");
-		this.setDataAttribute(attribute);
-		this.setDataObject(dataObject);
-		try {
-			setValue(value);
-		} catch (IllegalArgumentException e) {
-			throw e;
-		}
 	}
 
 	public String getId() {
@@ -53,6 +40,12 @@ public class DataAttributeInstance {
 		return value;
 	}
 
+	/**
+	 * Set the value of the DataAttributeInstance but throws an exception if the
+	 * value hasn't the right type.
+	 * 
+	 * @param value
+	 */
 	public void setValue(Object value) {
 		// TODO: implement an independent version for the type of an value of an
 		// data attribute
