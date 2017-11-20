@@ -97,15 +97,15 @@ public class ScenarioRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenario(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
-		CaseModel cm = CaseModelManager.getCaseModel(cmId);
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-		if (cm == null) {
-			return casemodelNotFoundResponse(cmId);
+			JSONObject result = new JSONObject(new CaseModelDetailsJaxBean(cm));
+
+			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
-		JSONObject result = new JSONObject(new CaseModelDetailsJaxBean(cm));
-
-		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
 	/**
@@ -149,15 +149,15 @@ public class ScenarioRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/terminationcondition")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getTerminationCondition(@PathParam("scenarioId") String cmId) {
-		CaseModel cm = CaseModelManager.getCaseModel(cmId);
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-		if (cm == null) {
-			return casemodelNotFoundResponse(cmId);
+			JSONObject result = new JSONObject(new ConditionsJaxBean(cm.getTerminationCondition()));
+
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
-		JSONObject result = new JSONObject(new ConditionsJaxBean(cm.getTerminationCondition()));
-
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
 	/**
@@ -170,13 +170,13 @@ public class ScenarioRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/xml")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFragmentXmlStrings(@PathParam("scenarioId") String cmId) {
-		CaseModel cm = CaseModelManager.getCaseModel(cmId);
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-		if (cm == null) {
-			return casemodelNotFoundResponse(cmId);
+			JSONArray result = new JSONArray(cm.getContentXmlStrings());
+			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
-		JSONArray result = new JSONArray(cm.getContentXmlStrings());
-		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 }

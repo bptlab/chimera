@@ -49,21 +49,21 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenarioInstances(@Context UriInfo uri, @PathParam("scenarioId") String cmId, @DefaultValue("") @QueryParam("filter") String filterString) {
-		if (!CaseModelManager.isExistingCaseModel(cmId)) {
-			return casemodelNotFoundResponse(cmId);
+		try {
+			List<CaseExecutioner> caseExecutions = de.hpi.bpt.chimera.execution.ExecutionService.getAllCasesOfCaseModel(cmId);
+
+			if (!filterString.isEmpty())
+				caseExecutions = caseExecutions.stream().filter(instance -> instance.getCase().getName().contains(filterString)).collect(Collectors.toList());
+
+			JSONArray result = new JSONArray();
+			for (CaseExecutioner caseExecutioner : caseExecutions) {
+				result.put(new JSONObject(new CaseOverviewJaxBean(caseExecutioner)));
+			}
+
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
-		List<CaseExecutioner> caseExecutions = de.hpi.bpt.chimera.execution.ExecutionService.getAllCasesOfCaseModel(cmId);
-
-		if (!filterString.isEmpty())
-			caseExecutions = caseExecutions.stream().filter(instance -> instance.getCase().getName().contains(filterString)).collect(Collectors.toList());
-
-		JSONArray result = new JSONArray();
-		for (CaseExecutioner caseExecutioner : caseExecutions) {
-			result.put(new JSONObject(new CaseOverviewJaxBean(caseExecutioner)));
-		}
-
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
 	/**
@@ -86,7 +86,11 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startNewInstance(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
-		return initializeNewInstance(uri, cmId);
+		try {
+			return initializeNewInstance(uri, cmId);
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
 	}
 
 	/**
@@ -112,13 +116,18 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startNewNamedInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @DefaultValue("") final String name) {
-		JSONObject nameJson = new JSONObject(name);
+		try {
+			JSONObject nameJson = new JSONObject(name);
 
-		if (nameJson.has("name")) {
-			return initializeNewInstance(uriInfo, cmId, nameJson.getString("name"));
-		} else {
-			return initializeNewInstance(uriInfo, cmId);
+			if (nameJson.has("name")) {
+				return initializeNewInstance(uriInfo, cmId, nameJson.getString("name"));
+			} else {
+				return initializeNewInstance(uriInfo, cmId);
+			}
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
+
 	}
 
 	/**
@@ -129,7 +138,11 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	 * @return Response
 	 */
 	private Response initializeNewInstance(UriInfo uriInfo, String cmId) {
-		return initializeNewInstance(uriInfo, cmId, "");
+		try {
+			return initializeNewInstance(uriInfo, cmId, "");
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
 	}
 
 	/**
@@ -141,14 +154,14 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	 * @return Response
 	 */
 	private Response initializeNewInstance(UriInfo uriInfo, String cmId, String name) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.startCase(cmId, name);
+		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.startCase(cmId, name);
 
-		if (caseExecutioner == null) {
-			return Response.status(Response.Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity("Case instantiation failed").build();
+			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
+			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
-		JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
-		return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
 	/**
@@ -174,13 +187,14 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenarioInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
+		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 
-		JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
 	}
 
 	/**
@@ -215,18 +229,19 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/canTerminate")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response checkTermination(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
+		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+
+			TerminationCondition terminationCondition = caseExecutioner.getCaseModel().getTerminationCondition();
+			DataManager dataManager = caseExecutioner.getDataManager();
+			boolean canTerminate = terminationCondition.isFulfilled(dataManager.getDataStateConditions());
+
+			JSONObject result = new JSONObject();
+			result.put("canTerminate", canTerminate);
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
-		TerminationCondition terminationCondition = caseExecutioner.getCaseModel().getTerminationCondition();
-		DataManager dataManager = caseExecutioner.getDataManager();
-		boolean canTerminate = terminationCondition.isFulfilled(dataManager.getDataStateConditions());
-
-		JSONObject result = new JSONObject();
-		result.put("canTerminate", canTerminate);
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.execution;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,12 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
+import de.hpi.bpt.chimera.execution.exception.IllegalDataClassNameException;
+import de.hpi.bpt.chimera.execution.exception.IllegalDataObjectIdException;
+import de.hpi.bpt.chimera.execution.exception.IllegalDataObjectLockException;
+import de.hpi.bpt.chimera.execution.exception.IllegalDataObjectUnlockException;
+import de.hpi.bpt.chimera.execution.exception.IllegalObjectLifecycleStateNameException;
+import de.hpi.bpt.chimera.execution.exception.IllegalObjectLifecycleStateSuccessorException;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
@@ -45,13 +52,17 @@ public class DataManager {
 		for (Entry<String, String> dataClassNameToStateName : dataClassToStateTransitionStrings.entrySet()) {
 			String dataClassName = dataClassNameToStateName.getKey();
 			if (!dataClassNameToDataClass.containsKey(dataClassName)) {
-				// TODO: throw Exception
+				IllegalDataClassNameException e = new IllegalDataClassNameException(dataClassName);
+				log.error(e.getMessage());
+				throw e;
 			}
 			DataClass dataClass = dataClassNameToDataClass.get(dataClassName);
 			String objectLifecycleStateName = dataClassNameToStateName.getValue();
 			Map<String, ObjectLifecycleState> olcStateNameToOlcState = dataClass.getNameToObjectLifecycleState();
 			if (!olcStateNameToOlcState.containsKey(objectLifecycleStateName)) {
-				// TODO: throw exception
+				IllegalObjectLifecycleStateNameException e = new IllegalObjectLifecycleStateNameException(dataClass, dataClassName);
+				log.error(e.getMessage());
+				throw e;
 			}
 			ObjectLifecycleState olcState = olcStateNameToOlcState.get(objectLifecycleStateName);
 			dataClassToStateTransition.put(dataClass, olcState);
@@ -81,12 +92,16 @@ public class DataManager {
 		for (DataObject dataObject : dataObjectsToTransition) {
 			DataClass dataClass = dataObject.getDataClass();
 			if (!dataClassToStateTransitions.containsKey(dataClass)) {
-				// TODO: throw Exception
+				IllegalDataClassNameException e = new IllegalDataClassNameException(dataClass.getName());
+				log.error(e.getMessage());
+				throw e;
 			}
 			ObjectLifecycleState oldOlcState = dataObject.getObjectLifecycleState();
 			ObjectLifecycleState newOlcState = dataClassToStateTransitions.get(dataClass);
 			if (!newOlcState.isSuccessorOf(oldOlcState)) {
-				// TODO: throw Exception
+				IllegalObjectLifecycleStateSuccessorException e = new IllegalObjectLifecycleStateSuccessorException(dataClass, oldOlcState, newOlcState);
+				log.error(e.getMessage());
+				throw e;
 			}
 		}
 
@@ -129,9 +144,9 @@ public class DataManager {
 		for (DataObject dataObjectToLock : dataObjects) {
 			if (dataObjectToLock.isLocked()) {
 				unlockDataObjects(lockedDataObjects);
-				String message = String.format("Try to lock the DataObject with id: %s, that is already locked.", dataObjectToLock.getId());
-				log.error(message);
-				throw new SecurityException(message);
+				IllegalDataObjectLockException e = new IllegalDataObjectLockException(dataObjectToLock);
+				log.error(e.getMessage());
+				throw e;
 			}
 			dataObjectToLock.lock();
 			lockedDataObjects.add(dataObjectToLock);
@@ -152,9 +167,9 @@ public class DataManager {
 		for (DataObject dataObjectToUnlock : dataObjects) {
 			if (!dataObjectToUnlock.isLocked()) {
 				lockDataObjects(unlockedDataObjects);
-				String message = String.format("Try to unlock the DataObject with id: %s, that is already unlocked.", dataObjectToUnlock.getId());
-				log.error(message);
-				throw new SecurityException(message);
+				IllegalDataObjectUnlockException e = new IllegalDataObjectUnlockException(dataObjectToUnlock);
+				log.error(e.getMessage());
+				throw e;
 			}
 			dataObjectToUnlock.unlock();
 			unlockedDataObjects.add(dataObjectToUnlock);
@@ -242,12 +257,13 @@ public class DataManager {
 	 * @param dataObjectId
 	 * @return DataObject
 	 */
-	// TODO: make this try catch
 	public DataObject getDataObjectById(String dataObjectId) {
 		if (dataObjectIdToDataObject.containsKey(dataObjectId)) {
 			return dataObjectIdToDataObject.get(dataObjectId);
 		}
-		return null;
+		IllegalDataObjectIdException e = new IllegalDataObjectIdException(dataObjectId);
+		log.error(e.getMessage());
+		throw e;
 	}
 
 	/**
@@ -259,11 +275,12 @@ public class DataManager {
 	public List<DataObject> getDataObjectsById(List<String> dataObjectIds) {
 		List<DataObject> dataObjects = new ArrayList<>();
 		for (String dataObjectId : dataObjectIds) {
-			DataObject dataObject = getDataObjectById(dataObjectId);
-			if (dataObject == null) {
-
+			try {
+				DataObject dataObject = getDataObjectById(dataObjectId);
+				dataObjects.add(dataObject);
+			} catch (IllegalArgumentException e) {
+				throw e;
 			}
-			dataObjects.add(dataObject);
 		}
 		return dataObjects;
 	}
@@ -285,7 +302,12 @@ public class DataManager {
 		this.caseExecutioner = caseExecutioner;
 	}
 
-	public Map<String, DataObject> getDataObjectMap() {
+	public List<DataObject> getDataObjects() {
+		Collection<DataObject> dataObjects = dataObjectIdToDataObject.values();
+		return new ArrayList<>(dataObjects);
+	}
+
+	public Map<String, DataObject> getDataObjectIdToDataObject() {
 		return dataObjectIdToDataObject;
 	}
 }

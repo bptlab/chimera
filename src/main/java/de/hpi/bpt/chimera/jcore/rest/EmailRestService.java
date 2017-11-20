@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.database.DbEmailConfiguration;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.EmailConfigJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.miscellaneous.EmailConfigJaxBean;
 import de.hpi.bpt.chimera.util.JsonUtil;
 
 import javax.ws.rs.*;

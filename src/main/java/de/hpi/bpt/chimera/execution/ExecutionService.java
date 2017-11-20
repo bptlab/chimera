@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import de.hpi.bpt.chimera.execution.exception.IllegalCaseIdException;
+import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
@@ -30,23 +33,21 @@ public class ExecutionService {
 	 * 
 	 * @param cmId
 	 * @param caseId
-	 * @return true if the Case exists
-	 */
-	private static boolean isExistingCase(String cmId, String caseId) {
-		return CaseModelManager.isExistingCaseModel(cmId) && caseExecutions.containsKey(cmId) && cases.containsKey(caseId);
-	}
-
-	/**
-	 * 
-	 * @param cmId
-	 * @param caseId
 	 * @return CaseExecutioner
 	 */
 	public static CaseExecutioner getCaseExecutioner(String cmId, String caseId) {
-		if (isExistingCase(cmId, caseId)) {
-			return cases.get(caseId);
+		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
+			IllegalCaseModelIdException e = new IllegalCaseModelIdException(cmId);
+			log.error(e.getMessage());
+			throw e;
 		}
-		return null;
+		if (!cases.containsKey(caseId)) {
+			IllegalCaseIdException e = new IllegalCaseIdException(cmId);
+			log.error(e.getMessage());
+			throw e;
+		}
+
+		return cases.get(caseId);
 	}
 
 	/**
@@ -58,23 +59,24 @@ public class ExecutionService {
 	 * @return created CaseExecutioner
 	 */
 	public static CaseExecutioner startCase(String cmId, String name) {
-		if (!CaseModelManager.isExistingCaseModel(cmId)) {
-			return null;
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
+
+			// If name of Case isn't specified, use name of CaseModel
+			String caseName = cm.getName();
+			if (name == null || !name.isEmpty())
+				caseName = name;
+
+			CaseExecutioner caseExecutioner = new CaseExecutioner(cm, caseName);
+			addCase(caseExecutioner);
+
+			caseExecutioner.startCase();
+
+			log.info(String.format("Successfully started Case with Case-Id: %s", caseExecutioner.getCase().getId()));
+			return caseExecutioner;
+		} catch (IllegalArgumentException e) {
+			throw e;
 		}
-		CaseModel cm = CaseModelManager.getCaseModel(cmId);
-
-		// If name of Case isn't specified, use name of CaseModel
-		String caseName = cm.getName();
-		if (name == null || !name.isEmpty())
-			caseName = name;
-
-		CaseExecutioner caseExecutioner = new CaseExecutioner(cm, caseName);
-		addCase(caseExecutioner);
-
-		caseExecutioner.startCase();
-
-		log.info(String.format("Successfully started Case with Case-Id: %s", caseExecutioner.getCase().getId()));
-		return caseExecutioner;
 	}
 
 	private static void addCase(CaseExecutioner caseExecutioner) {
@@ -100,7 +102,9 @@ public class ExecutionService {
 	 */
 	public static List<CaseExecutioner> getAllCasesOfCaseModel(String cmId) {
 		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
-			return new ArrayList<>();
+			IllegalCaseModelIdException e = new IllegalCaseModelIdException(cmId);
+			log.error(e.getMessage());
+			throw e;
 		}
 		log.info(String.format("Successfully requested all Case-Informations of CaseModel-Id: %s", cmId));
 		return caseExecutions.get(cmId);
@@ -113,16 +117,14 @@ public class ExecutionService {
 	 */
 	public static void deleteCaseModel(String cmId) {
 		if (caseExecutions.containsKey(cmId)) {
-			// TODO: adapt for persistence manager
 			List<CaseExecutioner> executions = caseExecutions.get(cmId);
 			for (CaseExecutioner caseExecutioner : executions) {
+				// TODO: add deletion of case?
 				cases.remove(caseExecutioner.getCase().getId(), caseExecutioner);
 			}
 			caseExecutions.remove(cmId);
 		} else {
-			log.info("Delete CaseModel without cases");
-			// throw new IllegalArgumentException(String.format("CaseModel %s id
-			// does not exist in Case executions", cmId));
+			log.info(String.format("CaseModel with id: %s is not assigned or hadn't any cases", cmId));
 		}
 	}
 }

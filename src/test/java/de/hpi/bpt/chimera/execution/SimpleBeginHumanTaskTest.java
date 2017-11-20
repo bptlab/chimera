@@ -78,8 +78,8 @@ public class SimpleBeginHumanTaskTest {
 		// TODO: this shouldn't be necessary
 		dataObject.unlock();
 
-		caseExecutioner.getDataManager().getDataObjectMap().put(dataObject.getId(), dataObject);
-		assertEquals(1, caseExecutioner.getDataManager().getDataObjectMap().size());
+		caseExecutioner.getDataManager().getDataObjectIdToDataObject().put(dataObject.getId(), dataObject);
+		assertEquals(1, caseExecutioner.getDataManager().getDataObjectIdToDataObject().size());
 		fragmentInstance.updateDataFlow();
 		assertEquals("State of ActivityInstance is not READY", State.READY, task2.getState());
 

@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.jcore.rest.TransportationBeans;
+package de.hpi.bpt.chimera.jcore.rest.beans.miscellaneous;
 
 import de.hpi.bpt.chimera.jconfiguration.rest.RestConfigurator;
 

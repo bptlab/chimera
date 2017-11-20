@@ -4,7 +4,7 @@ import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataManager;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.ExecutionService;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.datamodel.DataObjectJaxBean;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -41,40 +42,40 @@ public class DataObjectRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/dataobject")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDataObjects(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @DefaultValue("") @QueryParam("filter") String filterString) {
-		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
+		try {
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 
-		DataManager dataManager = caseExecutioner.getDataManager();
-		Collection<DataObject> dataObjects = dataManager.getDataObjectMap().values();
+			DataManager dataManager = caseExecutioner.getDataManager();
+			List<DataObject> dataObjects = dataManager.getDataObjects();
 
-		if (!filterString.isEmpty()) {
-			dataObjects = dataObjects.stream().filter(instance -> instance.getId().contains(filterString)).collect(Collectors.toList());
-		}
+			if (!filterString.isEmpty()) {
+				dataObjects = dataObjects.stream().filter(instance -> instance.getId().contains(filterString)).collect(Collectors.toList());
+			}
 
-		JSONArray result = new JSONArray();
-		for (DataObject dataObject : dataObjects) {
-			result.put(new JSONObject(new DataObjectJaxBean(dataObject)));
+			JSONArray result = new JSONArray();
+			for (DataObject dataObject : dataObjects) {
+				result.put(new JSONObject(new DataObjectJaxBean(dataObject)));
+			}
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/dataobject/{objectId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDataObject(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("objectId") String dataObjectId) {
-		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
-		DataManager dataManager = caseExecutioner.getDataManager();
-		DataObject dataObject = dataManager.getDataObjectById(dataObjectId);
-		if (dataObject == null) {
-			return dataObjectNotFoundResponse(dataObjectId);
-		}
+		try {
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 
-		JSONObject result = new JSONObject(new DataObjectJaxBean(dataObject));
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+			DataManager dataManager = caseExecutioner.getDataManager();
+			DataObject dataObject = dataManager.getDataObjectById(dataObjectId);
+
+			JSONObject result = new JSONObject(new DataObjectJaxBean(dataObject));
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
 	}
 }

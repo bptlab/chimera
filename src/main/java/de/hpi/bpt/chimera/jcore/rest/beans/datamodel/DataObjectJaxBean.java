@@ -1,7 +1,8 @@
-package de.hpi.bpt.chimera.jcore.rest.TransportationBeans;
+package de.hpi.bpt.chimera.jcore.rest.beans.datamodel;
 
 import de.hpi.bpt.chimera.execution.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.DataObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +15,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DataObjectJaxBean {
-	/**
-	 * The label of the data object.
-	 */
-	private String label;
-
 	/**
 	 * The id the dataobjectinstance.
 	 */
@@ -36,34 +32,27 @@ public class DataObjectJaxBean {
 	 */
 	private String state;
 
+	private boolean locked;
 	/**
 	 * An array of all dataAttributes belonging to this dataObject.
 	 * Each attribute has an id, name, type and value.
 	 */
 	private DataAttributeJaxBean[] attributeConfiguration;
 
-	public DataObjectJaxBean(DataObject instance) {
-		setId(instance.getId());
-		setLabel(instance.getDataClass().getName());
-		setDataclass(instance.getDataClass().getName());
-		setState(instance.getObjectLifecycleState().getName());
+	public DataObjectJaxBean(DataObject dataObject) {
+		setId(dataObject.getId());
+		setDataclass(dataObject.getDataClass().getName());
+		setState(dataObject.getObjectLifecycleState().getName());
+		setLocked(dataObject.isLocked());
 
-		List<DataAttributeJaxBean> attributes = new ArrayList<>(instance.getDataAttributeInstances().size());
-		for (DataAttributeInstance dataAttributeInstance : instance.getDataAttributeInstances().values()) {
+		List<DataAttributeJaxBean> attributes = new ArrayList<>(dataObject.getDataAttributeInstances().size());
+		for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
 			DataAttributeJaxBean attributeInstance = new DataAttributeJaxBean(dataAttributeInstance);
 			attributes.add(attributeInstance);
 		}
 
-		DataAttributeJaxBean[] attributesArray = attributes.toArray(new DataAttributeJaxBean[instance.getDataAttributeInstances().size()]);
+		DataAttributeJaxBean[] attributesArray = attributes.toArray(new DataAttributeJaxBean[dataObject.getDataAttributeInstances().size()]);
 		setAttributeConfiguration(attributesArray);
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
 	}
 
 	public String getId() {
@@ -96,6 +85,14 @@ public class DataObjectJaxBean {
 
 	public void setAttributeConfiguration(DataAttributeJaxBean[] attributeConfiguration) {
 		this.attributeConfiguration = attributeConfiguration;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean isLocked) {
+		this.locked = isLocked;
 	}
 }
 

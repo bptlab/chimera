@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.jcore.rest.TransportationBeans;
+package de.hpi.bpt.chimera.jcore.rest.beans.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

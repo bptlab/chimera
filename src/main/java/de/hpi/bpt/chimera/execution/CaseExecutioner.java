@@ -8,6 +8,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.exception.IllegalActivityInstanceStateException;
+import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceIdException;
+import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceTypeException;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.ActivityLog;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.DataAttributeLog;
@@ -83,7 +86,9 @@ public class CaseExecutioner {
 	public void beginActivityInstance(AbstractActivityInstance activityInstance, List<DataObject> selectedDataObjects) {
 		try {
 			if (!activityInstance.getState().equals(State.READY)) {
-				// TODO: exception
+				IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(activityInstance, State.READY);
+				log.error(e.getMessage());
+				throw e;
 			}
 
 			List<DataObject> lockedDataObjects = dataManager.lockDataObjects(selectedDataObjects);
@@ -91,7 +96,7 @@ public class CaseExecutioner {
 			// TODO: has this to be before lock?
 			activityInstance.getFragmentInstance().skipAlternativeControlNodes(activityInstance);
 			activityInstance.begin();
-		} catch (IllegalArgumentException | SecurityException e) {
+		} catch (IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -106,7 +111,9 @@ public class CaseExecutioner {
 	public List<DataObject> terminateActivityInstance(AbstractActivityInstance activityInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		try {
 			if (!activityInstance.getState().equals(State.RUNNING)) {
-				// TODO: exception
+				IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(activityInstance, State.RUNNING);
+				log.error(e.getMessage());
+				throw e;
 			}
 
 			List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
@@ -119,71 +126,6 @@ public class CaseExecutioner {
 
 			activityInstance.terminate();
 			return usedDataObject;
-		} catch (IllegalArgumentException e) {
-			throw e;
-		}
-	}
-
-	// TODO: think about whether this should be refactored to a method with
-	// exceptions
-	/**
-	 * Get a specific ActivityInstance by an id.
-	 * 
-	 * @param activityInstanceId
-	 * @return the associated AbstractActivityInstance, or {@code null} if the
-	 *         id is not assigned, or {@code null} if the id is associated to a
-	 *         ControlNodeInstance which is not an ActivityInstance
-	 */
-	public AbstractActivityInstance getActivityInstance(String activityInstanceId) {
-		ControlNodeInstance nodeInstance = getControlNodeInstance(activityInstanceId);
-		if (nodeInstance == null)
-			return null;
-		if (!(nodeInstance instanceof AbstractActivityInstance))
-			return null;
-		return (AbstractActivityInstance) nodeInstance;
-	}
-
-	/**
-	 * Get a specific ActivityInstance by an id.
-	 * 
-	 * @param activityInstanceId
-	 * @return the associated AbstractActivityInstance, or {@code null} if the
-	 *         id is not assigned, or {@code null} if the id is associated to a
-	 *         ControlNodeInstance which is not an ActivityInstance
-	 */
-	public AbstractActivityInstance getActivityInstanceWithExceptions(String activityInstanceId) {
-		ControlNodeInstance nodeInstance = getControlNodeInstance(activityInstanceId);
-		if (nodeInstance == null) {
-			String message = String.format("ActivityInstance-id: %s is not assigned", activityInstanceId);
-			log.error(message);
-			throw new IllegalArgumentException(message);
-		}
-		if (!(nodeInstance instanceof AbstractActivityInstance)) {
-			String message = String.format("ControlNode assigned by id: %s, is not of an ActivityInstance", activityInstanceId);
-			log.error(message);
-			throw new IllegalArgumentException(message);
-		}
-
-		return (AbstractActivityInstance) nodeInstance;
-	}
-
-	/**
-	 * Get a specific ActivityInstance by an id.
-	 * 
-	 * @param activityInstanceId
-	 * @return the associated AbstractActivityInstance, or {@code null} if the
-	 *         id is not assigned, or {@code null} if the id is associated to a
-	 *         ControlNodeInstance which is not an ActivityInstance
-	 */
-	public AbstractActivityInstance getActivityInstanceWithStateAndExceptions(String activityInstanceId, State state) {
-		try {
-			AbstractActivityInstance activitiyInstance = this.getActivityInstanceWithExceptions(activityInstanceId);
-			if (activitiyInstance.getState() != state) {
-				String message = String.format("ActivityInstance assigned by id: %s, is not in State: %s", activityInstanceId, state.toString());
-				log.error(message);
-				throw new IllegalArgumentException(message);
-			}
-			return activitiyInstance;
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
@@ -208,7 +150,34 @@ public class CaseExecutioner {
 				return fragmentInstance.getControlNodeInstances().get(controlNodeId);
 			}
 		}
-		return null;
+
+		IllegalControlNodeInstanceIdException e = new IllegalControlNodeInstanceIdException(controlNodeId);
+		log.error(e.getMessage());
+		throw e;
+	}
+
+	/**
+	 * Get a specific ActivityInstance by an id.
+	 * 
+	 * @param activityInstanceId
+	 * @return the associated AbstractActivityInstance, or {@code null} if the
+	 *         id is not assigned, or {@code null} if the id is associated to a
+	 *         ControlNodeInstance which is not an ActivityInstance
+	 */
+	public AbstractActivityInstance getActivityInstance(String activityInstanceId) {
+		try {
+			ControlNodeInstance nodeInstance = getControlNodeInstance(activityInstanceId);
+
+			if (!(nodeInstance instanceof AbstractActivityInstance)) {
+				IllegalControlNodeInstanceTypeException e = new IllegalControlNodeInstanceTypeException(nodeInstance, AbstractActivityInstance.class);
+				log.error(e.getMessage());
+				throw e;
+			}
+
+			return (AbstractActivityInstance) nodeInstance;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
 	}
 
 	// LOGGING

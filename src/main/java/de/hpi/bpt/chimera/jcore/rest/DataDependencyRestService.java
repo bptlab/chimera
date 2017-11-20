@@ -5,16 +5,13 @@ import de.hpi.bpt.chimera.execution.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.DataManager;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataAttributeJaxBean;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataNodeJaxBean;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.datamodel.DataAttributeJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.datamodel.DataObjectJaxBean;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,10 +25,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -57,13 +50,9 @@ public class DataDependencyRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/availableInput")
 	public Response getAvailableInput(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
-
 		try {
-			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstanceWithExceptions(activityInstanceId);
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
 			DataManager dataManager = caseExecutioner.getDataManager();
 			DataStateCondition activityPreCondition = activityInstance.getControlNode().getPreCondition();
@@ -78,9 +67,8 @@ public class DataDependencyRestService extends AbstractRestService {
 
 			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
 	}
 
 	/**
@@ -114,28 +102,26 @@ public class DataDependencyRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/outputStates")
 	public Response getOutputDataObjects(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
-		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-		if (activityInstance == null) {
-			return activityInstanceNotFoundResponse(activityInstanceId);
-		}
+			Map<DataClass, Set<AtomicDataStateCondition>> dataClassToAtomicConditions = activityInstance.getControlNode().getPostCondition().getDataClassToAtomicDataStateConditions();
 
-		Map<DataClass, Set<AtomicDataStateCondition>> dataClassToAtomicConditions = activityInstance.getControlNode().getPostCondition().getDataClassToAtomicDataStateConditions();
-
-		JSONObject dataClassStateAssociation = new JSONObject();
-		for (Entry<DataClass, Set<AtomicDataStateCondition>> dataClassToAtomicCondition : dataClassToAtomicConditions.entrySet()) {
-			JSONArray conditionStateStrings = new JSONArray();
-			for (AtomicDataStateCondition condition : dataClassToAtomicCondition.getValue()) {
-				conditionStateStrings.put(condition.getStateName());
+			JSONObject dataClassStateAssociation = new JSONObject();
+			for (Entry<DataClass, Set<AtomicDataStateCondition>> dataClassToAtomicCondition : dataClassToAtomicConditions.entrySet()) {
+				JSONArray conditionStateStrings = new JSONArray();
+				for (AtomicDataStateCondition condition : dataClassToAtomicCondition.getValue()) {
+					conditionStateStrings.put(condition.getStateName());
+				}
+				dataClassStateAssociation.put(dataClassToAtomicCondition.getKey().getName(), conditionStateStrings);
 			}
-			dataClassStateAssociation.put(dataClassToAtomicCondition.getKey().getName(), conditionStateStrings);
+
+			return Response.ok(dataClassStateAssociation.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 
-		return Response.ok(dataClassStateAssociation.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
 	/**
@@ -152,40 +138,36 @@ public class DataDependencyRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/outputAttributes")
 	public Response getOuptutAttributes(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
+		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+			JSONObject result = new JSONObject();
+			// early exit
+			if (activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
+				return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+			}
+			Set<AtomicDataStateCondition> outputConditions = activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions();
+			for (AtomicDataStateCondition outputConiditon : outputConditions) {
+				JSONArray dataAttributeArray = new JSONArray();
+				for (DataAttribute dataAttribute : outputConiditon.getDataClass().getDataAttributes()) {
+					dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttribute)));
+				}
+				result.put(outputConiditon.getDataClassName(), dataAttributeArray);
+			}
 
-		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-		if (activityInstance == null) {
-			return activityInstanceNotFoundResponse(activityInstanceId);
-		}
+			List<DataObject> selectedDataObjects = activityInstance.getSelectedDataObjects();
+			for (DataObject dataObject : selectedDataObjects) {
+				JSONArray dataAttributeArray = new JSONArray();
+				for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
+					dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttributeInstance)));
+				}
+				result.put(dataObject.getDataClass().getName(), dataAttributeArray);
+			}
 
-		JSONObject result = new JSONObject();
-
-		if (activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
 			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-		Set<AtomicDataStateCondition> outputConditions = activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions();
-		for (AtomicDataStateCondition outputConiditon : outputConditions) {
-			JSONArray dataAttributeArray = new JSONArray();
-			for (DataAttribute dataAttribute : outputConiditon.getDataClass().getDataAttributes()) {
-				dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttribute)));
-			}
-			result.put(outputConiditon.getDataClassName(), dataAttributeArray);
-		}
-
-		List<DataObject> selectedDataObjects = activityInstance.getSelectedDataObjects();
-		for (DataObject dataObject : selectedDataObjects) {
-			JSONArray dataAttributeArray = new JSONArray();
-			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
-				dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttributeInstance)));
-			}
-			result.put(dataObject.getDataClass().getName(), dataAttributeArray);
-		}
-
-		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
 	// List<DataObjectJaxBean> outputBeans =

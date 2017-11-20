@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import de.hpi.bpt.chimera.execution.ExecutionService;
+import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
@@ -63,14 +64,15 @@ public class CaseModelManager {
 	 */
 	public static CaseModel getCaseModel(String id) {
 		mayInstantiate();
-		CaseModel cm;
 		if (caseModels.containsKey(id)) {
-			cm = caseModels.get(id);
+			return caseModels.get(id);
 		} else {
 			// cm = DomainModelPersistenceManager.loadCaseModel(id);
-			return null;
+			IllegalCaseModelIdException e = new IllegalCaseModelIdException(id);
+			log.error(e.getMessage());
+			throw e;
 		}
-		return cm;
+
 	}
 
 	/**

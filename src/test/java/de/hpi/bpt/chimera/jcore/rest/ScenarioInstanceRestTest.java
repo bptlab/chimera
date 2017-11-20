@@ -5,7 +5,7 @@ import de.hpi.bpt.chimera.AbstractTest;
 import de.hpi.bpt.chimera.database.DbScenarioInstance;
 import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.NamedJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.miscellaneous.NamedJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import net.minidev.json.JSONObject;

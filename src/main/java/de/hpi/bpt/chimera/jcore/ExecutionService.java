@@ -12,8 +12,9 @@ import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataAttributeJaxBean;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.datamodel.DataAttributeJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.datamodel.DataObjectJaxBean;
+
 import org.apache.log4j.Logger;
 
 import java.util.*;

@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
-import de.hpi.bpt.chimera.execution.gateway.AbstractGatewayInstance;
 import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
@@ -74,7 +73,6 @@ public class FragmentInstance {
 				nodeInstance.enableControlFlow();
 			}
 		}
-		updateDataFlow();
 	}
 
 	// HELPER METHODS

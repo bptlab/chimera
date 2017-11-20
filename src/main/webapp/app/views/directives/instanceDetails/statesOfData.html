@@ -17,9 +17,9 @@
                     <tbody>
                     <tr ng-repeat="dataobject in instanceCtrl.instanceDetails.dataobjects">
                         <td>{{dataobject['id']}}</td>
-                        <td>{{dataobject['label']}}</td>
                         <td>{{dataobject['dataclass']}}</td>
                         <td>{{dataobject['state']}}</td>
+                        <td>{{dataobject['isLocked']}}
                     </tr>
                     </tbody>
                 </table>

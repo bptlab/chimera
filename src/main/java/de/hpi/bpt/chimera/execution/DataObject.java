@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import de.hpi.bpt.chimera.execution.exception.IllegalObjectLifecycleStateSuccessorException;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
@@ -72,7 +73,7 @@ public class DataObject {
 	public void makeObjectLifecycleTransition(ObjectLifecycleState newObjectLifecycleState) {
 		ObjectLifecycleState oldObjectLifecycleState = condition.getObjectLifecycleState();
 		if (!newObjectLifecycleState.isSuccessorOf(oldObjectLifecycleState)) {
-			// throw exception
+			throw new IllegalObjectLifecycleStateSuccessorException(condition.getDataClass(), oldObjectLifecycleState, newObjectLifecycleState);
 		}
 		getCaseExecutioner().logDataObjectTransition(this, newObjectLifecycleState);
 		this.condition.setObjectLifecycleState(newObjectLifecycleState);

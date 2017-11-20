@@ -3,15 +3,11 @@ package de.hpi.bpt.chimera.jcore.rest;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.DataManager;
-import de.hpi.bpt.chimera.execution.DataManagerBean;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataAttributeJaxBean;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.beans.activity.ActivityJaxBean;
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
-import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
+import de.hpi.bpt.chimera.jcore.rest.beans.datamodel.DataObjectJaxBean;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
@@ -19,17 +15,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,24 +56,25 @@ public class ActivityRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activity")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getActivitiesOfInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @QueryParam("filter") String filterString, @QueryParam("state") String stateName) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
-		// common
-		if (StringUtils.isEmpty(filterString)) {
-			if (StringUtils.isEmpty(stateName)) {
-				// for log
-				return getAllActivitiesOfInstance(caseExecutioner, uriInfo);
+		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			// common
+			if (StringUtils.isEmpty(filterString)) {
+				if (StringUtils.isEmpty(stateName)) {
+					// for log
+					return getAllActivitiesOfInstance(caseExecutioner, uriInfo);
+				}
+				// for execution
+				return getAllActivitiesOfInstanceWithState(caseExecutioner, stateName, uriInfo);
 			}
-			// for execution
-			return getAllActivitiesOfInstanceWithState(caseExecutioner, stateName, uriInfo);
+			// uncommon
+			if (StringUtils.isEmpty(stateName)) {
+				return getAllActivitiesOfInstanceWithFilter(caseExecutioner, filterString, uriInfo);
+			}
+			return getAllActivitiesWithFilterAndState(caseExecutioner, filterString, stateName, uriInfo);
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-		// uncommon
-		if (StringUtils.isEmpty(stateName)) {
-			return getAllActivitiesOfInstanceWithFilter(caseExecutioner, filterString, uriInfo);
-		}
-		return getAllActivitiesWithFilterAndState(caseExecutioner, filterString, stateName, uriInfo);
 	}
 
 	/**
@@ -158,21 +150,22 @@ public class ActivityRestService extends AbstractRestService {
 	 * @return
 	 */
 	private Response getAllActivitiesWithFilterAndState(CaseExecutioner caseExecutioner, String filterString, String stateName, UriInfo uriInfo) {
-		State state = State.fromString(stateName);
-		if (state == null) {
-			return stateNotFoundResponse(stateName);
-		}
-		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getActivitiesWithState(state);
-		if (!filterString.isEmpty()) {
-			activityInstances = activityInstances.stream().filter(instance -> instance.getControlNode().getName().contains(filterString)).collect(Collectors.toList());
-		}
+		try {
+			State state = State.fromString(stateName);
+			Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getActivitiesWithState(state);
+			if (!filterString.isEmpty()) {
+				activityInstances = activityInstances.stream().filter(instance -> instance.getControlNode().getName().contains(filterString)).collect(Collectors.toList());
+			}
 
-		JSONArray result = new JSONArray();
-		for (AbstractActivityInstance activityInstance : activityInstances) {
-			result.put(new JSONObject(new ActivityJaxBean(activityInstance)));
-		}
+			JSONArray result = new JSONArray();
+			for (AbstractActivityInstance activityInstance : activityInstances) {
+				result.put(new JSONObject(new ActivityJaxBean(activityInstance)));
+			}
 
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
 	}
 
 	/**
@@ -190,17 +183,13 @@ public class ActivityRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
 	public Response getActivity(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
-
 		try {
-			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstanceWithExceptions(activityInstanceId);
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 			ActivityJaxBean activity = new ActivityJaxBean(activityInstance);
 			return Response.ok(activity, MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
 
@@ -218,17 +207,18 @@ public class ActivityRestService extends AbstractRestService {
 	@PUT
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
 	public Response setDataAttribute(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
+		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+
+			Map<String, Map<String, Object>> dataAttributeValues = parseDataAttribueValues(post);
+
+			DataManager dataManager = caseExecutioner.getDataManager();
+			dataManager.setDataAttributeValues(dataAttributeValues);
+
+			return Response.status(201).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
-		Map<String, Map<String, Object>> dataAttributeValues = parseDataAttribueValues(post);
-
-		DataManager dataManager = caseExecutioner.getDataManager();
-		dataManager.setDataAttributeValues(dataAttributeValues);
-
-		return Response.status(201).build();
 	}
 
 	/**
@@ -267,23 +257,20 @@ public class ActivityRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/workingItems")
 	public Response getWorkingItems(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
+		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
-		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-		if (activityInstance == null) {
-			return activityInstanceNotFoundResponse(activityInstanceId);
-		}
+			List<DataObject> selectedInstances = activityInstance.getSelectedDataObjects();
 
-		List<DataObject> selectedInstances = activityInstance.getSelectedDataObjects();
-
-		JSONArray result = new JSONArray();
-		for (DataObject instance : selectedInstances) {
-			result.put(new JSONObject(new DataObjectJaxBean(instance)));
+			JSONArray result = new JSONArray();
+			for (DataObject dataObject : selectedInstances) {
+				result.put(new JSONObject(new DataObjectJaxBean(dataObject)));
+			}
+			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
 	/**
@@ -301,20 +288,14 @@ public class ActivityRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/begin")
 	public Response beginActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
-
-		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-		if (activityInstance == null) {
-			return activityInstanceNotFoundResponse(activityInstanceId);
-		}
-
-		List<String> selectedDataObjectIds = parseDataObjectIds(post);
-		List<DataObject> selectedDataObjects = caseExecutioner.getDataManager().getDataObjectsById(selectedDataObjectIds);
-
 		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+
+			List<String> selectedDataObjectIds = parseDataObjectIds(post);
+			List<DataObject> selectedDataObjects = caseExecutioner.getDataManager().getDataObjectsById(selectedDataObjectIds);
+
 			caseExecutioner.beginActivityInstance(activityInstance, selectedDataObjects);
 			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
 		} catch (Exception e) {
@@ -361,17 +342,11 @@ public class ActivityRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
 	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner == null) {
-			return caseNotFoundResponse(cmId, caseId);
-		}
-
-		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-		if (activityInstance == null) {
-			return activityInstanceNotFoundResponse(activityInstanceId);
-		}
-
 		try {
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+
 			Map<String, String> dataClassToStateTransitionStrings = parseDataClassToStateTransitionStrings(post);
 			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(dataClassToStateTransitionStrings);
 			List<DataObject> usedDataObjects = caseExecutioner.terminateActivityInstance(activityInstance, dataClassToStateTransitions);
@@ -379,7 +354,7 @@ public class ActivityRestService extends AbstractRestService {
 			JSONArray result = parseJsonForUsedDataObjects(usedDataObjects);
 			
 			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
