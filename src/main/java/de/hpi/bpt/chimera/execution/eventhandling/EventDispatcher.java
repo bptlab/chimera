@@ -84,11 +84,11 @@ public final class EventDispatcher {
 		// TODO: setDataAttributes
 		// TODO: Maybe directly give the CaseModel via getParenCaseModel() to
 		// ExecutionService
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.startCase(caseStartTrigger.getParentCaseModel().getId(), "AutomaticallyCreatedInstance");
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.createCaseExecutioner(caseStartTrigger.getParentCaseModel().getId(), "AutomaticallyCreatedInstance");
 		logger.info("An Event started a Case via REST-Interface.");
 		CaseStarter caseStarter = new CaseStarter(caseStartTrigger);
 		try {
-			caseStarter.startInstance(eventJson, caseExecutioner);
+			caseStarter.startCase(eventJson, caseExecutioner);
 			SseNotifier.notifyRefresh();
 		} catch (IllegalStateException e) {
 			logger.error("Could not start case from query", e);

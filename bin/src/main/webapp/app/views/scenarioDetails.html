@@ -1,0 +1,41 @@
+<div>
+    <div class="panel panel-body">
+        <div class="panel-body">
+            <div class="pull-right">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#/scenario">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <span>Scenario {{scenarioCtrl.currentScenario['id']}} - {{scenarioCtrl.currentScenario['details']['name']}}</span>
+                    </li>
+                </ol>
+            </div>
+            <h2>
+                Scenario: {{scenarioCtrl.currentScenario['details']['name']}}
+            </h2>
+
+        </div>
+        <!-- /.panel body -->
+    </div>
+</div> <!-- /. normalheader -->
+
+<div>
+
+    <div class="row">
+
+        <scenario-meta-data></scenario-meta-data>
+
+        <instance-overview></instance-overview>
+    </div>
+    <!-- /. row -->
+</div>
+<!--___________________________________ MODALS ___________________________________-->
+<!-- modal for creating a new instance  -->
+<modal-new-instance></modal-new-instance>
+
+<!-- modal for deleting a scenario -->
+<modal-delete-instance></modal-delete-instance>
+
+<!-- modal for showing the termination condition -->
+<modal-termination-condition></modal-termination-condition>

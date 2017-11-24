@@ -1,0 +1,21 @@
+language: java
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk7
+
+before_install:
+  - mvn clean
+
+before_script:
+  - mysql -e "create database IF NOT EXISTS JEngineV2;" -uroot
+
+script:
+  - mysql JEngineV2 < src/main/resources/JEngineV2_schema.sql -uroot
+  - mvn test
+ 
+after_success:
+  - mvn clean generate-sources cobertura:cobertura coveralls:report
+  
+notifications:
+  hipchat: 062eec142640c35ba3c3a3cac1052b@1093154

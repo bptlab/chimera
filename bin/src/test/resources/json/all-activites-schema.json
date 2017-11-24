@@ -1,0 +1,10 @@
+//http://172.16.64.113:8080/JEngine/interface/v1/en/scenario/1/instance/47/activityinstance/0/?status=enabled
+{
+	"ids":[5,4,16],
+	"label":{
+		"16":"ActivityFragment4",
+		"4":"Activity1Fragment2",
+		"5":"Activity2Fragment1"
+		}
+}
+

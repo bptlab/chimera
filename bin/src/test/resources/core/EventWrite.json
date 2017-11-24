@@ -1,0 +1,54 @@
+{
+  "domainmodel": {
+    "__v": 1,
+    "_id": "575d3798712f113f0d62a4fc",
+    "name": "MinimalEventDataCreation",
+    "revision": 4,
+    "dataclasses": [
+      {
+        "_id": "575d37e9712f113f0d62a4fe",
+        "is_event": false,
+        "name": "Customer",
+        "olc": {
+          "intermediateThrowEvent": [
+            {
+              "id": "State_11u8x6w",
+              "name": "received"
+            }
+          ],
+          "state": [
+            {
+              "id": "State_11u8x6w",
+              "name": "received"
+            }
+          ]
+        },
+        "attributes": [
+          {
+            "name": "Age",
+            "datatype": "String",
+            "_id": "575d37e9712f113f0d62a4ff"
+          }
+        ]
+      }
+    ]
+  },
+  "name": "MinimalEventDataCreation",
+  "revision": 1,
+  "_id": "575d3798712f113f0d62a4fb",
+  "__v": 0,
+  "startconditions": [
+
+  ],
+  "fragments": [
+    {
+      "__v": 0,
+      "_id": "575d3798712f113f0d62a4fd",
+      "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http:\/\/www.omg.org\/spec\/BPMN\/20100524\/MODEL\" xmlns:bpmndi=\"http:\/\/www.omg.org\/spec\/BPMN\/20100524\/DI\" xmlns:di=\"http:\/\/www.omg.org\/spec\/DD\/20100524\/DI\" xmlns:dc=\"http:\/\/www.omg.org\/spec\/DD\/20100524\/DC\" xmlns:xsi=\"http:\/\/www.w3.org\/2001\/XMLSchema-instance\" xmlns:griffin=\"http:\/\/wat\" id=\"Definitions_1\" targetNamespace=\"http:\/\/bpmn.io\/schema\/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:outgoing>SequenceFlow_027hgq3<\/bpmn:outgoing>\n    <\/bpmn:startEvent>\n    <bpmn:task id=\"Task_0jvzw3o\" name=\"Before Event\">\n      <bpmn:incoming>SequenceFlow_027hgq3<\/bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0ro20sv<\/bpmn:outgoing>\n    <\/bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_027hgq3\" sourceRef=\"StartEvent_1\" targetRef=\"Task_0jvzw3o\" \/>\n    <bpmn:intermediateCatchEvent id=\"IntermediateCatchEvent_14m3se9\" griffin:eventquery=\"SELECT * FROM CostumerEvent\">\n      <bpmn:incoming>SequenceFlow_0ro20sv<\/bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0ng9vwi<\/bpmn:outgoing>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_0xkpcqd\">\n        <bpmn:targetRef>DataObjectReference_1d251g2<\/bpmn:targetRef>\n      <\/bpmn:dataOutputAssociation>\n      <bpmn:messageEventDefinition \/>\n    <\/bpmn:intermediateCatchEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0ro20sv\" sourceRef=\"Task_0jvzw3o\" targetRef=\"IntermediateCatchEvent_14m3se9\" \/>\n    <bpmn:endEvent id=\"EndEvent_0zn3egw\">\n      <bpmn:incoming>SequenceFlow_0ng9vwi<\/bpmn:incoming>\n    <\/bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0ng9vwi\" sourceRef=\"IntermediateCatchEvent_14m3se9\" targetRef=\"EndEvent_0zn3egw\" \/>\n    <bpmn:dataObjectReference id=\"DataObjectReference_1d251g2\" name=\"Customer[received]\" dataObjectRef=\"DataObject_1rpji4f\" griffin:state=\"received\" griffin:dataclass=\"Customer\" griffin:jsonpath=\"{&#34;Age&#34;:&#34;$.age&#34;}\" \/>\n    <bpmn:dataObject id=\"DataObject_1rpji4f\" \/>\n  <\/bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"183\" y=\"173\" width=\"36\" height=\"36\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"156\" y=\"209\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_0jvzw3o_di\" bpmnElement=\"Task_0jvzw3o\">\n        <dc:Bounds x=\"322\" y=\"151\" width=\"100\" height=\"80\" \/>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_027hgq3_di\" bpmnElement=\"SequenceFlow_027hgq3\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"219\" y=\"191\" \/>\n        <di:waypoint xsi:type=\"dc:Point\" x=\"322\" y=\"191\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"225.5\" y=\"181\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"IntermediateCatchEvent_14m3se9_di\" bpmnElement=\"IntermediateCatchEvent_14m3se9\">\n        <dc:Bounds x=\"515\" y=\"173\" width=\"36\" height=\"36\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"488\" y=\"209\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0ro20sv_di\" bpmnElement=\"SequenceFlow_0ro20sv\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"422\" y=\"191\" \/>\n        <di:waypoint xsi:type=\"dc:Point\" x=\"515\" y=\"191\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"423.5\" y=\"181\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_0zn3egw_di\" bpmnElement=\"EndEvent_0zn3egw\">\n        <dc:Bounds x=\"620\" y=\"173\" width=\"36\" height=\"36\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"593\" y=\"209\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0ng9vwi_di\" bpmnElement=\"SequenceFlow_0ng9vwi\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"551\" y=\"191\" \/>\n        <di:waypoint xsi:type=\"dc:Point\" x=\"620\" y=\"191\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"540.5\" y=\"181\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_1d251g2_di\" bpmnElement=\"DataObjectReference_1d251g2\">\n        <dc:Bounds x=\"587\" y=\"65\" width=\"36\" height=\"50\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"560\" y=\"115\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_0xkpcqd_di\" bpmnElement=\"DataOutputAssociation_0xkpcqd\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"543\" y=\"177\" \/>\n        <di:waypoint xsi:type=\"dc:Point\" x=\"587\" y=\"115\" \/>\n      <\/bpmndi:BPMNEdge>\n    <\/bpmndi:BPMNPlane>\n  <\/bpmndi:BPMNDiagram>\n<\/bpmn:definitions>\n",
+      "name": "First Fragment",
+      "revision": 3
+    }
+  ],
+  "terminationconditions": [
+  ]
+}

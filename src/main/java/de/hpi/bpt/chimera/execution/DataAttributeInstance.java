@@ -40,6 +40,7 @@ public class DataAttributeInstance {
 		return value;
 	}
 
+	// TODO: implement better type checking and allow others than String
 	/**
 	 * Set the value of the DataAttributeInstance but throws an exception if the
 	 * value hasn't the right type.

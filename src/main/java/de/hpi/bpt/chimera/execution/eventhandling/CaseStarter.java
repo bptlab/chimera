@@ -4,6 +4,9 @@ import com.jayway.jsonpath.JsonPath;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.DataManager;
+import de.hpi.bpt.chimera.execution.DataObject;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 //import de.hpi.bpt.chimera.database.controlnodes.events.DbStartQuery;
 //import de.hpi.bpt.chimera.database.history.DbLogEntry;
 //import de.hpi.bpt.chimera.jcore.ScenarioInstance;
@@ -36,12 +39,14 @@ public class CaseStarter {
 		// scenarioId);
 	}
 
-	public void startInstance(String json, CaseExecutioner caseExecutioner) {
-		initializeDataObjects(caseExecutioner);
+	public void startCase(String json, CaseExecutioner caseExecutioner) {
+		initializeDataObjects(caseExecutioner, json);
+
 		// TODO implement the access to the dataAttributeInstances
 		// List<DataAttributeInstance> dataAttributes = new
 		// ArrayList<>(caseExecutioner.getDataManager().getDataAttributeInstances);
-		writeDataAttributes(new ArrayList<DataAttributeInstance>(), json, caseExecutioner);
+		// writeDataAttributes(new ArrayList<DataAttributeInstance>(), json, caseExecutioner);
+		caseExecutioner.startCase();
 	}
 
 	/**
@@ -49,12 +54,30 @@ public class CaseStarter {
 	 * specified in the json path mapping. For each data class there will maximal be
 	 * one data object.
 	 */
-	public void initializeDataObjects(CaseExecutioner caseExecutioner) {
-		// DataManager dataManager = scenarioInstance.getDataManager();
+	public void initializeDataObjects(CaseExecutioner caseExecutioner, String json) {
+		DataManager dataManager = caseExecutioner.getDataManager();
 		for (CaseStartTriggerConsequence triggerConsequence : caseStartTrigger.getTriggerConsequences()) {
-			LOGGER.info(String.format("Here we should initialize DataObject %s of Case %s in State %s.", triggerConsequence.getDataObjectState().getDataClass().getName(), caseExecutioner.getCase().getName(), triggerConsequence.getDataObjectState().getObjectLifecycleState().getName()));
-			// dataManager.initializeDataObject(part.getDataClassId(),
-			// part.getStartStateId());
+			LOGGER.info(String.format("initialize DataObject %s of Case %s in State %s.", triggerConsequence.getDataObjectState().getDataClass().getName(), caseExecutioner.getCase().getName(), triggerConsequence.getDataObjectState().getObjectLifecycleState().getName()));
+			AtomicDataStateCondition condition = triggerConsequence.getDataObjectState();
+			DataObject dataObject = dataManager.createDataObject(condition);
+			for (DataAttributeJsonPath dataAttributeJsonPath : triggerConsequence.getMapping()) {
+				writeDataAttributeInstances(dataObject, dataAttributeJsonPath, json);
+			}
+		}
+	}
+
+	private void writeDataAttributeInstances(DataObject dataObject, DataAttributeJsonPath dataAttributeJsonPath, String json) {
+		for (DataAttributeInstance attributeInstance : dataObject.getDataAttributeInstances().values()) {
+			if (attributeInstance.getDataAttribute().equals(dataAttributeJsonPath.getDataAttribute())) {
+				try {
+					Object value = JsonPath.read(json, dataAttributeJsonPath.getJsonPath());
+					attributeInstance.setValue(value);
+				} catch (Exception e) {
+					LOGGER.error("An Exception occured while parsing the given JSON according to the given JSON-Path. Maybe there is a mistake in the JSON-Path.");
+					attributeInstance.setValue("ERROR");
+					throw e;
+				}
+			}
 		}
 	}
 

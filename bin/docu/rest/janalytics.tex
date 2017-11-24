@@ -1,0 +1,49 @@
+%
+%%
+\subsection{JAnalytics} %status = open   GET(0/1) POST(0/1)
+\label{subsec:JAnalytics}
+
+	%
+    %%
+	\subsubsection{Analytic Algorithms}
+	
+	%\textbf{Get all services}\\
+	The names of all registered algorithms executable can be obtained via\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{analytics/\{version\}/services}
+			\end{tabular}\\
+			\\
+	\textbf{POST analysis}\\
+	The Algorithm can be started via the REST-Interface using\\
+			\begin{tabular}{lll}
+				http & POST & \texttt{analytics/\{version\}/services/}\\
+				& & \texttt{de.uni\_potsdam.hpi.bpt.bp2014.janalytics.\{classNameOfAlgorithm\}}
+			\end{tabular}
+			\\
+			\\
+If the Algorithm expects any parameters you have to put them in the request body as JSON Array with your POST. You have to keep the order in mind, the request body is the later input for the calculateResult(String[] args) method. \\
+After the POST-Request a http 303 See Other with a new URI is returned. The URI (/jengine/api/analytics/v2/services/de.uni\_potsdam.hpi.bpt.bp2014.janalytics.\{class\\NameOfAlgorithm\}/resultId/\{resultId\}) can be used for a GET-Request to obtain the result of the calculation, the resultId is used to identify the result of the different POSTs.\\
+\\
+%%%----------
+	\textbf{Get analysis results}\\
+	After the Algorithm has terminated, the results can be obtained via 
+	\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{analytics/\{version\}/services/}\\
+				& & \texttt{de.uni\_potsdam.hpi.bpt.bp2014.janalytics.\{classNameOfAlgorithm\}/}\\
+				& & \texttt{resultId/\{resultId\}}
+			\end{tabular}
+			\\
+			\\
+			to the same URI as in the 303 See Other and returns a JSON with the output of the Algorithm.\\
+It should be considered, that the Angular.js frontend will automatically send a GET Request to the URI of the http 303 See Other and no additional GET Request is needed when the output of an algorithm is integrated into the frontend.
+
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "scenarioId":"163","meanScenarioInstanceRuntime":"0d:0h:3m:17s"
+}
+
+			\end{lstlisting}
+			\captionof{json}{Example output of get request for  Example-Algorithm (meanScenarioInstanceRuntime)}
+		\end{flushleft}

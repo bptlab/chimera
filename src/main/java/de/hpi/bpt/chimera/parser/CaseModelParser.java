@@ -58,22 +58,22 @@ public class CaseModelParser {
 
 			List<CaseStartTrigger> caseStartTrigger = getCaseStartTrigger(caseModelJson.getJSONArray("startconditions"), parserHelper, caseModel);
 			caseModel.setStartCaseTrigger(caseStartTrigger);
-			// register the CaseStartTrigger at Unicorn
-			for (CaseStartTrigger cst : caseStartTrigger) {
-				EventDispatcher.registerCaseStartEvent(cst);
-			}
 
 			TerminationCondition terminationCondition = TerminationConditionParser.parseTerminationCondition(caseModelJson.getJSONArray("terminationconditions"), parserHelper);
 			caseModel.setTerminationCondition(terminationCondition);
 			
 			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"), parserHelper);
 			caseModel.setFragments(fragments);
-
 		} catch (JSONException | IllegalArgumentException e) {
 			log.error("Error", e);
 			throw new IllegalCaseModelException("Invalid CaseModel: " + e.getMessage());
 		} catch (IllegalCaseModelException e) {
 			throw e;
+		}
+
+		// register the CaseStartTrigger at Unicorn
+		for (CaseStartTrigger cst : caseModel.getStartCaseTrigger()) {
+			EventDispatcher.registerCaseStartEvent(cst);
 		}
 
 		return caseModel;

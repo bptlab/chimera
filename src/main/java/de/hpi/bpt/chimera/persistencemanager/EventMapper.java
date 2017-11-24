@@ -27,7 +27,7 @@ public class EventMapper {
 	private static final Logger log = Logger.getLogger(EventMapper.class);
 
 	public EventMapper() {
-		caseStartEvents = new HashMap<String, CaseStartTrigger>();
+		caseStartEvents = new HashMap<>();
 	}
 
 	public void addCaseStartEvent(String eventKey, CaseStartTrigger caseStartTrigger) {

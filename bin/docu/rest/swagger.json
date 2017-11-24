@@ -1,0 +1,1896 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.2",
+        "title": "Chimera API"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/interface/v2",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/scenario": {
+            "get": {
+                "description": "This method gives an overview of all current scenarios.",
+                "operationId": "getScenarios_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "required": false,
+                        "x-is-map": false,
+                        "type": "string",
+                        "description": "Specifies a search. Only scenarios which\n                     name contain the specified string will be\n                     returned."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all scenarios.",
+                        "schema": {
+                            "$ref": "#/definitions/ScenarioList"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "This method allows to upload a new scenario.",
+                "operationId": "postInstance_",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenario",
+                        "in": "body",
+                        "required": true,
+                        "x-is-map": false,
+                        "schema": {
+                            "$ref": "#/definitions/Scenario"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created scenario."
+                    },
+                    "400": {
+                        "description": "Invalid fragment XML.",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorArray"
+                        }
+                    },
+                    "422": {
+                        "description": "Failed to process the scenario.",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorArray"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}": {
+            "get": {
+                "description": "This method provides information about one scenario.",
+                "operationId": "getScenario_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The Id of the scenario used inside the database."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detailed information about the scenario.",
+                        "schema": {
+                            "$ref": "#/definitions/ScenarioDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/emailtask": {
+            "get": {
+                "description": "This method provides information about all email Tasks inside\n a given scenario.",
+                "operationId": "getAllEmailTasks_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "required": false,
+                        "x-is-map": false,
+                        "type": "string",
+                        "description": "A Filter String, only mail tasks with a label containing\n                     this filter String will be returned."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of emailtasks for the scenarios.",
+                        "schema": {
+                            "$ref": "#/definitions/EmailtaskList"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/emailtask/{emailTaskID}": {
+            "get": {
+                "description": "This method provides information about an email Task.",
+                "operationId": "getEmailTaskConfiguration_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario model."
+                    },
+                    {
+                        "name": "emailTaskID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The control node ID of the mail Task."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detailed information about the emailtask.",
+                        "schema": {
+                            "$ref": "#/definitions/EmailConfigJaxBean"
+                        }
+                    },
+                    "404": {
+                        "description": "There is no emailtask in the scenario with the given ids.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance": {
+            "get": {
+                "description": "This method provides information about all instances of one scenario.",
+                "operationId": "getScenarioInstances_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of the scenario which instances should be returned."
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "required": false,
+                        "x-is-map": false,
+                        "type": "string",
+                        "description": "Specifies a search. Only scenarios which\n                     name contain the specified string will be\n                     returned."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all instances for the scenario.",
+                        "schema": {
+                            "$ref": "#/definitions/ScenarioInstanceList"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Creates a new instance of a specified scenario. The name of the instance can be specified in the request.",
+                "operationId": "Update_startNewNamedInstance_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "the id of the scenario."
+                    },
+                    {
+                        "name": "name",
+                        "in": "body",
+                        "required": true,
+                        "x-is-map": false,
+                        "description": "The name, which will be used for the new instance.",
+                        "schema": {
+                            "$ref": "#/definitions/NamedJaxBean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "successfully created the instance.",
+                        "schema": {
+                            "$ref": "#/definitions/ScenarioRef"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new instance of a specified scenario. The instance will have the same name as the scenario.",
+                "operationId": "Create_startNewInstance_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "the id of the scenario."
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "successfully created the instance.",
+                        "schema": {
+                            "$ref": "#/definitions/ScenarioRef"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}": {
+            "get": {
+                "description": "This method provides detailed information about a scenario instance.",
+                "operationId": "getScenarioInstance_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the instance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detailed information about the instance.",
+                        "schema": {
+                            "$ref": "#/definitions/ScenarioInstance"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/events": {
+            "get": {
+                "description": "This method provides a list of registered events for the instance.",
+                "operationId": "getEvents_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the instance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of events for the scenario instance.",
+                        "schema": {
+                            "$ref": "#/definitions/EventList"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/canTerminate": {
+            "get": {
+                "description": "This determines whether a given scenario instance can terminate.",
+                "operationId": "checkTermination_",
+                "produces": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the instance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Instance can be deleted",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Termination condition is not fulfilled",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/terminate": {
+            "post": {
+                "description": "This method is used to terminate a scenario instance.",
+                "operationId": "Create_terminateScenarioInstance_",
+                "produces": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the instance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Instance has been terminated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Termination condition is not fulfilled",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activity": {
+            "get": {
+                "description": "Returns a JSON-Object containing information about all activity\n instances of a specified scenario instance.",
+                "operationId": "getActivitiesOfInstance_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of the scenario"
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of the instance."
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "required": false,
+                        "x-is-map": false,
+                        "type": "string",
+                        "description": "Defines a search strings. Only activities\n                     with a label containing this String will be\n                     shown."
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "required": false,
+                        "x-is-map": false,
+                        "type": "string",
+                        "description": "The state of the instance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list with all activity instances for the scenario instance.",
+                        "schema": {
+                            "$ref": "#/definitions/Activities"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityID}": {
+            "get": {
+                "description": "This method is used to get all the information for an activity.",
+                "operationId": "getActivity_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of a scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of a scenarioInstance."
+                    },
+                    {
+                        "name": "activityID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of an activityInstance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Information about the activity instance.",
+                        "schema": {
+                            "$ref": "#/definitions/Activity"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario / instance / activity wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "This method updates the data attributes of a specific activity\n defined via its activityID.",
+                "operationId": "Update_setDataAttribute_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of a scenario model."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "the id of an scenario instance."
+                    },
+                    {
+                        "name": "activityID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "the control node id of the activity."
+                    },
+                    {
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "x-is-map": false,
+                        "description": "data input.",
+                        "schema": {
+                            "$ref": "#/definitions/Input"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Successfully updated attribute.",
+                        "schema": {
+                            "$ref": "#/definitions/Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Couldn't update the attributes.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario / instance / activity wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceId}/begin": {
+            "post": {
+                "description": "Updates the state of an activity instance.",
+                "operationId": "Create_beginActivity_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of a scenario model."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of an scenario instance."
+                    },
+                    {
+                        "name": "activityInstanceId",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of the activity instance."
+                    },
+                    {
+                        "name": "postBody",
+                        "in": "body",
+                        "required": true,
+                        "x-is-map": false,
+                        "description": "Information about the dataobjects for the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/postBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Successfully started the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Couldn't start the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario / instance / activity wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceId}/terminate": {
+            "post": {
+                "description": "Updates the state of an activity instance.",
+                "operationId": "Create_terminateActivity_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of a scenario model."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of an scenario instance."
+                    },
+                    {
+                        "name": "activityInstanceId",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of the activity instance."
+                    },
+                    {
+                        "name": "postBody",
+                        "in": "body",
+                        "required": true,
+                        "x-is-map": false,
+                        "description": "Information about the dataobjects for the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/postBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Successfully terminated the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Couldn't terminate the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario / instance / activity wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceID}/input": {
+            "get": {
+                "description": "This method responds to a GET request by returning an array of inputSets.",
+                "operationId": "getInputDataObjects_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the scenarioInstance belonging to the\n                              aforementioned scenario."
+                    },
+                    {
+                        "name": "activityInstanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the activityInstance belonging to this\n                              scenarioInstance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array with information about the inputs of the activity",
+                        "schema": {
+                            "$ref": "#/definitions/IOList"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario/scenarioInstance/activityInstance was not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activityInstace/{activityInstanceID}/output": {
+            "get": {
+                "description": "This method responds to a GET request by returning an array of outputSets.",
+                "operationId": "getOutputDataObjects_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the scenarioInstance belonging to the\n                              aforementioned scenario."
+                    },
+                    {
+                        "name": "activityInstanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the activityInstance belonging to this\n                              scenarioInstance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array with information about the outputs of the activity",
+                        "schema": {
+                            "$ref": "#/definitions/IOList"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario/scenarioInstance/activityInstance was not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/availableInput": {
+            "get": {
+                "description": "This method provides a list of available inputs.",
+                "operationId": "getAvailableInput_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the scenarioInstance belonging to the\n                              aforementioned scenario."
+                    },
+                    {
+                        "name": "activityID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the activity in this\n                              scenarioInstance."
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "An array with the available inputs",
+                        "schema": {
+                            "$ref": "#/definitions/DataSetList"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityInstanceId}/workingItems": {
+            "get": {
+                "description": "This method provides a list of working items for an activity instance.",
+                "operationId": "getWorkingItems_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of a scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of a scenarioInstance."
+                    },
+                    {
+                        "name": "activityInstanceId",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of an activityInstance."
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "A list of working items",
+                        "schema": {
+                            "$ref": "#/definitions/WorkingItems"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario/scenarioInstance/activityInstance was not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/dataobject": {
+            "get": {
+                "description": "Returns a JSON-Object, which contains information about all\n data objects of a specified scenario instance.",
+                "operationId": "getDataObjects_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario model."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario instance."
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "required": false,
+                        "x-is-map": false,
+                        "type": "string",
+                        "description": "A String which specifies a filter. Only Data\n                     Objects with a label containing this string\n                     will be returned."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all data objects.",
+                        "schema": {
+                            "$ref": "#/definitions/DataObjectList"
+                        }
+                    },
+                    "404": {
+                        "description": "There is no scenario / instance for the given ids.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/dataobject/{dataObjectID}": {
+            "get": {
+                "description": "This method provides detailed information about an data Object.",
+                "operationId": "getDataObject_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The scenario Model ID."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The scenario Instance ID."
+                    },
+                    {
+                        "name": "dataObjectID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The Data Object ID."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detailed information about the data object.",
+                        "schema": {
+                            "$ref": "#/definitions/DataObjectJaxBean"
+                        }
+                    },
+                    "404": {
+                        "description": "There is no scenario / instance / data object for the given ids.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}": {
+            "get": {
+                "description": "This method responds to a GET request\n by returning an array of dataObjectsInstances with their dataAttributeInstances\n belonging to an inputSet.",
+                "operationId": "getInputDataObjectsAndAttributes_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "This is the databaseID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "This is the databaseID of the scenarioInstance of the\n                              aforementioned scenario."
+                    },
+                    {
+                        "name": "inputsetID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "This is the databaseID of an inputSet belonging to this\n                              scenarioInstance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of dataObjectInstances for the inputSet",
+                        "schema": {
+                            "$ref": "#/definitions/DataSetList"
+                        }
+                    },
+                    "404": {
+                        "description": "the scenario/scenarioInstance/inputSet can't be found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}": {
+            "get": {
+                "description": "This method responds to a GET request by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an outputSet.",
+                "operationId": "getOutputDataObjectsAndAttributes_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "This is the databaseID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "This is the databaseID of the scenarioInstance of the\n                              aforementioned scenario."
+                    },
+                    {
+                        "name": "outputsetID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "This is the databaseID of an outputSet belonging to this\n                              scenarioInstance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of dataObjectInstances for the outputSet",
+                        "schema": {
+                            "$ref": "#/definitions/DataSetList"
+                        }
+                    },
+                    "404": {
+                        "description": "the scenario/scenarioInstance/outputSet can't be found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioId}/terminationcondition": {
+            "get": {
+                "description": "This method provides information about the termination condition.",
+                "operationId": "getTerminationCondition_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioId",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "This id specifies the scenario. The id is the\n                   primary key inside the database."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The termination conditions for the scenario.",
+                        "schema": {
+                            "$ref": "#/definitions/TerminationCondition"
+                        }
+                    },
+                    "404": {
+                        "description": "the scenario can't be found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioId}/xml": {
+            "get": {
+                "description": "This method provides information about the termination condition.",
+                "operationId": "getFragmentXmlStrings_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioId",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "This id specifies the scenario. The id is the\n                   primary key inside the database."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The scenario's fragments as XML.",
+                        "schema": {
+                            "$ref": "#/definitions/FragmentsXML"
+                        }
+                    },
+                    "404": {
+                        "description": "the scenario can't be found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/version": {
+            "get": {
+                "description": "Method for checking whether an address specified in the griffin editor\n links to a valid running chimera instance",
+                "operationId": "getVersion_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "A JSON object with the Chimera version",
+                        "schema": {
+                            "$ref": "#/definitions/VersionObject"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "NamedJaxBean": {
+            "title": "NamedJaxBean",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "The name which should be assigned to the entity.",
+                    "type": "string"
+                }
+            }
+        },
+        "Input": {
+            "type": "object",
+            "description": "New values for the DataAttributes",
+            "properties": {
+                "(DataAttribute)": {
+                    "type": "string",
+                    "description": "new value for the specific DataAttribute"
+                }
+            }
+        },
+        "ScenarioList": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "description": "IDs of all known scenarios.",
+                    "items": {
+                        "type": "number",
+                        "format": "integer"
+                    }
+                },
+                "links": {
+                    "type": "array",
+                    "description": "References to all known scenarios.",
+                    "items": {
+                        "$ref": "#/definitions/ScenarioRef"
+                    }
+                },
+                "labels": {
+                    "type": "array",
+                    "description": "Labels of all known scenarios.",
+                    "items": {
+                        "$ref": "#/definitions/ScenarioLabel"
+                    }
+                }
+            }
+        },
+        "ScenarioRef": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "ID of the scenario."
+                },
+                "link": {
+                    "type": "string",
+                    "description": "URI of the scenario."
+                }
+            }
+        },
+        "ScenarioLabel": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "ID of the scenario."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Label of the scenario."
+                }
+            }
+        },
+        "ScenarioDetails": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The database ID of the scenario."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the scenario."
+                },
+                "modelid": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The model ID of the scenario."
+                },
+                "modelversion": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The model version of the scenario."
+                },
+                "instances": {
+                    "type": "string",
+                    "description": "URI to retrieve instances of the scenario."
+                }
+            }
+        },
+        "ScenarioInstance": {
+            "type": "object",
+            "properties": {
+                "activities": {
+                    "type": "string",
+                    "description": "URI to retrieve activities in the scenarioInstance."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the scenarioInstance."
+                },
+                "id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The ID of the scenarioInstance."
+                },
+                "terminated": {
+                    "type": "boolean"
+                },
+                "scenario_id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The modelId of the scenario."
+                }
+            }
+        },
+        "EmailtaskList": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "description": "IDs of all known emailtasks.",
+                    "items": {
+                        "type": "number",
+                        "format": "integer"
+                    }
+                }
+            }
+        },
+        "EmailConfigJaxBean": {
+            "type": "object",
+            "properties": {
+                "receiver": {
+                    "type": "string",
+                    "description": "The receiver of the email."
+                },
+                "subject": {
+                    "type": "string",
+                    "description": "The subject of the email."
+                },
+                "content": {
+                    "type": "string",
+                    "description": "The content of the email."
+                }
+            }
+        },
+        "ScenarioInstanceList": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "description": "IDs of all known scenario instances.",
+                    "items": {
+                        "type": "number",
+                        "format": "integer"
+                    }
+                },
+                "labels": {
+                    "$ref": "#/definitions/InstanceLabel"
+                },
+                "links": {
+                    "$ref": "#/definitions/InstanceRef"
+                }
+            }
+        },
+        "InstanceLabel": {
+            "type": "object",
+            "properties": {
+                "(id)": {
+                    "type": "string",
+                    "description": "Instance id with the respective label."
+                }
+            }
+        },
+        "InstanceRef": {
+            "type": "object",
+            "properties": {
+                "(id)": {
+                    "type": "string",
+                    "description": "Instance id with the respective URL."
+                }
+            }
+        },
+        "TerminationCondition": {
+            "type": "object",
+            "properties": {
+                "conditions": {
+                    "$ref": "#/definitions/TerminationConditionList"
+                },
+                "setIDs": {
+                    "type": "array",
+                    "description": "IDs of the termination conditions.",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "TerminationConditionList": {
+            "type": "object",
+            "properties": {
+                "(id)": {
+                    "type": "array",
+                    "description": "State required for termination.",
+                    "items": {
+                        "$ref": "#/definitions/TerminationConditionEntry"
+                    }
+                }
+            }
+        },
+        "TerminationConditionEntry": {
+            "type": "object",
+            "properties": {
+                "data_object": {
+                    "type": "string",
+                    "description": "Name of the associated data object."
+                },
+                "set_id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "ID of the termination condition set."
+                },
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
+        "FragmentsXML": {
+            "type": "object",
+            "properties": {
+                "xml": {
+                    "type": "array",
+                    "description": "List of all fragments as XML",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "Scenario": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The scenarios name"
+                },
+                "_id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "Unique identifier of any scenario."
+                },
+                "terminationconditions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TerminationCondition"
+                    },
+                    "description": "The termination conditions that are used."
+                },
+                "domain_model": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The ID of the associated domain model."
+                },
+                "fragments": {
+                    "type": "array",
+                    "items": {
+                        "type": "number",
+                        "format": "integer"
+                    },
+                    "description": "The IDs of associated fragments."
+                },
+                "revision": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The scenarios revision. Is increased automatically if the\nfragments, the data_objects or the termination condition is different \nfrom the last version\n"
+                }
+            }
+        },
+        "DataObjectList": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "description": "IDs of all data objects.",
+                    "items": {
+                        "type": "number",
+                        "format": "integer"
+                    }
+                },
+                "results": {
+                    "type": "array",
+                    "description": "Information about all data objects.",
+                    "items": {
+                        "$ref": "#/definitions/DataObjectEntry"
+                    }
+                }
+            }
+        },
+        "DataObjectEntry": {
+            "type": "object",
+            "properties": {
+                "(id)": {
+                    "type": "array",
+                    "description": "the name of this attribute is the actual ID of the data object (note that swagger cant do this).",
+                    "items": {
+                        "$ref": "#/definitions/DataObject"
+                    }
+                }
+            }
+        },
+        "DataObject": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "Unique identifier for the data object."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "The label of the data object"
+                },
+                "state": {
+                    "type": "string",
+                    "description": "The state of the data object"
+                },
+                "link": {
+                    "type": "string",
+                    "description": "The URI of the data object"
+                }
+            }
+        },
+        "IOList": {
+            "type": "array",
+            "description": "Information about all IOObjects.",
+            "items": {
+                "$ref": "#/definitions/IOEntry"
+            }
+        },
+        "IOEntry": {
+            "type": "object",
+            "properties": {
+                "(id)": {
+                    "type": "array",
+                    "description": "the name of this attribute is the actual ID of the IO object (swagger cant do this).",
+                    "items": {
+                        "$ref": "#/definitions/IOObject"
+                    }
+                }
+            }
+        },
+        "IOObject": {
+            "type": "object",
+            "properties": {
+                "(id)": {
+                    "type": "string",
+                    "description": "Name of the dataclass."
+                },
+                "states": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Possible States"
+                }
+            }
+        },
+        "EventList": {
+            "type": "array",
+            "description": "List of events.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "DataSetList": {
+            "type": "array",
+            "description": "All data objects found.",
+            "items": {
+                "$ref": "#/definitions/DataObjectJaxBean"
+            }
+        },
+        "Message": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "Content of the message."
+                }
+            }
+        },
+        "DataObjectJaxBean": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "description": "The label of the data object."
+                },
+                "id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The id the dataobject (not the instance) has inside the database."
+                },
+                "state": {
+                    "type": "string",
+                    "description": "The state of the data object."
+                }
+            }
+        },
+        "Activities": {
+            "type": "object",
+            "properties": {
+                "activities": {
+                    "$ref": "#/definitions/ActivityList"
+                },
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "description": "List of all activity ids"
+                }
+            }
+        },
+        "ActivityList": {
+            "type": "object",
+            "description": "Details for all activites",
+            "properties": {
+                "(id)": {
+                    "type": "object",
+                    "properties": {
+                        "activityid": {
+                            "type": "number",
+                            "format": "integer"
+                        },
+                        "link": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "number",
+                            "format": "integer"
+                        },
+                        "label": {
+                            "type": "string"
+                        },
+                        "state": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "Activity": {
+            "type": "object",
+            "description": "Details for an activity",
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "format": "integer"
+                },
+                "inputSetLink": {
+                    "type": "string"
+                },
+                "outputSetLink": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Name of the activity (if existant)"
+                }
+            }
+        },
+        "WorkingItems": {
+            "type": "array",
+            "description": "List of working items",
+            "items": {
+                "$ref": "#/definitions/WorkingItem"
+            }
+        },
+        "WorkingItem": {
+            "type": "object",
+            "description": "Details for a working item",
+            "properties": {
+                "label": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number",
+                    "format": "integer"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "attributeConfiguration": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AttributeConfiguration"
+                    }
+                }
+            }
+        },
+        "AttributeConfiguration": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number",
+                    "format": "integer"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "postBody": {
+            "type": "object",
+            "description": "Information about data objects.",
+            "properties": {
+                "dataobjects": {
+                    "type": "array",
+                    "description": "ids of the data objects",
+                    "items": {
+                        "type": "number",
+                        "format": "integer"
+                    }
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "description": "Description of the error."
+                }
+            }
+        },
+        "ErrorArray": {
+            "type": "array",
+            "description": "List of errors",
+            "items": {
+                "$ref": "#/definitions/ErrorObject"
+            }
+        },
+        "ErrorObject": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Description of the error."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Level of the error"
+                }
+            }
+        },
+        "VersionObject": {
+            "type": "object",
+            "properties": {
+                "version": {
+                    "description": "The current Chimera version.",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

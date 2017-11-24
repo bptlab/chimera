@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+        <bpmn:outgoing>SequenceFlow_1c2sz72</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_0m3uh0o" name="Receive Application">
+        <bpmn:incoming>SequenceFlow_1c2sz72</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0ngl4ot</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_1j26l7l">
+            <bpmn:targetRef>DataObjectReference_0oj682f</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_1c2sz72" sourceRef="StartEvent_1" targetRef="Task_0m3uh0o" />
+    <bpmn:dataObjectReference id="DataObjectReference_0oj682f" name="Application&#10;[received]" dataObjectRef="DataObject_139xzme" />
+    <bpmn:dataObject id="DataObject_139xzme" />
+    <bpmn:task id="Task_1wojg0o" name="Review&#10;Application">
+        <bpmn:incoming>SequenceFlow_0ngl4ot</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_012gowf</bpmn:outgoing>
+        <bpmn:dataInputAssociation id="DataInputAssociation_1ozl5l2">
+            <bpmn:sourceRef>DataObjectReference_0oj682f</bpmn:sourceRef>
+        </bpmn:dataInputAssociation>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_0bpgv9f">
+            <bpmn:targetRef>DataObjectReference_1lokkw5</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_0ngl4ot" sourceRef="Task_0m3uh0o" targetRef="Task_1wojg0o" />
+    <bpmn:task id="Task_1ievrh7" name="End Application">
+        <bpmn:incoming>SequenceFlow_012gowf</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_1c79cwb</bpmn:outgoing>
+        <bpmn:dataInputAssociation id="DataInputAssociation_06kxp0q">
+            <bpmn:sourceRef>DataObjectReference_1lokkw5</bpmn:sourceRef>
+        </bpmn:dataInputAssociation>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_012gowf" sourceRef="Task_1wojg0o" targetRef="Task_1ievrh7" />
+    <bpmn:endEvent id="EndEvent_099mm6b">
+        <bpmn:incoming>SequenceFlow_1c79cwb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1c79cwb" sourceRef="Task_1ievrh7" targetRef="EndEvent_099mm6b" />
+    <bpmn:dataObjectReference id="DataObjectReference_1lokkw5" name="Application&#10;[reviewed]" dataObjectRef="DataObject_0jv1kbp" />
+    <bpmn:dataObject id="DataObject_0jv1kbp" />
+</bpmn:process>
+

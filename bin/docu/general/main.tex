@@ -1,0 +1,151 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University/School Laboratory Report
+% LaTeX Template
+% Version 3.1 (25/3/14)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Linux and Unix Users Group at Virginia Tech Wiki 
+% (https://vtluug.org/wiki/Example_LaTeX_chem_lab_report)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+% please be aware to install sudo apt-get install texlive-science
+
+\documentclass{article}
+
+%\usepackage[version=3]{mhchem} % Package for chemical equation typesetting
+\usepackage{siunitx} % Provides the \SI{}{} and \si{} command for typesetting SI units
+\usepackage{graphicx} % Required for the inclusion of images
+\usepackage{natbib} % Required to change bibliography style to APA
+\usepackage{amsmath} % Required for some math elements 
+\usepackage{fullpage}
+\usepackage{todonotes} %todonoes
+\usepackage{listings}
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+
+%\usepackage{times} % Uncomment to use the Times New Roman font
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{JEngine Documentation} % Title
+
+\author{BP2014W1 Team} % Author name
+
+\date{\today} % Date for the report
+
+\begin{document}
+
+\maketitle % Insert the title, author and date
+
+
+\begin{center}
+\begin{tabular}{l r}
+Date Performed: & January 1, 2015 \\ % Date the experiment was performed
+%Betreuer: & Andreas Meyer \\ % Partner names
+%& Marcin Hewelt \\
+%Instructor: & Professor Dr Mathias Weske % Instructor/supervisor
+\end{tabular}
+\end{center}
+
+\listoftodos %displaying open todos
+
+%----------------------------------------------------------------------------------------
+%	SECTION 0 
+%----------------------------------------------------------------------------------------
+
+% If you wish to include an abstract, uncomment the lines below
+\begin{abstract}
+This documentation is created in the context of the bachelor project BP2014W1 at the research group of Prof. Dr. Mathias Weske. The goal of the project was to implement an Engine for supporting the concept of \textit{Production Case Management} (PCM) in order to provide a proof of concept and a prototype for several uses cases of Bosch Sofware Innovations. This document serves as a detailed documentation of the result.   
+\end{abstract}
+
+%\tableofcontents
+%\listoffigures
+%\listoftables
+%\lstlistoflistings
+%\listofsymbols{ll}{$w$ & The weight vector}
+%\acknowledgements{Thanks to no one.}
+%\dedicatory{To \dots}
+%\mainmatter
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
+
+%
+%
+\section{Introduction}
+Production Case Management describes a flexible alternative to traditional processmanagement which focuses the modelling and execution of static, predefined processes. PCM, on the contrary, supports the usage of processvariants granting simplification of complex processmodels and flexibility in the execution by splitting complex processes into less complex fragments.
+
+%
+%
+\section{JEngine}
+Overall JEngine
+
+\begin{figure}
+\centering
+\includegraphics[width=6in]{img/fmc-architecture-v2_4.png}
+\caption{Meta Modell von PCM.}
+\label{fig:PCMmetaModell}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% JCore %%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+% Consider using \include{jcore} instead
+\input{jcore.tex}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% jcomparser %%%%%%%%%%%%%%%%%%%%%%%%%% 
+%\input{jcomparser.tex}
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% jfrontend %%%%%%%%%%%%%%%%%%%%%%%%%% 
+%\input{jfrontend.tex}
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% jdatabase %%%%%%%%%%%%%%%%%%%%%%%%%% 
+%\input{jdatabase.tex}
+%\newpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% processeditor %%%%%%%%%%%%%%%%%%%%%%%%%% 
+\input{processeditor.tex}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% jhistory %%%%%%%%%%%%%%%%%%%%%%%%%% 
+%\input{jhistory.tex}
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% janalytics %%%%%%%%%%%%%%%%%%%%%%%%%% 
+%\input{janalytics.tex}
+%\newpage
+
+\section{Addition}
+For further insides, we kindly refer to the created tutorials with their how-to section. 
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+%\bibliographystyle{apalike}
+
+%\bibliography{sample}
+
+%----------------------------------------------------------------------------------------
+
+
+\end{document}

@@ -1,0 +1,29 @@
+<div class="col-lg-6" ng-init="todo_terminated = false">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Open Tasks
+        </div>
+        <!-- ./ panel heading -->
+        <div class="panel-body">
+            <div class="tab-content">
+                <div ng-if="!todo_terminated">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr ng-repeat="activityInstance in instanceCtrl.instanceDetails.activityInstances['running']['activities']  track by $index">
+                            <td>{{activityInstance['label']}}</td>
+                            <td><a type="button" data-toggle="modal"
+                                   ng-click="instanceCtrl.getActivityOutputStates(activityInstance['id']);instanceCtrl.getActivityOutput(activityInstance['id'])"
+                                   data-target="{{'#modalTerminate' + activityInstance['id']}}"><i
+                                    class="fa fa-check"></i></a></td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- ./ tab content -->
+        </div>
+        <!-- ./ panel body -->
+    </div>
+</div>
+<!-- ./ col-lg-6 -->

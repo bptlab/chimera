@@ -155,7 +155,8 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	 */
 	private Response initializeNewInstance(UriInfo uriInfo, String cmId, String name) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.startCase(cmId, name);
+			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.createCaseExecutioner(cmId, name);
+			caseExecutioner.startCase();
 
 			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
 			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();

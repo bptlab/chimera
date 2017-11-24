@@ -58,7 +58,7 @@ public class ExecutionService {
 	 *            for Case
 	 * @return created CaseExecutioner
 	 */
-	public static CaseExecutioner startCase(String cmId, String name) {
+	public static CaseExecutioner createCaseExecutioner(String cmId, String name) {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
@@ -70,9 +70,7 @@ public class ExecutionService {
 			CaseExecutioner caseExecutioner = new CaseExecutioner(cm, caseName);
 			addCase(caseExecutioner);
 
-			caseExecutioner.startCase();
-
-			log.info(String.format("Successfully started Case with Case-Id: %s", caseExecutioner.getCase().getId()));
+			log.info(String.format("Successfully created Case with Case-Id: %s", caseExecutioner.getCase().getId()));
 			return caseExecutioner;
 		} catch (IllegalArgumentException e) {
 			throw e;

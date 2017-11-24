@@ -1,0 +1,13 @@
+.idea
+.idea/*
+.classpath
+.project
+.settings
+*.class
+*.iml
+resources/database_connection
+target/*
+*~
+/target/
+src/main/resources/
+config.properties

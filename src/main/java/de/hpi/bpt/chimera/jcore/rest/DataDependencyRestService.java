@@ -106,6 +106,9 @@ public class DataDependencyRestService extends AbstractRestService {
 			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
+			// TODO: make the output states for the activity instance dependent
+			// to the existing data objects and the atomic datastateconditions
+			// in the inputset
 			Map<DataClass, Set<AtomicDataStateCondition>> dataClassToAtomicConditions = activityInstance.getControlNode().getPostCondition().getDataClassToAtomicDataStateConditions();
 
 			JSONObject dataClassStateAssociation = new JSONObject();

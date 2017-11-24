@@ -39,6 +39,12 @@ public class DataManager {
 		this.dataObjectIdToDataObject = new HashMap<>();
 	}
 
+	public DataObject createDataObject(AtomicDataStateCondition condition) {
+		DataObject dataObject = new DataObject(condition, this);
+		dataObjectIdToDataObject.put(dataObject.getId(), dataObject);
+		return dataObject;
+	}
+
 	/**
 	 * Resolve a Map of DataClass name and ObjectLifecycle name to the
 	 * corresponding DataClass and ObjectLifecycleState.
@@ -121,8 +127,7 @@ public class DataManager {
 		for (DataClass dataClass : transitionDataClasses) {
 			ObjectLifecycleState olcState = dataClassToStateTransitions.get(dataClass);
 			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
-			DataObject dataObject = new DataObject(condition, this);
-			dataObjectIdToDataObject.put(dataObject.getId(), dataObject);
+			DataObject dataObject = createDataObject(condition);
 			usedDataObjects.add(dataObject);
 		}
 
