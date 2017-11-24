@@ -73,7 +73,7 @@ public class CaseStarter {
 					Object value = JsonPath.read(json, dataAttributeJsonPath.getJsonPath());
 					attributeInstance.setValue(value);
 				} catch (Exception e) {
-					LOGGER.error("An Exception occured while parsing the given JSON according to the given JSON-Path. Maybe there is a mistake in the JSON-Path.");
+					LOGGER.error("An Exception occured while parsing the given JSON according to the given JSON-Path. Maybe there is a mistake in the JSON-Path. " + e.getMessage());
 					attributeInstance.setValue("ERROR");
 					throw e;
 				}
