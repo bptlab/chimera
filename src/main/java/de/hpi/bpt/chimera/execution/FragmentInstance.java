@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
+import de.hpi.bpt.chimera.execution.gateway.AbstractGatewayInstance;
 import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
@@ -75,6 +76,25 @@ public class FragmentInstance {
 		}
 	}
 
+	public ControlNodeInstance createControlNodeInstance(AbstractControlNode controlNode) {
+		if (isInstantiated(controlNode)) {
+			return controlNodeIdToInstance.get(controlNode.getId());
+		} else {
+			ControlNodeInstance nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(controlNode, this);
+			addControlNodeInstance(nodeInstance);
+			return nodeInstance;
+		}
+	}
+
+	/**
+	 * 
+	 * @param controlNodes
+	 * @return
+	 */
+	public boolean checkExclusiveGatewayBehaviour(ControlNodeInstance instance, List<ControlNodeInstance> instancesToRemove) {
+		return false;
+	}
+
 	// HELPER METHODS
 	/**
 	 * 
@@ -122,12 +142,21 @@ public class FragmentInstance {
 	}
 
 	// TODO maybe not needed >>> maybe a separate map for executing (Xor-)
-	// Gateways ist better
+	// Gateways is better and faster
 	/**
 	 * @return a ArrayList of executing gateways.
 	 */
 	public Map<String, ExclusiveGatewayInstance> getExecutingExclusiveGateways() {
 		return this.controlNodeInstanceIdToInstance.entrySet().stream().filter(x -> (x.getValue().getClass().equals(ExclusiveGatewayInstance.class) && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (ExclusiveGatewayInstance) p.getValue()));
+	}
+
+	// TODO maybe not needed >>> maybe a separate map for executing (Xor-)
+	// Gateways is better and faster
+	/**
+	 * @return a ArrayList of executing gateways.
+	 */
+	public Map<String, AbstractGatewayInstance> getExecutingGateways() {
+		return this.controlNodeIdToInstance.entrySet().stream().filter(x -> (x.getValue() instanceof AbstractGatewayInstance && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (AbstractGatewayInstance) p.getValue()));
 	}
 
 	/**

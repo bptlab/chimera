@@ -1,10 +1,11 @@
-package de.hpi.bpt.chimera.jcore.eventhandling;
+package de.hpi.bpt.chimera.execution.eventhandling;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.hpi.bpt.chimera.database.DbCaseStart;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
 import de.hpi.bpt.chimera.database.history.DbLogEntry;
+import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.jcore.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
@@ -13,6 +14,8 @@ import de.hpi.bpt.chimera.jcore.controlnodes.EventFactory;
 import de.hpi.bpt.chimera.jcore.controlnodes.TimerEventInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.TimeEventJob;
+import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -39,10 +42,9 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
- * The event dispatcher class is responsible for manage registrations from
- * Events to RestQueries.
+ * The event dispatcher class is responsible for manage registrations from Events to RestQueries.
  */
-// @Path("eventdispatcher/")
+@Path("eventdispatcher/")
 public final class EventDispatcher {
 
 	private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
@@ -53,10 +55,10 @@ public final class EventDispatcher {
 
 	private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
-	// @POST
-	// @Consumes(MediaType.APPLICATION_JSON)
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 
-	// @Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
+	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
 	public static Response receiveEvent(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
 		AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
 		if (eventJson.isEmpty() || "{}".equals(eventJson)) {
@@ -68,17 +70,25 @@ public final class EventDispatcher {
 		return Response.accepted("Event received.").build();
 	}
 
-	// @POST
-	// @Consumes(MediaType.APPLICATION_JSON)
-	// @Path("casestart/{requestKey}")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("casestart/{requestKey}")
 	public static Response startCase(@PathParam("requestKey") String requestKey, String eventJson) {
-		int scenarioId = new DbCaseStart().getScenarioId(requestKey);
-		int scenarioInstanceId = ExecutionService.startNewScenarioInstanceStatic(scenarioId);
-		ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
-		String queryId = new DbCaseStart().getQueryId(requestKey);
-		CaseStarter caseStarter = new CaseStarter(scenarioId, queryId);
+		logger.info("CaseSartEvent received via REST-Interface.");
+		CaseStartTrigger caseStartTrigger = CaseModelManager.getCaseStartTrigger(requestKey);
+		// int scenarioInstanceId =
+		// ExecutionService.startNewScenarioInstanceStatic(scenarioId);
+		// ScenarioInstance instance = new ScenarioInstance(scenarioId,
+		// scenarioInstanceId);
+		// String queryId = new DbCaseStart().getQueryId(requestKey);
+		// TODO: setDataAttributes
+		// TODO: Maybe directly give the CaseModel via getParenCaseModel() to
+		// ExecutionService
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.startCase(caseStartTrigger.getParentCaseModel().getId(), "AutomaticallyCreatedInstance");
+		logger.info("An Event started a Case via REST-Interface.");
+		CaseStarter caseStarter = new CaseStarter(caseStartTrigger);
 		try {
-			caseStarter.startInstance(eventJson, instance);
+			caseStarter.startInstance(eventJson, caseExecutioner);
 			SseNotifier.notifyRefresh();
 		} catch (IllegalStateException e) {
 			logger.error("Could not start case from query", e);
@@ -93,9 +103,9 @@ public final class EventDispatcher {
 	}
 
 
-	// @GET
-	// @Produces(MediaType.APPLICATION_JSON)
-	// @Path("scenario/{scenarioId}/instance/{instanceId}/events")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
 	public static Response getRegisteredEvents(@PathParam("instanceId") int scenarioInstanceId, @PathParam("scenarioId") int scenarioId) {
 		ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
 		List<Integer> fragmentIds = scenarioInstance.getFragmentInstances().stream().map(FragmentInstance::getFragmentId).collect(Collectors.toList());
@@ -121,11 +131,13 @@ public final class EventDispatcher {
 		alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
 	}
 
-	public static void registerCaseStartEvent(String eventQuery, int scenarioId, String id) {
+	public static void registerCaseStartEvent(CaseStartTrigger caseStartTrigger) {
 		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
 		String notificationPath = String.format(SELF_PATH_CASESTART, SELF_DEPLOY_URL, requestId);
-		String notificationRuleId = sendQueryToEventService(eventQuery, requestId, notificationPath);
-		new DbCaseStart().insertCaseStartMapping(requestId, scenarioId, notificationRuleId, id);
+		String notificationRuleId = sendQueryToEventService(caseStartTrigger.getQueryExecutionPlan(), requestId, notificationPath);
+		caseStartTrigger.setEventKeyId(requestId);
+		caseStartTrigger.setNotificationRuleId(notificationRuleId);
+		CaseModelManager.registerCaseStartTrigger(requestId, caseStartTrigger);
 	}
 
 	public static void registerTimerEvent(TimerEventInstance event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
@@ -192,12 +204,12 @@ public final class EventDispatcher {
 	}
 
 	/**
-	 * Saves that events are alternative to each other, so that they can be
-	 * skipped when one of the is triggered. The events have to be registered
+	 * Saves that events are alternative to each other, so that they can be skipped when
+	 * one of the is triggered.
+	 * The events have to be registered
 	 *
-	 * @param events
-	 *            the events that are alternative to each other (e.g. behind a
-	 *            event based gateway)
+	 * @param events the events that are alternative to each other (e.g. behind a event
+	 *               based gateway)
 	 */
 	public static void registerExclusiveEvents(List<AbstractEvent> events) {
 		DbEventMapping mapping = new DbEventMapping();
@@ -211,8 +223,7 @@ public final class EventDispatcher {
 	}
 
 	private static String sendQueryToEventService(String rawQuery, String requestId, String notificationPath) {
-		// since some symbols (mainly < and >) are escaped in the fragment xml,
-		// we need to unescape them.
+		// since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
 		String query = StringEscapeUtils.unescapeHtml4(rawQuery);
 		logger.debug("Sending EventQuery to Unicorn: " + query + " " + requestId);
 

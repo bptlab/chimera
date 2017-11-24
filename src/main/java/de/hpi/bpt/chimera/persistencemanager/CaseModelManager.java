@@ -11,6 +11,7 @@ import org.json.JSONException;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 
@@ -19,6 +20,8 @@ public class CaseModelManager {
 
 	private static boolean isInstantiated = false;
 	private static Map<String, CaseModel> caseModels = new HashMap<>();
+
+	private static EventMapper eventMapper = new EventMapper();
 
 	private CaseModelManager() {
 	}
@@ -29,6 +32,9 @@ public class CaseModelManager {
 				caseModels.put(cm.getId(), cm);
 			}
 			log.info("updated CaseModels");
+			eventMapper = DomainModelPersistenceManager.loadEventMapper();
+			log.info("loaded Event Mapper");
+
 			isInstantiated = true;
 		}
 	}
@@ -104,5 +110,18 @@ public class CaseModelManager {
 		} else {
 			throw new IllegalArgumentException(String.format("CaseModel id: %s is not assigned", cmId));
 		}
+	}
+
+	public static CaseStartTrigger getCaseStartTrigger(String eventKey) {
+		mayInstantiate();
+		CaseStartTrigger startTrigger;
+		startTrigger = eventMapper.getCaseStartTriggerToEventKey(eventKey);
+
+		return startTrigger;
+	}
+
+	public static void registerCaseStartTrigger(String eventKey, CaseStartTrigger caseStartTrigger){
+		eventMapper.addCaseStartEvent(eventKey, caseStartTrigger);
+		DomainModelPersistenceManager.saveEventMapper(eventMapper);
 	}
 }

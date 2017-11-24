@@ -25,7 +25,14 @@ public class SequenceFlowResolver {
 		for (SequenceFlow sfWrap : fragXmlWrap.getSequenceFlow()) {
 			SequenceFlowAssociation sfa = new SequenceFlowAssociation();
 			sfa.setId(sfWrap.getId());
-			sfa.setCondition(sfWrap.getCondition());
+			// bpmn.io only sets the name (which in Chimera is used as
+			// Condition) when it exists. So every time there is no name,
+			// condition is set to "".
+			if (sfWrap.getCondition() != null) {
+				sfa.setCondition(sfWrap.getCondition());
+			} else {
+				sfa.setCondition("");
+			}
 			associationMap.put(sfWrap.getId(), sfa);
 		}
 	}

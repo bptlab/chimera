@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -14,6 +16,8 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 
 public abstract class AbstractActivityInstance extends ControlNodeInstance {
+	private static final Logger log = Logger.getLogger(AbstractActivityInstance.class);
+
 	private boolean isAutomaticTask;
 	// TODO: find out what canTerminate is exactly needed for
 	// private boolean canTerminate;
@@ -82,6 +86,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	public void begin() {
 		// assert ... maybe not needed
 		if (!getState().equals(State.READY)) {
+			log.info(String.format("%s not set to running, because the activty isn't in state READY", this.getControlNode().getName()));
 			return;
 		}
 		// TODO: think about whether selected DataObjectInstances should be set
@@ -91,6 +96,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		// TODO: implement skipBehaviour
 		// TODO: implement creation of possible attached BoundaryEvent
 		setState(State.RUNNING);
+		execute();
 		if (this.isAutomaticTask && getControlNode().getPostCondition().getConditionSets().size() <= 1) {
 			Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = new HashMap<>();
 			if (getControlNode().getPostCondition().getConditionSets().isEmpty()) {
@@ -107,9 +113,10 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	 */
 	@Override
 	public void terminate() {
-		if (!getState().equals(State.RUNNING))
+		if (!getState().equals(State.RUNNING)) {
+			log.info(String.format("%s not terminated, because the activty isn't in state RUNNING", this.getControlNode().getName()));
 			return;
-
+		}
 		// TODO: maybe state after creation of following
 		setState(State.TERMINATED);
 		this.getFragmentInstance().createFollowing(getControlNode());
@@ -121,6 +128,8 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	public void skip() {
 		setState(State.SKIPPED);
 	}
+
+	public abstract void execute();
 
 	// GETTER & SETTER
 	@Override

@@ -137,8 +137,12 @@ public class CaseExecutioner {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Get an ControlNodeInstance over all FragmentInstances of the Case by an
 	 * id.
+=======
+	 * Get a ControlNodeInstance over all FragmentInstances of the Case.
+>>>>>>> 5a0086cf4a2d8618df46db0aeb43e89c001fc55d
 	 * 
 	 * @param controlNodeId
 	 * @return the associated ControlNodeInstance, or {@code null} if the id is

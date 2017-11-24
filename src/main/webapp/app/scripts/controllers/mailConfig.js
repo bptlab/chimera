@@ -14,7 +14,7 @@ angular.module('jfrontend')
 
             //requesting initially all available scenarios
             $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").success(function (data) {
-                controller.scenarioIDs = data['labels'];
+                controller.scenarioIDs = data;
 
             }).error(function () {
                 console.log('request failed');
@@ -24,7 +24,7 @@ angular.module('jfrontend')
             this.submitMyForm = function () {
                 //using the data set in the form as request content
                 var data = $scope.form;
-                $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/" + controller.workingID + "/?", data).success(function (data) {
+                $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/"+ this.currentScenarioID + "/emailtask/" + controller.workingID + "/?", data).success(function (data) {
                     controller.loadData();
                 }).error(function () {
                     console.log('request failed');
@@ -49,10 +49,10 @@ angular.module('jfrontend')
             	//save the given scenario ID to later identify the scenario 
             	this.currentScenarioID=id;
                 $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").success(function (data) {
-                    controller.emailtaskIDs = data['ids'];
+                    controller.emailtaskIDs = data;
                     //if the emailtaskIDs array is not empty, prefetch the first item details
                     if (controller.emailtaskIDs.length > 0) {
-                        controller.getDetails(controller.emailtaskIDs[0], id);
+                        controller.getDetails(controller.emailtaskIDs[0].id, id);
                     }
                 }).error(function () {
                     console.log('request failed');

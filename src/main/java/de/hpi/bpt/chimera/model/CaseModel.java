@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,15 +14,21 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.apache.log4j.Logger;
+
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
+import de.hpi.bpt.chimera.model.configuration.EmailConfiguration;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity
 @NamedQuery(name = "CaseModel.getAll", query = "SELECT c FROM CaseModel c")
 public class CaseModel {
+	public static final Logger log = Logger.getLogger(CaseModel.class);
 	@Id
 	private String cmId;
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +55,27 @@ public class CaseModel {
 		entityManager.getTransaction().begin();
 		entityManager.merge(this);
 		entityManager.getTransaction().commit();
+	}
+
+	/**
+	 * Return the activity with the given Id. Throws an exception when there is
+	 * no or there are more than one activities with that Id.
+	 * 
+	 * @param controlNodeId
+	 *            the Id to identify the Activity
+	 * @return the found activity
+	 */
+	public Activity getActivityById(String controlNodeId){
+		// creates a list of all activities of all fragments and filters these
+		// list for the given Id.
+		// all activities that have the given Id are stored in result
+		List<Activity> result = this.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getTasks()).flatMap(List::stream).filter(activity -> activity.getId().equals(controlNodeId)).collect(Collectors.toList());
+		// there should exact 1 activity with the given Id
+		if (result.size() != 1) {
+			throw new IllegalStateException();
+		}
+		// return the found activity
+		return result.get(0);
 	}
 
 	// GETTER & SETTER

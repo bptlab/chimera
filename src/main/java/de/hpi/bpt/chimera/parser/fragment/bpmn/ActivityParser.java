@@ -8,8 +8,10 @@ import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
+import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.SendTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.Task;
 
 public class ActivityParser {
@@ -27,9 +29,13 @@ public class ActivityParser {
 	 * @param dfResolver
 	 */
 	public static void parseActivities(BpmnFragment fragment, FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
-		List<Activity> activities = new ArrayList<>();
-		activities.addAll(getHumanActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
-		fragment.setTasks(activities);
+		List<Activity> humanActivities = new ArrayList<>();
+		humanActivities.addAll(getHumanActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.addTasks(humanActivities);
+
+		List<Activity> mailActivities = new ArrayList<>();
+		mailActivities.addAll(getEmailActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.addTasks(mailActivities);
 	}
 
 	public static List<HumanTask> getHumanActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
@@ -50,6 +56,22 @@ public class ActivityParser {
 			activityList.add(activity);
 		}
 		return activityList;
+	}
+
+	public static List<EmailActivity> getEmailActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+		List<EmailActivity> mailActivityList = new ArrayList<>();
+
+		for (SendTask xmlSendTask : fragXmlWrap.getSendTasks()) {
+			EmailActivity mailActivity = new EmailActivity();
+			mailActivity.setId(xmlSendTask.getId());
+			mailActivity.setName(xmlSendTask.getName());
+			sfResolver.resolveIncomingSequenceFlow(xmlSendTask.getIncomingSequenceFlows(), mailActivity);
+			sfResolver.resolveOutgoingSequenceFlow(xmlSendTask.getOutgoingSequenceFlows(), mailActivity);
+			dfResolver.resolveIncomingDataFlow(xmlSendTask.getIncomingDataNodeObjectReferences(), mailActivity);
+			dfResolver.resolveOutgoingDataFlow(xmlSendTask.getOutgoingDataNodeObjectReferences(), mailActivity);
+			mailActivityList.add(mailActivity);
+		}
+		return mailActivityList;
 	}
 
 

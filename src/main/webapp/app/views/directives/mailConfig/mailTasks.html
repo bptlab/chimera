@@ -4,8 +4,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="pull-right">
-                    <select class="form-control" data-ng-options="k as v for (k, v) in mailC.scenarioIDs"
-                            ng-model="selectedScenario"
+                    <select class="form-control"
+                    		data-ng-options="scenario.id as scenario.name for scenario in mailC.scenarioIDs "
+                    		ng-model="selectedScenario"
                             data-ng-change="mailC.getAllMailtaskForScenarioID(selectedScenario)">
                         <option value="">Select Scenario</option>
                     </select>
@@ -20,9 +21,9 @@
                 <div ng-if="selectedScenario">
                     <div>
                         <ul class="nav nav-tabs">
-                            <li class="active" ng-repeat="(key, value) in mailC.emailtaskIDs">
-                                <a data-toggle="tab" ng-click="mailC.getDetails(value, selectedScenario)">
-                                    {{value}}</a>
+                            <li class="active" ng-repeat="emailActivitiy in mailC.emailtaskIDs">
+                                <a data-toggle="tab" ng-click="mailC.getDetails(emailActivitiy.id)">
+                                    {{emailActivitiy.label}}</a>
                             </li>
                         </ul>
                         <!-- /. nav tabs options -->

@@ -39,10 +39,9 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
- * The event dispatcher class is responsible for manage registrations from
- * Events to RestQueries.
+ * The event dispatcher class is responsible for manage registrations from Events to RestQueries.
  */
-// @Path("eventdispatcher/")
+@Path("eventdispatcher/")
 public final class EventDispatcher {
 
 	private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
@@ -53,10 +52,10 @@ public final class EventDispatcher {
 
 	private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
-	// @POST
-	// @Consumes(MediaType.APPLICATION_JSON)
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 
-	// @Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
+	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
 	public static Response receiveEvent(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
 		AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
 		if (eventJson.isEmpty() || "{}".equals(eventJson)) {
@@ -68,9 +67,9 @@ public final class EventDispatcher {
 		return Response.accepted("Event received.").build();
 	}
 
-	// @POST
-	// @Consumes(MediaType.APPLICATION_JSON)
-	// @Path("casestart/{requestKey}")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("casestart/{requestKey}")
 	public static Response startCase(@PathParam("requestKey") String requestKey, String eventJson) {
 		int scenarioId = new DbCaseStart().getScenarioId(requestKey);
 		int scenarioInstanceId = ExecutionService.startNewScenarioInstanceStatic(scenarioId);
@@ -93,9 +92,9 @@ public final class EventDispatcher {
 	}
 
 
-	// @GET
-	// @Produces(MediaType.APPLICATION_JSON)
-	// @Path("scenario/{scenarioId}/instance/{instanceId}/events")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
 	public static Response getRegisteredEvents(@PathParam("instanceId") int scenarioInstanceId, @PathParam("scenarioId") int scenarioId) {
 		ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
 		List<Integer> fragmentIds = scenarioInstance.getFragmentInstances().stream().map(FragmentInstance::getFragmentId).collect(Collectors.toList());
@@ -192,12 +191,12 @@ public final class EventDispatcher {
 	}
 
 	/**
-	 * Saves that events are alternative to each other, so that they can be
-	 * skipped when one of the is triggered. The events have to be registered
+	 * Saves that events are alternative to each other, so that they can be skipped when
+	 * one of the is triggered.
+	 * The events have to be registered
 	 *
-	 * @param events
-	 *            the events that are alternative to each other (e.g. behind a
-	 *            event based gateway)
+	 * @param events the events that are alternative to each other (e.g. behind a event
+	 *               based gateway)
 	 */
 	public static void registerExclusiveEvents(List<AbstractEvent> events) {
 		DbEventMapping mapping = new DbEventMapping();
@@ -211,8 +210,7 @@ public final class EventDispatcher {
 	}
 
 	private static String sendQueryToEventService(String rawQuery, String requestId, String notificationPath) {
-		// since some symbols (mainly < and >) are escaped in the fragment xml,
-		// we need to unescape them.
+		// since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
 		String query = StringEscapeUtils.unescapeHtml4(rawQuery);
 		logger.debug("Sending EventQuery to Unicorn: " + query + " " + requestId);
 
