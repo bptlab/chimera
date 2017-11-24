@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
+import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.activity.HumanTaskInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
@@ -25,8 +26,17 @@ import de.hpi.bpt.chimera.jcore.controlnodes.State;
 public class ExclusiveGatewayInstanceControlFlowTest {
 	String jsonString = "";
 	final String path = "execution/ExclusiveGatewayInstanceControlFlowTest";
-	CaseModel cm;
+	private final String filepath = "src/test/resources/execution/ExclusiveGatewayInstanceControlFlowTest";
+	private CaseModel cm;
+	private CaseExecutioner caseExecutioner;
 
+	@Before
+	public void setup() {
+		cm = CaseModelTestHelper.parseCaseModel(filepath);
+		caseExecutioner = new CaseExecutioner(cm, cm.getName());
+		caseExecutioner.startCase();
+	}
+	/*
 	@Before
 	public void getJsonString() {
 		try {
@@ -38,6 +48,7 @@ public class ExclusiveGatewayInstanceControlFlowTest {
 		}
 		cm = CaseModelParser.parseCaseModel(jsonString);
 	}
+	*/
 
 	/*
 	 * Checks whether the controlflow of an ExclusiveGateway works correct and
@@ -52,7 +63,7 @@ public class ExclusiveGatewayInstanceControlFlowTest {
 	}
 
 	private void ControlFlowTest(CaseModel cm) {
-		CaseExecutioner caseExecutioner = new CaseExecutioner(cm, "TestCase");
+		// CaseExecutioner caseExecutioner = new CaseExecutioner(cm, "TestCase");
 		caseExecutioner.startCase();
 
 		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity1");
