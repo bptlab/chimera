@@ -248,7 +248,7 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		String comparison = ast.getChild(i + 1).toStringTree();
 		String right = ast.getChild(i + 2).toStringTree();
 
-		for (DataObject dataObject : this.getCaseExecutioner().getDataObjectInstances()) {
+		for (DataObject dataObject : this.getCaseExecutioner().getDataManager().getDataObjects()) {
 			String dataObjectName = dataObject.getDataClass().getName();
 			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
 				left = left.replace("#" + dataObjectName + "." + dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString());

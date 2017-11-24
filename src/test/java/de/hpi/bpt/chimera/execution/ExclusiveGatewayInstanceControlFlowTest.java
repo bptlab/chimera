@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
@@ -12,9 +13,12 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.activity.HumanTaskInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 
@@ -51,11 +55,11 @@ public class ExclusiveGatewayInstanceControlFlowTest {
 		CaseExecutioner caseExecutioner = new CaseExecutioner(cm, "TestCase");
 		caseExecutioner.startCase();
 
-		HumanTaskInstance activityInst = (HumanTaskInstance) caseExecutioner.getAllActivitiesWithState(State.READY).stream().filter(activity -> activity.getControlNode().getName().equals("activity1")).toArray()[0];
-		caseExecutioner.beginActivityInstance(activityInst.getId(), new ArrayList<String>());
-		caseExecutioner.terminateActivityInstance(activityInst.getId(), new DataManagerBean(new JSONObject()));
+		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity1");
+		caseExecutioner.beginActivityInstance(activityInst, new ArrayList<DataObject>());
+		caseExecutioner.terminateActivityInstance(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
 
-		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getAllActivitiesWithState(State.READY);
+		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getActivitiesWithState(State.READY);
 		Collection<String> readyActivities = new ArrayList<String>();
 		readyActivities.addAll(activityInstances.stream().map(activity -> activity.getControlNode().getName()).collect(Collectors.toList()));
 
@@ -65,7 +69,7 @@ public class ExclusiveGatewayInstanceControlFlowTest {
 		assertTrue("Activity4 should be in State READY but isn't.", readyActivities.contains("activity4"));
 
 		HumanTaskInstance activityInst2 = (HumanTaskInstance) activityInstances.stream().filter(activity -> activity.getControlNode().getName().equals("activity2")).toArray()[0];
-		caseExecutioner.beginActivityInstance(activityInst2.getId(), new ArrayList<String>());
-		assertEquals("Activities aren't skipped properly.", caseExecutioner.getAllActivitiesWithState(State.READY).size(), 0);
+		caseExecutioner.beginActivityInstance(activityInst2, new ArrayList<DataObject>());
+		assertEquals("Activities aren't skipped properly.", caseExecutioner.getActivitiesWithState(State.READY).size(), 0);
 	}
 }

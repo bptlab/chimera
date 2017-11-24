@@ -65,10 +65,13 @@ public class ActivityParser {
 			EmailActivity mailActivity = new EmailActivity();
 			mailActivity.setId(xmlSendTask.getId());
 			mailActivity.setName(xmlSendTask.getName());
-			sfResolver.resolveIncomingSequenceFlow(xmlSendTask.getIncomingSequenceFlows(), mailActivity);
-			sfResolver.resolveOutgoingSequenceFlow(xmlSendTask.getOutgoingSequenceFlows(), mailActivity);
-			dfResolver.resolveIncomingDataFlow(xmlSendTask.getIncomingDataNodeObjectReferences(), mailActivity);
-			dfResolver.resolveOutgoingDataFlow(xmlSendTask.getOutgoingDataNodeObjectReferences(), mailActivity);
+			List<AtomicDataStateCondition> availableInputConditions = dfResolver.resolveDataNodeReferences(xmlSendTask.getIncomingDataNodeObjectReferences());
+			DataStateCondition preCondition = dfResolver.parseDataStateCondition(availableInputConditions);
+			mailActivity.setPreCondition(preCondition);
+			List<AtomicDataStateCondition> availableOutputConditions = dfResolver.resolveDataNodeReferences(xmlSendTask.getOutgoingDataNodeObjectReferences());
+			DataStateCondition postCondition = dfResolver.parseDataStateCondition(availableOutputConditions);
+			mailActivity.setPostCondition(postCondition);
+
 			mailActivityList.add(mailActivity);
 		}
 		return mailActivityList;

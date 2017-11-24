@@ -52,7 +52,7 @@ public class CaseStarter {
 	public void initializeDataObjects(CaseExecutioner caseExecutioner) {
 		// DataManager dataManager = scenarioInstance.getDataManager();
 		for (CaseStartTriggerConsequence triggerConsequence : caseStartTrigger.getTriggerConsequences()) {
-			LOGGER.info(String.format("Here we should initialize DataObject %s of Case %s in State %s.", triggerConsequence.getDataObjectState().getDataClass().getName(), caseExecutioner.getCase().getName(), triggerConsequence.getDataObjectState().getState().getName()));
+			LOGGER.info(String.format("Here we should initialize DataObject %s of Case %s in State %s.", triggerConsequence.getDataObjectState().getDataClass().getName(), caseExecutioner.getCase().getName(), triggerConsequence.getDataObjectState().getObjectLifecycleState().getName()));
 			// dataManager.initializeDataObject(part.getDataClassId(),
 			// part.getStartStateId());
 		}
