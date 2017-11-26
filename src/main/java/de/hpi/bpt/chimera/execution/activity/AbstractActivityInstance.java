@@ -103,7 +103,8 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
 			}
 			
-			getCaseExecutioner().terminateActivityInstance(this, dataObjectToObjectLifecycleTransition);
+			getCaseExecutioner().prepareForActivityInstanceTermination(this, dataObjectToObjectLifecycleTransition);
+			getCaseExecutioner().terminateActivityInstance(this);
 		}
 	}
 

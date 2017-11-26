@@ -102,13 +102,16 @@ public class CaseExecutioner {
 	}
 
 	/**
+	 * Does everything for terminating an activity excepted from the actual
+	 * termination. This will be done after all DataObjects/DataAttributes are
+	 * set via an Rest-Method which will be called by the Front-End.
 	 * 
 	 * @param activityInstanceId
 	 * @param dataClassToStateTransition
 	 * @return List of DataObjects that made a transition and those that are
 	 *         newly created
 	 */
-	public List<DataObject> terminateActivityInstance(AbstractActivityInstance activityInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+	public List<DataObject> prepareForActivityInstanceTermination(AbstractActivityInstance activityInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		try {
 			if (!activityInstance.getState().equals(State.RUNNING)) {
 				IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(activityInstance, State.RUNNING);
@@ -124,8 +127,22 @@ public class CaseExecutioner {
 				usedDataObject = dataManager.handleDataObjectTransitions(workingItems, dataClassToStateTransitions);
 			}
 
-			activityInstance.terminate();
 			return usedDataObject;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Finally terminates the activity. Therefore this Method is called after
+	 * termination was prepared (prepareForActivityInstanceTermination() ) and
+	 * all DataAttributes were set.
+	 * 
+	 * @param activityInstanceId
+	 */
+	public void terminateActivityInstance(AbstractActivityInstance activityInstance) {
+		try {
+			activityInstance.terminate();
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}

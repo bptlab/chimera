@@ -12,6 +12,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  */
 @Path("interface/v2")
 public class ActivityRestService extends AbstractRestService {
+	private final static Logger log = Logger.getLogger(ActivityRestService.class);
 	/**
 	 * Returns a JSON-Object containing information about all activity
 	 * instances of a specified scenario instance.
@@ -207,16 +209,21 @@ public class ActivityRestService extends AbstractRestService {
 	@PUT
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
 	public Response setDataAttribute(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
+		log.info("REST: setting DataAttributeInstances");
 		try {
 			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
 			Map<String, Map<String, Object>> dataAttributeValues = parseDataAttribueValues(post);
 
 			DataManager dataManager = caseExecutioner.getDataManager();
 			dataManager.setDataAttributeValues(dataAttributeValues);
 
+			caseExecutioner.terminateActivityInstance(activityInstance);
+
 			return Response.status(201).build();
 		} catch (IllegalArgumentException e) {
+			log.error("REST setDataAttribute() Error", e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
@@ -349,7 +356,7 @@ public class ActivityRestService extends AbstractRestService {
 
 			Map<String, String> dataClassToStateTransitionStrings = parseDataClassToStateTransitionStrings(post);
 			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(dataClassToStateTransitionStrings);
-			List<DataObject> usedDataObjects = caseExecutioner.terminateActivityInstance(activityInstance, dataClassToStateTransitions);
+			List<DataObject> usedDataObjects = caseExecutioner.prepareForActivityInstanceTermination(activityInstance, dataClassToStateTransitions);
 
 			JSONArray result = parseJsonForUsedDataObjects(usedDataObjects);
 			

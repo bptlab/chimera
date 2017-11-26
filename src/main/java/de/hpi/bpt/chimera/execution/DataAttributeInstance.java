@@ -4,10 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+
 import de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
 public class DataAttributeInstance {
+
+	private final static Logger log = Logger.getLogger(DataAttributeInstance.class);
 
 	private String id;
 	private DataAttribute dataAttribute;
@@ -48,16 +52,21 @@ public class DataAttributeInstance {
 	 * @param value
 	 */
 	public void setValue(Object value) {
+		log.info("DataObject: Attribute value set.");
+		this.value = value.toString();
 		// TODO: implement an independent version for the type of an value of an
 		// data attribute
-		Class<? extends Object> clazz = dataAttribute.getType().getClass();
-		if (clazz.isInstance(value)) {
-			getCaseExecutioner().logDataAttributeTransition(this, value);
-			this.value = value;
-		} else {
-			String errorMsg = String.format("Could not set value of DataAttribute %s. Expected: %s, Received: %s", dataAttribute.getName(), dataAttribute.getType().getClass().getName(), value.getClass().getName());
-			throw new IllegalArgumentException(errorMsg);
-		}
+		// Class<? extends Object> clazz = dataAttribute.getType().getClass();
+		// if (clazz.isInstance(value)) {
+		// getCaseExecutioner().logDataAttributeTransition(this, value);
+		// this.value = value;
+		// } else {
+		// String errorMsg = String.format("Could not set value of DataAttribute
+		// %s. Expected: %s, Received: %s", dataAttribute.getName(),
+		// dataAttribute.getType().getClass().getName(),
+		// value.getClass().getName());
+		// throw new IllegalArgumentException(errorMsg);
+		// }
 
 	}
 

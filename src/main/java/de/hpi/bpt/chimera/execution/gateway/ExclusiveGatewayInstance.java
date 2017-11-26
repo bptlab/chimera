@@ -129,6 +129,7 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	 */
 	@Override
 	public void enableControlFlow() {
+		log.info("XOR-Gateway Controlflow enabled");
 		begin();
 	}
 
@@ -248,11 +249,19 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		String comparison = ast.getChild(i + 1).toStringTree();
 		String right = ast.getChild(i + 2).toStringTree();
 
+		log.info("Beginning to replace dataObject references.");
 		for (DataObject dataObject : this.getCaseExecutioner().getDataManager().getDataObjects()) {
 			String dataObjectName = dataObject.getDataClass().getName();
+			log.info("Beginning to replace dataAttribute references. There are " + dataObject.getDataAttributeInstances().size());
 			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
+				log.info("a dataAttribute Instance");
+				try {
+				log.info(String.format("iterating through %s.%s with values:%s", dataObjectName, dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString()));
 				left = left.replace("#" + dataObjectName + "." + dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString());
 				right = right.replace("#" + dataObjectName + "." + dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString());
+				} catch (Exception e) {
+					log.error("Error", e);
+				}
 			}
 		}
 		// TODO
