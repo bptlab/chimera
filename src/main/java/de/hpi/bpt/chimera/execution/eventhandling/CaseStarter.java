@@ -67,7 +67,7 @@ public class CaseStarter {
 	}
 
 	private void writeDataAttributeInstances(DataObject dataObject, DataAttributeJsonPath dataAttributeJsonPath, String json) {
-		for (DataAttributeInstance attributeInstance : dataObject.getDataAttributeInstances().values()) {
+		for (DataAttributeInstance attributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
 			if (attributeInstance.getDataAttribute().equals(dataAttributeJsonPath.getDataAttribute())) {
 				try {
 					Object value = JsonPath.read(json, dataAttributeJsonPath.getJsonPath());

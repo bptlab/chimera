@@ -7,7 +7,7 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
@@ -29,11 +29,11 @@ public class ActivityParser {
 	 * @param dfResolver
 	 */
 	public static void parseActivities(BpmnFragment fragment, FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
-		List<Activity> humanActivities = new ArrayList<>();
+		List<AbstractActivity> humanActivities = new ArrayList<>();
 		humanActivities.addAll(getHumanActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.addTasks(humanActivities);
 
-		List<Activity> mailActivities = new ArrayList<>();
+		List<AbstractActivity> mailActivities = new ArrayList<>();
 		mailActivities.addAll(getEmailActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.addTasks(mailActivities);
 	}

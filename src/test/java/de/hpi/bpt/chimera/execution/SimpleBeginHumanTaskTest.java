@@ -18,7 +18,7 @@ import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 
 /**

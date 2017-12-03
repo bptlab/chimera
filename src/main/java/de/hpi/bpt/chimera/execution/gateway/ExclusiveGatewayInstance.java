@@ -252,8 +252,8 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		log.info("Beginning to replace dataObject references.");
 		for (DataObject dataObject : this.getCaseExecutioner().getDataManager().getDataObjects()) {
 			String dataObjectName = dataObject.getDataClass().getName();
-			log.info("Beginning to replace dataAttribute references. There are " + dataObject.getDataAttributeInstances().size());
-			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
+			log.info("Beginning to replace dataAttribute references. There are " + dataObject.getDataAttributeInstanceIdToInstance().size());
+			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
 				log.info("a dataAttribute Instance");
 				try {
 				log.info(String.format("iterating through %s.%s with values:%s", dataObjectName, dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString()));

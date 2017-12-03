@@ -1,6 +1,9 @@
 package de.hpi.bpt.chimera.execution;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -101,12 +104,17 @@ public class DataObject {
 		return condition.getObjectLifecycleState();
 	}
 
-	public Map<String, DataAttributeInstance> getDataAttributeInstances() {
+	public Map<String, DataAttributeInstance> getDataAttributeInstanceIdToInstance() {
 		return dataAttributeInstanceIdToInstance;
 	}
 
-	public void setDataAttributeInstances(Map<String, DataAttributeInstance> dataAttributeInstances) {
-		this.dataAttributeInstanceIdToInstance = dataAttributeInstances;
+	public List<DataAttributeInstance> getDataAttributeInstances() {
+		Collection<DataAttributeInstance> dataAttributeInstances = dataAttributeInstanceIdToInstance.values();
+		return new ArrayList<>(dataAttributeInstances);
+	}
+
+	public void setDataAttributeInstanceIdToInstance(Map<String, DataAttributeInstance> dataAttributeInstanceIdToInstance) {
+		this.dataAttributeInstanceIdToInstance = dataAttributeInstanceIdToInstance;
 	}
 
 	public void setDataManger(DataManager dataManager) {

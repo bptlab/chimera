@@ -23,6 +23,6 @@ public class HumanTaskInstance extends AbstractActivityInstance {
 
 	@Override
 	public void execute() {
-
+		// no execution for HumanTasks
 	}
 }

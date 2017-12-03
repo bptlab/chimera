@@ -7,7 +7,7 @@ import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.configuration.EmailConfiguration;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
 
 import javax.ws.rs.*;
@@ -57,7 +57,7 @@ public class RestConfigurator {
 		if (!CaseModelManager.isExistingCaseModel(caseModelId)) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 		}
-		Activity emailActivity = CaseModelManager.getCaseModel(caseModelId).getActivityById(emailTaskId);
+		AbstractActivity emailActivity = CaseModelManager.getCaseModel(caseModelId).getActivityById(emailTaskId);
 		if (!(emailActivity instanceof EmailActivity)) {
 			log.error("The activty for the given Id isn't an EmailActivit");
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
@@ -131,7 +131,7 @@ public class RestConfigurator {
 	private List<EmailActivity> getAllEmailActiviesFromCaseModel(CaseModel caseModel) {
 		// first create a List of all Activities of the CaseModel. Therefore add
 		// all Activities of each Fragment to a List of all Activities.
-		List<Activity> activities = caseModel.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getTasks()).flatMap(List::stream).collect(Collectors.toList());
+		List<AbstractActivity> activities = caseModel.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getTasks()).flatMap(List::stream).collect(Collectors.toList());
 		// now filter the List of all Activities for the Activities which are
 		// from Type EmailActivity
 		return activities.stream().filter(activity -> activity instanceof EmailActivity).map(activity -> (EmailActivity) activity).collect(Collectors.toList());
@@ -158,7 +158,7 @@ public class RestConfigurator {
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{}").build();
 		}
 		EmailConfigJaxBean emailConfigJaxB = new EmailConfigJaxBean();
-		Activity emailActivity = CaseModelManager.getCaseModel(caseModelId).getActivityById(mailTaskId);
+		AbstractActivity emailActivity = CaseModelManager.getCaseModel(caseModelId).getActivityById(mailTaskId);
 		if (!(emailActivity instanceof EmailActivity)) {
 			log.error("The activty for the given Id isn't an EmailActivit");
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{}").build();

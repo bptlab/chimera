@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -314,5 +315,13 @@ public class DataManager {
 
 	public Map<String, DataObject> getDataObjectIdToDataObject() {
 		return dataObjectIdToDataObject;
+	}
+
+	/**
+	 * 
+	 * @return all DataAttributeInstances in all existing DataObjects
+	 */
+	public List<DataAttributeInstance> getDataAttributeInstances() {
+		return this.getDataObjects().stream().map(DataObject::getDataAttributeInstances).flatMap(Collection::stream).collect(Collectors.toList());
 	}
 }

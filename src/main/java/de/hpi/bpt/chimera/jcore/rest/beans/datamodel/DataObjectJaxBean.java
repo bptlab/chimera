@@ -45,13 +45,13 @@ public class DataObjectJaxBean {
 		setState(dataObject.getObjectLifecycleState().getName());
 		setLocked(dataObject.isLocked());
 
-		List<DataAttributeJaxBean> attributes = new ArrayList<>(dataObject.getDataAttributeInstances().size());
-		for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
+		List<DataAttributeJaxBean> attributes = new ArrayList<>(dataObject.getDataAttributeInstanceIdToInstance().size());
+		for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
 			DataAttributeJaxBean attributeInstance = new DataAttributeJaxBean(dataAttributeInstance);
 			attributes.add(attributeInstance);
 		}
 
-		DataAttributeJaxBean[] attributesArray = attributes.toArray(new DataAttributeJaxBean[dataObject.getDataAttributeInstances().size()]);
+		DataAttributeJaxBean[] attributesArray = attributes.toArray(new DataAttributeJaxBean[dataObject.getDataAttributeInstanceIdToInstance().size()]);
 		setAttributeConfiguration(attributesArray);
 	}
 

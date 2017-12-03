@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
@@ -31,7 +31,7 @@ public class BpmnFragment {
 	private StartEvent startEvent;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<Activity> activities = new ArrayList<>();
+	private List<AbstractActivity> activities = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<ParallelGateway> parallelGateways = new ArrayList<>();
@@ -48,7 +48,7 @@ public class BpmnFragment {
 	@OneToOne(cascade = CascadeType.ALL)
 	private EndEvent endEvent;
 
-	public void addTasks(List<Activity> tasks) {
+	public void addTasks(List<AbstractActivity> tasks) {
 		activities.addAll(tasks);
 	}
 	
@@ -68,7 +68,7 @@ public class BpmnFragment {
 		this.startEvent = startEvent;
 	}
 
-	public List<Activity> getTasks() {
+	public List<AbstractActivity> getTasks() {
 		return activities;
 	}
 
@@ -88,7 +88,7 @@ public class BpmnFragment {
 		this.conditions = conditions;
 	}
 
-	public void setTasks(List<Activity> activities) {
+	public void setTasks(List<AbstractActivity> activities) {
 		this.activities = activities;
 	}
 

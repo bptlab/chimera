@@ -77,8 +77,8 @@ public class CaseExecutioner {
 	 * DataObjects is already locked the AbstractActivityInstance cannot be
 	 * begun.
 	 * 
-	 * @param activityInstanceId
-	 *            - {@code id} of AbstractActivityInstance that shall be begun
+	 * @param activityInstance
+	 *            AbstractActivityInstance that shall be begun
 	 * @param selectedDataObjectIds
 	 *            - list of {@code ids } of DataObjects that are used by the
 	 *            AbstractActivityInstance
@@ -127,6 +127,7 @@ public class CaseExecutioner {
 				usedDataObject = dataManager.handleDataObjectTransitions(workingItems, dataClassToStateTransitions);
 			}
 
+			activityInstance.setTransitionDataObjects(usedDataObject);
 			return usedDataObject;
 		} catch (IllegalArgumentException e) {
 			throw e;

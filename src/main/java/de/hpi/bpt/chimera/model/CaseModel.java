@@ -22,7 +22,7 @@ import de.hpi.bpt.chimera.model.configuration.EmailConfiguration;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity
@@ -65,11 +65,11 @@ public class CaseModel {
 	 *            the Id to identify the Activity
 	 * @return the found activity
 	 */
-	public Activity getActivityById(String controlNodeId){
+	public AbstractActivity getActivityById(String controlNodeId){
 		// creates a list of all activities of all fragments and filters these
 		// list for the given Id.
 		// all activities that have the given Id are stored in result
-		List<Activity> result = this.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getTasks()).flatMap(List::stream).filter(activity -> activity.getId().equals(controlNodeId)).collect(Collectors.toList());
+		List<AbstractActivity> result = this.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getTasks()).flatMap(List::stream).filter(activity -> activity.getId().equals(controlNodeId)).collect(Collectors.toList());
 		// there should exact 1 activity with the given Id
 		if (result.size() != 1) {
 			throw new IllegalStateException();

@@ -403,7 +403,7 @@ public class ActivityRestService extends AbstractRestService {
 			dataObjectInfo.put("id", dataObject.getId());
 			dataObjectInfo.put("dataclass", dataObject.getDataClass().getName());
 			JSONArray attributeInstanceInfo = new JSONArray();
-			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
+			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
 				JSONObject attributeInstance = new JSONObject();
 				attributeInstance.put("name", dataAttributeInstance.getDataAttribute().getName());
 				attributeInstance.put("id", dataAttributeInstance.getId());

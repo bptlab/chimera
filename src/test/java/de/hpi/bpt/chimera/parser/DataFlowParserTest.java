@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 
 public class DataFlowParserTest {
 	String jsonString = "";
@@ -38,7 +38,7 @@ public class DataFlowParserTest {
 		// manager
 		CaseModel cm = CaseModelParser.parseCaseModel(jsonString);
 
-		Activity task = cm.getFragments().get(0).getBpmnFragment().getTasks().get(0);
+		AbstractActivity task = cm.getFragments().get(0).getBpmnFragment().getTasks().get(0);
 		assertEquals(12, cm.getFragments().get(0).getBpmnFragment().getConditions().size());
 		List<ConditionSet> preCondition = task.getPreCondition().getConditionSets();
 		List<ConditionSet> postCondition = task.getPostCondition().getConditionSets();

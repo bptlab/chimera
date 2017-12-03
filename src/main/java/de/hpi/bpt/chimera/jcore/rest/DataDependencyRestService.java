@@ -161,7 +161,7 @@ public class DataDependencyRestService extends AbstractRestService {
 			List<DataObject> selectedDataObjects = activityInstance.getSelectedDataObjects();
 			for (DataObject dataObject : selectedDataObjects) {
 				JSONArray dataAttributeArray = new JSONArray();
-				for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
+				for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
 					dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttributeInstance)));
 				}
 				result.put(dataObject.getDataClass().getName(), dataAttributeArray);

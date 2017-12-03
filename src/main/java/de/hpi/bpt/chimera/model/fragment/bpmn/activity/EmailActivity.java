@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import de.hpi.bpt.chimera.model.configuration.EmailConfiguration;
 
 @Entity
-public class EmailActivity extends Activity {
+public class EmailActivity extends AbstractActivity {
 
 	private EmailConfiguration emailConfiguration = new EmailConfiguration();
 
