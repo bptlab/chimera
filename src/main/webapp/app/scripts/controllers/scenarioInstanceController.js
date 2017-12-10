@@ -295,10 +295,10 @@ angular.module('jfrontend')
                     .success(function (data) {
                         instanceCtrl.availableInput[activityInstanceId] = {};
                         data.forEach(function (dataobject) {
-                            if (!instanceCtrl.availableInput[activityInstanceId].hasOwnProperty(dataobject['label'])) {
-                                instanceCtrl.availableInput[activityInstanceId][dataobject['label']] = [];
+                            if (!instanceCtrl.availableInput[activityInstanceId].hasOwnProperty(dataobject['dataclass'])) {
+                                instanceCtrl.availableInput[activityInstanceId][dataobject['dataclass']] = [];
                             }
-                            instanceCtrl.availableInput[activityInstanceId][dataobject['label']].push(dataobject);
+                            instanceCtrl.availableInput[activityInstanceId][dataobject['dataclass']].push(dataobject);
                         });
                     })
                     .error(function () {

@@ -22,7 +22,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	// TODO: find out what canTerminate is exactly needed for
 	// private boolean canTerminate;
 	private List<DataObject> selectedDataObjects;
-	private List<DataObject> transitionDataObjects;
+	private List<DataObject> outputDataObjects;
 
 
 	/**
@@ -35,7 +35,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		super(activity, fragmentInstance);
 		this.isAutomaticTask = false;
 		this.selectedDataObjects = new ArrayList<>();
-		this.transitionDataObjects = new ArrayList<>();
+		this.outputDataObjects = new ArrayList<>();
 	}
 
 	/**
@@ -100,10 +100,6 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 			log.info(String.format("%s not set to running, because the activty isn't in state READY", this.getControlNode().getName()));
 			return;
 		}
-		// TODO: think about whether selected DataObjectInstances should be set
-		// here or by CaseExecutioner
-		// saved here. By CaseExecutioner should be better.
-		// getFragmentInstance().updateDataFlow();
 		// TODO: implement skipBehaviour
 		// TODO: implement creation of possible attached BoundaryEvent
 		setState(State.RUNNING);
@@ -171,11 +167,11 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		this.isAutomaticTask = isAutomaticTask;
 	}
 
-	public List<DataObject> getTransitionDataObjects() {
-		return transitionDataObjects;
+	public List<DataObject> getOutputDataObjects() {
+		return outputDataObjects;
 	}
 
-	public void setTransitionDataObjects(List<DataObject> transitionDataObjects) {
-		this.transitionDataObjects = transitionDataObjects;
+	public void setOutputDataObjects(List<DataObject> outputDataObjects) {
+		this.outputDataObjects = outputDataObjects;
 	}
 }

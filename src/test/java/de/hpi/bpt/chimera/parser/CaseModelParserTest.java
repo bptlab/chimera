@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
 import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +11,6 @@ import org.junit.Test;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.CaseStartTriggerConsequence;
-import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
@@ -167,9 +165,9 @@ public class CaseModelParserTest {
 		assertTrue("wrong State mapping", objectStateCondition1.getObjectLifecycleState().equals(state));
 
 		int dataclassPos = dcPos == 0 ? 1 : 0;
-		DataAttributeJsonPath mapping = consequence.get(dataclassPos).getMapping().get(0);
 
 		DataAttribute attr = dataModelClasses.get(0).getDataAttributes().get(0);
-		assertTrue("wrong Attribute mapping", attr.equals(mapping.getDataAttribute()));
+		String jsonPathString = consequence.get(dataclassPos).getDataAttributeToJsonPath().get(attr).getJsonPathString();
+		assertNotNull("wrong Attribute mapping", jsonPathString);
 	}
 }

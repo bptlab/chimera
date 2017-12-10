@@ -89,20 +89,20 @@ public class DataManager {
 	 * of one {@code dataObjectsToTransition} lead to a new DataObject with the
 	 * referred ObjectLifecycleState.
 	 * 
-	 * @param dataObjectsToTransition
+	 * @param workingItems
 	 * @param dataClassToStateTransitions
 	 * @return the List of DataObject that had a transition and were newly
 	 *         created
 	 */
-	public List<DataObject> handleDataObjectTransitions(List<DataObject> dataObjectsToTransition, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+	public List<DataObject> handleDataObjectTransitions(List<DataObject> workingItems, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		// validation
-		for (DataObject dataObject : dataObjectsToTransition) {
+		List<DataObject> dataObjectToTransition = new ArrayList<>();
+		for (DataObject dataObject : workingItems) {
 			DataClass dataClass = dataObject.getDataClass();
 			if (!dataClassToStateTransitions.containsKey(dataClass)) {
-				IllegalDataClassNameException e = new IllegalDataClassNameException(dataClass.getName());
-				log.error(e.getMessage());
-				throw e;
+				continue;
 			}
+			dataObjectToTransition.add(dataObject);
 			ObjectLifecycleState oldOlcState = dataObject.getObjectLifecycleState();
 			ObjectLifecycleState newOlcState = dataClassToStateTransitions.get(dataClass);
 			if (!newOlcState.isSuccessorOf(oldOlcState)) {
@@ -112,14 +112,12 @@ public class DataManager {
 			}
 		}
 
-		List<DataObject> usedDataObjects = new ArrayList<>();
 		// make transitions
 		List<DataClass> workingItemDataClasses = new ArrayList<>();
-		for (DataObject workingItem : dataObjectsToTransition) {
+		for (DataObject workingItem : dataObjectToTransition) {
 			ObjectLifecycleState newObjectLifecycleState = dataClassToStateTransitions.get(workingItem.getDataClass());
 			workingItem.makeObjectLifecycleTransition(newObjectLifecycleState);
 			workingItemDataClasses.add(workingItem.getDataClass());
-			usedDataObjects.add(workingItem);
 		}
 		
 		// create new DataObjects
@@ -129,10 +127,10 @@ public class DataManager {
 			ObjectLifecycleState olcState = dataClassToStateTransitions.get(dataClass);
 			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
 			DataObject dataObject = createDataObject(condition);
-			usedDataObjects.add(dataObject);
+			dataObjectToTransition.add(dataObject);
 		}
 
-		return usedDataObjects;
+		return dataObjectToTransition;
 	}
 
 	/**

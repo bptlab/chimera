@@ -11,9 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.JsonPath;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.CaseStartTriggerConsequence;
-import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
@@ -85,19 +85,18 @@ public class CaseStartTriggerParser {
 				ObjectLifecycleState objectLifecycleState = parserHelper.getNameToObjectLifecycleState(dataClass, objectLifecycleStateName);
 				dataObjectStateCondition.setObjectLifecycleState(objectLifecycleState);
 
-				List<DataAttributeJsonPath> dataAttributeJsonPath = parseDataAttributeJsonPaths(triggerConsequenceJson.getJSONArray("mapping"), parserHelper, dataClass);
+				Map<DataAttribute, JsonPath> dataAttributeToJsonPath = parseDataAttributeJsonPaths(triggerConsequenceJson.getJSONArray("mapping"), parserHelper, dataClass);
 				
 				if (conditionToTrigger.containsKey(dataObjectStateCondition)) {
 					// If DataObjectStateCondition already occurred the
 					// DataAttributeJsonPaths are just added.
 					CaseStartTriggerConsequence triggerConsequence = conditionToTrigger.get(dataObjectStateCondition);
-					triggerConsequence.addMapping(dataAttributeJsonPath);
+					triggerConsequence.getDataAttributeToJsonPath().putAll(dataAttributeToJsonPath);
 				} else {
 					// If DataObjectStateCondition does not already occurred a
 					// new CaseStartTrigger gets created.
-					CaseStartTriggerConsequence triggerConsequence = new CaseStartTriggerConsequence(dataObjectStateCondition, dataAttributeJsonPath);
-					
-					triggerConsequence.setMapping(dataAttributeJsonPath);
+					CaseStartTriggerConsequence triggerConsequence = new CaseStartTriggerConsequence(dataObjectStateCondition, dataAttributeToJsonPath);
+
 					conditionToTrigger.put(dataObjectStateCondition, triggerConsequence);
 				}
 
@@ -122,25 +121,21 @@ public class CaseStartTriggerParser {
 	 * @param dataClass
 	 * @return DataAttributeJsonPath
 	 */
-	private static List<DataAttributeJsonPath> parseDataAttributeJsonPaths(JSONArray mappingJsonArray, CaseModelParserHelper parserHelper, DataClass dataClass) {
+	private static Map<DataAttribute, JsonPath> parseDataAttributeJsonPaths(JSONArray mappingJsonArray, CaseModelParserHelper parserHelper, DataClass dataClass) {
 		int arraySize = mappingJsonArray.length();
 		CaseStartTriggerValidation.validateMappingAmount(arraySize);
 
-		List<DataAttributeJsonPath> mapping = new ArrayList<>();
+		Map<DataAttribute, JsonPath> mapping = new HashMap<>();
 		for (int i = 0; i < arraySize; i++) {
 			try {
 				JSONObject mappingJson = mappingJsonArray.getJSONObject(i);
 
-				DataAttributeJsonPath dataAttributeJsonPath = new DataAttributeJsonPath();
-
 				String dataAttributeName = mappingJson.getString("attr");
 				DataAttribute dataAttribute = parserHelper.getNameToDataAttribute(dataClass, dataAttributeName);
-				dataAttributeJsonPath.setDataAttribute(dataAttribute);
 
 				String jsonPathString = mappingJson.getString("path");
-				dataAttributeJsonPath.setJsonPath(jsonPathString);
 
-				mapping.add(dataAttributeJsonPath);
+				mapping.put(dataAttribute, new JsonPath(jsonPathString));
 			} catch (JSONException | IllegalArgumentException e) {
 				log.error(e);
 				throw new IllegalCaseModelException("Invalid CaseStartTriggerMapping - " + e.getMessage());

@@ -40,14 +40,6 @@ public class CaseStartTrigger {
 		this.queryExecutionPlan = queryExecutionPlan;
 	}
 
-	public List<CaseStartTriggerConsequence> getTriggerConsequences() {
-		return triggerConsequences;
-	}
-
-	public void setTriggerConsequence(List<CaseStartTriggerConsequence> triggerConsequences) {
-		this.triggerConsequences = triggerConsequences;
-	}
-
 	public String getEventKeyId() {
 		return eventKeyId;
 	}
@@ -75,4 +67,13 @@ public class CaseStartTrigger {
 	public void setParentCaseModel(CaseModel parentCaseModel) {
 		this.parentCaseModel = parentCaseModel;
 	}
+
+	public List<CaseStartTriggerConsequence> getTriggerConsequences() {
+		return triggerConsequences;
+	}
+
+	public void setTriggerConsequence(List<CaseStartTriggerConsequence> triggerConsequences) {
+		this.triggerConsequences = triggerConsequences;
+	}
+
 }

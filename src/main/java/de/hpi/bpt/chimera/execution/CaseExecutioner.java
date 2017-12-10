@@ -127,7 +127,7 @@ public class CaseExecutioner {
 				usedDataObject = dataManager.handleDataObjectTransitions(workingItems, dataClassToStateTransitions);
 			}
 
-			activityInstance.setTransitionDataObjects(usedDataObject);
+			activityInstance.setOutputDataObjects(usedDataObject);
 			return usedDataObject;
 		} catch (IllegalArgumentException e) {
 			throw e;

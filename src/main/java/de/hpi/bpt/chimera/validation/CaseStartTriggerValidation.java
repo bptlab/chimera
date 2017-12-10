@@ -1,10 +1,13 @@
 package de.hpi.bpt.chimera.validation;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.CaseStartTriggerConsequence;
-import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
 public class CaseStartTriggerValidation {
@@ -30,20 +33,23 @@ public class CaseStartTriggerValidation {
 	 * 
 	 * @param 
 	 */
-	public static void validateCaseStartTriggers(List<CaseStartTriggerConsequence> triggers) {
+	public static void validateCaseStartTriggers(List<CaseStartTriggerConsequence> caseStartTriggers) {
+		// TODO: rethink this
+		/*
 		for (CaseStartTriggerConsequence trigger : triggers) {
 			List<DataAttribute> dataAttributes = new ArrayList<>();
 
-			for (DataAttributeJsonPath dataAttributeJsonPath : trigger.getMapping()) {
-				DataAttribute dataAttribute = dataAttributeJsonPath.getDataAttribute();
+			for (Map<DataAttribute, String> dataAttributeToJsonPath : trigger.getJsonPathMapping().values()) {
+				Collection<DataAttribute> mappedDataAttributes = dataAttributeToJsonPath.keySet();
 
-				if (dataAttributes.contains(dataAttribute)) {
-					throw new IllegalArgumentException("CaseStartTrigger referres to the same Attribute more than once");
+				if (Collections.disjoint(dataAttributes, mappedDataAttributes)) {
+					dataAttributes.addAll(mappedDataAttributes);
 				} else {
-					dataAttributes.add(dataAttribute);
+					throw new IllegalArgumentException("CaseStartTrigger referres to the same Attribute more than once");
 				}
 			}
 		}
+		*/
 	}
 
 }
