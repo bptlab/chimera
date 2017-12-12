@@ -15,6 +15,7 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 
@@ -47,6 +48,9 @@ public class BpmnFragment {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private EndEvent endEvent;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<TimerEvent> timerEvents = new ArrayList<>();
 
 	public void addTasks(List<AbstractActivity> tasks) {
 		activities.addAll(tasks);
@@ -116,5 +120,12 @@ public class BpmnFragment {
 		this.exclusiveGateways = exclusiveGateways;
 	}
 
+	public List<TimerEvent> getTimerEvents() {
+		return timerEvents;
+	}
+
+	public void setTimerEvents(List<TimerEvent> timerEvents) {
+		this.timerEvents = timerEvents;
+	}
 
 }
