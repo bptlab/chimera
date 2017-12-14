@@ -167,7 +167,7 @@ public class CaseModelParserTest {
 		int dataclassPos = dcPos == 0 ? 1 : 0;
 
 		DataAttribute attr = dataModelClasses.get(0).getDataAttributes().get(0);
-		String jsonPathString = consequence.get(dataclassPos).getDataAttributeToJsonPath().get(attr).getJsonPathString();
+		String jsonPathString = consequence.get(dataclassPos).getDataAttributeToJsonPath().get(attr);
 		assertNotNull("wrong Attribute mapping", jsonPathString);
 	}
 }

@@ -137,7 +137,7 @@ public final class EventDispatcher {
 		String notificationRuleId = sendQueryToEventService(caseStartTrigger.getQueryExecutionPlan(), requestId, notificationPath);
 		caseStartTrigger.setEventKeyId(requestId);
 		caseStartTrigger.setNotificationRuleId(notificationRuleId);
-		CaseModelManager.registerCaseStartTrigger(requestId, caseStartTrigger);
+		CaseModelManager.getEventMapper().registerCaseStartTrigger(requestId, caseStartTrigger);
 	}
 
 	public static void registerTimerEvent(TimerEventInstance event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {

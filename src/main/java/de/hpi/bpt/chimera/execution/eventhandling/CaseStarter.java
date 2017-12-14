@@ -4,7 +4,6 @@ import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataAttributeInstanceWriter;
 import de.hpi.bpt.chimera.execution.DataManager;
 import de.hpi.bpt.chimera.execution.DataObject;
-import de.hpi.bpt.chimera.model.JsonPath;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.CaseStartTriggerConsequence;
@@ -27,7 +26,7 @@ public class CaseStarter {
 	}
 
 	public void startCase(String json, CaseExecutioner caseExecutioner) {
-		if (new JSONObject(json).length() == 0 && this.hasMapping()) {
+		if (new JSONObject(json).length() == 0 && caseStartTrigger.hasMapping()) {
 			throw new IllegalStateException("Could not initialize attributes from empty json");
 		}
 
@@ -47,13 +46,9 @@ public class CaseStarter {
 			LOGGER.info(String.format("initialize DataObject %s of Case %s in State %s.", condition.getDataClass().getName(), caseExecutioner.getCase().getName(), condition.getObjectLifecycleState().getName()));
 
 			DataObject dataObject = dataManager.createDataObject(condition);
-			Map<DataAttribute, JsonPath> dataAttributeToJsonPath = triggerConsequence.getDataAttributeToJsonPath();
+			Map<DataAttribute, String> dataAttributeToJsonPath = triggerConsequence.getDataAttributeToJsonPath();
 			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, json);
 		}
-	}
-
-	private boolean hasMapping() {
-		return this.caseStartTrigger.getTriggerConsequences().stream().filter(x -> !x.getDataAttributeToJsonPath().isEmpty()).findAny().isPresent();
 	}
 }
 

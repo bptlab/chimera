@@ -32,7 +32,7 @@ public class CaseModelManagerTest {
 
 	@Test
 	public void parseCaseModel() {
-
+		// TODO: use CaseModelManager for parsing
 		// Parse a CaseModel from jsonString and give it to the CaseModel
 		// manager
 		CaseModel cm1 = CaseModelManager.parseCaseModel(jsonString);

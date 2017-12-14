@@ -30,7 +30,7 @@ public class CaseStartTrigger {
 	// from unicorn while registering the event.
 	private String eventKeyId; // The id under which the event is registered at
 								// unicorn.
-	private String NotificationRuleId;
+	private String notificationRuleId;
 
 	public String getQueryExecutionPlan() {
 		return queryExecutionPlan;
@@ -49,11 +49,11 @@ public class CaseStartTrigger {
 	}
 
 	public String getNotificationRuleId() {
-		return NotificationRuleId;
+		return notificationRuleId;
 	}
 
 	public void setNotificationRuleId(String notificationRuleId) {
-		NotificationRuleId = notificationRuleId;
+		this.notificationRuleId = notificationRuleId;
 	}
 
 	public String getId() {
@@ -76,4 +76,7 @@ public class CaseStartTrigger {
 		this.triggerConsequences = triggerConsequences;
 	}
 
+	public boolean hasMapping() {
+		return getTriggerConsequences().stream().filter(x -> !x.getDataAttributeToJsonPath().isEmpty()).findAny().isPresent();
+	}
 }

@@ -23,6 +23,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity

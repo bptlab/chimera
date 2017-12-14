@@ -30,7 +30,7 @@ public class EventMapper {
 		caseStartEvents = new HashMap<>();
 	}
 
-	public void addCaseStartEvent(String eventKey, CaseStartTrigger caseStartTrigger) {
+	public void registerCaseStartTrigger(String eventKey, CaseStartTrigger caseStartTrigger) {
 		if (!caseStartEvents.containsKey(eventKey)) {
 			caseStartEvents.put(eventKey, caseStartTrigger);
 		}

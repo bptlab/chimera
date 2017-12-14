@@ -1,5 +1,9 @@
 package de.hpi.bpt.chimera.model.datamodel;
 
+import java.io.Serializable;
+
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,9 +13,14 @@ import de.hpi.bpt.chimera.model.Listable;
 import de.hpi.bpt.chimera.model.Nameable;
 
 @Entity
-public class DataAttribute implements Listable, Nameable {
+public class DataAttribute implements Listable, Nameable, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int dbId;
 
 	private String id;

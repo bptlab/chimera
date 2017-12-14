@@ -49,12 +49,21 @@ public class CaseModelManager {
 		return caseModels.containsKey(cmId);
 	}
 
+	/**
+	 * Parse a CaseModel with a given String. Save the CaseModel and the updated
+	 * EventMapper to the DataBase.
+	 * 
+	 * @param jsonString
+	 * @return
+	 */
 	public static CaseModel parseCaseModel(String jsonString) {
 		mayInstantiate();
 		try {
+			eventMapper = DomainModelPersistenceManager.loadEventMapper();
 			CaseModel cm = CaseModelParser.parseCaseModel(jsonString);
 			caseModels.put(cm.getId(), cm);
 			DomainModelPersistenceManager.saveCaseModel(cm);
+			DomainModelPersistenceManager.saveEventMapper(eventMapper);
 			log.info(String.format("new CaseModel: %s deployed", cm.getName()));
 			return cm;
 		} catch (IllegalArgumentException | JSONException | IllegalCaseModelException e) {
@@ -78,7 +87,6 @@ public class CaseModelManager {
 			log.error(e.getMessage());
 			throw e;
 		}
-
 	}
 
 	/**
@@ -120,8 +128,11 @@ public class CaseModelManager {
 		return startTrigger;
 	}
 
-	public static void registerCaseStartTrigger(String eventKey, CaseStartTrigger caseStartTrigger){
-		eventMapper.addCaseStartEvent(eventKey, caseStartTrigger);
-		DomainModelPersistenceManager.saveEventMapper(eventMapper);
+	public static EventMapper getEventMapper() {
+		return eventMapper;
+	}
+
+	public static void setEventMapper(EventMapper loadEventMapper) {
+		eventMapper = loadEventMapper;
 	}
 }
