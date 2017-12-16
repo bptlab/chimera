@@ -1,5 +1,8 @@
 package de.hpi.bpt.chimera.model.fragment.bpmn.activity;
 
+import javax.persistence.Entity;
+
+@Entity
 public class WebServiceTask extends AbstractActivity {
 	private String webServiceUrl;
 	private String webServiceMethod;

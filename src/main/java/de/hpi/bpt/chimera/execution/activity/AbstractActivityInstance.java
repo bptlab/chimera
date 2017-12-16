@@ -54,7 +54,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 			setState(State.READY);
 		}
 
-		if (this.isAutomaticTask && getControlNode().getPreCondition().getConditionSets().isEmpty()) {
+		if (this.isAutomaticTask && !getControlNode().hasPreCondition()) {
 			getCaseExecutioner().beginActivityInstance(this, new ArrayList<DataObject>());
 		}
 	}
@@ -104,9 +104,9 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		// TODO: implement creation of possible attached BoundaryEvent
 		setState(State.RUNNING);
 		execute();
-		if (this.isAutomaticTask && getControlNode().getPostCondition().getConditionSets().size() <= 1) {
+		if (this.isAutomaticTask && getControlNode().hasUniquePostCondition()) {
 			Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = new HashMap<>();
-			if (getControlNode().getPostCondition().getConditionSets().isEmpty()) {
+			if (getControlNode().hasPostCondition()) {
 				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
 			}
 			
@@ -160,7 +160,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	}
 
 	public boolean isAutomaticTask() {
-		return isAutomaticTask();
+		return isAutomaticTask;
 	}
 
 	public void setAutomaticTask(boolean isAutomaticTask) {

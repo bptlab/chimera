@@ -1,26 +1,29 @@
 package de.hpi.bpt.chimera.model.condition;
 
+import java.util.Objects;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class AtomicDataStateCondition {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	@OneToOne(cascade = CascadeType.ALL)
-	private DataClass dataClass;
+	protected DataClass dataClass;
 	@OneToOne(cascade = CascadeType.ALL)
-	private ObjectLifecycleState state;
-
-	// TODO: add Feature: JsonPath
+	protected ObjectLifecycleState state;
 
 	public AtomicDataStateCondition() {
 		this.dataClass = null;
@@ -91,7 +94,7 @@ public class AtomicDataStateCondition {
 
 	@Override
 	public int hashCode() {
-		return (int) (((long) this.dataClass.hashCode() + (long) this.state.hashCode()) / 2);
+		return Objects.hash(dataClass, state);
 	}
 
 }

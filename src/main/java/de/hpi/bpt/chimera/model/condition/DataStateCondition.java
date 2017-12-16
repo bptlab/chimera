@@ -9,22 +9,12 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
 // TODO: think of a better name
 /**
@@ -132,5 +122,9 @@ public class DataStateCondition {
 		}
 
 		return dataClassToAtomicDataStateConditions;
+	}
+
+	public boolean isEmpty() {
+		return conditionSets.isEmpty();
 	}
 }

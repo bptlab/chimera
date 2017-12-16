@@ -66,6 +66,7 @@ public class CaseModelParserTest {
 		assertEquals("wrong Fragment version", 3, fragment.getVersionNumber());
 		// TODO: implement testing for fragment elements
 
+		caseModel.saveCaseModelToDB();
 	}
 
 	private void testDataModelClasses(List<DataModelClass> dataModelClasses) {

@@ -28,12 +28,16 @@ public class WebServiceTask extends AbstractDataControlNode {
 	@XmlAttribute(name = "griffin:webservicebody")
 	String webServiceBody = "";
 
-	/*
-	 * public int save() { Connector connector = new Connector();
-	 * this.databaseId = connector.insertControlNode(this.getName(),
-	 * "WebServiceTask", this.getFragmentId(), this.getId());
-	 * connector.insertWebServiceTask(this.databaseId,
-	 * StringEscapeUtils.unescapeHtml4(this.webServiceUrl),
-	 * this.webServiceMethod, this.webServiceBody); return this.databaseId; }
-	 */
+
+	public String getWebServiceUrl() {
+		return webServiceUrl;
+	}
+
+	public String getWebServiceMethod() {
+		return webServiceMethod;
+	}
+
+	public String getWebServiceBody() {
+		return webServiceBody;
+	}
 }

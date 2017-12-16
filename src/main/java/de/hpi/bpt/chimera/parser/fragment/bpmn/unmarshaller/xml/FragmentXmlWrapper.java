@@ -54,7 +54,7 @@ public class FragmentXmlWrapper {
 		return this.bpmnProcessXml.getStartEvent();
 	}
 
-	public List<DataNode> getDataNodes() {
+	public List<BpmnDataNode> getDataNodes() {
 		return this.bpmnProcessXml.getDataNodes();
 	}
 

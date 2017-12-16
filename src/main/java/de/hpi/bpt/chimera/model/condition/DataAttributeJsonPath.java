@@ -19,6 +19,15 @@ public class DataAttributeJsonPath {
 	private DataAttribute dataAttribute;
 	private String jsonPath;
 
+	public DataAttributeJsonPath() {
+		// used by jpa
+	}
+
+	public DataAttributeJsonPath(DataAttribute dataAttribute, String jsonPath) {
+		this.dataAttribute = dataAttribute;
+		this.jsonPath = jsonPath;
+	}
+
 	public DataAttribute getDataAttribute() {
 		return dataAttribute;
 	}

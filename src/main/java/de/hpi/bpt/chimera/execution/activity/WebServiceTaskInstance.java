@@ -1,6 +1,5 @@
 package de.hpi.bpt.chimera.execution.activity;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.Client;
@@ -11,31 +10,37 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
+
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.execution.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.DataAttributeInstanceWriter;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
 
 public class WebServiceTaskInstance extends AbstractActivityInstance {
+	private static final Logger log = Logger.getLogger(WebServiceTaskInstance.class);
+
 	private Response webServiceResponse;
 
 	public WebServiceTaskInstance(WebServiceTask webServiceTask, FragmentInstance fragmentInstance) {
 		super(webServiceTask, fragmentInstance);
+		setState(State.INIT);
 		this.setAutomaticTask(true);
 	}
 
 	@Override
 	public void execute() {
 		WebTarget target = buildTarget();
-		// log.info("Target for web service call constructed: " + target.toString());
+		log.info("Target for web service call constructed: " + target.toString());
 		Response response = executeWebserviceRequest(target);
 		if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
 			setWebServiceResponse(response);
 		} else {
-			// log.warn("Web service task did not executed properly");
+			log.warn("Web service task did not executed properly");
 		}
 	}
 
@@ -120,22 +125,30 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 	@Override
 	public void terminate() {
 		if (!getState().equals(State.RUNNING)) {
-			// log.info(String.format("%s not terminated, because the activity isn't in state RUNNING", this.getControlNode().getName()));
+			log.info(String.format("%s not terminated, because the activity isn't in state RUNNING", this.getControlNode().getName()));
 			return;
 		}
 		if (getControlNode().getPostCondition().getConditionSets().isEmpty()) {
-		    // log.info("Web service task has no output set, received data can not be stored.");
+			log.info("Web service task has no output set, received data can not be stored.");
 			return;
 		}
 		if (webServiceResponse == null) {
-	        //log.info("No response found, received data can not be stored.");
+			log.info("No response found, received data can not be stored.");
 	        return;
 	    }
+		String jsonResponse = webServiceResponse.readEntity(String.class);
+		if (jsonResponse == null) {
+			log.info("No response json was found, received data can not be stored.");
+			return;
+		}
 
 		for (DataObject dataObject : getOutputDataObjects()) {
 			AtomicDataStateCondition condition = dataObject.getCondition();
-			Map<DataAttribute, String> dataAttributeJsonMapping = getControlNode().getJsonPathMapping().get(condition);
+			Map<DataAttribute, String> dataAttributeToJsonPath = getControlNode().getJsonPathMapping().get(condition);
+			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, jsonResponse);
 		}
+
+		super.terminate();
 	}
 
 	@Override

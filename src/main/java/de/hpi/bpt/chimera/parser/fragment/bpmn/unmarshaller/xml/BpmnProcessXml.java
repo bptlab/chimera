@@ -41,7 +41,7 @@ public class BpmnProcessXml {
 	private List<SendTask> sendTasks = new ArrayList<>();
 
 	@XmlElement(name = "bpmn:dataObjectReference")
-	private List<DataNode> dataNodes = new ArrayList<>();
+	private List<BpmnDataNode> dataNodes = new ArrayList<>();
 
 	@XmlElement(name = "bpmn:intermediateCatchEvent")
 	private List<IntermediateCatchEvent> intermediateCatchEvents = new ArrayList<>();
@@ -103,11 +103,11 @@ public class BpmnProcessXml {
 		this.tasks = tasks;
 	}
 
-	public List<DataNode> getDataNodes() {
+	public List<BpmnDataNode> getDataNodes() {
 		return dataNodes;
 	}
 
-	public void setDataNodes(List<DataNode> dataNodes) {
+	public void setDataNodes(List<BpmnDataNode> dataNodes) {
 		this.dataNodes = dataNodes;
 	}
 

@@ -130,15 +130,12 @@ public class CaseStartTriggerParser {
 			try {
 				JSONObject mappingJson = mappingJsonArray.getJSONObject(i);
 
-				DataAttributeJsonPath dataAttributeJsonPath = new DataAttributeJsonPath();
-
 				String dataAttributeName = mappingJson.getString("attr");
 				DataAttribute dataAttribute = parserHelper.getNameToDataAttribute(dataClass, dataAttributeName);
-				dataAttributeJsonPath.setDataAttribute(dataAttribute);
 
 				String jsonPathString = mappingJson.getString("path");
-				dataAttributeJsonPath.setJsonPath(jsonPathString);
 
+				DataAttributeJsonPath dataAttributeJsonPath = new DataAttributeJsonPath(dataAttribute, jsonPathString);
 				mapping.add(dataAttributeJsonPath);
 			} catch (JSONException | IllegalArgumentException e) {
 				log.error(e);

@@ -53,7 +53,9 @@ public class DataAttributeInstance {
 	 */
 	public void setValue(Object value) {
 		log.info("DataObject: Attribute value set.");
+		getCaseExecutioner().logDataAttributeTransition(this, value);
 		this.value = value.toString();
+
 		// TODO: implement an independent version for the type of an value of an
 		// data attribute
 		// Class<? extends Object> clazz = dataAttribute.getType().getClass();

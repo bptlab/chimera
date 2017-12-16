@@ -5,12 +5,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
+import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
 
@@ -29,19 +34,58 @@ public class DataFlowResolver {
 	 * @param parserHelper
 	 */
 	public DataFlowResolver(FragmentXmlWrapper fragXmlWrap, CaseModelParserHelper parserHelper) {
-		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.DataNode dataNodeReference : fragXmlWrap.getDataNodes()) {
-			AtomicDataStateCondition condition = new AtomicDataStateCondition();
-			// TODO:
-			// condition.setJsonPath(dataNodeReference.getJsonPath());
+		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BpmnDataNode dataNodeReference : fragXmlWrap.getDataNodes()) {
+			DataNode dataNode = new DataNode();
 
 			DataClass dataClass = parserHelper.getNameToDataClass(dataNodeReference.getDataClassName());
 			ObjectLifecycleState olcState = parserHelper.getNameToObjectLifecycleState(dataClass, dataNodeReference.getStateName());
 
-			condition.setDataClass(dataClass);
-			condition.setObjectLifecycleState(olcState);
+			String unparsedJsonPathMapping = dataNodeReference.getJsonPath();
+			List<DataAttributeJsonPath> dataAttributeJsonPaths = parseDataAttributeJsonPaths(unparsedJsonPathMapping, dataClass, parserHelper);
 
-			associationMap.put(dataNodeReference.getDataNodeObjectReferenceId(), condition);
+			dataNode.setDataClass(dataClass);
+			dataNode.setObjectLifecycleState(olcState);
+			dataNode.setDataAttributeJsonPaths(dataAttributeJsonPaths);
+
+			associationMap.put(dataNodeReference.getDataNodeObjectReferenceId(), dataNode);
 		}
+	}
+
+	/**
+	 * Parse a List of DataAttributeJsonPaths by a given JSON-String that
+	 * contains the mapping from the name of the DataAttribute to the
+	 * corresponding Json Path that will be used for writing the values of an
+	 * DataAttributeInstance.
+	 * 
+	 * @param dataAttributeJsonPathMapping
+	 * @param dataClass
+	 * @param parserHelper
+	 * @return List of DataAttributeJsonPath
+	 */
+	private List<DataAttributeJsonPath> parseDataAttributeJsonPaths(String dataAttributeJsonPathMapping, DataClass dataClass, CaseModelParserHelper parserHelper) {
+		List<DataAttributeJsonPath> dataAttributeJsonPaths = new ArrayList<>();
+		if (dataAttributeJsonPathMapping.isEmpty()) {
+			return dataAttributeJsonPaths;
+		}
+
+		String xmlEscapedPathObject = StringEscapeUtils.unescapeHtml4(dataAttributeJsonPathMapping);
+		JSONObject jsonMapping = new JSONObject(xmlEscapedPathObject);
+
+		for (Object key : jsonMapping.keySet()) {
+			if (!(key instanceof String)) {
+				continue;
+			}
+			String dataAttributeName = key.toString();
+			DataAttribute dataAttribute = parserHelper.getNameToDataAttribute(dataClass, dataAttributeName);
+			
+			String unescapedJsonPath = jsonMapping.getString(dataAttributeName);
+			String jsonPath = unescapedJsonPath.replace("'", "''");
+
+			DataAttributeJsonPath dataAttributeJsonPath = new DataAttributeJsonPath(dataAttribute, jsonPath);
+			dataAttributeJsonPaths.add(dataAttributeJsonPath);
+		}
+
+		return dataAttributeJsonPaths;
 	}
 
 	/**
@@ -69,7 +113,9 @@ public class DataFlowResolver {
 	 */
 	public DataStateCondition parseDataStateCondition(List<AtomicDataStateCondition> availableConditions) {
 		// List<AtomicDataStateCondition> resolvedConditions = resolveDataNodeReferences(availableConditions);
-
+		if (availableConditions.isEmpty()) {
+			return new DataStateCondition();
+		}
 		List<AtomicDataStateCondition> definiteConditions = getDefiniteConditions(availableConditions);
 		availableConditions.removeAll(definiteConditions);
 

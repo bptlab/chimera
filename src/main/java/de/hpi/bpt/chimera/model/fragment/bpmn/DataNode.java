@@ -1,63 +1,53 @@
 package de.hpi.bpt.chimera.model.fragment.bpmn;
 
+import java.util.List;
+import java.util.Objects;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
 
+/**
+ * A class that extends the AtomicDataStateCondition with a mapping from
+ * DataAttribute to JsonPath. This class refers to the steady DataNodes in the
+ * Fragment which represent and fixed AtomicDataStateCondition. It inherits from
+ * AtomicDataStateCondition so it can be easily compared with the
+ * AtomicDataStateConditions that are part of running DataObjects.
+ *
+ */
 @Entity
-@Deprecated
-public class DataNode {
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	private int dbId;
+public class DataNode extends AtomicDataStateCondition {
 
-	private String id;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<DataAttributeJsonPath> dataAttributeJsonPaths;
 
-	private String name;
-	@OneToOne(cascade = CascadeType.ALL)
-	private AtomicDataStateCondition dataObjectState;
-	private String jsonPath;
-
-	// GETTER & SETTER
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public AtomicDataStateCondition getDataObjectState() {
-		return dataObjectState;
-	}
-	public void setDataObjectState(AtomicDataStateCondition dataObjectState) {
-		this.dataObjectState = dataObjectState;
+	public DataNode() {
+		super();
 	}
 
-	public String getJsonPath() {
-		return jsonPath;
+	public List<DataAttributeJsonPath> getDataAttributeJsonPaths() {
+		return dataAttributeJsonPaths;
 	}
 
-	public void setJsonPath(String jsonPath) {
-		this.jsonPath = jsonPath;
+	public void setDataAttributeJsonPaths(List<DataAttributeJsonPath> dataAttributeJsonPaths) {
+		this.dataAttributeJsonPaths = dataAttributeJsonPaths;
 	}
 
-	public DataClass getDataClass() {
-		return dataObjectState.getDataClass();
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof AtomicDataStateCondition) {
+			AtomicDataStateCondition condition = (AtomicDataStateCondition) o;
+
+			return dataClass.equals(condition.getDataClass()) && state.equals(condition.getObjectLifecycleState());
+		}
+		return false;
 	}
 
-	public ObjectLifecycleState getObjectLifecycleState() {
-		return dataObjectState.getObjectLifecycleState();
+	@Override
+	public int hashCode() {
+		return Objects.hash(dataClass, state);
 	}
 }

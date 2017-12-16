@@ -1,12 +1,9 @@
 package de.hpi.bpt.chimera.execution;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import de.hpi.bpt.chimera.model.JsonPathMapper;
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
 // TODO: think about exception handling
@@ -14,24 +11,6 @@ public class DataAttributeInstanceWriter {
 	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
 
 	private DataAttributeInstanceWriter() {
-	}
-
-	@Deprecated
-	public static void writeDataObjects(List<DataObject> dataObjects, JsonPathMapper jsonPathMapper, String json) {
-		Map<AtomicDataStateCondition, Map<DataAttribute, String>> jsonPathMapping = jsonPathMapper.getJsonPathMapping();
-		for (DataObject dataObject : dataObjects) {
-			AtomicDataStateCondition condition = dataObject.getCondition();
-			if (!jsonPathMapping.containsKey(condition)) {
-				continue;
-			}
-			
-			Map<DataAttribute, String> dataAttributeToJsonPath = jsonPathMapping.get(condition);
-			try {
-				// writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, json);
-			} catch (Exception e) {
-				// TODO: should rest of DataObjects still be written
-			}
-		}
 	}
 
 	public static void writeDataAttributeInstances(DataObject dataObject, Map<DataAttribute, String> dataAttributeToJsonPath, String json) {

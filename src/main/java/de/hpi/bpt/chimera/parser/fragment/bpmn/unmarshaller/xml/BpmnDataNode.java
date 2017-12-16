@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "bpmn:dataObjectReference")
 @XmlAccessorType(XmlAccessType.NONE)
-public class DataNode {
+public class BpmnDataNode {
 	@XmlAttribute(name = "id")
 	private String dataObjectReferenceId;
 
