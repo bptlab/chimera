@@ -166,7 +166,7 @@ public class CaseExecutioner {
 	 * @return the associated ControlNodeInstance, or {@code null} if the id is
 	 *         not assigned
 	 */
-	private ControlNodeInstance getControlNodeInstance(String controlNodeId) {
+	public ControlNodeInstance getControlNodeInstance(String controlNodeId) {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
 			if (fragmentInstance.getControlNodeInstances().containsKey(controlNodeId)) {
 				return fragmentInstance.getControlNodeInstances().get(controlNodeId);

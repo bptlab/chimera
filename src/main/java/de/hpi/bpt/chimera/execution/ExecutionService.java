@@ -31,6 +31,16 @@ public class ExecutionService {
 
 	/**
 	 * 
+	 * @param caseId
+	 * @return true when the case identified by this caseId exists, false
+	 *         otherwise.
+	 */
+	public static boolean isExistingCase(String caseId) {
+		return cases.containsKey(caseId);
+	}
+
+	/**
+	 * 
 	 * @param cmId
 	 * @param caseId
 	 * @return CaseExecutioner

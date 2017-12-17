@@ -79,7 +79,7 @@ public final class EventDispatcher {
 		CaseStarter caseStarter = new CaseStarter(scenarioId, queryId);
 		try {
 			caseStarter.startInstance(eventJson, instance);
-			SseNotifier.notifyRefresh();
+			// SseNotifier.notifyRefresh();
 		} catch (IllegalStateException e) {
 			logger.error("Could not start case from query", e);
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
@@ -129,6 +129,7 @@ public final class EventDispatcher {
 	}
 
 	public static void registerTimerEvent(TimerEventInstance event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
+		logger.info("register TimerEvent");
 		String mappingKey = registerEvent(event, fragmentInstanceId, scenarioInstanceId, scenarioId);
 		Date terminationDate = event.getTerminationDate();
 		assert (terminationDate.after(new Date())) : "Traveling back in time is not implemented yet, see feature request #CM-(-243)";
@@ -146,10 +147,12 @@ public final class EventDispatcher {
 	}
 
 	private static JobDetail createJob(String mappingKey, int scenarioInstanceId, int scenarioId) {
+		logger.info("create TimerJob");
 		JobDetail timeEventJob = newJob(TimeEventJob.class).withIdentity("1").build();
 		timeEventJob.getJobDataMap().put("mappingKey", mappingKey);
 		timeEventJob.getJobDataMap().put("scenarioInstanceId", scenarioInstanceId);
 		timeEventJob.getJobDataMap().put("scenarioId", scenarioId);
+		logger.info("TimerJob created");
 		return timeEventJob;
 	}
 

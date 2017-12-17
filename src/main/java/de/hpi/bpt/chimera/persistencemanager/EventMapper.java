@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.event.TimerEventInstance;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 
 @Entity

@@ -6,14 +6,13 @@ import de.hpi.bpt.chimera.database.DbCaseStart;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
 import de.hpi.bpt.chimera.database.history.DbLogEntry;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.event.TimerEventInstance;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.jcore.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
 import de.hpi.bpt.chimera.jcore.controlnodes.EventFactory;
-import de.hpi.bpt.chimera.jcore.controlnodes.TimerEventInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.TimeEventJob;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.util.PropertyLoader;
@@ -140,14 +139,15 @@ public final class EventDispatcher {
 		CaseModelManager.getEventMapper().registerCaseStartTrigger(requestId, caseStartTrigger);
 	}
 
-	public static void registerTimerEvent(TimerEventInstance event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
-		String mappingKey = registerEvent(event, fragmentInstanceId, scenarioInstanceId, scenarioId);
+	public static void registerTimerEvent(TimerEventInstance event) {
+		// String mappingKey = registerEvent(event, fragmentInstanceId,
+		// scenarioInstanceId, scenarioId);
 		Date terminationDate = event.getTerminationDate();
 		assert (terminationDate.after(new Date())) : "Traveling back in time is not implemented yet, see feature request #CM-(-243)";
 		SchedulerFactory sf = new StdSchedulerFactory();
 		try {
 			Scheduler sched = sf.getScheduler();
-			JobDetail job = createJob(mappingKey, scenarioInstanceId, scenarioId);
+			JobDetail job = createJob(event);
 			SimpleTrigger trigger = (SimpleTrigger) newTrigger().startAt(terminationDate).build();
 			sched.start();
 			sched.scheduleJob(job, trigger);
@@ -157,11 +157,11 @@ public final class EventDispatcher {
 
 	}
 
-	private static JobDetail createJob(String mappingKey, int scenarioInstanceId, int scenarioId) {
+	private static JobDetail createJob(TimerEventInstance event) {
 		JobDetail timeEventJob = newJob(TimeEventJob.class).withIdentity("1").build();
-		timeEventJob.getJobDataMap().put("mappingKey", mappingKey);
-		timeEventJob.getJobDataMap().put("scenarioInstanceId", scenarioInstanceId);
-		timeEventJob.getJobDataMap().put("scenarioId", scenarioId);
+		timeEventJob.getJobDataMap().put("CaseModelId", event.getCaseExecutioner().getCaseModel().getId());
+		timeEventJob.getJobDataMap().put("CaseId", event.getFragmentInstance().getCase().getId());
+		timeEventJob.getJobDataMap().put("ControlNodeInstanceId", event.getId());
 		return timeEventJob;
 	}
 

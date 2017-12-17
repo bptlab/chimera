@@ -47,6 +47,6 @@ public class SseNotifier extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		target = new ServletEventTarget(req).ok().open();
-		logger.info("SSE target registered.");
+		logger.info("SSE target registered." + target.toString());
 	}
 }

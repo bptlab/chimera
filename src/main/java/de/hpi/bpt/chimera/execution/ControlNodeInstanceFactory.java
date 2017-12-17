@@ -7,6 +7,7 @@ import de.hpi.bpt.chimera.execution.activity.HumanTaskInstance;
 import de.hpi.bpt.chimera.execution.activity.WebServiceTaskInstance;
 import de.hpi.bpt.chimera.execution.event.EndEventInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
+import de.hpi.bpt.chimera.execution.event.TimerEventInstance;
 import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
 import de.hpi.bpt.chimera.execution.gateway.ParallelGatewayInstance;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
@@ -14,6 +15,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
@@ -50,6 +52,8 @@ public class ControlNodeInstanceFactory {
 			return new EmailActivityInstance((EmailActivity) controlNode, fragmentInstance);
 		} else if (clazz.equals(WebServiceTask.class)) {
 			return new WebServiceTaskInstance((WebServiceTask) controlNode, fragmentInstance);
+		} else if (clazz.equals(TimerEvent.class)) {
+			return new TimerEventInstance((TimerEvent) controlNode, fragmentInstance);
 		} else {
 			throw new IllegalArgumentException(String.format("Illegal type of ControlNode: %s", clazz.getName()));
 			// log.error(String.format("Illegal type of ControlNode: %s", clazz.getName()));
