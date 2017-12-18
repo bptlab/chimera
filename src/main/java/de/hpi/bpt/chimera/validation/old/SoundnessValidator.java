@@ -1,7 +1,4 @@
-package de.hpi.bpt.chimera.jcomparser.validation;
-
-import de.hpi.bpt.chimera.jcomparser.saving.AbstractControlNode;
-import de.hpi.bpt.chimera.jcomparser.saving.Fragment;
+package de.hpi.bpt.chimera.validation.old;
 
 import java.util.*;
 import java.util.stream.Collectors;

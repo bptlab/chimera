@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.jcomparser.validation;
+package de.hpi.bpt.chimera.validation.old;
 
 /**
  *

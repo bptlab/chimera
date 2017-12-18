@@ -2,6 +2,8 @@ package de.hpi.bpt.chimera.jcomparser.validation;
 
 import de.hpi.bpt.chimera.FragmentTestHelper;
 import de.hpi.bpt.chimera.jcomparser.saving.Fragment;
+import de.hpi.bpt.chimera.validation.old.SoundnessValidator;
+
 import org.junit.Test;
 
 import java.io.IOException;

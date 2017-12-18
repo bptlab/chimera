@@ -1,9 +1,10 @@
 package de.hpi.bpt.chimera.jcomparser.json;
 
-import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataTransitionException;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
+
+import de.hpi.bpt.chimera.validation.old.InvalidDataTransitionException;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;

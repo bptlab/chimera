@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.jcomparser.validation;
+package de.hpi.bpt.chimera.validation.old;
 
 import de.hpi.bpt.chimera.jcomparser.jaxb.AbstractDataControlNode;
 import de.hpi.bpt.chimera.jcomparser.jaxb.DataInputAssociation;
