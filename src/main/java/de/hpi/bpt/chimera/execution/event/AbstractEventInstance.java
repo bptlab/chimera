@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.execution.gateway.EventBasedGatewayInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 
 public abstract class AbstractEventInstance extends ControlNodeInstance {

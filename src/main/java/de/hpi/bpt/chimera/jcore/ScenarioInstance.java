@@ -6,6 +6,7 @@ import de.hpi.bpt.chimera.database.DbScenario;
 import de.hpi.bpt.chimera.database.DbScenarioInstance;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;

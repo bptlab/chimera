@@ -4,7 +4,10 @@ package de.hpi.bpt.chimera.jcore.rest;
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.DbScenarioInstance;
 import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
+import de.hpi.bpt.chimera.rest.ActivityRestService;
+import de.hpi.bpt.chimera.rest.DataDependencyRestService;
+import de.hpi.bpt.chimera.rest.filters.AuthorizationRequestFilter;
+
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.AfterClass;

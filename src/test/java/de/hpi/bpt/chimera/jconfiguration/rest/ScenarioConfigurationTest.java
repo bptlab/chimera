@@ -5,7 +5,7 @@ import de.hpi.bpt.chimera.AbstractTest;
 import de.hpi.bpt.chimera.configuration.rest.RestConfigurator;
 import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.jcore.rest.RestInterface;
+import de.hpi.bpt.chimera.rest.RestInterface;
 import de.hpi.bpt.chimera.util.ScriptRunner;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;

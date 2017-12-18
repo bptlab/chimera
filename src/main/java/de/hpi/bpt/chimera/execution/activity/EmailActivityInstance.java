@@ -8,7 +8,7 @@ import org.apache.commons.mail.SimpleEmail;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 

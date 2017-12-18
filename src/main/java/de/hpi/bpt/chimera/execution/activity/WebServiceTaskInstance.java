@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.execution.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.DataAttributeInstanceWriter;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;

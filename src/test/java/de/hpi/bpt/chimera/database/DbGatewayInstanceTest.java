@@ -3,9 +3,10 @@ package de.hpi.bpt.chimera.database;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.controlnodes.DbGatewayInstance;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.controlnodes.GatewayType;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

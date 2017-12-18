@@ -1,7 +1,8 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.AbstractTest;
-import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
+import de.hpi.bpt.chimera.rest.ActivityRestService;
+import de.hpi.bpt.chimera.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Before;

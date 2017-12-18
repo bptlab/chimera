@@ -1,9 +1,9 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.ControlNodeFactory;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 
 import java.util.List;
 

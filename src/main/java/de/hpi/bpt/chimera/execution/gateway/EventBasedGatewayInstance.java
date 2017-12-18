@@ -8,9 +8,9 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.EventBasedGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.Gateway;
 

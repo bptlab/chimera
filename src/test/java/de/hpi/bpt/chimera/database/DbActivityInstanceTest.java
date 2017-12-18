@@ -3,8 +3,9 @@ package de.hpi.bpt.chimera.database;
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.controlnodes.DbActivityInstance;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
+
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;

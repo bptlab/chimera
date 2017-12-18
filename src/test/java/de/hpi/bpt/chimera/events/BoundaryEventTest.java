@@ -4,9 +4,10 @@ import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
 import de.hpi.bpt.chimera.jcore.controlnodes.BoundaryEvent;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
+
 import org.junit.After;
 import org.junit.Test;
 

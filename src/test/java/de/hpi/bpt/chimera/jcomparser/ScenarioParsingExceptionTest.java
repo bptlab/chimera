@@ -1,7 +1,8 @@
 package de.hpi.bpt.chimera.jcomparser;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcore.rest.ScenarioRestService;
+import de.hpi.bpt.chimera.rest.ScenarioRestService;
+
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

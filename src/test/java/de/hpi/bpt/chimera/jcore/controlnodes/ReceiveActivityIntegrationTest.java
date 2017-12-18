@@ -2,10 +2,11 @@ package de.hpi.bpt.chimera.jcore.controlnodes;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.jcore.rest.ActivityRestService;
-import de.hpi.bpt.chimera.jcore.rest.DataObjectRestService;
-import de.hpi.bpt.chimera.jcore.rest.ScenarioInstanceRestService;
-import de.hpi.bpt.chimera.jcore.rest.ScenarioRestService;
+import de.hpi.bpt.chimera.rest.ActivityRestService;
+import de.hpi.bpt.chimera.rest.DataObjectRestService;
+import de.hpi.bpt.chimera.rest.ScenarioInstanceRestService;
+import de.hpi.bpt.chimera.rest.ScenarioRestService;
+
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

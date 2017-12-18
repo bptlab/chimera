@@ -19,7 +19,6 @@ import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 
 public class ExclusiveGatewayInstanceControlFlowDecisionsTest {
 	String jsonString = "";

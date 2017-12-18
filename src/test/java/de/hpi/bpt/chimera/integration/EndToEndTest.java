@@ -2,8 +2,8 @@ package de.hpi.bpt.chimera.integration;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.jcore.rest.*;
-import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
+import de.hpi.bpt.chimera.rest.*;
+import de.hpi.bpt.chimera.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;

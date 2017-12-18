@@ -9,8 +9,8 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.execution.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
 
 public class TimerEventInstance extends AbstractEventInstance {

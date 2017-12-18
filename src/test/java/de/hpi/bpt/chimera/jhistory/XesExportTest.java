@@ -4,7 +4,7 @@ import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.ScenarioTestHelper;
 import de.hpi.bpt.chimera.history.rest.HistoryRestService;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.rest.RestInterface;
+import de.hpi.bpt.chimera.rest.RestInterface;
 import de.hpi.bpt.chimera.util.XmlUtil;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

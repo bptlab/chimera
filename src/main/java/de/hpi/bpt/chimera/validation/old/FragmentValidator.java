@@ -1,13 +1,5 @@
 package de.hpi.bpt.chimera.validation.old;
 
-import de.hpi.bpt.chimera.jcomparser.jaxb.AbstractDataControlNode;
-import de.hpi.bpt.chimera.jcomparser.jaxb.DataInputAssociation;
-import de.hpi.bpt.chimera.jcomparser.jaxb.DataNode;
-import de.hpi.bpt.chimera.jcomparser.jaxb.DataOutputAssociation;
-import de.hpi.bpt.chimera.jcomparser.json.DomainModel;
-import de.hpi.bpt.chimera.jcomparser.json.Olc;
-import de.hpi.bpt.chimera.jcomparser.saving.Fragment;
-
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -34,6 +26,7 @@ public class FragmentValidator {
 	 * @param fragment    This is a fragment.
 	 * @param domainModel This is the corresponding DomainModel for the fragment.
 	 */
+	/*
 	public static void validateFragment(Fragment fragment, DomainModel domainModel) {
 		validateDataReferences(fragment, domainModel);
 		validateOlc(domainModel.getOlcs(), fragment);
@@ -55,7 +48,7 @@ public class FragmentValidator {
 			}
 		}
 	}
-
+	*/
 	/**
 	 * TODO break up this logic
 	 * This method validates a fragment against the given OLCs. Note that in case there is no OLC
@@ -63,6 +56,7 @@ public class FragmentValidator {
 	 *
 	 * @param olcs A map of DataClasses (identified by name) to their respective OLCs.
 	 */
+	/*
 	private static void validateOlc(Map<String, Olc> olcs, Fragment fragment) {
 		Map<String, DataNode> idToDataNode = getIdToDataNode(fragment.getDataNodes());
 		for (AbstractDataControlNode task : fragment.getAllActivities()) {
@@ -75,7 +69,7 @@ public class FragmentValidator {
 				/* This is the case when dataobjects are created (i.e., not in input, but in output)
                      TODO instead of skipping when dataobjectName is not contained in
                      incoming dataobjects, check whether output state is valid begin state
-                     for this data object */
+                     for this data object *//*
 					List<String> inputStates = incomingDataobjectStates.get(dataobjectName);
 					if (!outgoingDataobjectStates.containsKey(dataobjectName)) {
 						continue;
@@ -138,7 +132,7 @@ public class FragmentValidator {
 		return outgoingStatesPerDataobject;
 	}
 
-
+	*/
 	/**
 	 * @param incomingDataobjects
 	 * @param outgoingDataObjects
@@ -146,6 +140,7 @@ public class FragmentValidator {
 	 * @return a list of data object names for data objects, that are in an input and
 	 * an output set and are part of an OLC
 	 */
+	/*
 	private static List<String> getDataObjectsToBeChecked(Set<String> incomingDataobjects, Set<String> outgoingDataObjects, Set<String> dataObjectsWithOlc) {
 		if (!incomingDataobjects.isEmpty()) {
 			return Stream.concat(incomingDataobjects.stream(), outgoingDataObjects.stream()).distinct().filter(dataObjectsWithOlc::contains).collect(Collectors.toList());
@@ -153,5 +148,5 @@ public class FragmentValidator {
 		// this is the case with Activities that write data objects
 		return new ArrayList<>();
 	}
-
+	*/
 }

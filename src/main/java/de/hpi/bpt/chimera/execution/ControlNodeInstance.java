@@ -2,7 +2,6 @@ package de.hpi.bpt.chimera.execution;
 
 import java.util.UUID;
 
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 
 public abstract class ControlNodeInstance implements Behaving {

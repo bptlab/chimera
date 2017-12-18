@@ -2,10 +2,10 @@ package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
 import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.database.data.DbDataNode;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 
 import java.util.List;

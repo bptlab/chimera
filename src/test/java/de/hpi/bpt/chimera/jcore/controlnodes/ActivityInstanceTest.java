@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.jcore.controlnodes;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.DbSelectedDataObjects;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import org.easymock.EasyMock;

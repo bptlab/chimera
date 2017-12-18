@@ -7,13 +7,15 @@ import java.util.stream.Collectors;
  *
  */
 public class SoundnessValidator {
-	public static void validateStructuralSoundness(Fragment fragment) {
+	
+	//public static void validateStructuralSoundness(Fragment fragment) {
 		//problem: while parallel gateways are not considered as control nodes,
 		//incoming/outgoing includes all sequence flows, resulting in inconsistencies.
-		Map<String, Set<String>> graph = buildGraphFromFragment(fragment);
-		Map<String, Set<String>> reverseGraph = buildReverseGraph(graph);
-		Set<String> nodes = fragment.getControlNodes().stream().map(AbstractControlNode::getId).collect(Collectors.toSet());
+		// Map<String, Set<String>> graph = buildGraphFromFragment(fragment);
+		//Map<String, Set<String>> reverseGraph = buildReverseGraph(graph);
+		//Set<String> nodes = fragment.getControlNodes().stream().map(AbstractControlNode::getId).collect(Collectors.toSet());
 		// End of reverse graph == start of original graph
+	/*
 		Boolean hasOnlyOneStart = checkOnlyOneEnd(nodes, reverseGraph);
 		Boolean hasOnlyOneEnd = checkOnlyOneEnd(nodes, graph);
 		if (!hasOnlyOneStart || !hasOnlyOneEnd) {
@@ -59,7 +61,7 @@ public class SoundnessValidator {
 		}
 		return reverseGraph;
 	}
-
+	*/
 	/**
 	 * A place with no outgoing edges must be an output place,
 	 * so we can check by subtracting nodes with outgoing edges from the list of all nodes.
@@ -68,6 +70,7 @@ public class SoundnessValidator {
 	 * @param graph         The graph of the fragment.
 	 * @return a Boolean stating whether there is exactly one output place.
 	 */
+	/*
 	public static Boolean checkOnlyOneEnd(Set<String> originalNodes, Map<String, Set<String>> graph) {
 		Set<String> nodes = new HashSet<>(originalNodes);
 		nodes.removeAll(graph.keySet());
@@ -100,4 +103,5 @@ public class SoundnessValidator {
 		}
 		return reachableNodes;
 	}
+	*/
 }

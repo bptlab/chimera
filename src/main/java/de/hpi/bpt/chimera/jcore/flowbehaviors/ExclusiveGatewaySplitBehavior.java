@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
 import de.hpi.bpt.chimera.database.data.DbState;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.XORGrammarCompiler;
 import de.hpi.bpt.chimera.jcore.controlnodes.*;

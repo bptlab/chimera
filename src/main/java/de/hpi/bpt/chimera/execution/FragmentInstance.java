@@ -12,7 +12,6 @@ import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
 import de.hpi.bpt.chimera.execution.gateway.AbstractGatewayInstance;
 import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;

@@ -15,7 +15,6 @@ import de.hpi.bpt.chimera.history.transportationbeans.ActivityLog;
 import de.hpi.bpt.chimera.history.transportationbeans.DataAttributeLog;
 import de.hpi.bpt.chimera.history.transportationbeans.DataObjectLog;
 import de.hpi.bpt.chimera.history.transportationbeans.LogEntry;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;

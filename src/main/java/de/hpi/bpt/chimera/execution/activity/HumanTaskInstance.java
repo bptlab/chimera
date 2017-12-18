@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.execution.activity;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
+import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 
 /**
