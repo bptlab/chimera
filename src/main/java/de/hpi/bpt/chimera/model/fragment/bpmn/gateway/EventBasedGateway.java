@@ -1,5 +1,8 @@
 package de.hpi.bpt.chimera.model.fragment.bpmn.gateway;
 
-public class EventBasedGateway {
-	// TODO implement this model and the corresponding parser
+import javax.persistence.Entity;
+
+@Entity
+public class EventBasedGateway extends Gateway {
+
 }

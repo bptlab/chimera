@@ -14,8 +14,10 @@ import javax.persistence.OneToOne;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.EventBasedGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 
@@ -50,7 +52,13 @@ public class BpmnFragment {
 	private EndEvent endEvent;
 
 	@OneToMany(cascade = CascadeType.ALL)
+	private List<IntermediateCatchEvent> intermediateCatchEvents = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<TimerEvent> timerEvents = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<EventBasedGateway> eventBasedGateways = new ArrayList<>();
 
 	public void addTasks(List<AbstractActivity> tasks) {
 		activities.addAll(tasks);
@@ -126,6 +134,22 @@ public class BpmnFragment {
 
 	public void setTimerEvents(List<TimerEvent> timerEvents) {
 		this.timerEvents = timerEvents;
+	}
+
+	public List<EventBasedGateway> getEventBasedGateways() {
+		return eventBasedGateways;
+	}
+
+	public void setEventBasedGateways(List<EventBasedGateway> eventBasedGateways) {
+		this.eventBasedGateways = eventBasedGateways;
+	}
+
+	public List<IntermediateCatchEvent> getIntermediateCatchEvents() {
+		return intermediateCatchEvents;
+	}
+
+	public void setIntermediateCatchEvents(List<IntermediateCatchEvent> intermediateCatchEvents) {
+		this.intermediateCatchEvents = intermediateCatchEvents;
 	}
 
 }

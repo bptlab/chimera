@@ -79,7 +79,7 @@ public final class EventDispatcher {
 		CaseStarter caseStarter = new CaseStarter(scenarioId, queryId);
 		try {
 			caseStarter.startInstance(eventJson, instance);
-			// SseNotifier.notifyRefresh();
+			SseNotifier.notifyRefresh();
 		} catch (IllegalStateException e) {
 			logger.error("Could not start case from query", e);
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();

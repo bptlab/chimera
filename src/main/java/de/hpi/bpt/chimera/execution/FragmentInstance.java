@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.execution;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,17 +64,21 @@ public class FragmentInstance {
 	 * 
 	 * @param node
 	 */
-	public void createFollowing(AbstractControlNode controlNode) {
+	public List<ControlNodeInstance> createFollowing(AbstractControlNode controlNode) {
+		List<ControlNodeInstance> createdFollowingControlNodeInstances = new ArrayList();
 		for (AbstractControlNode following : controlNode.getOutgoingControlNodes()) {
+			ControlNodeInstance nodeInstance;
 			if (isInstantiated(following)) {
-				ControlNodeInstance nodeInstance = controlNodeIdToInstance.get(following.getId());
+				nodeInstance = controlNodeIdToInstance.get(following.getId());
 				nodeInstance.enableControlFlow();
 			} else {
-				ControlNodeInstance nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
+				nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
 				addControlNodeInstance(nodeInstance);
 				nodeInstance.enableControlFlow();
 			}
+			createdFollowingControlNodeInstances.add(nodeInstance);
 		}
+		return createdFollowingControlNodeInstances;
 	}
 
 	public ControlNodeInstance createControlNodeInstance(AbstractControlNode controlNode) {

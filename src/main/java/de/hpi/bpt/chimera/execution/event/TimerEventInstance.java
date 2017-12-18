@@ -1,6 +1,17 @@
 package de.hpi.bpt.chimera.execution.event;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.UnableToInterruptJobException;
+import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import de.hpi.bpt.chimera.database.controlnodes.events.DbTimerEvent;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -12,17 +23,39 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
 
 public class TimerEventInstance extends AbstractEventInstance {
 
-	public TimerEventInstance(AbstractEvent event, FragmentInstance fragmentInstance) {
+	private final static Logger logger = Logger.getLogger(AbstractEventInstance.class);
+	private org.quartz.JobKey jobKey = null;
+
+	public TimerEventInstance(TimerEvent event, FragmentInstance fragmentInstance) {
 		super(event, fragmentInstance);
 		setState(State.INIT);
 	}
 	
 	@Override
 	public void enableControlFlow() {
+		logger.info("Controlflow of an TimerEventenabled");
 		if (this.getState().equals(State.INIT)) {
 			this.setState(State.REGISTERED);
 			this.registerEvent();
 		}
+	}
+
+	@Override
+	public void skip() {
+		super.skip();
+		if (this.getJobKey() != null) { 
+			Scheduler scheduler;
+			try {
+				scheduler = new StdSchedulerFactory().getScheduler();
+				scheduler.deleteJob(jobKey);
+			} catch (SchedulerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			logger.info("Timerevent skipped");
+		}
+		 
+		this.setState(State.SKIPPED);
 	}
 
 	/**
@@ -31,6 +64,7 @@ public class TimerEventInstance extends AbstractEventInstance {
 	 */
 	public void registerEvent() {
 		EventDispatcher.registerTimerEvent(this);
+		logger.info("Timerevent has registered itself at EventDispatcher");
 	}
 
 	/**
@@ -51,4 +85,13 @@ public class TimerEventInstance extends AbstractEventInstance {
 	public TimerEvent getControlNode() {
 		return (TimerEvent) super.getControlNode();
 	}
+
+	public JobKey getJobKey() {
+		return jobKey;
+	}
+
+	public void setJobKey(JobKey jobKey) {
+		this.jobKey = jobKey;
+	}
+
 }

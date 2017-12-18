@@ -13,7 +13,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
-import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.IntermediateCatchEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
 
 public class EventParser {
 
@@ -33,6 +33,7 @@ public class EventParser {
 	public static void parseEvents(BpmnFragment fragment, FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
 		fragment.setStartEvent(getStartEventFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.setEndEvent(getEndEventFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.setIntermediateCatchEvents(getIntermediateCatchEventsFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.setTimerEvents(getTimerEventsFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 	}
 
@@ -88,8 +89,9 @@ public class EventParser {
 	private static List<TimerEvent> getTimerEventsFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
 		List<TimerEvent> timerEventList = new ArrayList<>();
 
-		for (IntermediateCatchEvent xmlIntermediateCatchEvent : fragXmlWrap.getIntermediateCatchEvents()) {
+		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.IntermediateCatchEvent xmlIntermediateCatchEvent : fragXmlWrap.getIntermediateCatchEvents()) {
 			if (xmlIntermediateCatchEvent.getTimer() != null) {
+				log.info("parsing TimerEvent");
 				TimerEvent timerEvent = new TimerEvent();
 				timerEvent.setId(xmlIntermediateCatchEvent.getId());
 				timerEvent.setName(xmlIntermediateCatchEvent.getName());
@@ -108,4 +110,28 @@ public class EventParser {
 		return timerEventList;
 	}
 
+	private static List<IntermediateCatchEvent> getIntermediateCatchEventsFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+		List<IntermediateCatchEvent> intermediateCatchEventList = new ArrayList<>();
+		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.IntermediateCatchEvent xmlIntermediateCatchEvent : fragXmlWrap.getIntermediateCatchEvents()) {
+			log.info("parsing intermediateCatchEvents");
+			if (xmlIntermediateCatchEvent.getTimer() == null) {
+				IntermediateCatchEvent intermediateCatchEvent = new IntermediateCatchEvent();
+				intermediateCatchEvent.setId(xmlIntermediateCatchEvent.getId());
+				intermediateCatchEvent.setName(xmlIntermediateCatchEvent.getName());
+				log.info("Xml-EventQuery" + xmlIntermediateCatchEvent.getEventQuery());
+				intermediateCatchEvent.setEventQuery(xmlIntermediateCatchEvent.getEventQuery());
+				log.info("Eventquery parsed:" + intermediateCatchEvent.getEventQuery());
+				sfResolver.resolveIncomingSequenceFlow(xmlIntermediateCatchEvent.getIncomingSequenceFlows(), intermediateCatchEvent);
+				sfResolver.resolveOutgoingSequenceFlow(xmlIntermediateCatchEvent.getOutgoingSequenceFlows(), intermediateCatchEvent);
+				List<AtomicDataStateCondition> availableInputConditions = dfResolver.resolveDataNodeReferences(xmlIntermediateCatchEvent.getIncomingDataNodeObjectReferences());
+				DataStateCondition preCondition = dfResolver.parseDataStateCondition(availableInputConditions);
+				intermediateCatchEvent.setPreCondition(preCondition);
+				List<AtomicDataStateCondition> availableOutputConditions = dfResolver.resolveDataNodeReferences(xmlIntermediateCatchEvent.getOutgoingDataNodeObjectReferences());
+				DataStateCondition postCondition = dfResolver.parseDataStateCondition(availableOutputConditions);
+				intermediateCatchEvent.setPostCondition(postCondition);
+				intermediateCatchEventList.add(intermediateCatchEvent);
+			}
+		}
+		return intermediateCatchEventList;
+	}
 }

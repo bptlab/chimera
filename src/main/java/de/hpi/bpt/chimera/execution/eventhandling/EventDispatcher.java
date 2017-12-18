@@ -6,14 +6,16 @@ import de.hpi.bpt.chimera.database.DbCaseStart;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
 import de.hpi.bpt.chimera.database.history.DbLogEntry;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
+import de.hpi.bpt.chimera.execution.event.AbstractIntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.event.TimerEventInstance;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.jcore.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
 import de.hpi.bpt.chimera.jcore.controlnodes.EventFactory;
-import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
@@ -33,7 +35,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -54,18 +58,24 @@ public final class EventDispatcher {
 
 	private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
+	// TODO move these maps in the EventMapper and add persistence or move them
+	// into the Case, so that each Case is responsible for its own events.
+	private static Map<String, AbstractIntermediateCatchEventInstance> idToRegisteredEvent = new HashMap();
+	private static Map<String, AbstractIntermediateCatchEventInstance> keyToRegisteredEvent = new HashMap();
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
 	public static Response receiveEvent(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
-		AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
+		AbstractIntermediateCatchEventInstance event = keyToRegisteredEvent.get(requestId);
 		if (eventJson.isEmpty() || "{}".equals(eventJson)) {
 			event.terminate("");
 		} else {
 			event.terminate(eventJson);
 		}
-		unregisterEvent(event);
+		/// unregisterEvent(event); >>>>>is now responsibility of
+		/// AbstractIntermediateCatchEvent
 		return Response.accepted("Event received.").build();
 	}
 
@@ -96,39 +106,52 @@ public final class EventDispatcher {
 		return Response.ok("Event received.").build();
 	}
 
-	public static AbstractEvent findEvent(String requestId, int scenarioId, int instanceId) {
-		ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
-		return getEvent(scenarioInstance, requestId);
-	}
+	// Not supported anymore because we dont use Integers as Ids anymore.
+	// public static AbstractEvent findEvent(String requestId, int scenarioId,
+	// int instanceId) {
+	// ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId,
+	// instanceId);
+	// return getEvent(scenarioInstance, requestId);
+	// }
 
-
+	// TODO Do we need this function? Doesnt works with the new Chimera
+	// architecture because we dont uses Integers as ids any more.
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
 	public static Response getRegisteredEvents(@PathParam("instanceId") int scenarioInstanceId, @PathParam("scenarioId") int scenarioId) {
-		ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
-		List<Integer> fragmentIds = scenarioInstance.getFragmentInstances().stream().map(FragmentInstance::getFragmentId).collect(Collectors.toList());
-		DbEventMapping eventMapping = new DbEventMapping();
-		List<String> requestKeys = fragmentIds.stream().map(eventMapping::getRequestKeysForFragment).flatMap(Collection::stream).collect(Collectors.toList());
-		JSONArray jsonArray = new JSONArray(requestKeys);
-		return Response.ok().type(MediaType.APPLICATION_JSON).entity(jsonArray.toString()).build();
+		logger.error("This function doesn't works with Chimera 2.0");
+		// ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId,
+		// scenarioInstanceId);
+		// List<Integer> fragmentIds =
+		// scenarioInstance.getFragmentInstances().stream().map(FragmentInstance::getFragmentId).collect(Collectors.toList());
+		// DbEventMapping eventMapping = new DbEventMapping();
+		// List<String> requestKeys =
+		// fragmentIds.stream().map(eventMapping::getRequestKeysForFragment).flatMap(Collection::stream).collect(Collectors.toList());
+		// JSONArray jsonArray = new JSONArray(requestKeys);
+		// Response.ok().type(MediaType.APPLICATION_JSON).entity(jsonArray.toString()).build();
+		return Response.serverError().type("unimplemented in Chimera 2.0").build();
 	}
 
 
-	public static void unregisterEvent(AbstractEvent event) {
-		if (isExclusiveEvent(event)) {
-			discardAllAlternatives(event);
-		} else {
-			unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
-		}
-	}
+	// Not needed anymore???
+	// public static void unregisterEvent(AbstractIntermediateCatchEventInstance
+	// event) {
+	// if (isExclusiveEvent(event)) {
+	// discardAllAlternatives(event);
+	// } else {
+	// unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
+	// }
+	// }
 
-	private static void discardAllAlternatives(AbstractEvent event) {
-		DbEventMapping mapping = new DbEventMapping();
-		int fragmentInstanceId = event.getFragmentInstanceId();
-		List<Integer> alternativeEventNodes = mapping.getAlternativeEventsIds(event);
-		alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
-	}
+	// private static void discardAllAlternatives(AbstractEvent event) {
+	// DbEventMapping mapping = new DbEventMapping();
+	// int fragmentInstanceId = event.getFragmentInstanceId();
+	// List<Integer> alternativeEventNodes =
+	// mapping.getAlternativeEventsIds(event);
+	// alternativeEventNodes.forEach(x -> unregisterEvent(x,
+	// fragmentInstanceId));
+	// }
 
 	public static void registerCaseStartEvent(CaseStartTrigger caseStartTrigger) {
 		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
@@ -158,45 +181,58 @@ public final class EventDispatcher {
 	}
 
 	private static JobDetail createJob(TimerEventInstance event) {
-		JobDetail timeEventJob = newJob(TimeEventJob.class).withIdentity("1").build();
-		timeEventJob.getJobDataMap().put("CaseModelId", event.getCaseExecutioner().getCaseModel().getId());
-		timeEventJob.getJobDataMap().put("CaseId", event.getFragmentInstance().getCase().getId());
-		timeEventJob.getJobDataMap().put("ControlNodeInstanceId", event.getId());
+		JobDetail timeEventJob = newJob(TimeEventJob.class).usingJobData("CaseModelId", event.getCaseExecutioner().getCaseModel().getId()).usingJobData("CaseId", event.getFragmentInstance().getCase().getId()).usingJobData("ControlNodeInstanceId", event.getId()).build();
+		event.setJobKey(timeEventJob.getKey());
 		return timeEventJob;
 	}
 
-	private static boolean isExclusiveEvent(AbstractEvent event) {
-		DbEventMapping mapping = new DbEventMapping();
-		return mapping.isAlternativeEvent(event);
-	}
-
-	private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
-		DbEventMapping eventMapping = new DbEventMapping();
-		EventFactory factory = new EventFactory(instance);
-
-		int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
-		int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
-		AbstractEvent event = factory.getEventForControlNodeId(eventControlNodeId, fragmentInstanceId);
-		new DbLogEntry().logEvent(event.getControlNodeInstanceId(), instance.getId(), "received");
-		return event;
-	}
+	// private static boolean isExclusiveEvent(AbstractEvent event) {
+	// DbEventMapping mapping = new DbEventMapping();
+	// return mapping.isAlternativeEvent(event);
+	// }
 
 
-	public static String registerEvent(AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
+	// Not supported anymore because we dont use Integers as Ids anymore.
+	// private static AbstractEvent getEvent(ScenarioInstance instance, String
+	// requestId) {
+	// DbEventMapping eventMapping = new DbEventMapping();
+	// EventFactory factory = new EventFactory(instance);
+	//
+	// int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
+	// int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
+	// AbstractEvent event =
+	// factory.getEventForControlNodeId(eventControlNodeId, fragmentInstanceId);
+	// new DbLogEntry().logEvent(event.getControlNodeInstanceId(),
+	// instance.getId(), "received");
+	// return event;
+	// }
+
+
+	public static void registerEvent(AbstractIntermediateCatchEventInstance event) {
+		logger.info("trying to register an Event at unicorn");
 		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
-		String query = insertAttributesIntoQueryString(event.getQueryString(), scenarioInstanceId, scenarioId);
-		String notificationRuleId = sendQueryToEventService(query, requestId, scenarioInstanceId, scenarioId);
-		DbEventMapping mapping = new DbEventMapping();
-		mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
-		new DbLogEntry().logEvent(event.getControlNodeInstanceId(), scenarioInstanceId, "registered");
-		return requestId;
+		String query = insertAttributesIntoQueryString(event);
+		logger.info("Created query to register an Event at unicorn");
+		String notificationRuleId = sendQueryToEventService(query, requestId, 0 , 0);//last to Parameters 0 because we dont Integer Ids anymore but have to fit the unicorn Interface
+		event.setNotificationRule(notificationRuleId);
+		event.setUnicornKey(requestId);
+		
+		if (!idToRegisteredEvent.containsKey(event.getId())) {
+			idToRegisteredEvent.put(event.getId(), event);
+			keyToRegisteredEvent.put(requestId, event);
+		}
+		
+		logger.info(String.format("Registered event with id %s and eventQuery %s at unicorn, getting back %s as NotificationRule", event.getId(), query, notificationRuleId));
+		
 	}
 
-	public static String insertAttributesIntoQueryString(String queryString, int scenarioInstanceId, int scenarioId) {
+	public static String insertAttributesIntoQueryString(AbstractIntermediateCatchEventInstance event) {
+		String queryString = event.getControlNode().getEventQuery();
 		if (queryString.contains("#")) {
-			ScenarioInstance scenario = new ScenarioInstance(scenarioId, scenarioInstanceId);
-			for (DataAttributeInstance attribute : scenario.getDataManager().getDataAttributeInstances()) {
-				String dataattributePath = String.format("#%s.%s", attribute.getDataObject().getName(), attribute.getName());
+			// ScenarioInstance scenario = new ScenarioInstance(scenarioId,
+			// scenarioInstanceId);
+			for (DataAttributeInstance attribute : event.getDataManager().getDataAttributeInstances()) {
+				String dataattributePath = String.format("#%s.%s", attribute.getDataObject().getDataClass().getName(), attribute.getDataAttribute().getName());
 				queryString = queryString.replace(dataattributePath, attribute.getValue().toString());
 			}
 		}
@@ -211,11 +247,12 @@ public final class EventDispatcher {
 	 * @param events the events that are alternative to each other (e.g. behind a event
 	 *               based gateway)
 	 */
-	public static void registerExclusiveEvents(List<AbstractEvent> events) {
-		DbEventMapping mapping = new DbEventMapping();
-		mapping.saveAlternativeEvents(events);
-		events.forEach(AbstractEvent::enableControlFlow);
-	}
+	// not needed anymore
+	// public static void registerExclusiveEvents(List<AbstractEvent> events) {
+	// DbEventMapping mapping = new DbEventMapping();
+	// mapping.saveAlternativeEvents(events);
+	// events.forEach(AbstractEvent::enableControlFlow);
+	// }
 
 	private static String sendQueryToEventService(String rawQuery, String requestId, int scenarioInstanceId, int scenarioId) {
 		String notificationPath = String.format(SELF_PATH_NODES, SELF_DEPLOY_URL, scenarioId, scenarioInstanceId, requestId);
@@ -252,12 +289,13 @@ public final class EventDispatcher {
 		}
 	}
 
-	public static void unregisterEvent(int eventControlNodeId, int fragmentInstanceId) {
-		DbEventMapping eventMapping = new DbEventMapping();
-		String notificationRuleId = eventMapping.getNotificationRuleId(eventControlNodeId);
+	public static void unregisterEvent(AbstractIntermediateCatchEventInstance event) {
+		String notificationRuleId = event.getNotificationRule();
 
 		unregisterNotificationRule(notificationRuleId);
-		eventMapping.removeEventMapping(fragmentInstanceId, eventControlNodeId);
+		keyToRegisteredEvent.remove(event.getUnicornKey());
+		idToRegisteredEvent.remove(event.getId());
+		logger.info(String.format("Event with id %s and notification Rule %s unregistered", event.getId(), notificationRuleId));
 	}
 
 	private static void unregisterNotificationRule(String notificationRuleId) {

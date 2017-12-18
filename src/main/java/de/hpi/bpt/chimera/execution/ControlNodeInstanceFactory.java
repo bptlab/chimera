@@ -5,9 +5,11 @@ import org.apache.log4j.Logger;
 import de.hpi.bpt.chimera.execution.activity.EmailActivityInstance;
 import de.hpi.bpt.chimera.execution.activity.HumanTaskInstance;
 import de.hpi.bpt.chimera.execution.activity.WebServiceTaskInstance;
+import de.hpi.bpt.chimera.execution.event.AbstractIntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.event.EndEventInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
 import de.hpi.bpt.chimera.execution.event.TimerEventInstance;
+import de.hpi.bpt.chimera.execution.gateway.EventBasedGatewayInstance;
 import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
 import de.hpi.bpt.chimera.execution.gateway.ParallelGatewayInstance;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
@@ -17,8 +19,10 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
+import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.EventBasedGateway;
 
 public class ControlNodeInstanceFactory {
 	private static Logger log = Logger.getLogger(ControlNodeInstanceFactory.class);
@@ -52,8 +56,12 @@ public class ControlNodeInstanceFactory {
 			return new EmailActivityInstance((EmailActivity) controlNode, fragmentInstance);
 		} else if (clazz.equals(WebServiceTask.class)) {
 			return new WebServiceTaskInstance((WebServiceTask) controlNode, fragmentInstance);
+		} else if (clazz.equals(EventBasedGateway.class)) {
+			return new EventBasedGatewayInstance((EventBasedGateway) controlNode, fragmentInstance);
 		} else if (clazz.equals(TimerEvent.class)) {
 			return new TimerEventInstance((TimerEvent) controlNode, fragmentInstance);
+		} else if (clazz.equals(IntermediateCatchEvent.class)) {
+			return new AbstractIntermediateCatchEventInstance((IntermediateCatchEvent) controlNode, fragmentInstance);
 		} else {
 			throw new IllegalArgumentException(String.format("Illegal type of ControlNode: %s", clazz.getName()));
 			// log.error(String.format("Illegal type of ControlNode: %s", clazz.getName()));

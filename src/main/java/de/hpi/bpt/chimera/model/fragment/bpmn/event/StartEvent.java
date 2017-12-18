@@ -12,7 +12,7 @@ public class StartEvent extends AbstractEvent {
 	}
 
 	@Override
-	public String getEventQuerry() {
+	public String getEventQuery() {
 		return eventQuerry;
 	}
 

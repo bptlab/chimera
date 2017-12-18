@@ -26,12 +26,13 @@ public class TimeEventJob implements Job {
 		String caseModelId = data.getString("CaseModelId");
 		String caseId = data.getString("CaseId");
 		String controlNodeInstanceId = data.getString("ControlNodeInstanceId");
+		logger.info(String.format("cmId: %s, caseId: %s, ControlNodeInstanceId: %s", caseModelId, caseId, controlNodeInstanceId));
 		if (!ExecutionService.isExistingCase(caseId)) {
 			return;
 		}
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(caseModelId, caseId);
 		TimerEventInstance timerEvent = (TimerEventInstance) caseExecutioner.getControlNodeInstance(controlNodeInstanceId);
 		timerEvent.terminate();
-		de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier.notifyRefresh();
+		// de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier.notifyRefresh();
 	}
 }
