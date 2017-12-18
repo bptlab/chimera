@@ -1,21 +1,10 @@
 package de.hpi.bpt.chimera.execution.event;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
-import de.hpi.bpt.chimera.database.data.DbDataFlow;
-import de.hpi.bpt.chimera.execution.DataAttributeInstanceWriter;
-import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
-import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
-import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
 
 //TODO maybe rename or make abstract again

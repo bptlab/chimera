@@ -1,6 +1,5 @@
 package de.hpi.bpt.chimera.execution.eventhandling;
 
-import de.hpi.bpt.chimera.database.data.DbDataClass;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
@@ -23,7 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.List;
 
 public class EventSpawner {
-
+	/*
 	private static final String EVENT_URL = PropertyLoader.getProperty("unicorn.url") + PropertyLoader.getProperty("unicorn.path.deploy");
 	private static final String EVENT_PATH = PropertyLoader.getProperty("unicorn.path.event");
 	private static final Logger log = Logger.getLogger(EventSpawner.class);
@@ -104,4 +103,5 @@ public class EventSpawner {
 			rootElement.appendChild(el);
 		});
 	}
+	*/
 }

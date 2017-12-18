@@ -2,9 +2,6 @@ package de.hpi.bpt.chimera.execution.eventhandling;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import de.hpi.bpt.chimera.database.DbCaseStart;
-import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
-import de.hpi.bpt.chimera.database.history.DbLogEntry;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
@@ -313,6 +310,8 @@ public final class EventDispatcher {
 		}
 	}
 
+	// TODO: unregister
+	/*
 	public static void unregisterCaseStartEvent(int scenarioId) {
 		DbCaseStart caseStart = new DbCaseStart();
 		List<String> requestKeys = caseStart.getRequestKeys(scenarioId);
@@ -322,4 +321,5 @@ public final class EventDispatcher {
 
 		requestKeys.forEach(caseStart::deleteCaseMapping);
 	}
+	*/
 }

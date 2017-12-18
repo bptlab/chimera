@@ -1,24 +1,16 @@
 package de.hpi.bpt.chimera.execution.event;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.UnableToInterruptJobException;
 import org.quartz.impl.StdSchedulerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import de.hpi.bpt.chimera.database.controlnodes.events.DbTimerEvent;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
-import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
 
 public class TimerEventInstance extends AbstractEventInstance {
