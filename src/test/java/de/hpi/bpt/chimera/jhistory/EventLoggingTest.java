@@ -4,6 +4,8 @@ import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.history.HistoryService;
+import de.hpi.bpt.chimera.history.LogEntry;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;

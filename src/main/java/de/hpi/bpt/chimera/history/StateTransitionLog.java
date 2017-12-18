@@ -1,7 +1,5 @@
-package de.hpi.bpt.chimera.jhistory;
+package de.hpi.bpt.chimera.history;
 
-import de.hpi.bpt.chimera.database.ConnectionWrapper;
-import de.hpi.bpt.chimera.database.history.DbLogEntry;
 import org.json.JSONObject;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -81,7 +79,9 @@ public class StateTransitionLog {
 		transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));
 	}
 
+	
 	private static List<StateTransitionLog> parseStateTransitions(String sql) {
+		/*
 		java.sql.Connection con = ConnectionWrapper.getInstance().connect();
 		List<StateTransitionLog> transitionLogs = new ArrayList<>();
 		try (Statement statement = con.createStatement(); ResultSet rs = statement.executeQuery(sql)) {
@@ -99,6 +99,8 @@ public class StateTransitionLog {
 			e.printStackTrace();
 		}
 		return transitionLogs;
+		*/
+		return null;
 	}
 
 	public Date getTimeStamp() {

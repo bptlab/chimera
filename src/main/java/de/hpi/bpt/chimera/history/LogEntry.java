@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.jhistory;
+package de.hpi.bpt.chimera.history;
 
 
 import org.w3c.dom.Document;

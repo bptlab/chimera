@@ -1,8 +1,8 @@
 package de.hpi.bpt.chimera.jcore.rest.beans.miscellaneous;
 
-import de.hpi.bpt.chimera.jconfiguration.rest.RestConfigurator;
-
 import javax.xml.bind.annotation.XmlRootElement;
+
+import de.hpi.bpt.chimera.configuration.rest.RestConfigurator;
 
 /**
  * This is a data class for the email configuration.

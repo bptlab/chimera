@@ -1,6 +1,5 @@
-package de.hpi.bpt.chimera.jhistory;
+package de.hpi.bpt.chimera.history;
 
-import de.hpi.bpt.chimera.database.history.DbLogEntry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

@@ -1,7 +1,6 @@
-package de.hpi.bpt.chimera.jconfiguration.rest;
+package de.hpi.bpt.chimera.configuration.rest;
 
-import de.hpi.bpt.chimera.database.ConnectionWrapper;
-import de.hpi.bpt.chimera.jconfiguration.rest.beans.EmailActivityJaxBean;
+import de.hpi.bpt.chimera.configuration.rest.beans.EmailActivityJaxBean;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
 
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
@@ -254,7 +253,7 @@ public class RestConfigurator {
 			this.method = method;
 		}
 
-		public ArrayList<HashMap<String, Object>> getAttributes() {
+		public List<HashMap<String, Object>> getAttributes() {
 			return attributes;
 		}
 

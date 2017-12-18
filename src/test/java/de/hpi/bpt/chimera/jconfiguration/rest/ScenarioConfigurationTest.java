@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.jconfiguration.rest;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.configuration.rest.RestConfigurator;
 import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.jcore.rest.RestInterface;

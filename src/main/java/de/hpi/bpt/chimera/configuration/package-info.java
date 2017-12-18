@@ -7,4 +7,4 @@
  * configuring data attributes for an activity
  * configuring users and roles
  */
-package de.hpi.bpt.chimera.jconfiguration;
+package de.hpi.bpt.chimera.configuration;

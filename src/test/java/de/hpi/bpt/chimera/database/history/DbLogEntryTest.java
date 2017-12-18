@@ -2,8 +2,9 @@ package de.hpi.bpt.chimera.database.history;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.DbObject;
+import de.hpi.bpt.chimera.history.LogEntry;
 import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import de.hpi.bpt.chimera.jhistory.LogEntry;
+
 import org.junit.After;
 import org.junit.Test;
 

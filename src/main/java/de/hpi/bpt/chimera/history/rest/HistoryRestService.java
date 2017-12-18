@@ -1,10 +1,11 @@
-package de.hpi.bpt.chimera.jhistory.rest;
+package de.hpi.bpt.chimera.history.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
-import de.hpi.bpt.chimera.jhistory.HistoryService;
-import de.hpi.bpt.chimera.jhistory.LogEntry;
-import de.hpi.bpt.chimera.jhistory.StateTransitionLog;
+import de.hpi.bpt.chimera.history.HistoryService;
+import de.hpi.bpt.chimera.history.LogEntry;
+import de.hpi.bpt.chimera.history.StateTransitionLog;
+
 import org.json.JSONArray;
 import org.w3c.dom.Document;
 
@@ -101,7 +102,7 @@ public class HistoryRestService {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"The instance or scenario ID " + "is incorrect\"}").build();
 		}
 		
-		List<de.hpi.bpt.chimera.jhistory.transportationbeans.LogEntry> logEntries = new ArrayList<>();
+		List<de.hpi.bpt.chimera.history.transportationbeans.LogEntry> logEntries = new ArrayList<>();
 		logEntries.addAll(caseExecutioner.getActivityLogs());
 		logEntries.addAll(caseExecutioner.getDataObjectLogs());
 		logEntries.addAll(caseExecutioner.getDataAttributeLogs());
@@ -109,6 +110,7 @@ public class HistoryRestService {
 		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
+	// TODO
 	@GET
 	@Path("scenario/{scenarioId}/export")
 	@Produces(MediaType.APPLICATION_XML)

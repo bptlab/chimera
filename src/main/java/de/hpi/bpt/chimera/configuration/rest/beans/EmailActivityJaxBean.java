@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.jconfiguration.rest.beans;
+package de.hpi.bpt.chimera.configuration.rest.beans;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

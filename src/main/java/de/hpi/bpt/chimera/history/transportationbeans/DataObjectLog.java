@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.jhistory.transportationbeans;
+package de.hpi.bpt.chimera.history.transportationbeans;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

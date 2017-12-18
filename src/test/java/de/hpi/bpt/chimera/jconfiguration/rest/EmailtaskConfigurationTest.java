@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.jconfiguration.rest;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.configuration.rest.RestConfigurator;
 import de.hpi.bpt.chimera.database.DbEmailConfiguration;
 import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.rest.DataDependencyRestService;

@@ -1,7 +1,5 @@
-package de.hpi.bpt.chimera.jhistory;
+package de.hpi.bpt.chimera.history;
 
-import de.hpi.bpt.chimera.database.DbScenarioInstance;
-import de.hpi.bpt.chimera.database.history.DbLogEntry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -34,11 +32,13 @@ public class HistoryService {
 		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		Element rootElement = doc.createElementNS("http://www.xes-standard.org", "log");
 		doc.appendChild(rootElement);
+		/*
 		List<Integer> scenarioInstances = new DbScenarioInstance().getScenarioInstances(scenarioId);
 		for (int instanceId : scenarioInstances) {
 			Trace trace = new Trace(instanceId);
 			trace.appendToLog(rootElement);
 		}
+		*/
 		return doc;
 	}
 

@@ -5,6 +5,7 @@ import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.rest.RestInterface;
 import de.hpi.bpt.chimera.ScenarioTestHelper;
 import de.hpi.bpt.chimera.database.history.DbLogEntry;
+import de.hpi.bpt.chimera.history.rest.HistoryRestService;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

@@ -6,6 +6,9 @@ import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.history.HistoryService;
+import de.hpi.bpt.chimera.history.LogEntry;
+
 import org.junit.After;
 import org.junit.Test;
 

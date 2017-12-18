@@ -2,6 +2,9 @@ package de.hpi.bpt.chimera.jhistory;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.history.DbLogEntry;
+import de.hpi.bpt.chimera.history.LogEntry;
+import de.hpi.bpt.chimera.history.StateTransitionLog;
+
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
