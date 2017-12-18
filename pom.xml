@@ -407,8 +407,8 @@
 			<properties>
 				<!-- default values -->
 				<db.user>chimera</db.user>
-				<db.password>bp2015</db.password>
-				<db.schema>JEngineV2</db.schema>
+				<db.password>bptlab</db.password>
+				<db.schema>chimeradb</db.schema>
 				<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
 				<db.url>${db.url.root}${db.schema}</db.url>
 			</properties>
@@ -444,11 +444,13 @@
 						<version>1.7</version>
 						<executions>
 							<execution>
-								<phase>validate</phase>
+								<phase>compile</phase>
 								<configuration>
 									<target>
 										<move file="${basedir}/config_template.properties"
 											tofile="${basedir}/config.properties" />
+										<move file="${project.build.outputDirectory}/META-INF/persistence_template.xml"
+											tofile="${project.build.outputDirectory}/META-INF/persistence.xml" />
 									</target>
 								</configuration>
 								<goals>
