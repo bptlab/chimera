@@ -2,9 +2,8 @@ package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataManager;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
-import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
 
 import org.apache.log4j.Logger;
@@ -50,7 +49,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenarioInstances(@Context UriInfo uri, @PathParam("scenarioId") String cmId, @DefaultValue("") @QueryParam("filter") String filterString) {
 		try {
-			List<CaseExecutioner> caseExecutions = de.hpi.bpt.chimera.execution.ExecutionService.getAllCasesOfCaseModel(cmId);
+			List<CaseExecutioner> caseExecutions = ExecutionService.getAllCasesOfCaseModel(cmId);
 
 			if (!filterString.isEmpty())
 				caseExecutions = caseExecutions.stream().filter(instance -> instance.getCase().getName().contains(filterString)).collect(Collectors.toList());
@@ -212,9 +211,11 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getEvents(@Context UriInfo uriInfo, @PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
 		// TODO
-		ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
-		List<String> eventKeys = scenarioInstance.getRegisteredEventKeys();
-		return Response.ok(MediaType.APPLICATION_JSON).entity(eventKeys).build();
+		
+		// ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
+		// List<String> eventKeys = scenarioInstance.getRegisteredEventKeys();
+		// return Response.ok(MediaType.APPLICATION_JSON).entity(eventKeys).build();
+		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Not implemented yet").build();
 	}
 
 	/**
@@ -259,6 +260,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response terminateScenarioInstance(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
 		// TODO
+		/*
 		ScenarioInstance instance = new ScenarioInstance(scenarioId, instanceId);
 		if (instance.canTerminate()) {
 			instance.terminate();
@@ -266,5 +268,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 		} else {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Termination condition is not fulfilled").build();
 		}
+		*/
+		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Not implemented yet").build();
 	}
 }

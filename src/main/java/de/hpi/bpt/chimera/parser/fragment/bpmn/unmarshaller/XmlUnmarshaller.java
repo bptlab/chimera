@@ -41,7 +41,7 @@ public class XmlUnmarshaller {
 		}
 	}
 
-	private static Document getXmlDocFromString(String xml) {
+	public static Document getXmlDocFromString(String xml) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			return dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));

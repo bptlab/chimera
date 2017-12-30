@@ -1,10 +1,13 @@
 package de.hpi.bpt.chimera;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
@@ -19,19 +22,16 @@ public class CaseModelTestHelper {
 	/**
 	 * Get the JsonString which is saved at the filepath.
 	 * 
-	 * @param filepath
+	 * @param path
 	 * @return String
 	 */
-	public static String getJsonString(String filepath) {
+	public static String getJsonString(String path) {
+		File file = new File(path);
 		try {
-			// String file = getClass().getResource(fileName).getFile();
-			// String file = "src/test/resources/parser/JsonStringVerySimpleCaseModel";
-			FileInputStream inputStream = new FileInputStream(filepath);
-			String jsonString = IOUtils.toString(inputStream);
-			inputStream.close();
-			return jsonString;
-		} catch (Exception e) {
-			throw new IllegalArgumentException("wasn't able to find the file");
+			String fileContent = FileUtils.readFileToString(file);
+			return fileContent;
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e.getMessage());
 		}
 	}
 

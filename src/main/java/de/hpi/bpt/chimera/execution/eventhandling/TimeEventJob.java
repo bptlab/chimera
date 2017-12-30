@@ -3,7 +3,6 @@ package de.hpi.bpt.chimera.execution.eventhandling;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.event.TimerEventInstance;
-import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.util.log.Log;

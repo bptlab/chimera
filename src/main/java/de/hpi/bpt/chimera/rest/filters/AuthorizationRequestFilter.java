@@ -1,7 +1,5 @@
 package de.hpi.bpt.chimera.rest.filters;
 
-import de.hpi.bpt.chimera.jcore.executionbehaviors.HttpMethod;
-
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.MediaType;
@@ -38,7 +36,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		// abortIllegalActivityInstance(requestContext.getMethod());
 		// }
 	}
-
+	/*
 	private void abortIllegalActivity(String method) {
 		int activityId = Integer.parseInt(requestContext.getUriInfo().getPathParameters().getFirst("activityId"));
 		if (method.equals(HttpMethod.GET.toString())) {
@@ -97,7 +95,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		 * (!map.containsKey("scenarioId")) { return true; } int scenarioId =
 		 * Integer.parseInt(map.getFirst("scenarioId")); return new
 		 * DbScenario().existScenario(scenarioId);
-		 */
+		 *//*
 		return true;
 	}
 
@@ -131,4 +129,5 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		Response badRequest = Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(errorMsg).build();
 		this.requestContext.abortWith(badRequest);
 	}
+	*/
 }

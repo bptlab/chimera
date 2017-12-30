@@ -6,12 +6,11 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
-import de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
 public class DataAttributeInstance {
 
-	private final static Logger log = Logger.getLogger(DataAttributeInstance.class);
+	private static final Logger log = Logger.getLogger(DataAttributeInstance.class);
 
 	private String id;
 	private DataAttribute dataAttribute;
@@ -102,7 +101,7 @@ public class DataAttributeInstance {
 				throw new IllegalArgumentException("Attribute data type is not supported.");
 			}
 		} catch (IllegalArgumentException | ParseException e) {
-			SseNotifier.notifyWarning("Data attribute " + dataAttribute.getName() + " could not be set " + "because the entered value did not match its data type.");
+			// SseNotifier.notifyWarning("Data attribute " + dataAttribute.getName() + " could not be set " + "because the entered value did not match its data type.");
 			throw new IllegalArgumentException(excp);
 		}
 	}

@@ -21,6 +21,9 @@
 			</resource>
 			<resource>
 				<directory>${basedir}</directory>
+				<excludes>
+					<exclude>src/test/*</exclude>
+				</excludes>
 				<includes>
 					<include>config.properties</include>
 				</includes>

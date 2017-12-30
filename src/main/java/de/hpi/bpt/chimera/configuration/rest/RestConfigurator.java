@@ -1,7 +1,6 @@
 package de.hpi.bpt.chimera.configuration.rest;
 
 import de.hpi.bpt.chimera.configuration.rest.beans.EmailActivityJaxBean;
-import de.hpi.bpt.chimera.jcore.ExecutionService;
 
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.model.CaseModel;

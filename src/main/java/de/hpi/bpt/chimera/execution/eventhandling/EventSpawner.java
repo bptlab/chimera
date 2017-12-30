@@ -1,9 +1,5 @@
 package de.hpi.bpt.chimera.execution.eventhandling;
 
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
-import de.hpi.bpt.chimera.jcore.data.DataManager;
-import de.hpi.bpt.chimera.jcore.data.DataObject;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
 import org.apache.log4j.Logger;
