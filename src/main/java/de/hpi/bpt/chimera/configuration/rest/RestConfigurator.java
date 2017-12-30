@@ -129,7 +129,7 @@ public class RestConfigurator {
 	private List<EmailActivity> getAllEmailActiviesFromCaseModel(CaseModel caseModel) {
 		// first create a List of all Activities of the CaseModel. Therefore add
 		// all Activities of each Fragment to a List of all Activities.
-		List<AbstractActivity> activities = caseModel.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getTasks()).flatMap(List::stream).collect(Collectors.toList());
+		List<AbstractActivity> activities = caseModel.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getActivities()).flatMap(List::stream).collect(Collectors.toList());
 		// now filter the List of all Activities for the Activities which are
 		// from Type EmailActivity
 		return activities.stream().filter(activity -> activity instanceof EmailActivity).map(activity -> (EmailActivity) activity).collect(Collectors.toList());

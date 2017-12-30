@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
@@ -58,9 +59,12 @@ public class BpmnFragment {
 	private List<TimerEvent> timerEvents = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL)
+	private List<BoundaryEvent> boundaryEvents = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<EventBasedGateway> eventBasedGateways = new ArrayList<>();
 
-	public void addTasks(List<AbstractActivity> tasks) {
+	public void addActivities(List<AbstractActivity> tasks) {
 		activities.addAll(tasks);
 	}
 	
@@ -80,7 +84,7 @@ public class BpmnFragment {
 		this.startEvent = startEvent;
 	}
 
-	public List<AbstractActivity> getTasks() {
+	public List<AbstractActivity> getActivities() {
 		return activities;
 	}
 
@@ -152,4 +156,11 @@ public class BpmnFragment {
 		this.intermediateCatchEvents = intermediateCatchEvents;
 	}
 
+	public List<BoundaryEvent> getBoundaryEvents() {
+		return boundaryEvents;
+	}
+
+	public void setBoundaryEvents(List<BoundaryEvent> boundaryEvents) {
+		this.boundaryEvents = boundaryEvents;
+	}
 }

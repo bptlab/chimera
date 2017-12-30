@@ -8,12 +8,15 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.ControlNodeInstanceFactory;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.State;
+import de.hpi.bpt.chimera.execution.event.BoundaryEventInstance;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 
 public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	private static final Logger log = Logger.getLogger(AbstractActivityInstance.class);
@@ -23,7 +26,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	// private boolean canTerminate;
 	private List<DataObject> selectedDataObjects;
 	private List<DataObject> outputDataObjects;
-
+	private List<BoundaryEventInstance> attachedBoundaryEventInstances;
 
 	/**
 	 * Create a new AbstractActivityInstance.
@@ -36,6 +39,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		this.isAutomaticTask = false;
 		this.selectedDataObjects = new ArrayList<>();
 		this.outputDataObjects = new ArrayList<>();
+		this.attachedBoundaryEventInstances = new ArrayList<>();
 	}
 
 	/**
@@ -101,7 +105,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 			return;
 		}
 		// TODO: implement skipBehaviour
-		// TODO: implement creation of possible attached BoundaryEvent
+		createAttachedBoundaryEvents();
 		setState(State.RUNNING);
 		execute();
 		if (this.isAutomaticTask && getControlNode().hasUniquePostCondition()) {
@@ -112,6 +116,15 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 			
 			getCaseExecutioner().prepareForActivityInstanceTermination(this, dataObjectToObjectLifecycleTransition);
 			getCaseExecutioner().terminateActivityInstance(this);
+		}
+	}
+
+	// TODO: finish
+	private void createAttachedBoundaryEvents() {
+		for (BoundaryEvent boundaryEvent : getControlNode().getAttachedBoundaryEvents()) {
+			// TODO: think whether instance should be created by factory
+			BoundaryEventInstance boundaryEventInstane = new BoundaryEventInstance(boundaryEvent, getFragmentInstance());
+			boundaryEventInstane.setAttachedToActivity(this);
 		}
 	}
 
@@ -173,5 +186,13 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 
 	public void setOutputDataObjects(List<DataObject> outputDataObjects) {
 		this.outputDataObjects = outputDataObjects;
+	}
+
+	public List<BoundaryEventInstance> getAttachedBoundaryEventInstances() {
+		return attachedBoundaryEventInstances;
+	}
+
+	public void setAttachedBoundaryEventInstances(List<BoundaryEventInstance> attachedBoundaryEventInstances) {
+		this.attachedBoundaryEventInstances = attachedBoundaryEventInstances;
 	}
 }

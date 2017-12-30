@@ -10,21 +10,10 @@ import java.util.List;
 @XmlTransient
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class AbstractDataControlNode extends AbstractControlNode {
-	@XmlAttribute(name = "name")
-	protected String name = "";
 	@XmlElement(name = "bpmn:dataInputAssociation")
 	protected List<DataInputAssociation> dataInputAssociations = new ArrayList<>();
 	@XmlElement(name = "bpmn:dataOutputAssociation")
 	protected List<DataOutputAssociation> dataOutputAssociations = new ArrayList<>();
-
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public List<DataOutputAssociation> getDataOutputAssociations() {
 		return dataOutputAssociations;

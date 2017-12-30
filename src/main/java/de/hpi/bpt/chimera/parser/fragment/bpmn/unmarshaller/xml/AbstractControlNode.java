@@ -16,6 +16,8 @@ public abstract class AbstractControlNode {
 
 	@XmlAttribute(name = "id")
 	private String id;
+	@XmlAttribute(name = "name")
+	private String name = "";
 	@XmlElement(name = "bpmn:incoming")
 	private List<String> incomingSequenceFlows = new ArrayList<>();
 	@XmlElement(name = "bpmn:outgoing")
@@ -27,6 +29,10 @@ public abstract class AbstractControlNode {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public List<String> getIncomingSequenceFlows() {

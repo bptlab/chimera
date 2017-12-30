@@ -12,7 +12,7 @@ import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.EventBasedGateway;
-import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.Gateway;
+import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.AbstractGateway;
 
 public class EventBasedGatewayInstance extends AbstractGatewayInstance {
 

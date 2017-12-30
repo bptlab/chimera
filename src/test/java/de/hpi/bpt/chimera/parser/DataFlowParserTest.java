@@ -38,7 +38,7 @@ public class DataFlowParserTest {
 		// manager
 		CaseModel cm = CaseModelParser.parseCaseModel(jsonString);
 
-		AbstractActivity task = cm.getFragments().get(0).getBpmnFragment().getTasks().get(0);
+		AbstractActivity task = cm.getFragments().get(0).getBpmnFragment().getActivities().get(0);
 		assertEquals(12, cm.getFragments().get(0).getBpmnFragment().getConditions().size());
 		List<ConditionSet> preCondition = task.getPreCondition().getConditionSets();
 		List<ConditionSet> postCondition = task.getPostCondition().getConditionSets();

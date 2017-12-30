@@ -20,6 +20,10 @@ public class BoundaryEvent extends AbstractDataControlNode {
 	@XmlAttribute(name = "griffin:eventquery")
 	private String eventQuery;
 
+	public boolean hasAttachedToRef() {
+		return attachedToRef != null;
+	}
+
 	public String getAttachedToRef() {
 		return attachedToRef;
 	}

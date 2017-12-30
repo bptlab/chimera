@@ -70,7 +70,7 @@ public class CaseModel {
 		// creates a list of all activities of all fragments and filters these
 		// list for the given Id.
 		// all activities that have the given Id are stored in result
-		List<AbstractActivity> result = this.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getTasks()).flatMap(List::stream).filter(activity -> activity.getId().equals(controlNodeId)).collect(Collectors.toList());
+		List<AbstractActivity> result = this.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getActivities()).flatMap(List::stream).filter(activity -> activity.getId().equals(controlNodeId)).collect(Collectors.toList());
 		// there should exact 1 activity with the given Id
 		if (result.size() != 1) {
 			throw new IllegalStateException();

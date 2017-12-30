@@ -16,8 +16,6 @@ import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 
 @Entity
 public abstract class AbstractDataControlNode extends AbstractControlNode {
-	private String name = "";
-
 	@OneToOne(cascade = CascadeType.ALL)
 	private DataStateCondition preCondition;
 	@OneToOne(cascade = CascadeType.ALL)
@@ -32,14 +30,6 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
 	}
 
 	// GETTER & SETTER
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public DataStateCondition getPreCondition() {
 		return preCondition;
 	}

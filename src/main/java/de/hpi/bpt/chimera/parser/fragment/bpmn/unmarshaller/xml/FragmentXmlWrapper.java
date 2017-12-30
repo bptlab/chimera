@@ -22,11 +22,9 @@ public class FragmentXmlWrapper {
 		return this.bpmnProcessXml.getSequenceFlowAssociations();
 	}
 
-
 	public List<Task> getTasks() {
 		return this.bpmnProcessXml.getTasks();
 	}
-
 
 	public List<BoundaryEvent> getBoundaryEvents() {
 		return this.bpmnProcessXml.getBoundaryEvents();
@@ -36,7 +34,6 @@ public class FragmentXmlWrapper {
 		return this.bpmnProcessXml.getEventBasedGateways();
 	}
 
-
 	public List<ExclusiveGateway> getXorGateways() {
 		return this.bpmnProcessXml.getXorGateways();
 	}
@@ -44,7 +41,6 @@ public class FragmentXmlWrapper {
 	public List<ParallelGateway> getAndGateways() {
 		return this.bpmnProcessXml.getAndGateways();
 	}
-
 
 	public EndEvent getEndEvent() {
 		return this.bpmnProcessXml.getEndEvent();
@@ -86,6 +82,7 @@ public class FragmentXmlWrapper {
 		List<? super AbstractDataControlNode> allActivities = new ArrayList<>();
 		allActivities.addAll(this.bpmnProcessXml.getTasks());
 		allActivities.addAll(this.bpmnProcessXml.getWebServiceTasks());
+		allActivities.addAll(this.bpmnProcessXml.getSendTasks());
 		return (List<AbstractDataControlNode>) allActivities;
 	}
 
@@ -95,9 +92,8 @@ public class FragmentXmlWrapper {
 		allEvents.add(this.bpmnProcessXml.getEndEvent());
 		allEvents.addAll(this.bpmnProcessXml.getIntermediateCatchEvents());
 		allEvents.addAll(this.bpmnProcessXml.getBoundaryEvents());
-		allEvents.addAll(this.bpmnProcessXml.getReceiveTasks());
-		allEvents.addAll(this.bpmnProcessXml.getSendTasks());
 		allEvents.addAll(this.bpmnProcessXml.getIntermediateThrowEvents());
+		// allEvents.addAll(this.bpmnProcessXml.getReceiveTasks());
 		return (List<AbstractDataControlNode>) allEvents;
 	}
 

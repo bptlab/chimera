@@ -64,7 +64,7 @@ public class FragmentInstance {
 	 * @param node
 	 */
 	public List<ControlNodeInstance> createFollowing(AbstractControlNode controlNode) {
-		List<ControlNodeInstance> createdFollowingControlNodeInstances = new ArrayList();
+		List<ControlNodeInstance> createdFollowingControlNodeInstances = new ArrayList<>();
 		for (AbstractControlNode following : controlNode.getOutgoingControlNodes()) {
 			ControlNodeInstance nodeInstance;
 			if (isInstantiated(following)) {

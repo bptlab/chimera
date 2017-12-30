@@ -45,10 +45,7 @@ public class GatewayParser {
 
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.ParallelGateway xmlParallelGateway : fragXmlWrap.getAndGateways()) {
 			ParallelGateway parallelGateway = new ParallelGateway();
-			parallelGateway.setId(xmlParallelGateway.getId());
-			parallelGateway.setName(xmlParallelGateway.getName());
-			sfResolver.resolveIncomingSequenceFlow(xmlParallelGateway.getIncomingSequenceFlows(), parallelGateway);
-			sfResolver.resolveOutgoingSequenceFlow(xmlParallelGateway.getOutgoingSequenceFlows(), parallelGateway);
+			ControlNodeParserHelper.parseControlNode(parallelGateway, xmlParallelGateway, sfResolver);
 			parallelGatewayList.add(parallelGateway);
 		}
 		return parallelGatewayList;
@@ -68,10 +65,7 @@ public class GatewayParser {
 
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.ExclusiveGateway xmlExclusiveGateway : fragXmlWrap.getXorGateways()) {
 			ExclusiveGateway exclusiveGateway = new ExclusiveGateway();
-			exclusiveGateway.setId(xmlExclusiveGateway.getId());
-			exclusiveGateway.setName(xmlExclusiveGateway.getName());
-			sfResolver.resolveIncomingSequenceFlow(xmlExclusiveGateway.getIncomingSequenceFlows(), exclusiveGateway);
-			sfResolver.resolveOutgoingSequenceFlow(xmlExclusiveGateway.getOutgoingSequenceFlows(), exclusiveGateway);
+			ControlNodeParserHelper.parseControlNode(exclusiveGateway, xmlExclusiveGateway, sfResolver);
 			exclusiveGatewayList.add(exclusiveGateway);
 		}
 		return exclusiveGatewayList;
@@ -91,9 +85,7 @@ public class GatewayParser {
 
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.EventBasedGateway xmlEventBasedGateway : fragXmlWrap.getEventBasedGateways()) {
 			EventBasedGateway eventBasedGateway = new EventBasedGateway();
-			eventBasedGateway.setId(xmlEventBasedGateway.getId());
-			sfResolver.resolveIncomingSequenceFlow(xmlEventBasedGateway.getIncomingSequenceFlows(), eventBasedGateway);
-			sfResolver.resolveOutgoingSequenceFlow(xmlEventBasedGateway.getOutgoingSequenceFlows(), eventBasedGateway);
+			ControlNodeParserHelper.parseControlNode(eventBasedGateway, xmlEventBasedGateway, sfResolver);
 			eventBasedGatewayList.add(eventBasedGateway);
 		}
 		return eventBasedGatewayList;

@@ -50,8 +50,11 @@ public final class BpmnXmlFragmentParser {
 			// ^has to be called first
 			DataFlowResolver dfResolver = new DataFlowResolver(fragXmlWrap, parserHelper);
 
-			EventParser.parseEvents(fragment, fragXmlWrap, sfResolver, dfResolver);
+			// activities need to be parsed before events because there need to
+			// be an activity with the id that the BoundaryEvents are attached
+			// to
 			ActivityParser.parseActivities(fragment, fragXmlWrap, sfResolver, dfResolver);
+			EventParser.parseEvents(fragment, fragXmlWrap, sfResolver, dfResolver);
 			GatewayParser.parseGateways(fragment, fragXmlWrap, sfResolver);
 
 			fragment.setSequenceFlowAssociations(sfResolver.getResolvedSequenceFlowAssociations());

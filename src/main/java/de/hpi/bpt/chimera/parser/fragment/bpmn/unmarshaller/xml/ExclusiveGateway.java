@@ -19,10 +19,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "bpmn:exclusiveGateway")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ExclusiveGateway extends AbstractControlNode {
-	@XmlAttribute(name = "name")
-	private String name = "";
 
-	public String getName() {
-		return name;
-	}
 }

@@ -53,8 +53,8 @@ public final class EventDispatcher {
 
 	// TODO move these maps in the EventMapper and add persistence or move them
 	// into the Case, so that each Case is responsible for its own events.
-	private static Map<String, AbstractIntermediateCatchEventInstance> idToRegisteredEvent = new HashMap();
-	private static Map<String, AbstractIntermediateCatchEventInstance> keyToRegisteredEvent = new HashMap();
+	private static Map<String, AbstractIntermediateCatchEventInstance> idToRegisteredEvent = new HashMap<>();
+	private static Map<String, AbstractIntermediateCatchEventInstance> keyToRegisteredEvent = new HashMap<>();
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)

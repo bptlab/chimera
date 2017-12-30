@@ -18,10 +18,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "bpmn:parallelGateway")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ParallelGateway extends AbstractControlNode {
-	@XmlAttribute(name = "name")
-	private String name = "";
 
-	public String getName() {
-		return name;
-	}
 }

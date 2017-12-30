@@ -56,6 +56,7 @@ public class EmailActivityInstanceTest {
 		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity1");
 		caseExecutioner.beginActivityInstance(activityInst, new ArrayList<DataObject>());
 		caseExecutioner.prepareForActivityInstanceTermination(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
+		activityInst.terminate();
 
 		EmailActivityInstance emailActivityInst = (EmailActivityInstance) caseExecutioner.getActivitiesWithState(State.READY).stream().filter(activity -> activity.getControlNode().getName().equals("activity2")).toArray()[0];
 		caseExecutioner.beginActivityInstance(emailActivityInst, new ArrayList<DataObject>());

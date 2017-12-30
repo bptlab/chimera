@@ -22,6 +22,9 @@ public abstract class AbstractControlNode {
 	private int dbId;
 
 	private String id;
+
+	private String name;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "targetRef")
 	@JoinColumn(name = "targetRef")
 	private List<SequenceFlowAssociation> incomingSequenceFlows = new ArrayList<>();
@@ -37,6 +40,14 @@ public abstract class AbstractControlNode {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public List<AbstractControlNode> getIncomingControlNodes() {

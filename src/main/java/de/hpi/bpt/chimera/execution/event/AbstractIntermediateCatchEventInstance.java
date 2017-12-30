@@ -10,7 +10,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
 //TODO maybe rename or make abstract again
 public class AbstractIntermediateCatchEventInstance extends AbstractEventInstance {
 
-	private final static Logger logger = Logger.getLogger(AbstractIntermediateCatchEventInstance.class);
+	private static final Logger logger = Logger.getLogger(AbstractIntermediateCatchEventInstance.class);
 
 	private String notificationRule; // important for Unicorn
 	private String unicornKey; // important for Unicorn
