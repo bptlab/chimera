@@ -5,11 +5,12 @@ import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
 
-public class BoundaryEventInstance extends AbstractEventInstance {
+public class BoundaryEventInstance extends AbstractIntermediateCatchEventInstance {
 	private AbstractActivityInstance attachedToActivity;
 
-	public BoundaryEventInstance(AbstractEvent event, FragmentInstance fragmentInstance) {
+	public BoundaryEventInstance(BoundaryEvent event, FragmentInstance fragmentInstance) {
 		super(event, fragmentInstance);
 		setState(State.INIT);
 	}
@@ -17,6 +18,12 @@ public class BoundaryEventInstance extends AbstractEventInstance {
 	@Override
 	public BoundaryEvent getControlNode() {
 		return (BoundaryEvent) super.getControlNode();
+	}
+
+	@Override
+	public void terminate(String json) {
+		attachedToActivity.cancel();
+		super.terminate(json);
 	}
 
 	public AbstractActivityInstance getAttachedToActivity() {

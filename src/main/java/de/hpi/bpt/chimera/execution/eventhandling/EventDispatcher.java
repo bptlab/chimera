@@ -61,12 +61,14 @@ public final class EventDispatcher {
 
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
 	public static Response receiveEvent(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
+		logger.info("Receiving a Request from Unicorn.");
 		AbstractIntermediateCatchEventInstance event = keyToRegisteredEvent.get(requestId);
 		if (eventJson.isEmpty() || "{}".equals(eventJson)) {
 			event.terminate("");
 		} else {
 			event.terminate(eventJson);
 		}
+		SseNotifier.notifyRefresh();
 		/// unregisterEvent(event); >>>>>is now responsibility of
 		/// AbstractIntermediateCatchEvent
 		return Response.accepted("Event received.").build();
@@ -215,7 +217,7 @@ public final class EventDispatcher {
 			keyToRegisteredEvent.put(requestId, event);
 		}
 		
-		logger.info(String.format("Registered event with id %s and eventQuery %s at unicorn, getting back %s as NotificationRule", event.getId(), query, notificationRuleId));
+		logger.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requesId %s, getting back %s as NotificationRule", event.getId(), query, requestId, notificationRuleId));
 		
 	}
 

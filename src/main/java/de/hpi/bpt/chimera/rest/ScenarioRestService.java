@@ -74,7 +74,7 @@ public class ScenarioRestService extends AbstractRestService {
 			log.info("Successfully parsed a CaseModel");
 			return Response.status(201).build();
 		} catch (Exception e) {
-			log.error(e);
+			log.error("Chimera failed to parse the CaseModel!", e);
 			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}

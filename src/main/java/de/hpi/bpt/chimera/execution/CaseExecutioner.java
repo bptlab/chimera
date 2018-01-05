@@ -103,7 +103,7 @@ public class CaseExecutioner {
 	/**
 	 * Does everything for terminating an activity excepted from the actual
 	 * termination. This will be done after all DataObjects/DataAttributes are
-	 * set via an Rest-Method which will be called by the Front-End.
+	 * set via a Rest-Method which will be called by the Front-End.
 	 * 
 	 * @param activityInstanceId
 	 * @param dataClassToStateTransition

@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.model.fragment.bpmn.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 
 @Entity
 public abstract class AbstractActivity extends AbstractDataControlNode {
-	private List<BoundaryEvent> attachedBoundaryEvents;
+	private List<BoundaryEvent> attachedBoundaryEvents = new ArrayList();
 
 	public List<BoundaryEvent> getAttachedBoundaryEvents() {
 		return attachedBoundaryEvents;

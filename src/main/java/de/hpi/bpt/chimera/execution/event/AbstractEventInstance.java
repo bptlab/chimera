@@ -35,6 +35,8 @@ public abstract class AbstractEventInstance extends ControlNodeInstance {
 	 */
 	@Override
 	public void begin() {
+		// TODO why is that here, doesnt belong all EventQuerryStuff to
+		// AbstractIntermediateCatchEventInstance?
 		if (getControlNode().hasEventQuerry()) {
 			String eventQuerry = getControlNode().getEventQuery();
 			if (!(eventQuerry.trim().isEmpty())) {
@@ -55,7 +57,6 @@ public abstract class AbstractEventInstance extends ControlNodeInstance {
 	@Override
 	public void terminate() {
 		if (previousEventBasedGatewayInstance != null) {
-			logger.info("trying to skip Events");
 			previousEventBasedGatewayInstance.skipAlternativeGateways(this);
 		}
 

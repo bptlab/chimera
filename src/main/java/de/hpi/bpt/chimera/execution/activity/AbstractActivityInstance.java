@@ -106,7 +106,15 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		}
 		// TODO: implement skipBehaviour
 		createAttachedBoundaryEvents();
+		try {
+		for (BoundaryEventInstance boundaryEvent : attachedBoundaryEventInstances) {
+			boundaryEvent.enableControlFlow();
+		}
+		} catch (Exception e) {
+			log.error("failed to enable boundary Events", e);
+		}
 		setState(State.RUNNING);
+		log.info(String.format("enabled %d Boundary events", attachedBoundaryEventInstances.size()));
 		execute();
 		if (this.isAutomaticTask && getControlNode().hasUniquePostCondition()) {
 			Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = new HashMap<>();
@@ -123,8 +131,9 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	private void createAttachedBoundaryEvents() {
 		for (BoundaryEvent boundaryEvent : getControlNode().getAttachedBoundaryEvents()) {
 			// TODO: think whether instance should be created by factory
-			BoundaryEventInstance boundaryEventInstane = new BoundaryEventInstance(boundaryEvent, getFragmentInstance());
-			boundaryEventInstane.setAttachedToActivity(this);
+			BoundaryEventInstance boundaryEventInstance = new BoundaryEventInstance(boundaryEvent, getFragmentInstance());
+			boundaryEventInstance.setAttachedToActivity(this);
+			attachedBoundaryEventInstances.add(boundaryEventInstance);
 		}
 	}
 
@@ -138,6 +147,9 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 			log.info(String.format("%s not terminated, because the activity isn't in state RUNNING", this.getControlNode().getName()));
 			return;
 		}
+		for (BoundaryEventInstance boundaryEvent : attachedBoundaryEventInstances) {
+			boundaryEvent.skip();
+		}
 		// TODO: maybe state after creation of following
 		setState(State.TERMINATED);
 		this.getFragmentInstance().createFollowing(getControlNode());
@@ -147,7 +159,22 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 
 	@Override
 	public void skip() {
+		for (BoundaryEventInstance boundaryEvent : attachedBoundaryEventInstances) {
+			boundaryEvent.skip();
+		}
 		setState(State.SKIPPED);
+	}
+
+	public void cancel() {
+		if (!this.getState().equals(State.RUNNING)) {
+			String errorMsg = "Tried cancelling an activity instance, which is not running";
+			log.warn(errorMsg);
+			throw new IllegalStateException(errorMsg);
+		}
+		setState(State.CANCEL);
+		// TODO: is the following right?
+		List<DataObject> workingItems = getSelectedDataObjects();
+		this.getCaseExecutioner().getDataManager().unlockDataObjects(workingItems);
 	}
 
 	public abstract void execute();

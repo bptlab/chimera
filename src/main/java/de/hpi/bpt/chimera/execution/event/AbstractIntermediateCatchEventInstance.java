@@ -27,7 +27,7 @@ public class AbstractIntermediateCatchEventInstance extends AbstractEventInstanc
 	public void enableControlFlow() {
 		logger.info("Controlflow of IntermediateCatchEventInstance enabled");
 		EventDispatcher.registerEvent(this);
-		super.enableControlFlow();
+		setState(State.REGISTERED);
 	}
 
 	@Override
@@ -39,7 +39,6 @@ public class AbstractIntermediateCatchEventInstance extends AbstractEventInstanc
 	@Override
 	public void terminate() {
 		terminate("");
-		super.terminate();
 	}
 
 	public void terminate(String json) {
@@ -49,7 +48,6 @@ public class AbstractIntermediateCatchEventInstance extends AbstractEventInstanc
 		} else {
 			this.writeDataObjects(json);
 		}
-		this.terminate();
 		this.setState(State.TERMINATED);
 		super.terminate();
 	}

@@ -92,7 +92,7 @@ public class EventParser {
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BoundaryEvent xmlBoundaryEvent : fragXmlWrap.getBoundaryEvents()) {
 			BoundaryEvent boundaryEvent = new BoundaryEvent();
 			ControlNodeParserHelper.parseDataControlNode(boundaryEvent, xmlBoundaryEvent, sfResolver, dfResolver);
-			boundaryEvent.setEventQuerry(xmlBoundaryEvent.getEventQuery());
+			boundaryEvent.setEventQuery(xmlBoundaryEvent.getEventQuery());
 
 			if (xmlBoundaryEvent.hasAttachedToRef()) {
 				String attachedActivityId = xmlBoundaryEvent.getAttachedToRef();
