@@ -106,13 +106,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		}
 		// TODO: implement skipBehaviour
 		createAttachedBoundaryEvents();
-		try {
-		for (BoundaryEventInstance boundaryEvent : attachedBoundaryEventInstances) {
-			boundaryEvent.enableControlFlow();
-		}
-		} catch (Exception e) {
-			log.error("failed to enable boundary Events", e);
-		}
+
 		setState(State.RUNNING);
 		log.info(String.format("enabled %d Boundary events", attachedBoundaryEventInstances.size()));
 		execute();
@@ -127,13 +121,13 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		}
 	}
 
-	// TODO: finish
 	private void createAttachedBoundaryEvents() {
 		for (BoundaryEvent boundaryEvent : getControlNode().getAttachedBoundaryEvents()) {
 			// TODO: think whether instance should be created by factory
 			BoundaryEventInstance boundaryEventInstance = new BoundaryEventInstance(boundaryEvent, getFragmentInstance());
 			boundaryEventInstance.setAttachedToActivity(this);
 			attachedBoundaryEventInstances.add(boundaryEventInstance);
+			boundaryEventInstance.enableControlFlow();
 		}
 	}
 

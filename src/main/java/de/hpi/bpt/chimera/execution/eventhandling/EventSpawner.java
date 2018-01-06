@@ -1,5 +1,8 @@
 package de.hpi.bpt.chimera.execution.eventhandling;
 
+import de.hpi.bpt.chimera.execution.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
+import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
 import org.apache.log4j.Logger;
@@ -18,35 +21,35 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.List;
 
 public class EventSpawner {
-	/*
+
 	private static final String EVENT_URL = PropertyLoader.getProperty("unicorn.url") + PropertyLoader.getProperty("unicorn.path.deploy");
 	private static final String EVENT_PATH = PropertyLoader.getProperty("unicorn.path.event");
 	private static final Logger log = Logger.getLogger(EventSpawner.class);
-	private ScenarioInstance instance;
 
-	public EventSpawner(ScenarioInstance instance) {
-		this.instance = instance;
+	public boolean spawnEvent(AbstractEventInstance eventInstance) {
+		// TODO: check whether eventInstance is an sendEvent
+		try {
+			DataObject inputObject = getInputObject(eventInstance);
+			Response response = buildAndSendEvent(inputObject);
+			return response.getStatus() == 200;
+		} catch (IllegalArgumentException e) {
+			log.error(e);
+			return false;
+		}
 	}
 
-	public boolean spawnEvent(int controlNodeId) {
-		DataObject inputObject = getInputObject(controlNodeId);
-		assertIsEvent(inputObject);
-		Response response = buildAndSendEvent(inputObject);
-		return response.getStatus() == 200;
-	}
+	private DataObject getInputObject(AbstractEventInstance eventInstance) {
+		List<DataObject> inputObjects = eventInstance.getSelectedDataObjects();
+		if (inputObjects.size() != 1) {
+			throw new IllegalArgumentException("input objects of SendEvent is not distinct or there are no input objects");
+		}
+		DataObject inputObject = inputObjects.get(0);
 
-	private DataObject getInputObject(int controlNodeId) {
-		DataManager manager = instance.getDataManager();
-		manager.loadFromDatabase();
-		List<DataObject> possibleInputs = manager.getAvailableInput(controlNodeId);
-		assert possibleInputs.size() == 1 : "There is only one input object allowed for send events/tasks.";
-		DataObject inputObject = possibleInputs.get(0);
+		if (!inputObject.getDataClass().isEvent()) {
+			throw new IllegalArgumentException("dataclass of input object is not an eventclass");
+		}
+
 		return inputObject;
-	}
-
-	private void assertIsEvent(DataObject inputObject) {
-		boolean isEvent = new DbDataClass().isEvent(inputObject.getDataClassId());
-		assert isEvent : "The input for the send event/task is not an event object.";
 	}
 
 	private Response buildAndSendEvent(DataObject inputObject) {
@@ -56,7 +59,7 @@ public class EventSpawner {
 
 	private Document buildEventFromDataObject(DataObject inputObject) {
 		List<DataAttributeInstance> attributes = inputObject.getDataAttributeInstances();
-		String eventName = inputObject.getName();
+		String eventName = inputObject.getDataClass().getName();
 
 		try {
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -94,10 +97,9 @@ public class EventSpawner {
 
 	private void appendAttributes(Document doc, Element rootElement, List<DataAttributeInstance> attributes) {
 		attributes.stream().forEach(attr -> {
-			Element el = doc.createElement(attr.getName());
+			Element el = doc.createElement(attr.getDataAttribute().getName());
 			el.appendChild(doc.createTextNode(attr.getValue().toString()));
 			rootElement.appendChild(el);
 		});
 	}
-	*/
 }

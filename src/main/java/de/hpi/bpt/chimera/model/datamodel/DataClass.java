@@ -16,8 +16,10 @@ public class DataClass extends DataModelClass {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	
+	private boolean isEvent;
+
 	@OneToOne(cascade = CascadeType.ALL)
-	ObjectLifecycle objectLifecycle;
+	private ObjectLifecycle objectLifecycle;
 
 	public void setObjectLifecycle(ObjectLifecycle objectLifecycle) {
 		this.objectLifecycle = objectLifecycle;
@@ -40,5 +42,13 @@ public class DataClass extends DataModelClass {
 			nameToObjectLifecycleState.put(objectLifecycleState.getName(), objectLifecycleState);
 		}
 		return nameToObjectLifecycleState;
+	}
+
+	public boolean isEvent() {
+		return isEvent;
+	}
+
+	public void setEvent(boolean isEvent) {
+		this.isEvent = isEvent;
 	}
 }

@@ -1,8 +1,11 @@
 package de.hpi.bpt.chimera.execution.event;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.State;
 import de.hpi.bpt.chimera.execution.gateway.EventBasedGatewayInstance;
@@ -10,8 +13,9 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 
 public abstract class AbstractEventInstance extends ControlNodeInstance {
 
-	private final static Logger logger = Logger.getLogger(ControlNodeInstance.class);
+	private static final Logger logger = Logger.getLogger(ControlNodeInstance.class);
 
+	private List<DataObject> selectedDataObjects;
 	private EventBasedGatewayInstance previousEventBasedGatewayInstance;
 
 	public AbstractEventInstance(AbstractEvent event, FragmentInstance fragmentInstance) {
@@ -89,6 +93,14 @@ public abstract class AbstractEventInstance extends ControlNodeInstance {
 
 	public void setPreviousEventBasedGatewayInstance(EventBasedGatewayInstance previousEventBasedGatewayInstance) {
 		this.previousEventBasedGatewayInstance = previousEventBasedGatewayInstance;
+	}
+
+	public List<DataObject> getSelectedDataObjects() {
+		return selectedDataObjects;
+	}
+
+	public void setSelectedDataObjects(List<DataObject> selectedDataObjects) {
+		this.selectedDataObjects = selectedDataObjects;
 	}
 
 }
