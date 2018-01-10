@@ -38,7 +38,7 @@ public class EmailActivityInstance extends AbstractActivityInstance {
 
 	public EmailActivityInstance(EmailActivity mailActivity, FragmentInstance fragmentInstance) {
 		super(mailActivity, fragmentInstance);
-		setAutomaticTask(true);
+		allowAutomaticExecution();
 	}
 
 	@Override

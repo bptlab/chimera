@@ -25,7 +25,7 @@ public class HumanTaskInstance extends AbstractActivityInstance {
 
 	public HumanTaskInstance(HumanTask humanActivity, FragmentInstance fragmentInstance) {
 		super(humanActivity, fragmentInstance);
-		setAutomaticTask(false);
+		forbidAutomaticStart();
 	}
 
 	@Override

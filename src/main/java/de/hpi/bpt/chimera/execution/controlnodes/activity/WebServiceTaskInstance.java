@@ -41,7 +41,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 
 	public WebServiceTaskInstance(WebServiceTask webServiceTask, FragmentInstance fragmentInstance) {
 		super(webServiceTask, fragmentInstance);
-		this.setAutomaticTask(true);
+		allowAutomaticExecution();
 	}
 
 	@Override

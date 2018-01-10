@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.xorgrammarcompiler.XORGrammarCompiler;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
@@ -218,6 +219,9 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 			toEnable.add(defaultControlNode);
 		for (AbstractControlNode node : toEnable) {
 			ControlNodeInstance controlNodeInstance = this.getFragmentInstance().createControlNodeInstance(node);
+			if (controlNodeInstance.getClass() == AbstractActivityInstance.class) {
+				((AbstractActivityInstance) controlNodeInstance).forbidAutomaticStart();
+			}
 			controlNodeInstance.enableControlFlow();
 		}
 	}

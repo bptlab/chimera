@@ -17,6 +17,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstanceFactory;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.event.BoundaryEventInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
@@ -55,10 +56,11 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	}
 
 	/**
-	 * Enable the ControlFlow and clear the DataObjectInstances that were
-	 * selected. If the Abstract Activity is an automatic task and does not have
-	 * any input condition sets begin the task automatically by the case
-	 * executioner.
+	 * Enables the incoming control flow of the ActivityInstance. Any previously
+	 * selected DataObjects are cleared.
+	 * If state is INIT, it is set to CONTROLFLOW_ENABLED.
+	 * If data preconditions are fulfilled (or state is already DATAFLOW_ENABLED),
+	 * state is set to READY. If an automatic tasks is READY, it is started.   
 	 */
 	@Override
 	public void enableControlFlow() {
@@ -66,11 +68,13 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 		if (getState().equals(State.INIT)) {
 			setState(State.CONTROLFLOW_ENABLED);
 		}
-		if (getState().equals(State.DATAFLOW_ENABLED) || getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
+		if (getState().equals(State.DATAFLOW_ENABLED) || 
+				getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
 			setState(State.READY);
 		}
-
-		if (this.isAutomaticTask && !getControlNode().hasPreCondition()) {
+		// TODO: see #50 in github, allow automatic execution with unique input set
+		if (getState().equals(State.READY) && this.isAutomaticTask 
+				&& !getControlNode().hasPreCondition()) {
 			getCaseExecutioner().beginActivityInstance(this, new ArrayList<DataObject>());
 		}
 	}
@@ -199,10 +203,32 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 		return isAutomaticTask;
 	}
 
-	public void setAutomaticTask(boolean isAutomaticTask) {
-		this.isAutomaticTask = isAutomaticTask;
+	/**
+	 * Tries to set the flag for automatic execution of this activity instance to {@literal true}. 
+	 * This fails if the activity has multiple input or output sets which would require user choice.
+	 * Gateways themselves take care to forbid automatic execution of their successor activities, 
+	 * @see ExclusiveGatewayInstance. 
+	 */
+	public void allowAutomaticExecution() {
+		if (getControlNode().hasUniquePostCondition() &&
+				getControlNode().hasUniquePreCondition()) {
+			log.warn("Tasks with more than one input or output set cannot be executed automatically.");
+			isAutomaticTask = false;
+		} else {
+			isAutomaticTask = true;
+		}
 	}
 
+	/**
+	 * Sets the flag for automatic execution of this activity to {@literal false}. 
+	 * This is used by exclusive gateways to prevent that the branch starting with the automatic
+	 * activity is always taken. In this case, the automatic activity has to be started manually
+	 * by the user.  
+	 */
+	public void forbidAutomaticStart() {
+		isAutomaticTask = false;
+	}
+	
 	public List<BoundaryEventInstance> getAttachedBoundaryEventInstances() {
 		return attachedBoundaryEventInstances;
 	}
