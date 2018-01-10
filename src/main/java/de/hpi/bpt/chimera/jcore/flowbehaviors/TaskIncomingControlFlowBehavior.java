@@ -2,12 +2,14 @@ package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
 import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.database.data.DbDataNode;
+import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,8 +21,6 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 */
 	private final DbDataFlow dbDataFlow = new DbDataFlow();
 	private final DbDataNode dbDataNode = new DbDataNode();
-
-	private ActivityInstance activityInstance;
 
 	/**
 	 * Initializes the TaskIncomingControlFlowBehavior.
@@ -36,14 +36,27 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 		}
 	}
 
+	/**
+	 * Enables the incoming control flow of the ActivityInstance.
+	 * If state is INIT, it is set to CONTROLFLOW_ENABLED.
+	 * If data preconditions are fulfilled (or state is already DATAFLOW_ENABLED),
+	 * state is set to READY. If an automatic tasks is READY, it is started.   
+	 */
 	@Override
 	public void enableControlFlow() {
-		State currentState = this.getControlNodeInstance().getState();
-		if (State.INIT.equals(currentState)) {
-			this.getControlNodeInstance().setState(State.CONTROLFLOW_ENABLED);
+		ActivityInstance thisInstance = (ActivityInstance) getControlNodeInstance();
+		if (State.INIT.equals(thisInstance.getState())) {
+			thisInstance.setState(State.CONTROLFLOW_ENABLED);
 		}
-		if (State.DATAFLOW_ENABLED.equals(currentState) || checkInputObjects()) {
-			this.getControlNodeInstance().setState(State.READY);
+		if (State.DATAFLOW_ENABLED.equals(thisInstance.getState()) || checkInputObjects()) {
+			thisInstance.setState(State.READY);
+		}
+		if (State.READY.equals(thisInstance.getState()) &&
+				thisInstance.isAutomaticTask()) {
+			// checking whether the activity instance can be executed automatically is done during creation 
+			// TODO: selection of data object
+			List<Integer> dataClassIds = dbDataFlow.getPrecedingDataClassIds(thisInstance.getControlNodeId());
+			thisInstance.begin(new ArrayList<Integer>());
 		}
 	}
 

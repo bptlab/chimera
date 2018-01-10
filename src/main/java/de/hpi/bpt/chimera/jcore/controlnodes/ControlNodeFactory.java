@@ -14,8 +14,6 @@ public class ControlNodeFactory {
 	/**
 	 * Given the Id of a control node instance I look up its type in the database and create the
 	 * appropriate AbstractControlNodeInstance, e.g. a XorGatewayInstance.
-	 * TODO I have to find out, why I ignore Activities, EmailTasks, WebServiceTasks, and SendTasks,
-	 * 		who handles them?
 	 *
 	 * @param controlNodeInstanceId
 	 * @param scenarioInstance

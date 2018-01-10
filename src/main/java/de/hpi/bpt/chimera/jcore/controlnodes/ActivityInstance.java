@@ -10,6 +10,7 @@ import de.hpi.bpt.chimera.jcore.executionbehaviors.ActivityExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.EmailTaskExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.SendTaskExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.WebServiceTaskExecutionBehavior;
+import de.hpi.bpt.chimera.jcore.flowbehaviors.ExclusiveGatewaySplitBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.TaskOutgoingBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.WebServiceTaskOutgoingBehavior;
@@ -32,7 +33,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 	private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
 	private final DbControlNode dbControlNode = new DbControlNode();
-	private ActivityExecutionBehavior executionBehavior;
 
 	private boolean isAutomaticTask;
 	private boolean canTerminate;
@@ -73,7 +73,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		} else {
 			this.setControlNodeInstanceId(instanceId);
 		}
-		;
 		this.setState(new DbControlNodeInstance().getState(getControlNodeInstanceId()));
 		this.initActivityInstance();
 	}
@@ -109,7 +108,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	}
 
 	/**
-	 * Sets incoming outgoing and execution behavior, according to the type of
+	 * Sets incoming, outgoing and execution behavior, according to the type of
 	 * the activity.
 	 * <p>
 	 * This can be used when creating a new activity or when loading an activity
@@ -123,26 +122,26 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		switch (type) {
 			case "EmailTask":
 				this.setExecutionBehavior(new EmailTaskExecutionBehavior(this));
-				this.isAutomaticTask = true;
+				allowAutomaticExecution();
 				break;
 			case "WebServiceTask":
 				this.setExecutionBehavior(new WebServiceTaskExecutionBehavior(this));
 				this.setOutgoingBehavior(new WebServiceTaskOutgoingBehavior(getControlNodeId(), scenarioInstance, getFragmentInstanceId(), this));
-				this.isAutomaticTask = true;
+				allowAutomaticExecution();
 				break;
 			//Added additional case: activities can be terminated every time
 			case "SendTask":
 			case "IntermediateThrowEvent":
 				this.setExecutionBehavior(new SendTaskExecutionBehavior(this));
-				this.isAutomaticTask = true;
+				allowAutomaticExecution();
 				break;
 			case "Activity":
 				this.setExecutionBehavior(new ActivityExecutionBehavior(this));
-				this.isAutomaticTask = false;
+				forbidAutomaticExecution();
 				break;
 			default:
 				this.setExecutionBehavior(new ActivityExecutionBehavior(this));
-				this.isAutomaticTask = false;
+				forbidAutomaticExecution();
 				log.warn(String.format("Initializing unsupported activity type: %s", type));
 		}
 	}
@@ -211,10 +210,37 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		return isAutomaticTask;
 	}
 
-	public void setAutomaticTask(boolean automaticTask) {
-		isAutomaticTask = automaticTask;
+	/**
+	 * Tries to set the flag for automatic execution of this activity instance to {@literal true}. 
+	 * This fails if the activity has multiple input or output sets which would require user choice.
+	 * Gateways themselves take care to forbid automatic execution of their successor activities, 
+	 * @see ExclusiveGatewaySplitBehavior. 
+	 */
+	public void allowAutomaticExecution() {
+		DbDataFlow dbDataFlow = new DbDataFlow();
+		List<Integer> input = dbDataFlow.getInputSetsForControlNode(getControlNodeId());
+		List<Integer> output = dbDataFlow.getOutputSetsForControlNode(getControlNodeId());
+		if (input.size() > 1 && output.size() > 1) {
+			log.warn("Tasks with more than one input or output set cannot be executed automatically.");
+			isAutomaticTask = false;
+			dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), false);
+		} else {
+			isAutomaticTask = true;
+			dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
+		}
 	}
 
+	/**
+	 * Sets the flag for automatic execution of this activity to {@literal false}. 
+	 * This is used by exclusive gateways to prevent that the branch starting with the automatic
+	 * activity is always taken. In this case, the automatic activity has to be started manually
+	 * by the user.  
+	 */
+	public void forbidAutomaticExecution() {
+		isAutomaticTask = false;
+		dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), false);
+	}
+	
 	public void setCanTerminate(boolean canTerminate) {
 		this.canTerminate = canTerminate;
 		this.dbActivityInstance.setCanTerminate(getControlNodeInstanceId(), canTerminate);

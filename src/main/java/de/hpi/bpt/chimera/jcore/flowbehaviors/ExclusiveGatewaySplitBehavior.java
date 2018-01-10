@@ -128,12 +128,17 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		return controlNodeInstance;
 	}
 
+	/**
+	 * Disables the automatic execution of tasks and gateways that follow a XOR split.
+	 * @param type
+	 * @param controlNodeInstance
+	 */
 	private void setAutomaticExecutionToFalse(String type, AbstractControlNodeInstance controlNodeInstance) {
 		switch (type) {
 		case "Activity":
 		case "EmailTask":
 		case "WebServiceTask":
-			((ActivityInstance) controlNodeInstance).setAutomaticTask(false);
+			((ActivityInstance) controlNodeInstance).forbidAutomaticExecution();
 			break;
 		case "XOR":
 		case "EVENT_BASED":
