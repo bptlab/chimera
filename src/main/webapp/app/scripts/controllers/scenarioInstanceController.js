@@ -243,8 +243,8 @@ angular.module('jfrontend')
                     $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
                         "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
                         "/activityinstance/" + activityInstanceId, JSON.stringify(valueMap)
-                        ).success(function (data) {
-                        	postActivityTermination(activityInstanceId);
+                        ).success( (data) => {
+                        	this.postActivityTermination(activityInstanceId);
                         	console.log('Attributes changed.');
                         }).error(function () {
                         	console.log('Saving attribute values failed.');
@@ -252,7 +252,7 @@ angular.module('jfrontend')
 
                     instanceCtrl.initializeDataobjectAttributelogInstances();
                 } else {
-                	postActivityTermination(activityInstanceId);
+                	this.postActivityTermination(activityInstanceId);
                 }
             };
 
