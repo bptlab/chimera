@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.execution.controlnodes.gateway;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -208,15 +209,16 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		for (SequenceFlowAssociation association : associations) {
 			controlNode = association.getTargetRef();
 			condition = association.getCondition();
-			if (condition.equals("DEFAULT")) {
+			if ("DEFAULT".equals(condition)) {
 				defaultControlNode = controlNode;
 			} else if (evaluateCondition(condition)) { // condition true or
 														// empty
 				toEnable.add(controlNode);
 			}
 		}
-		if (toEnable.isEmpty() && defaultControlNode != null)
+		if (toEnable.isEmpty() && defaultControlNode != null) {
 			toEnable.add(defaultControlNode);
+		}	
 		for (AbstractControlNode node : toEnable) {
 			ControlNodeInstance controlNodeInstance = this.getFragmentInstance().createControlNodeInstance(node);
 			if (controlNodeInstance.getClass() == AbstractActivityInstance.class) {
@@ -235,8 +237,9 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	 * @return true if the condition ist true.
 	 */
 	public boolean evaluateCondition(String condition) {
-		if ("".equals(condition))
+		if ("".equals(condition)) {
 			return true; // empty condition is true
+		}
 		XORGrammarCompiler compiler = new XORGrammarCompiler();
 		CommonTree ast = compiler.compile(condition);
 		return ast.getChildCount() > 0 && evaluate(0, ast);
@@ -246,9 +249,9 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		boolean condition = checkCondition(ast, i);
 		if (ast.getChildCount() >= i + 4) {
 			if (ast.getChild(i + 3).toStringTree().equals("&") || ast.getChild(i + 3).toStringTree().equals(" & ")) {
-				return (condition & evaluate(i + 4, ast));
+				return condition && evaluate(i + 4, ast);
 			} else {
-				return (condition | evaluate(i + 4, ast));
+				return condition || evaluate(i + 4, ast);
 			}
 		} else {
 			return condition;
@@ -263,35 +266,12 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	 * @return the check result.
 	 */
 	private boolean checkCondition(Tree ast, int i) {
-		String left = ast.getChild(i).toStringTree();
-		String comparison = ast.getChild(i + 1).toStringTree();
-		String right = ast.getChild(i + 2).toStringTree();
-
-		log.info("Beginning to replace dataObject references.");
-		for (DataObject dataObject : this.getCaseExecutioner().getDataManager().getDataObjects()) {
-			String dataObjectName = dataObject.getDataClass().getName();
-			log.info("Beginning to replace dataAttribute references. There are " + dataObject.getDataAttributeInstanceIdToInstance().size());
-			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
-				log.info("a dataAttribute Instance");
-				try {
-				log.info(String.format("iterating through %s.%s with values:%s", dataObjectName, dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString()));
-				left = left.replace("#" + dataObjectName + "." + dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString());
-				right = right.replace("#" + dataObjectName + "." + dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString());
-				} catch (Exception e) {
-					log.error("Error", e);
-				}
-			}
-		}
-		// TODO
-		// for (DataObject dataObject :
-		// this.getCaseExecutioner().getDataObjectInstances()) {
-		// left = left.replace("#" + dataObject.getDataClass().getName(),
-		// dbState.getStateName(dataObject.getStateId()));
-		// right = right.replace("#" + dataObject.getDataClass().getName(),
-		// dbState.getStateName(dataObject.getStateId()));
-		// }
-
+		
 		try {
+			String left = resolveDataObject(ast.getChild(i).toStringTree());
+			String right = resolveDataObject(ast.getChild(i + 2).toStringTree());
+			String comparison = ast.getChild(i + 1).toStringTree();
+
 			switch (comparison) {
 			case "=":
 				return left.equals(right);
@@ -320,7 +300,49 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 			log.error("Error can't convert String to Float:", e);
 		} catch (NullPointerException e) {
 			log.error("Error can't convert String to Float, String is null:", e);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return false;
+	}
+
+	/**
+	 * 
+	 * @param reference
+	 * @return either the input, a data object state, or a attribute value
+	 */
+	private String resolveDataObject(String reference) throws ParseException {
+		if (! reference.startsWith("#")) { // no DO referenced, return reference unchanged
+			return reference;
+		} 
+		reference = reference.substring(1); // get rid of leading #
+		DataObject referencedDO = null;
+		String doReference = reference.split("\\.")[0]; 
+		for (DataObject dataObject : this.getCaseExecutioner().getDataManager().getDataObjects()) {
+			if (doReference.equals(dataObject.getDataClass().getName())) { // found the data object
+				referencedDO = dataObject;
+				break;
+				// TODO: we always take the first DO of the correct type
+			}
+		}
+		if (referencedDO == null) {
+			throw new ParseException(String.format("The data object '%s' referenced in the condition does not exist", doReference), 1);
+		} 
+		if (! reference.contains(".")) { // no attribute referenced, resolve to DO state
+			return referencedDO.getObjectLifecycleState().getName();
+		}
+		String attrReference = reference.split("\\.")[1];
+		DataAttributeInstance referencedDAI = null;
+		for (DataAttributeInstance dai : referencedDO.getDataAttributeInstances()) {
+			if (attrReference.equals(dai.getDataAttribute().getName())) { // found attribute
+				referencedDAI = dai;
+				break;
+			}
+		}
+		if (referencedDAI == null) {
+			throw new ParseException(String.format("The attribute '%s' referenced in the condition does not exist", attrReference), 1);
+		}
+		return referencedDAI.getValue().toString();
 	}
 }
