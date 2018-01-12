@@ -11,6 +11,7 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Logger;
 
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -92,9 +93,13 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	public void terminate() {
 		ScenarioInstance scenarioInstance = this.getScenarioInstance();
 		scenarioInstance.updateDataFlow();
-		// enableFollowing();
+
 		// do not enable all successors, just the one with fulfilled conditions
-		evaluateConditions();
+		Set<Integer> toEnable = evaluateConditions();
+		for (Integer nodeId : toEnable) {
+			AbstractControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(nodeId);
+			controlNodeInstance.enableControlFlow();
+		}
 	}
 
 	@Override
@@ -168,7 +173,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	/**
 	 * Evaluates Conditions for the control flow of an XOR gateway.
 	 */
-	public void evaluateConditions() {
+	public Set<Integer> evaluateConditions() {
 		Map<Integer, String> conditions = this.getDbControlFlow().getConditions(getControlNodeId());
 		Integer controlNodeId;
 		Integer defaultControlNode = -1;
@@ -178,18 +183,16 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		while (nodes.hasNext()) {
 			controlNodeId = nodes.next();
 			condition = conditions.get(controlNodeId);
-			if (condition.equals("DEFAULT")) {
+			if ("DEFAULT".equals(condition)) {
 				defaultControlNode = controlNodeId;
 			} else if (evaluateCondition(condition)) { // condition true or empty
 				toEnable.add(controlNodeId);
 			}
 		}
-		if (toEnable.isEmpty() && defaultControlNode != -1)
+		if (toEnable.isEmpty() && defaultControlNode != -1) {
 			toEnable.add(defaultControlNode);
-		for (Integer nodeId : toEnable) {
-			AbstractControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(nodeId);
-			controlNodeInstance.enableControlFlow();
 		}
+		return toEnable;
 	}
 
 	/**
@@ -200,8 +203,9 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 * @return true if the condition ist true.
 	 */
 	public boolean evaluateCondition(String condition) {
-		if ("".equals(condition))
+		if ("".equals(condition)) {
 			return true; // empty condition is true
+		}
 		XORGrammarCompiler compiler = new XORGrammarCompiler();
 		CommonTree ast = compiler.compile(condition);
 		return ast.getChildCount() > 0 && evaluate(0, ast);
@@ -226,35 +230,11 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 * @return the check result.
 	 */
 	private boolean checkCondition(Tree ast, int i) {
-		String left = ast.getChild(i).toStringTree();
-		int childCount = ast.getChild(i).getChildCount();
-		String comparison = ast.getChild(i + 1).toStringTree();
-		String right = ast.getChild(i + 2).toStringTree();
-//		for (DataAttributeInstance dataAttributeInstance : this.getScenarioInstance().getDataAttributeInstances().values()) {
-//			left = left.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
-//			right = right.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
-//		}
-		left = left.startsWith("#") ? left.substring(1) : left;  // get rid of leading #
-		for (DataObject dataObject : this.getScenarioInstance().getDataManager().getDataObjects()) {
-			if (left.startsWith(dataObject.getName())) { // found the data object
-				if (left.contains(".")) { // condition references attribute
-					// TODO: handle multiple '.' in condition
-					left = left.split("\\.")[1];
-					for (DataAttributeInstance dai : dataObject.getDataAttributeInstances()) {
-						if (left.equals(dai.getName())) { // found attribute
-							left = dai.getValue().toString();
-							break;
-						}
-					}
-				} else { // compare with data object state
-					left = left.replace("#" + dataObject.getName(), dbState.getStateName(dataObject.getStateId()));
-					right = right.replace("#" + dataObject.getName(), dbState.getStateName(dataObject.getStateId()));
-					
-				}
-				break;
-			}
-		}
 		try {
+			String left = resolveDataObject(ast.getChild(i).toStringTree());
+			String right = resolveDataObject(ast.getChild(i + 2).toStringTree());
+			String comparison = ast.getChild(i + 1).toStringTree();
+		
 			switch (comparison) {
 			case "=":
 				return left.equals(right);
@@ -283,12 +263,55 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 			log.error("Error can't convert String to Float:", e);
 		} catch (NullPointerException e) {
 			log.error("Error can't convert String to Float, String is null:", e);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return false;
+	}
+
+	/**
+	 * 
+	 * @param reference
+	 * @return either the input, a data object state, or a attribute value
+	 */
+	private String resolveDataObject(String reference) throws ParseException {
+		if (! reference.startsWith("#")) { // no DO referenced, return reference unchanged
+			return reference;
+		} 
+		reference = reference.substring(1); // get rid of leading #
+		DataObject referencedDO = null;
+		String doReference = reference.split("\\.")[0]; 
+		for (DataObject dataObject : this.getScenarioInstance().getDataManager().getDataObjects()) {
+			if (doReference.equals(dataObject.getName())) { // found the data object
+				referencedDO = dataObject;
+				break;
+				// TODO: we always take the first DO of the correct type
+			}
+		}
+		if (referencedDO == null) {
+			throw new ParseException(String.format("The data object '%s' referenced in the condition does not exist", doReference), 1);
+		} 
+		if (! reference.contains(".")) { // no attribute referenced, resolve to DO state
+			return dbState.getStateName(referencedDO.getStateId());
+		}
+		String attrReference = reference.split("\\.")[1];
+		DataAttributeInstance referencedDAI = null;
+		for (DataAttributeInstance dai : referencedDO.getDataAttributeInstances()) {
+			if (attrReference.equals(dai.getName())) { // found attribute
+				referencedDAI = dai;
+				break;
+			}
+		}
+		if (referencedDAI == null) {
+			throw new ParseException(String.format("The attribute '%s' referenced in the condition does not exist", attrReference), 1);
+		}
+		return referencedDAI.getValue().toString();
 	}
 
 	public boolean containsControlNodeInFollowing(int controlNodeId) {
 		List<Integer> allFollowing = branches.stream().flatMap(Collection::stream).collect(Collectors.toList());
 		return allFollowing.contains(controlNodeId);
 	}
+	
 }

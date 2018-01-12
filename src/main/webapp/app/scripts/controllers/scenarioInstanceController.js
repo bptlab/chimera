@@ -221,6 +221,20 @@ angular.module('jfrontend')
                 });
             };
 
+            // terminate activity with selected states
+            this.postActivityTermination = function (activityInstanceId) {
+            	$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
+                        "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+                        "/activityinstance/" + activityInstanceId + "/terminate", instanceCtrl.selectedStates).success(function (data) {
+                        instanceCtrl.instanceDetails.activityInstances = {};
+                        instanceCtrl.selectedStates = {};
+                        //reloading content so the dashboard is uptodate
+                        instanceCtrl.refreshPage();
+                    }).error(function () {
+                        console.log('request failed');
+                    });
+            };
+            
             this.terminateActivity = function (activityInstanceId) {
                 // save attribute values
                 if (instanceCtrl.changeAttributeObject.hasOwnProperty(activityInstanceId)) {
@@ -228,26 +242,18 @@ angular.module('jfrontend')
 
                     $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
                         "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                        "/activityinstance/" + activityInstanceId, JSON.stringify(valueMap)).success(function (data) {
-                        console.log('Attributes changed.')
-                    }).error(function () {
-                        console.log('Saving attribute values failed.');
-                    });
+                        "/activityinstance/" + activityInstanceId, JSON.stringify(valueMap)
+                        ).success(function (data) {
+                        	postActivityTermination(activityInstanceId);
+                        	console.log('Attributes changed.');
+                        }).error(function () {
+                        	console.log('Saving attribute values failed.');
+                        });
 
                     instanceCtrl.initializeDataobjectAttributelogInstances();
+                } else {
+                	postActivityTermination(activityInstanceId);
                 }
-
-                // terminate activity with selected states
-                $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
-                    "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                    "/activityinstance/" + activityInstanceId + "/terminate", instanceCtrl.selectedStates).success(function (data) {
-                    instanceCtrl.instanceDetails.activityInstances = {};
-                    instanceCtrl.selectedStates = {};
-                    //reloading content so the dashboard is uptodate
-                    instanceCtrl.refreshPage();
-                }).error(function () {
-                    console.log('request failed');
-                });
             };
 
             this.getTerminationConditionOfScenario = function (id) {
