@@ -5,17 +5,16 @@ import com.google.gson.JsonObject;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
-import de.hpi.bpt.chimera.execution.event.AbstractIntermediateCatchEventInstance;
-import de.hpi.bpt.chimera.execution.event.TimerEventInstance;
+import de.hpi.bpt.chimera.execution.event.behavior.MessageReceiveEventBehavior;
+import de.hpi.bpt.chimera.execution.event.behavior.TimerEventBehavior;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
-import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.MessageReceiveDefinition;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.ClientProperties;
-import org.json.JSONArray;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -26,14 +25,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -53,21 +48,25 @@ public final class EventDispatcher {
 
 	// TODO move these maps in the EventMapper and add persistence or move them
 	// into the Case, so that each Case is responsible for its own events.
-	private static Map<String, AbstractIntermediateCatchEventInstance> idToRegisteredEvent = new HashMap<>();
-	private static Map<String, AbstractIntermediateCatchEventInstance> keyToRegisteredEvent = new HashMap<>();
+	private static Map<String, AbstractEventInstance> idToRegisteredEvent = new HashMap<>();
+	private static Map<String, AbstractEventInstance> keyToRegisteredEvent = new HashMap<>();
+
+	private EventDispatcher() {
+	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
 	public static Response receiveEvent(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
 		logger.info("Receiving a Request from Unicorn.");
-		AbstractIntermediateCatchEventInstance event = keyToRegisteredEvent.get(requestId);
+		AbstractEventInstance eventInstance = keyToRegisteredEvent.get(requestId);
+		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
 		if (eventJson.isEmpty() || "{}".equals(eventJson)) {
-			event.terminate("");
+			receiveBehavior.setEventJson("");
 		} else {
-			event.terminate(eventJson);
+			receiveBehavior.setEventJson(eventJson);
 		}
+		eventInstance.terminate();
 		SseNotifier.notifyRefresh();
 		/// unregisterEvent(event); >>>>>is now responsibility of
 		/// AbstractIntermediateCatchEvent
@@ -157,15 +156,15 @@ public final class EventDispatcher {
 		CaseModelManager.getEventMapper().registerCaseStartTrigger(requestId, caseStartTrigger);
 	}
 
-	public static void registerTimerEvent(TimerEventInstance event) {
+	public static void registerTimerEvent(AbstractEventInstance event, TimerEventBehavior timerBehavior) {
 		// String mappingKey = registerEvent(event, fragmentInstanceId,
 		// scenarioInstanceId, scenarioId);
-		Date terminationDate = event.getTerminationDate();
+		Date terminationDate = timerBehavior.getTerminationDate();
 		assert (terminationDate.after(new Date())) : "Traveling back in time is not implemented yet, see feature request #CM-(-243)";
 		SchedulerFactory sf = new StdSchedulerFactory();
 		try {
 			Scheduler sched = sf.getScheduler();
-			JobDetail job = createJob(event);
+			JobDetail job = createJob(event, timerBehavior);
 			SimpleTrigger trigger = (SimpleTrigger) newTrigger().startAt(terminationDate).build();
 			sched.start();
 			sched.scheduleJob(job, trigger);
@@ -175,9 +174,9 @@ public final class EventDispatcher {
 
 	}
 
-	private static JobDetail createJob(TimerEventInstance event) {
+	private static JobDetail createJob(AbstractEventInstance event, TimerEventBehavior timerBehavior) {
 		JobDetail timeEventJob = newJob(TimeEventJob.class).usingJobData("CaseModelId", event.getCaseExecutioner().getCaseModel().getId()).usingJobData("CaseId", event.getFragmentInstance().getCase().getId()).usingJobData("ControlNodeInstanceId", event.getId()).build();
-		event.setJobKey(timeEventJob.getKey());
+		timerBehavior.setJobKey(timeEventJob.getKey());
 		return timeEventJob;
 	}
 
@@ -203,30 +202,29 @@ public final class EventDispatcher {
 	// }
 
 
-	public static void registerEvent(AbstractIntermediateCatchEventInstance event) {
+	public static void registerEvent(AbstractEventInstance eventInstance, MessageReceiveEventBehavior receiveBehavior) {
 		logger.info("trying to register an Event at unicorn");
 		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
-		String query = insertAttributesIntoQueryString(event);
+		String query = insertAttributesIntoQueryString(eventInstance);
 		logger.info("Created query to register an Event at unicorn");
 		String notificationRuleId = sendQueryToEventService(query, requestId, 0 , 0);//last to Parameters 0 because we dont Integer Ids anymore but have to fit the unicorn Interface
-		event.setNotificationRule(notificationRuleId);
-		event.setUnicornKey(requestId);
+		receiveBehavior.setNotificationRule(notificationRuleId);
+		receiveBehavior.setUnicornKey(requestId);
 		
-		if (!idToRegisteredEvent.containsKey(event.getId())) {
-			idToRegisteredEvent.put(event.getId(), event);
-			keyToRegisteredEvent.put(requestId, event);
+		if (!idToRegisteredEvent.containsKey(eventInstance.getId())) {
+			idToRegisteredEvent.put(eventInstance.getId(), eventInstance);
+			keyToRegisteredEvent.put(requestId, eventInstance);
 		}
 		
-		logger.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requesId %s, getting back %s as NotificationRule", event.getId(), query, requestId, notificationRuleId));
+		logger.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requesId %s, getting back %s as NotificationRule", eventInstance.getId(), query, requestId, notificationRuleId));
 		
 	}
 
-	public static String insertAttributesIntoQueryString(AbstractIntermediateCatchEventInstance event) {
-		String queryString = event.getControlNode().getEventQuery();
+	public static String insertAttributesIntoQueryString(AbstractEventInstance eventInstance) {
+		MessageReceiveDefinition messageDefinition = (MessageReceiveDefinition) eventInstance.getControlNode().getSpecialEventDefinition();
+		String queryString = messageDefinition.getEventQuerry();
 		if (queryString.contains("#")) {
-			// ScenarioInstance scenario = new ScenarioInstance(scenarioId,
-			// scenarioInstanceId);
-			for (DataAttributeInstance attribute : event.getDataManager().getDataAttributeInstances()) {
+			for (DataAttributeInstance attribute : eventInstance.getDataManager().getDataAttributeInstances()) {
 				String dataattributePath = String.format("#%s.%s", attribute.getDataObject().getDataClass().getName(), attribute.getDataAttribute().getName());
 				queryString = queryString.replace(dataattributePath, attribute.getValue().toString());
 			}
@@ -284,13 +282,13 @@ public final class EventDispatcher {
 		}
 	}
 
-	public static void unregisterEvent(AbstractIntermediateCatchEventInstance event) {
-		String notificationRuleId = event.getNotificationRule();
+	public static void unregisterEvent(AbstractEventInstance eventInstance, MessageReceiveEventBehavior receiveBehavior) {
+		String notificationRuleId = receiveBehavior.getNotificationRule();
 
 		unregisterNotificationRule(notificationRuleId);
-		keyToRegisteredEvent.remove(event.getUnicornKey());
-		idToRegisteredEvent.remove(event.getId());
-		logger.info(String.format("Event with id %s and notification Rule %s unregistered", event.getId(), notificationRuleId));
+		keyToRegisteredEvent.remove(receiveBehavior.getUnicornKey());
+		idToRegisteredEvent.remove(eventInstance.getId());
+		logger.info(String.format("Event with id %s and notification Rule %s unregistered", eventInstance.getId(), notificationRuleId));
 	}
 
 	private static void unregisterNotificationRule(String notificationRuleId) {

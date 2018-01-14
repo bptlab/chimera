@@ -2,10 +2,9 @@ package de.hpi.bpt.chimera.execution.eventhandling;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
-import de.hpi.bpt.chimera.execution.event.TimerEventInstance;
+import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.log.Log;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -15,7 +14,7 @@ import org.quartz.JobExecutionException;
  *
  */
 public class TimeEventJob implements Job {
-	private final static Logger logger = Logger.getLogger(TimeEventJob.class);
+	private static final Logger logger = Logger.getLogger(TimeEventJob.class);
 
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -29,7 +28,7 @@ public class TimeEventJob implements Job {
 			return;
 		}
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(caseModelId, caseId);
-		TimerEventInstance timerEvent = (TimerEventInstance) caseExecutioner.getControlNodeInstance(controlNodeInstanceId);
+		AbstractEventInstance timerEvent = (AbstractEventInstance) caseExecutioner.getControlNodeInstance(controlNodeInstanceId);
 		timerEvent.terminate();
 		// de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier.notifyRefresh();
 	}

@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.execution.event;
+package de.hpi.bpt.chimera.execution.event.behavior;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;

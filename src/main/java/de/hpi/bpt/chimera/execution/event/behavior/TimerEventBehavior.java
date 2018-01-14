@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.execution.event;
+package de.hpi.bpt.chimera.execution.event.behavior;
 
 import java.util.Date;
 
@@ -8,26 +8,25 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
-import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.State;
+import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.TimerDefinition;
 
-public class TimerEventInstance extends AbstractEventInstance {
-
-	private final static Logger logger = Logger.getLogger(AbstractEventInstance.class);
+public class TimerEventBehavior extends AbstractEventBehavior {
+	private static final Logger logger = Logger.getLogger(AbstractEventInstance.class);
 	private org.quartz.JobKey jobKey = null;
 
-	public TimerEventInstance(TimerEvent event, FragmentInstance fragmentInstance) {
-		super(event, fragmentInstance);
-		setState(State.INIT);
+	public TimerEventBehavior(AbstractEventInstance eventInstance) {
+		super(eventInstance);
+		eventInstance.setState(State.INIT);
 	}
 	
 	@Override
 	public void enableControlFlow() {
 		logger.info("Controlflow of an TimerEventenabled");
-		if (this.getState().equals(State.INIT)) {
-			this.setState(State.REGISTERED);
+		if (getEventInstance().getState().equals(State.INIT)) {
+			getEventInstance().setState(State.REGISTERED);
 			this.registerEvent();
 		}
 	}
@@ -47,7 +46,7 @@ public class TimerEventInstance extends AbstractEventInstance {
 			logger.info("Timerevent skipped");
 		}
 		 
-		this.setState(State.SKIPPED);
+		getEventInstance().setState(State.SKIPPED);
 	}
 
 	/**
@@ -55,7 +54,7 @@ public class TimerEventInstance extends AbstractEventInstance {
 	 * handled internally, calls specific method for timer events.
 	 */
 	public void registerEvent() {
-		EventDispatcher.registerTimerEvent(this);
+		EventDispatcher.registerTimerEvent(getEventInstance(), this);
 		logger.info("Timerevent has registered itself at EventDispatcher");
 	}
 
@@ -66,16 +65,11 @@ public class TimerEventInstance extends AbstractEventInstance {
 	 * @return the Date when the timer should be triggered.
 	 */
 	public Date getTerminationDate() {
-		String timerDefinition = this.getControlNode().getTimerDuration();
+		String timerDefinition = getTimerDefinition().getTimerDuration();
 		TimeCalculator calculator = new TimeCalculator();
 		Date now = new Date();
 		// TODO replaxw P10S with the imerDefinition
 		return calculator.getDatePlusInterval(now, timerDefinition);
-	}
-
-	@Override
-	public TimerEvent getControlNode() {
-		return (TimerEvent) super.getControlNode();
 	}
 
 	public JobKey getJobKey() {
@@ -86,4 +80,7 @@ public class TimerEventInstance extends AbstractEventInstance {
 		this.jobKey = jobKey;
 	}
 
+	public TimerDefinition getTimerDefinition() {
+		return (TimerDefinition) getEventInstance().getControlNode().getSpecialEventDefinition();
+	}
 }

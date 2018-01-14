@@ -15,9 +15,4 @@ public class BoundaryEvent extends IntermediateCatchEvent {
 	public void setAttachedToActivity(AbstractActivity attachedToActivity) {
 		this.attachedtoActivity = attachedToActivity;
 	}
-
-	@Override
-	public boolean hasEventQuerry() {
-		return true;
-	}
 }

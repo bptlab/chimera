@@ -128,7 +128,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 			log.info(String.format("%s not terminated, because the activity isn't in state RUNNING", this.getControlNode().getName()));
 			return;
 		}
-		if (getControlNode().getPostCondition().getConditionSets().isEmpty()) {
+		if (!getControlNode().hasPostCondition()) {
 			log.info("Web service task has no output set, received data can not be stored.");
 			return;
 		}

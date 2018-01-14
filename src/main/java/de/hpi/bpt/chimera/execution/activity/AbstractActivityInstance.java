@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import de.hpi.bpt.chimera.execution.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.AbstractDataControlNodeInstance;
 import de.hpi.bpt.chimera.execution.ControlNodeInstanceFactory;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -18,14 +18,12 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 
-public abstract class AbstractActivityInstance extends ControlNodeInstance {
+public abstract class AbstractActivityInstance extends AbstractDataControlNodeInstance {
 	private static final Logger log = Logger.getLogger(AbstractActivityInstance.class);
 
 	private boolean isAutomaticTask;
 	// TODO: find out what canTerminate is exactly needed for
 	// private boolean canTerminate;
-	private List<DataObject> selectedDataObjects;
-	private List<DataObject> outputDataObjects;
 	private List<BoundaryEventInstance> attachedBoundaryEventInstances;
 
 	/**
@@ -37,8 +35,6 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	public AbstractActivityInstance(AbstractActivity activity, FragmentInstance fragmentInstance) {
 		super(activity, fragmentInstance);
 		this.isAutomaticTask = false;
-		this.selectedDataObjects = new ArrayList<>();
-		this.outputDataObjects = new ArrayList<>();
 		this.attachedBoundaryEventInstances = new ArrayList<>();
 	}
 
@@ -50,7 +46,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	 */
 	@Override
 	public void enableControlFlow() {
-		this.selectedDataObjects.clear();
+		getSelectedDataObjects().clear();
 		if (getState().equals(State.INIT)) {
 			setState(State.CONTROLFLOW_ENABLED);
 		}
@@ -116,15 +112,14 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
 			}
 			
-			getCaseExecutioner().prepareForActivityInstanceTermination(this, dataObjectToObjectLifecycleTransition);
+			getCaseExecutioner().handleActivityOutputTransitions(this, dataObjectToObjectLifecycleTransition);
 			getCaseExecutioner().terminateActivityInstance(this);
 		}
 	}
 
 	private void createAttachedBoundaryEvents() {
 		for (BoundaryEvent boundaryEvent : getControlNode().getAttachedBoundaryEvents()) {
-			// TODO: think whether instance should be created by factory
-			BoundaryEventInstance boundaryEventInstance = new BoundaryEventInstance(boundaryEvent, getFragmentInstance());
+			BoundaryEventInstance boundaryEventInstance = (BoundaryEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(boundaryEvent, getFragmentInstance());
 			boundaryEventInstance.setAttachedToActivity(this);
 			attachedBoundaryEventInstances.add(boundaryEventInstance);
 			boundaryEventInstance.enableControlFlow();
@@ -147,7 +142,6 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		// TODO: maybe state after creation of following
 		setState(State.TERMINATED);
 		this.getFragmentInstance().createFollowing(getControlNode());
-		this.getCaseExecutioner().startAutomaticTasks();
 	}
 
 
@@ -185,28 +179,12 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		return (AbstractActivity) super.getControlNode();
 	}
 
-	public List<DataObject> getSelectedDataObjects() {
-		return selectedDataObjects;
-	}
-
-	public void setSelectedDataObjects(List<DataObject> selectedDataObjects) {
-		this.selectedDataObjects = selectedDataObjects;
-	}
-
 	public boolean isAutomaticTask() {
 		return isAutomaticTask;
 	}
 
 	public void setAutomaticTask(boolean isAutomaticTask) {
 		this.isAutomaticTask = isAutomaticTask;
-	}
-
-	public List<DataObject> getOutputDataObjects() {
-		return outputDataObjects;
-	}
-
-	public void setOutputDataObjects(List<DataObject> outputDataObjects) {
-		this.outputDataObjects = outputDataObjects;
 	}
 
 	public List<BoundaryEventInstance> getAttachedBoundaryEventInstances() {

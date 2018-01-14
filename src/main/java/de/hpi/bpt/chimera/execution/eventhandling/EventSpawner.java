@@ -26,7 +26,7 @@ public class EventSpawner {
 	private static final String EVENT_PATH = PropertyLoader.getProperty("unicorn.path.event");
 	private static final Logger log = Logger.getLogger(EventSpawner.class);
 
-	public boolean spawnEvent(AbstractEventInstance eventInstance) {
+	public static boolean spawnEvent(AbstractEventInstance eventInstance) {
 		// TODO: check whether eventInstance is an sendEvent
 		try {
 			DataObject inputObject = getInputObject(eventInstance);
@@ -38,7 +38,7 @@ public class EventSpawner {
 		}
 	}
 
-	private DataObject getInputObject(AbstractEventInstance eventInstance) {
+	private static DataObject getInputObject(AbstractEventInstance eventInstance) {
 		List<DataObject> inputObjects = eventInstance.getSelectedDataObjects();
 		if (inputObjects.size() != 1) {
 			throw new IllegalArgumentException("input objects of SendEvent is not distinct or there are no input objects");
@@ -52,12 +52,12 @@ public class EventSpawner {
 		return inputObject;
 	}
 
-	private Response buildAndSendEvent(DataObject inputObject) {
+	private static Response buildAndSendEvent(DataObject inputObject) {
 		Document eventXml = buildEventFromDataObject(inputObject);
 		return sendEvent(eventXml);
 	}
 
-	private Document buildEventFromDataObject(DataObject inputObject) {
+	private static Document buildEventFromDataObject(DataObject inputObject) {
 		List<DataAttributeInstance> attributes = inputObject.getDataAttributeInstances();
 		String eventName = inputObject.getDataClass().getName();
 
@@ -76,7 +76,7 @@ public class EventSpawner {
 		}
 	}
 
-	private Response sendEvent(Document eventXml) {
+	private static Response sendEvent(Document eventXml) {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(EVENT_URL).path(EVENT_PATH);
 		Response response = target.request(MediaType.APPLICATION_XML).post(Entity.xml(eventXml));
@@ -87,7 +87,7 @@ public class EventSpawner {
 	}
 
 	// <FoilEvent xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FoilEvent.xsd">
-	private Element createRootElement(Document doc, String eventName) {
+	private static Element createRootElement(Document doc, String eventName) {
 		Element ele = doc.createElement(eventName);
 		ele.setAttribute("xmlns", "");
 		ele.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
@@ -95,7 +95,7 @@ public class EventSpawner {
 		return ele;
 	}
 
-	private void appendAttributes(Document doc, Element rootElement, List<DataAttributeInstance> attributes) {
+	private static void appendAttributes(Document doc, Element rootElement, List<DataAttributeInstance> attributes) {
 		attributes.stream().forEach(attr -> {
 			Element el = doc.createElement(attr.getDataAttribute().getName());
 			el.appendChild(doc.createTextNode(attr.getValue().toString()));

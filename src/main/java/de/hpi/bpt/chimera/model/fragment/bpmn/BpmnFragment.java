@@ -16,8 +16,8 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateThrowEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
-import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.EventBasedGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
@@ -56,7 +56,7 @@ public class BpmnFragment {
 	private List<IntermediateCatchEvent> intermediateCatchEvents = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<TimerEvent> timerEvents = new ArrayList<>();
+	private List<IntermediateThrowEvent> intermediateThrowEvents = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<BoundaryEvent> boundaryEvents = new ArrayList<>();
@@ -132,14 +132,6 @@ public class BpmnFragment {
 		this.exclusiveGateways = exclusiveGateways;
 	}
 
-	public List<TimerEvent> getTimerEvents() {
-		return timerEvents;
-	}
-
-	public void setTimerEvents(List<TimerEvent> timerEvents) {
-		this.timerEvents = timerEvents;
-	}
-
 	public List<EventBasedGateway> getEventBasedGateways() {
 		return eventBasedGateways;
 	}
@@ -154,6 +146,14 @@ public class BpmnFragment {
 
 	public void setIntermediateCatchEvents(List<IntermediateCatchEvent> intermediateCatchEvents) {
 		this.intermediateCatchEvents = intermediateCatchEvents;
+	}
+
+	public List<IntermediateThrowEvent> getIntermediateThrowEvents() {
+		return intermediateThrowEvents;
+	}
+
+	public void setIntermediateThrowEvents(List<IntermediateThrowEvent> intermediateThrowEvents) {
+		this.intermediateThrowEvents = intermediateThrowEvents;
 	}
 
 	public List<BoundaryEvent> getBoundaryEvents() {

@@ -4,19 +4,5 @@ import javax.persistence.Entity;
 
 @Entity
 public class StartEvent extends AbstractEvent {
-	private String eventQuerry = "";
 
-	@Override
-	public boolean hasEventQuerry() {
-		return true;
-	}
-
-	@Override
-	public String getEventQuery() {
-		return eventQuerry;
-	}
-
-	public void setEventQuerry(String eventQuerry) {
-		this.eventQuerry = eventQuerry;
-	}
 }

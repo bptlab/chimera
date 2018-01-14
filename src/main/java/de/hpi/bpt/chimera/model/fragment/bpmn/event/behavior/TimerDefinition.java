@@ -1,17 +1,10 @@
-package de.hpi.bpt.chimera.model.fragment.bpmn.event;
+package de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior;
 
 import javax.persistence.Entity;
 
 @Entity
-public class TimerEvent extends IntermediateCatchEvent {
-
+public class TimerDefinition extends SpecialEventDefinition {
 	private String timerDuration;
-
-
-	@Override
-	public boolean hasEventQuerry() {
-		return false;
-	}
 
 	public String getTimerDuration() {
 		return timerDuration;

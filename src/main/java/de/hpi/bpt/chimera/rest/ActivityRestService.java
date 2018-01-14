@@ -356,7 +356,7 @@ public class ActivityRestService extends AbstractRestService {
 
 			Map<String, String> dataClassToStateTransitionStrings = parseDataClassToStateTransitionStrings(post);
 			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(dataClassToStateTransitionStrings);
-			List<DataObject> usedDataObjects = caseExecutioner.prepareForActivityInstanceTermination(activityInstance, dataClassToStateTransitions);
+			List<DataObject> usedDataObjects = caseExecutioner.handleActivityOutputTransitions(activityInstance, dataClassToStateTransitions);
 
 			JSONArray result = parseJsonForUsedDataObjects(usedDataObjects);
 			

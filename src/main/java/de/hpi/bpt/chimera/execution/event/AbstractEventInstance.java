@@ -1,21 +1,30 @@
 package de.hpi.bpt.chimera.execution.event;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.AbstractDataControlNodeInstance;
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.State;
+import de.hpi.bpt.chimera.execution.event.behavior.AbstractEventBehavior;
 import de.hpi.bpt.chimera.execution.gateway.EventBasedGatewayInstance;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 
-public abstract class AbstractEventInstance extends ControlNodeInstance {
+public abstract class AbstractEventInstance extends AbstractDataControlNodeInstance {
 
-	private static final Logger logger = Logger.getLogger(ControlNodeInstance.class);
+	private static final Logger log = Logger.getLogger(ControlNodeInstance.class);
 
-	private List<DataObject> selectedDataObjects;
+	private AbstractEventBehavior behavior;
 	private EventBasedGatewayInstance previousEventBasedGatewayInstance;
 
 	public AbstractEventInstance(AbstractEvent event, FragmentInstance fragmentInstance) {
@@ -30,8 +39,24 @@ public abstract class AbstractEventInstance extends ControlNodeInstance {
 	 */
 	@Override
 	public void enableControlFlow() {
+		behavior.enableControlFlow();
 		setState(State.REGISTERED);
-		this.begin();
+
+		if (getControlNode().hasUniquePreCondition()) {
+			List<DataObject> inputDataObjects = new ArrayList<>();
+			for (AtomicDataStateCondition condition : getControlNode().getPostCondition().getAtomicDataStateConditions()) {
+				List<DataObject> availableDataObjects = new ArrayList<>(getDataManager().getAvailableDataObjects(condition));
+				if (availableDataObjects.size() == 1) {
+					DataObject dataObject = availableDataObjects.get(0);
+					inputDataObjects.add(dataObject);
+				} else {
+					log.info(String.format("There is none or more than one possible DataObject with DataClass: %s and State: %s for the input of the event: %s", condition.getDataClassName(), condition.getStateName(), getControlNode().getId()));
+				}
+			}
+			getCaseExecutioner().beginEventInstance(this, inputDataObjects);
+		} else {
+			begin();
+		}
 	}
 
 	/**
@@ -39,19 +64,7 @@ public abstract class AbstractEventInstance extends ControlNodeInstance {
 	 */
 	@Override
 	public void begin() {
-		// TODO why is that here, doesnt belong all EventQuerryStuff to
-		// AbstractIntermediateCatchEventInstance?
-		if (getControlNode().hasEventQuerry()) {
-			String eventQuerry = getControlNode().getEventQuery();
-			if (!(eventQuerry.trim().isEmpty())) {
-				// TODO: registerEvent in Unicorn
-				// EventDispatcher.registerEvent(event,
-				// event.getFragmentInstanceId(),
-				// event.getScenarioInstance().getId(),
-				// event.getScenarioInstance().getScenarioId());
-				// return;
-			}
-		} 
+		behavior.begin();
 		terminate();
 	}
 
@@ -64,16 +77,19 @@ public abstract class AbstractEventInstance extends ControlNodeInstance {
 			previousEventBasedGatewayInstance.skipAlternativeGateways(this);
 		}
 
-		// TODO: use CaseExecutioner of Case of FragmentInstance
-		// this.fragmentInstance.createDataObjectInstances(this.getControlNode());
+		if (getControlNode().hasUniquePostCondition()) {
+			Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = new HashMap<>();
+			if (getControlNode().hasPostCondition()) {
+				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
+			}
 
-		// getCaseExecutioner().createDataObjectInstances(getControlNode());
+			getCaseExecutioner().handleEventOutputTransitions(this, dataObjectToObjectLifecycleTransition);
+		}
 
-		// TODO: write DataAttributes with Json
+		behavior.terminate();
+		setState(State.TERMINATED);
 		getFragmentInstance().updateDataFlow();
 		getFragmentInstance().createFollowing(getControlNode());
-		getCaseExecutioner().startAutomaticTasks();
-		setState(State.TERMINATED);
 	}
 
 	@Override
@@ -95,12 +111,11 @@ public abstract class AbstractEventInstance extends ControlNodeInstance {
 		this.previousEventBasedGatewayInstance = previousEventBasedGatewayInstance;
 	}
 
-	public List<DataObject> getSelectedDataObjects() {
-		return selectedDataObjects;
+	public void setBehavior(AbstractEventBehavior behavior) {
+		this.behavior = behavior;
 	}
 
-	public void setSelectedDataObjects(List<DataObject> selectedDataObjects) {
-		this.selectedDataObjects = selectedDataObjects;
+	public AbstractEventBehavior getBehavior() {
+		return behavior;
 	}
-
 }

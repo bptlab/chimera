@@ -10,15 +10,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "bpmn:boundaryEvent")
 @XmlAccessorType(XmlAccessType.NONE)
-public class BoundaryEvent extends AbstractDataControlNode {
+public class BoundaryEvent extends AbstractEvent {
 	/**
 	 * Stores the Id of the activity (or subprocess) the Event is attached to.
 	 */
 	@XmlAttribute(name = "attachedToRef")
 	private String attachedToRef;
-
-	@XmlAttribute(name = "griffin:eventquery")
-	private String eventQuery;
 
 	public boolean hasAttachedToRef() {
 		return attachedToRef != null;
@@ -26,17 +23,5 @@ public class BoundaryEvent extends AbstractDataControlNode {
 
 	public String getAttachedToRef() {
 		return attachedToRef;
-	}
-
-	public void setAttachedToRef(String attachedToRef) {
-		this.attachedToRef = attachedToRef;
-	}
-
-	public String getEventQuery() {
-		return this.eventQuery;
-	}
-
-	public void setEventQuery(String eventQuery) {
-		this.eventQuery = eventQuery;
 	}
 }

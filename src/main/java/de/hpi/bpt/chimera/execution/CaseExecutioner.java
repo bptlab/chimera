@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.exception.IllegalActivityInstanceStateException;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceTypeException;
@@ -18,6 +19,7 @@ import de.hpi.bpt.chimera.history.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
 public class CaseExecutioner {
 	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
@@ -71,10 +73,9 @@ public class CaseExecutioner {
 	/**
 	 * Begin an {@link AbstractActivityInstance}. Therefore lock all
 	 * {@link DataObject}s that are used by the AbstractActivityInstance and set
-	 * them in the AbstractActivityInstance. If {@code activityInstanceId} is
-	 * not assigned to an AbstractActivityInstance or if one of the selected
-	 * DataObjects is already locked the AbstractActivityInstance cannot be
-	 * begun.
+	 * them in the AbstractActivityInstance. If the {@code activityInstance} is
+	 * not READY or one of the selected DataObjects is already locked the
+	 * AbstractActivityInstance cannot be begun.
 	 * 
 	 * @param activityInstance
 	 *            AbstractActivityInstance that shall be begun
@@ -90,11 +91,50 @@ public class CaseExecutioner {
 				throw e;
 			}
 
+			beginDataControlNodeInstance((AbstractDataControlNodeInstance) activityInstance, selectedDataObjects);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Begin an {@link AbstractEventInstance}. Therefore lock all
+	 * {@link DataObject}s that are used by the AbstractEventInstance and set
+	 * them in the AbstractEventInstance. If one of the selected DataObjects is
+	 * already locked the AbstractEventInstance cannot be begun.
+	 * 
+	 * @param eventInstance
+	 * @param selectedDataObjects
+	 */
+	public void beginEventInstance(AbstractEventInstance eventInstance, List<DataObject> selectedDataObjects) {
+		try {
+			if (!eventInstance.getState().equals(State.REGISTERED)) {
+				// IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(activityInstance, State.REGISTERED);
+				// log.error(e.getMessage());
+				// throw e;
+			}
+
+			beginDataControlNodeInstance((AbstractDataControlNodeInstance) eventInstance, selectedDataObjects);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Begin an {@link AbstractDataControlNodeInstance}. Therefore lock all
+	 * {@link DataObject}s that are used by the AbstractDataControlNodeInstance
+	 * and set them in the AbstractDataControlNodeInstance.
+	 * 
+	 * @param instance
+	 * @param selectedDataObjects
+	 */
+	private void beginDataControlNodeInstance(AbstractDataControlNodeInstance instance, List<DataObject> selectedDataObjects) {
+		try {
 			List<DataObject> lockedDataObjects = dataManager.lockDataObjects(selectedDataObjects);
-			activityInstance.setSelectedDataObjects(lockedDataObjects);
+			instance.setSelectedDataObjects(lockedDataObjects);
 			// TODO: has this to be before lock?
-			activityInstance.getFragmentInstance().skipAlternativeControlNodes(activityInstance);
-			activityInstance.begin();
+			instance.getFragmentInstance().skipAlternativeControlNodes(instance);
+			instance.begin();
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
@@ -110,28 +150,51 @@ public class CaseExecutioner {
 	 * @return List of DataObjects that made a transition and those that are
 	 *         newly created
 	 */
-	public List<DataObject> prepareForActivityInstanceTermination(AbstractActivityInstance activityInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+	public List<DataObject> handleActivityOutputTransitions(AbstractActivityInstance activityInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		try {
 			if (!activityInstance.getState().equals(State.RUNNING)) {
 				IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(activityInstance, State.RUNNING);
 				log.error(e.getMessage());
 				throw e;
 			}
+			
+			return handleDataControlNodeOutputTransitions((AbstractDataControlNodeInstance) activityInstance, dataClassToStateTransitions);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
 
-			List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
+	public List<DataObject> handleEventOutputTransitions(AbstractEventInstance eventInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+		try {
+			if (!eventInstance.getState().equals(State.RUNNING)) {
+				// IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(eventInstance, State.RUNNING);
+				// log.error(e.getMessage());
+				// throw e;
+			}
+			
+			return handleDataControlNodeOutputTransitions((AbstractDataControlNodeInstance) eventInstance, dataClassToStateTransitions);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
+	
+	private List<DataObject> handleDataControlNodeOutputTransitions(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+		try {
+			List<DataObject> workingItems = controlNodeInstance.getSelectedDataObjects();
 			dataManager.unlockDataObjects(workingItems);
 			
 			List<DataObject> usedDataObject = new ArrayList<>();
-			if (!activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
+			if (!controlNodeInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
 				usedDataObject = dataManager.handleDataObjectTransitions(workingItems, dataClassToStateTransitions);
 			}
 
-			activityInstance.setOutputDataObjects(usedDataObject);
+			controlNodeInstance.setOutputDataObjects(usedDataObject);
 			return usedDataObject;
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
 	}
+
 
 	/**
 	 * Finally terminates the activity. Therefore this Method is called after

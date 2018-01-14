@@ -67,7 +67,7 @@ public class ExclusiveGatewayInstanceControlFlowTest {
 
 		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity1");
 		caseExecutioner.beginActivityInstance(activityInst, new ArrayList<DataObject>());
-		caseExecutioner.prepareForActivityInstanceTermination(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
+		caseExecutioner.handleActivityOutputTransitions(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
 		activityInst.terminate();
 
 		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getActivitiesWithState(State.READY);

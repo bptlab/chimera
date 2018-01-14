@@ -56,12 +56,19 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
 
 	/**
 	 * 
-	 * @return true if there is maximal one ConditionSet
+	 * @return true if there is maximal one input ConditionSet
+	 */
+	public boolean hasUniquePreCondition() {
+		return preCondition.getConditionSets().size() <= 1;
+	}
+
+	/**
+	 * 
+	 * @return true if there is maximal one output ConditionSet
 	 */
 	public boolean hasUniquePostCondition() {
 		return postCondition.getConditionSets().size() <= 1;
 	}
-
 
 	public Map<AtomicDataStateCondition, Map<DataAttribute, String>> getJsonPathMapping() {
 		if (jsonPathMapping == null) {

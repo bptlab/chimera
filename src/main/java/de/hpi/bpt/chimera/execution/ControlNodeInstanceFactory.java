@@ -7,11 +7,12 @@ import de.hpi.bpt.chimera.execution.activity.EmailActivityInstance;
 import de.hpi.bpt.chimera.execution.activity.HumanTaskInstance;
 import de.hpi.bpt.chimera.execution.activity.WebServiceTaskInstance;
 import de.hpi.bpt.chimera.execution.event.AbstractEventInstance;
-import de.hpi.bpt.chimera.execution.event.AbstractIntermediateCatchEventInstance;
+import de.hpi.bpt.chimera.execution.event.IntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.event.BoundaryEventInstance;
 import de.hpi.bpt.chimera.execution.event.EndEventInstance;
+import de.hpi.bpt.chimera.execution.event.IntermediateThrowEventInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
-import de.hpi.bpt.chimera.execution.event.TimerEventInstance;
+import de.hpi.bpt.chimera.execution.event.behavior.TimerEventBehavior;
 import de.hpi.bpt.chimera.execution.gateway.AbstractGatewayInstance;
 import de.hpi.bpt.chimera.execution.gateway.EventBasedGatewayInstance;
 import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
@@ -22,11 +23,11 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
-import de.hpi.bpt.chimera.model.fragment.bpmn.event.TimerEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateThrowEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.AbstractGateway;
@@ -51,7 +52,9 @@ public class ControlNodeInstanceFactory {
 		if (controlNode instanceof AbstractActivity) {
 			return createActivityInstance((AbstractActivity) controlNode, fragmentInstance);
 		} else if (controlNode instanceof AbstractEvent) {
-			return createEventInstance((AbstractEvent) controlNode, fragmentInstance);
+			AbstractEventInstance eventInstance = createEventInstance((AbstractEvent) controlNode, fragmentInstance);
+			setEventBehavior(eventInstance);
+			return eventInstance;
 		} else if (controlNode instanceof AbstractGateway) {
 			return createGatewayInstance((AbstractGateway) controlNode, fragmentInstance);
 		} else {
@@ -92,12 +95,31 @@ public class ControlNodeInstanceFactory {
 			return new EndEventInstance((EndEvent) event, fragmentInstance);
 		} else if (event instanceof BoundaryEvent) {
 			return new BoundaryEventInstance((BoundaryEvent) event, fragmentInstance);
-		} else if (event instanceof TimerEvent) {
-			return new TimerEventInstance((TimerEvent) event, fragmentInstance);
 		} else if (event instanceof IntermediateCatchEvent) {
-			return new AbstractIntermediateCatchEventInstance((IntermediateCatchEvent) event, fragmentInstance);
+			return new IntermediateCatchEventInstance((IntermediateCatchEvent) event, fragmentInstance);
+		} else if (event instanceof IntermediateThrowEvent) {
+			return new IntermediateThrowEventInstance((IntermediateThrowEvent) event, fragmentInstance);
 		} else {
 			throw new IllegalArgumentException(String.format("Unsupported type of Event: %s", event.getClass().getName()));
+		}
+
+	}
+
+	private static void setEventBehavior(AbstractEventInstance eventInstance) {
+
+		switch (eventInstance.getControlNode().getSpecialBehavior()) {
+		case MESSAGE_SENT:
+
+			break;
+		case MESSAGE_RECEIVE:
+
+			break;
+		case TIMER:
+			eventInstance.setBehavior(new TimerEventBehavior(eventInstance));
+			break;
+		case NONE:
+
+			break;
 		}
 	}
 
