@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.execution;
+package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
 import static org.junit.Assert.*;
 
@@ -11,6 +11,8 @@ import org.junit.Test;
 
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
+import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstanceFactory;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
@@ -63,10 +65,10 @@ public class SimpleBeginHumanTaskTest {
 
 		Collection<FragmentInstance> fragmentInstances = caseExecutioner.getCase().getFragmentInstances().values();
 		FragmentInstance fragmentInstance = new ArrayList<>(fragmentInstances).get(0);
-		assertEquals(2, fragmentInstance.getControlNodeInstances().size());
+		assertEquals(2, fragmentInstance.getControlNodeInstanceIdToInstance().size());
 
 		fragmentInstance.createFollowing(task1.getControlNode());
-		assertEquals(3, fragmentInstance.getControlNodeInstances().size());
+		assertEquals(3, fragmentInstance.getControlNodeInstanceIdToInstance().size());
 
 		AbstractActivityInstance task2 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task 2");
 		assertNotNull(task2);

@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
 import org.apache.log4j.Logger;
@@ -18,6 +19,8 @@ import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventSpawner {
@@ -26,30 +29,47 @@ public class EventSpawner {
 	private static final String EVENT_PATH = PropertyLoader.getProperty("unicorn.path.event");
 	private static final Logger log = Logger.getLogger(EventSpawner.class);
 
+	private EventSpawner() {
+	}
+
 	public static boolean spawnEvent(AbstractEventInstance eventInstance) {
 		// TODO: check whether eventInstance is an sendEvent
 		try {
-			DataObject inputObject = getInputObject(eventInstance);
-			Response response = buildAndSendEvent(inputObject);
-			return response.getStatus() == 200;
+			List<DataObject> inputObjects = getInputObjects(eventInstance);
+			for (DataObject inputObject : inputObjects) {
+				Response response = buildAndSendEvent(inputObject);
+				if (response.getStatus() != 200) {
+					log.error("Event Spawner was not able to send all Events");
+					return false;
+				}
+			}
+			return true;
 		} catch (IllegalArgumentException e) {
 			log.error(e);
 			return false;
 		}
 	}
 
-	private static DataObject getInputObject(AbstractEventInstance eventInstance) {
-		List<DataObject> inputObjects = eventInstance.getSelectedDataObjects();
-		if (inputObjects.size() != 1) {
-			throw new IllegalArgumentException("input objects of SendEvent is not distinct or there are no input objects");
-		}
-		DataObject inputObject = inputObjects.get(0);
-
-		if (!inputObject.getDataClass().isEvent()) {
-			throw new IllegalArgumentException("dataclass of input object is not an eventclass");
+	private static List<DataObject> getInputObjects(AbstractEventInstance eventInstance) {
+		if (!eventInstance.getControlNode().hasUniquePreCondition()) {
+			throw new IllegalArgumentException("PreConditition of SendEvent is not unique.");
 		}
 
-		return inputObject;
+		List<DataObject> possibleInputObjects = new ArrayList<>();
+		for (AtomicDataStateCondition condition : eventInstance.getControlNode().getPostCondition().getAtomicDataStateConditions()) {
+			if (!condition.getDataClass().isEvent()) {
+				throw new IllegalArgumentException("dataclass of input object is not an eventclass");
+			}
+			List<DataObject> availableDataObjects = new ArrayList<>(eventInstance.getDataManager().getAvailableDataObjects(condition));
+			if (availableDataObjects.size() == 1) {
+				DataObject dataObject = availableDataObjects.get(0);
+				possibleInputObjects.add(dataObject);
+			} else {
+				log.info(String.format("There is none or more than one possible DataObject with DataClass: %s and State: %s for the input of the event: %s", condition.getDataClassName(), condition.getStateName(), eventInstance.getControlNode().getId()));
+			}
+		}
+
+		return possibleInputObjects;
 	}
 
 	private static Response buildAndSendEvent(DataObject inputObject) {

@@ -41,7 +41,6 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	public ExclusiveGatewayInstance(ExclusiveGateway gateway, FragmentInstance fragmentInstance) {
 		super(gateway, fragmentInstance);
 		initializeBranches();
-		setState(State.INIT);
 	}
 
 	/**
@@ -102,7 +101,7 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		// Gets the ControlNodesInstances for the given Ids and calls skip for
 		// each of the ControlNodeInstances.
 		for (String toSkip : branch) {
-			ControlNodeInstance node = this.getFragmentInstance().getControlNodeInstance(toSkip);
+			ControlNodeInstance node = this.getFragmentInstance().getControlNodeInstanceById(toSkip);
 			if (node != null) {
 				node.skip();
 				// log.info(String.format("skipping the ControlNode with the id:

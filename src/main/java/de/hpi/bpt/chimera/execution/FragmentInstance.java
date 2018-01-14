@@ -172,7 +172,7 @@ public class FragmentInstance {
 	 * @return the Instance of the ControlNode with the given Id. Null if that
 	 *         ControlNode isn't instantiated yet.
 	 */
-	public ControlNodeInstance getControlNodeInstance(String controlNodeId) {
+	public ControlNodeInstance getControlNodeInstanceById(String controlNodeId) {
 		// TODO is it possible that someone calls this method for a controllnode
 		// that isn't instantiated yet?
 		if (controlNodeIdToInstance.containsKey(controlNodeId)) {
@@ -218,12 +218,20 @@ public class FragmentInstance {
 		this.fragment = fragment;
 	}
 
-	public Map<String, ControlNodeInstance> getControlNodeInstances() {
+	public Map<String, ControlNodeInstance> getControlNodeInstanceIdToInstance() {
 		return controlNodeInstanceIdToInstance;
 	}
 
 	public void setControlNodeInstances(Map<String, ControlNodeInstance> controlNodeInstances) {
 		this.controlNodeInstanceIdToInstance = controlNodeInstances;
+	}
+
+	public Map<String, ControlNodeInstance> getControlNodeIdToInstance() {
+		return controlNodeIdToInstance;
+	}
+
+	public List<ControlNodeInstance> getControlNodeInstances() {
+		return new ArrayList<>(controlNodeInstanceIdToInstance.values());
 	}
 
 	public Case getCase() {

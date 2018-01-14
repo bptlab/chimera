@@ -10,14 +10,21 @@ public class AbstractEventBehavior implements Behaving {
 		setEventInstance(eventInstance);
 	}
 
+	/**
+	 * Automatic begin.
+	 */
 	@Override
 	public void enableControlFlow() {
-		// no special behavior
+		getEventInstance().begin();
 	}
 
+	/**
+	 * Automatic termination.
+	 */
 	@Override
 	public void begin() {
 		// no special behavior
+		getEventInstance().terminate();
 	}
 
 	@Override

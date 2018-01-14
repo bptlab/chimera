@@ -26,7 +26,6 @@ public class ParallelGatewayInstance extends AbstractGatewayInstance {
 	public ParallelGatewayInstance(ParallelGateway parallelGateway, FragmentInstance fragmentInstance) {
 		super(parallelGateway, fragmentInstance);
 		this.setParallelGateway(parallelGateway);
-		this.setState(State.INIT);
 	}
 
 

@@ -1,11 +1,7 @@
 package de.hpi.bpt.chimera.execution.controlnodes.event;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -13,6 +9,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.AbstractEventBehavior;
+import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.EventBasedGatewayInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
@@ -39,24 +36,8 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	 */
 	@Override
 	public void enableControlFlow() {
+		setState(State.READY);
 		behavior.enableControlFlow();
-		setState(State.REGISTERED);
-
-		if (getControlNode().hasUniquePreCondition()) {
-			List<DataObject> inputDataObjects = new ArrayList<>();
-			for (AtomicDataStateCondition condition : getControlNode().getPostCondition().getAtomicDataStateConditions()) {
-				List<DataObject> availableDataObjects = new ArrayList<>(getDataManager().getAvailableDataObjects(condition));
-				if (availableDataObjects.size() == 1) {
-					DataObject dataObject = availableDataObjects.get(0);
-					inputDataObjects.add(dataObject);
-				} else {
-					log.info(String.format("There is none or more than one possible DataObject with DataClass: %s and State: %s for the input of the event: %s", condition.getDataClassName(), condition.getStateName(), getControlNode().getId()));
-				}
-			}
-			getCaseExecutioner().beginEventInstance(this, inputDataObjects);
-		} else {
-			begin();
-		}
 	}
 
 	/**
@@ -65,7 +46,6 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	@Override
 	public void begin() {
 		behavior.begin();
-		terminate();
 	}
 
 	/**
@@ -77,13 +57,11 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 			previousEventBasedGatewayInstance.skipAlternativeGateways(this);
 		}
 
-		if (getControlNode().hasUniquePostCondition()) {
-			Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = new HashMap<>();
-			if (getControlNode().hasPostCondition()) {
-				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
+		if (getControlNode().hasPostCondition() && getControlNode().hasUniquePostCondition()) {
+			for (AtomicDataStateCondition condition : getControlNode().getPostCondition().getConditionSets().get(0).getConditions()) {
+				DataObject dataObject = getDataManager().createDataObject(condition);
+				getOutputDataObjects().add(dataObject);
 			}
-
-			getCaseExecutioner().handleEventOutputTransitions(this, dataObjectToObjectLifecycleTransition);
 		}
 
 		behavior.terminate();

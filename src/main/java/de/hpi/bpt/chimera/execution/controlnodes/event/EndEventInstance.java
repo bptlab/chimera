@@ -8,7 +8,6 @@ public class EndEventInstance extends AbstractEventInstance {
 
 	public EndEventInstance(EndEvent event, FragmentInstance fragmentInstance) {
 		super(event, fragmentInstance);
-		setState(State.INIT);
 	}
 
 	@Override

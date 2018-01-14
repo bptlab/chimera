@@ -24,11 +24,9 @@ public class TimerEventBehavior extends AbstractEventBehavior {
 	
 	@Override
 	public void enableControlFlow() {
-		logger.info("Controlflow of an TimerEventenabled");
-		if (getEventInstance().getState().equals(State.INIT)) {
-			getEventInstance().setState(State.REGISTERED);
-			this.registerEvent();
-		}
+		logger.info("Controlflow of an TimerEvent enabled");
+		this.registerEvent();
+		getEventInstance().setState(State.REGISTERED);
 	}
 
 	@Override

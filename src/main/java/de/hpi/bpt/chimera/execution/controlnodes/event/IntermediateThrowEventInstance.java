@@ -9,7 +9,6 @@ public class IntermediateThrowEventInstance extends AbstractEventInstance {
 
 	public IntermediateThrowEventInstance(AbstractEvent event, FragmentInstance fragmentInstance) {
 		super(event, fragmentInstance);
-		setState(State.INIT);
 	}
 
 	@Override

@@ -26,7 +26,6 @@ public class EmailActivityInstance extends AbstractActivityInstance {
 
 	public EmailActivityInstance(EmailActivity mailActivity, FragmentInstance fragmentInstance) {
 		super(mailActivity, fragmentInstance);
-		setState(State.INIT);
 		setAutomaticTask(true);
 	}
 

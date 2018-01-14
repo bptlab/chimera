@@ -28,7 +28,6 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 
 	public WebServiceTaskInstance(WebServiceTask webServiceTask, FragmentInstance fragmentInstance) {
 		super(webServiceTask, fragmentInstance);
-		setState(State.INIT);
 		this.setAutomaticTask(true);
 	}
 

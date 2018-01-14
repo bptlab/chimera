@@ -18,6 +18,7 @@ public abstract class ControlNodeInstance implements Behaving {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.controlNode = controlNode;
 		this.fragmentInstance = fragmentInstance;
+		setState(State.INIT);
 	}
 
 	public String getId() {

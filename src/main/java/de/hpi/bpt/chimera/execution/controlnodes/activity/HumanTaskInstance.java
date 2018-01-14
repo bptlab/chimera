@@ -12,7 +12,6 @@ public class HumanTaskInstance extends AbstractActivityInstance {
 
 	public HumanTaskInstance(HumanTask humanActivity, FragmentInstance fragmentInstance) {
 		super(humanActivity, fragmentInstance);
-		setState(State.INIT);
 		setAutomaticTask(false);
 	}
 

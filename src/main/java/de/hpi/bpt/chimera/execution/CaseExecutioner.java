@@ -67,7 +67,7 @@ public class CaseExecutioner {
 	public List<AbstractActivityInstance> getActivitiesWithState(State state) {
 		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
-			for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstances().values()) {
+			for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstanceIdToInstance().values()) {
 				if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == state) {
 					activityInstances.add((AbstractActivityInstance) nodeInstance);
 				}
@@ -236,8 +236,8 @@ public class CaseExecutioner {
 	 */
 	public ControlNodeInstance getControlNodeInstance(String controlNodeId) {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
-			if (fragmentInstance.getControlNodeInstances().containsKey(controlNodeId)) {
-				return fragmentInstance.getControlNodeInstances().get(controlNodeId);
+			if (fragmentInstance.getControlNodeInstanceIdToInstance().containsKey(controlNodeId)) {
+				return fragmentInstance.getControlNodeInstanceIdToInstance().get(controlNodeId);
 			}
 		}
 

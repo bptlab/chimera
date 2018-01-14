@@ -10,7 +10,6 @@ public class BoundaryEventInstance extends AbstractEventInstance {
 
 	public BoundaryEventInstance(BoundaryEvent event, FragmentInstance fragmentInstance) {
 		super(event, fragmentInstance);
-		setState(State.INIT);
 	}
 
 	@Override

@@ -16,13 +16,12 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.AbstractGateway;
 
 public class EventBasedGatewayInstance extends AbstractGatewayInstance {
 
-	private final static Logger logger = Logger.getLogger(EventBasedGatewayInstance.class);
+	private static final Logger logger = Logger.getLogger(EventBasedGatewayInstance.class);
 
 	private List<AbstractEventInstance> eventsToSkip = new ArrayList();
 
 	public EventBasedGatewayInstance(EventBasedGateway gateway, FragmentInstance fragmentInstance) {
 		super(gateway, fragmentInstance);
-		setState(State.INIT);
 	}
 
 	@Override

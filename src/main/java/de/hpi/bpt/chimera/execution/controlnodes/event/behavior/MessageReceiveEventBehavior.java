@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.execution.controlnodes.event.behavior;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -44,11 +45,13 @@ public class MessageReceiveEventBehavior extends AbstractEventBehavior {
 	@Override
 	public void terminate() {
 		EventDispatcher.unregisterEvent(getEventInstance(), this);
+		
 		if (eventJson.isEmpty()) {
 			logger.info("No event json present to write data attributes from.");
 			return;
 		}
-		if (getEventInstance().getControlNode().hasPostCondition()) {
+
+		if (!getEventInstance().getControlNode().hasPostCondition()) {
 			logger.info("Message receive event has no output set, received data can not be stored.");
 			return;
 		}
