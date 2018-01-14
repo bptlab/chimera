@@ -119,7 +119,7 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 
 	private void createAttachedBoundaryEvents() {
 		for (BoundaryEvent boundaryEvent : getControlNode().getAttachedBoundaryEvents()) {
-			BoundaryEventInstance boundaryEventInstance = (BoundaryEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(boundaryEvent, getFragmentInstance());
+			BoundaryEventInstance boundaryEventInstance = (BoundaryEventInstance) getFragmentInstance().createControlNodeInstance(boundaryEvent);
 			boundaryEventInstance.setAttachedToActivity(this);
 			attachedBoundaryEventInstances.add(boundaryEventInstance);
 			boundaryEventInstance.enableControlFlow();

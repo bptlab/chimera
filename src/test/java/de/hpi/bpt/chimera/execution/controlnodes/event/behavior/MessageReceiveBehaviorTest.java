@@ -10,7 +10,9 @@ import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.event.BoundaryEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.StartEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
@@ -34,7 +36,7 @@ public class MessageReceiveBehaviorTest {
 	}
 
 	@Test
-	public void testReceiveBehavior() {
+	public void testIntermediateReceiveBehavior() {
 		FragmentInstance intermediateFragment = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "IntermediateFragment");
 		assertNotNull(intermediateFragment);
 
@@ -60,7 +62,38 @@ public class MessageReceiveBehaviorTest {
 		assertEquals("One DataObject should be created", caseExecutioner.getDataManager().getDataObjects().size(), 1);
 		DataObject dataObject = caseExecutioner.getDataManager().getDataObjects().get(0);
 		DataAttributeInstance attributeInstance = dataObject.getDataAttributeInstances().get(0);
-		assertNotNull(attributeInstance);
 		assertEquals("DataObject was not properly written", attributeInstance.getValue(), "1");
+	}
+
+	@Test
+	public void testBoundaryReceiveBehavior() {
+		FragmentInstance boundaryFragment = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "BoundaryFragment");
+		assertNotNull(boundaryFragment);
+
+		assertEquals("StartEvent and Task should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 2);
+		assertEquals(caseExecutioner.getDataManager().getDataObjects().size(), 0);
+
+		AbstractActivityInstance task = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task");
+		assertEquals("BoundaryEvents", task.getControlNode().getAttachedBoundaryEvents().size(), 1);
+		task.begin();
+		assertEquals("StartEvent, Task and BoundaryEvent should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 3);
+
+		AbstractEventInstance receiveEvent = CaseExecutionerTestHelper.getEventInstanceByName(boundaryFragment, "boundaryReceiveEvent");
+		assertTrue(BoundaryEventInstance.class.isInstance(receiveEvent));
+		assertTrue(MessageReceiveEventBehavior.class.isInstance(receiveEvent.getBehavior()));
+		assertEquals("ReceiveEvent registered properly", receiveEvent.getState(), State.REGISTERED);
+
+		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) receiveEvent.getBehavior();
+		String requestId = receiveBehavior.getUnicornKey();
+
+		EventDispatcher.receiveEvent(0, 0, requestId, eventJson);
+		assertEquals("ReceiveEvent terminated properly", receiveEvent.getState(), State.TERMINATED);
+		assertEquals("StartEvent, Task, BoundaryEvent and Task after BoundaryEvent should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 4);
+		assertEquals("Task was not canceled", task.getState(), State.CANCEL);
+
+		assertEquals("One DataObject should be created", caseExecutioner.getDataManager().getDataObjects().size(), 1);
+		DataObject dataObject = caseExecutioner.getDataManager().getDataObjects().get(0);
+		DataAttributeInstance attributeInstance = dataObject.getDataAttributeInstances().get(0);
+		assertEquals("DataObject was not properly written", attributeInstance.getValue(), "2");
 	}
 }
