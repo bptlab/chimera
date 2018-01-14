@@ -1,10 +1,10 @@
 package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
-import de.hpi.bpt.chimera.execution.DataAttributeInstance;
-import de.hpi.bpt.chimera.execution.DataManager;
-import de.hpi.bpt.chimera.execution.DataObject;
-import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.data.DataManager;
+import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;

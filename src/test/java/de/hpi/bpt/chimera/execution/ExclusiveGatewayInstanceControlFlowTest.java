@@ -15,8 +15,10 @@ import org.junit.Test;
 
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
-import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.execution.activity.HumanTaskInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.State;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.HumanTaskInstance;
+import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;

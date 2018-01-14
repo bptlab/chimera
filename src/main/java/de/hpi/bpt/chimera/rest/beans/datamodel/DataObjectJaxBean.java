@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.rest.beans.datamodel;
 
-import de.hpi.bpt.chimera.execution.DataAttributeInstance;
-import de.hpi.bpt.chimera.execution.DataObject;
+import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.data.DataObject;
 
 import java.util.ArrayList;
 import java.util.List;

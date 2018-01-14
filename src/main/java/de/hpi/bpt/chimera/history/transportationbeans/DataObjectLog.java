@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.execution.DataObject;
+import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 @XmlRootElement(name = "entry")

@@ -1,6 +1,6 @@
 package de.hpi.bpt.chimera.execution.exception;
 
-import de.hpi.bpt.chimera.execution.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 
 @SuppressWarnings("serial")
 public class IllegalControlNodeInstanceTypeException extends IllegalArgumentException {

@@ -1,5 +1,8 @@
 package de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior;
 
+import javax.persistence.Entity;
+
+@Entity
 public class MessageReceiveDefinition extends SpecialEventDefinition {
 	private String eventQuerry;
 

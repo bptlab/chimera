@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
-import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 
 public class CaseExecutionerTestHelper {
 	/**

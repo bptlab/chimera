@@ -62,7 +62,7 @@ public class EventParser {
 			event.setSpecialEventDefinition(timerDefiniton);
 		} else if (xmlEvent.hasMessageDefiniton()) {
 			if (event instanceof EndEvent || event instanceof IntermediateThrowEvent) {
-				event.setSpecialBehavior(SpecialBehavior.MESSAGE_SENT);
+				event.setSpecialBehavior(SpecialBehavior.MESSAGE_SEND);
 			} else if (event instanceof StartEvent || event instanceof IntermediateCatchEvent || event instanceof BoundaryEvent) {
 				event.setSpecialBehavior(SpecialBehavior.MESSAGE_RECEIVE);
 				MessageReceiveDefinition receiveDefinition = new MessageReceiveDefinition();

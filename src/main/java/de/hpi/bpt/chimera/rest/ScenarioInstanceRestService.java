@@ -1,8 +1,8 @@
 package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
-import de.hpi.bpt.chimera.execution.DataManager;
 import de.hpi.bpt.chimera.execution.ExecutionService;
+import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
 

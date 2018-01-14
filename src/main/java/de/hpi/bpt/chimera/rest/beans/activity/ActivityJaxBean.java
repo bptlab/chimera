@@ -2,7 +2,7 @@ package de.hpi.bpt.chimera.rest.beans.activity;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 
 /**
  *

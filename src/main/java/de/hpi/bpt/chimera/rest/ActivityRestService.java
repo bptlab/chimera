@@ -1,11 +1,11 @@
 package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
-import de.hpi.bpt.chimera.execution.DataAttributeInstance;
-import de.hpi.bpt.chimera.execution.DataManager;
-import de.hpi.bpt.chimera.execution.DataObject;
-import de.hpi.bpt.chimera.execution.State;
-import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.State;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.data.DataManager;
+import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.rest.beans.activity.ActivityJaxBean;

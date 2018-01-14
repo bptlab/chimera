@@ -11,11 +11,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
-import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.model.fragment.Fragment;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
 
 public class CaseModelTestHelper {
@@ -97,5 +99,25 @@ public class CaseModelTestHelper {
 	public static ObjectLifecycleState getObjectLifecycleStateByName(DataClass dataclass, String objectLifeycleStateName) {
 		Map<String, ObjectLifecycleState> nameToObjectLifecycle = dataclass.getNameToObjectLifecycleState();
 		return nameToObjectLifecycle.get(objectLifeycleStateName);
+	}
+
+	/**
+	 * Get an Event of a specific Fragment by its name.
+	 * 
+	 * @param fragment
+	 * @param name
+	 * @return
+	 */
+	public static AbstractEvent getEventByName(Fragment fragment, String name) {
+		AbstractEvent searchedEvent = null;
+		for (AbstractEvent event : fragment.getBpmnFragment().getEvents()) {
+			if (event.getName().equals(name)) {
+				if (searchedEvent != null) {
+					throw new IllegalArgumentException(String.format("more than event exists with this name: %s", name));
+				}
+				searchedEvent = event;
+			}
+		}
+		return searchedEvent;
 	}
 }

@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
@@ -162,5 +163,19 @@ public class BpmnFragment {
 
 	public void setBoundaryEvents(List<BoundaryEvent> boundaryEvents) {
 		this.boundaryEvents = boundaryEvents;
+	}
+
+	public List<AbstractEvent> getEvents() {
+		List<AbstractEvent> allEvents = new ArrayList<>();
+		if (startEvent != null) {
+			allEvents.add(startEvent);
+		}
+		if (endEvent != null) {
+			allEvents.add(endEvent);
+		}
+		allEvents.addAll(intermediateCatchEvents);
+		allEvents.addAll(intermediateThrowEvents);
+		allEvents.addAll(boundaryEvents);
+		return allEvents;
 	}
 }

@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.execution.exception;
 
-import de.hpi.bpt.chimera.execution.State;
-import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.State;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 
 @SuppressWarnings("serial")
 public class IllegalActivityInstanceStateException extends IllegalArgumentException {

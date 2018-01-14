@@ -8,10 +8,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
-import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.execution.event.StartEventInstance;
-import de.hpi.bpt.chimera.execution.gateway.AbstractGatewayInstance;
-import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstanceFactory;
+import de.hpi.bpt.chimera.execution.controlnodes.State;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.event.StartEventInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.gateway.AbstractGatewayInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.gateway.ExclusiveGatewayInstance;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;

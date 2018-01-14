@@ -2,7 +2,7 @@ package de.hpi.bpt.chimera.rest.beans.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.execution.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
 /**

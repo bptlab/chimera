@@ -1,6 +1,6 @@
 package de.hpi.bpt.chimera.execution.exception;
 
-import de.hpi.bpt.chimera.execution.DataObject;
+import de.hpi.bpt.chimera.execution.data.DataObject;
 
 @SuppressWarnings("serial")
 public class IllegalDataObjectUnlockException extends IllegalArgumentException {
