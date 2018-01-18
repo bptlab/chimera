@@ -50,31 +50,44 @@ public class WebServiceTaskOutgoingBehavior extends TaskOutgoingBehavior {
 
   /**
    * Stores the result of the webservice call into a data object.
-   * FIXME: Assumption that WSTask has no input DO
    */
   private void writeDataObjects() {
-    // get output set
-    List<Integer> outputSetIds = new DbDataFlow().getOutputSetsForControlNode(wsTask.getControlNodeId());
+    // get output and input set
+    DbDataFlow dbDataFlow = new DbDataFlow();
+	List<Integer> outputSetIds = dbDataFlow.getOutputSetsForControlNode(wsTask.getControlNodeId());
+	List<Integer> inputSetIds = dbDataFlow.getInputSetsForControlNode(wsTask.getControlNodeId());
     // check that output set is unique
     if (outputSetIds.size() > 1) {
       log.error("Service tasks require an unique output set, received data can not be stored.");
     } else if (outputSetIds.isEmpty()) {
-      log.info("Web service task has no output set, received data can not be stored.");
+      log.error("Web service task has no output set, received data can not be stored.");
     } else {
-      // create data objects if necessary
-      List<DataObject> createdDataObjects = new ArrayList<>();
-      Map<Integer, Integer> dataClassIdToStateIdMap = new DbDataNode().getDataSetClassToStateMap(outputSetIds.get(0));
-      DataManager dataManager = wsTask.getScenarioInstance().getDataManager();
-      for (Integer dataClassId : dataClassIdToStateIdMap.keySet()) {
-        DataObject dataObject = dataManager.initializeDataObject(dataClassId, dataClassIdToStateIdMap.get(dataClassId));
-        createdDataObjects.add(dataObject);
+    	// find data objects for input set
+    	DbDataNode dbDataNode = new DbDataNode();
+    	Map<Integer, Integer> inputSet = dbDataNode.getDataSetClassToStateMap(inputSetIds.get(0));
+    	DataManager dataManager = wsTask.getScenarioInstance().getDataManager();
+    	List<DataObject> createdOrFoundDataObjects = new ArrayList<>();
+      Map<Integer, Integer> outputSet = dbDataNode.getDataSetClassToStateMap(outputSetIds.get(0));
+      for (Integer dataClassId : outputSet.keySet()) {
+    	  if (inputSet.keySet().contains(dataClassId)) { // DO in input set, no need to create DO
+    		  DataObject foundDataObject = dataManager.getDataObjects().stream()
+    				  .filter(d -> dataClassId.equals(d.getDataClassId()))
+    				  .findFirst().orElse(null);
+    		  // this should always find a DO, because otherwise the WSTask would not have been enabled
+    		  assert foundDataObject != null : "Input data object null although activity is running.";
+    		  createdOrFoundDataObjects.add(foundDataObject);
+    		  foundDataObject.setState(outputSet.get(dataClassId));
+    	  } else {
+    		  DataObject dataObject = dataManager.initializeDataObject(dataClassId, outputSet.get(dataClassId));
+    		  createdOrFoundDataObjects.add(dataObject);
+    	  }
       }
-      if (responseInJson == null) { // we have a response
-        log.info("No response found, received data can not be stored.");
+      if (responseInJson == null) { // we have no response
+        log.error("No response found, received data can not be stored.");
       } else {
         // get jsonpath expressions for attributes
         List<DataAttributeInstance> attributesToCheck = new ArrayList<>();
-        for (DataObject dataObject : createdDataObjects) {
+        for (DataObject dataObject : createdOrFoundDataObjects) {
           attributesToCheck.addAll(dataObject.getDataAttributeInstances());
         }
         DataAttributeWriter dataAttributeWriter = new DataAttributeWriter(wsTask.getControlNodeId(),

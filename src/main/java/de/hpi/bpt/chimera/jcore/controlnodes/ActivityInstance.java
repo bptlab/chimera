@@ -220,7 +220,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		DbDataFlow dbDataFlow = new DbDataFlow();
 		List<Integer> input = dbDataFlow.getInputSetsForControlNode(getControlNodeId());
 		List<Integer> output = dbDataFlow.getOutputSetsForControlNode(getControlNodeId());
-		if (input.size() > 1 && output.size() > 1) {
+		if (input.size() > 1 || output.size() > 1) {
 			log.warn("Tasks with more than one input or output set cannot be executed automatically.");
 			isAutomaticTask = false;
 			dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), false);

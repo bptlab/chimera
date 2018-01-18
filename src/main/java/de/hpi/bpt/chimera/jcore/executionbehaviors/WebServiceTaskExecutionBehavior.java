@@ -43,8 +43,10 @@ public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
       // TODO: Find a better way to achieve this
       ((WebServiceTaskOutgoingBehavior) activityInstance.getOutgoingBehavior()).setResponse(response.readEntity(String.class));
     } else {
-      log.warn("Web service task did not begin properly");
+      log.error("Web service task did not execute properly, status code: " + response.getStatusInfo().getStatusCode());
     }
+    // terminate
+//    activityInstance.getOutgoingBehavior().terminate();
   }
 
   /**
