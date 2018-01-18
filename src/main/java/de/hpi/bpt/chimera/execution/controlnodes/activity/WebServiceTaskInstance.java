@@ -50,9 +50,11 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		log.info("Target for web service call constructed: " + target.toString());
 		Response response = executeWebserviceRequest(target);
 		if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
+			// store the response in the outgoing behavior
+			// TODO: Find a better way to achieve this
 			setWebServiceResponse(response);
 		} else {
-			log.warn("Web service task did not executed properly");
+			log.error("Web service task did not execute properly, status code: " + response.getStatusInfo().getStatusCode());
 		}
 	}
 

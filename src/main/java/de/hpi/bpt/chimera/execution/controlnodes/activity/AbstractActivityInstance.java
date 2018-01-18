@@ -212,10 +212,10 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	public void allowAutomaticExecution() {
 		if (getControlNode().hasUniquePostCondition() &&
 				getControlNode().hasUniquePreCondition()) {
+			isAutomaticTask = true;
+		} else {
 			log.warn("Tasks with more than one input or output set cannot be executed automatically.");
 			isAutomaticTask = false;
-		} else {
-			isAutomaticTask = true;
 		}
 	}
 
