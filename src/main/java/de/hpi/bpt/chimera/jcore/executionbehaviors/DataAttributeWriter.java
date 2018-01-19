@@ -4,6 +4,8 @@ import com.jayway.jsonpath.JsonPath;
 import de.hpi.bpt.chimera.database.DbPathMapping;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.jcore.data.DataManager;
+
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -22,8 +24,6 @@ public class DataAttributeWriter {
 	Map<Integer, String> attributeIdToJsonPath;
 
 	/**
-	 * Creates
-	 *
 	 * @param controlNodeId    The id of the webservice task or event, writes the data attributes.
 	 * @param scenarioInstance
 	 */
@@ -34,18 +34,22 @@ public class DataAttributeWriter {
 		this.scenarioInstance = scenarioInstance;
 	}
 
+	/**
+	 * Writes data from the webservice response (in JSON) to the attributes of output data objects
+	 * according to the JsonPath expressions of the attributes.
+	 * @param json
+	 * @param dataAttributeInstances
+	 */
 	public void writeDataAttributesFromJson(String json, List<DataAttributeInstance> dataAttributeInstances) {
-		Map<Integer, String> idToValue = new HashMap<>();
-		for (Map.Entry<Integer, String> idToPathEntry : attributeIdToJsonPath.entrySet()) {
-			int dataAttributeId = idToPathEntry.getKey();
-			// TODO safety check
-			int dataAttributeInstanceId = dataAttributeInstances.stream().filter(x -> x.getDataAttributeId() == dataAttributeId).map(x -> x.getId()).findFirst().get();
-			String jsonPath = idToPathEntry.getValue();
-			String value = JsonPath.read(json, jsonPath).toString();
-			idToValue.put(dataAttributeInstanceId, value);
+		DataManager dataManager = scenarioInstance.getDataManager();
+		for (DataAttributeInstance dai : dataAttributeInstances) {
+			int attributeId = dai.getDataAttributeId();
+			String jsonPath = attributeIdToJsonPath.get(attributeId);
+			if (jsonPath != null && !jsonPath.isEmpty()) {
+				String value = JsonPath.read(json, jsonPath).toString();
+				dataManager.setAttributeValue(dai, value, controlNodeInstanceId);
+			}
 		}
-
-		scenarioInstance.getDataManager().setAttributeValues(this.controlNodeInstanceId, idToValue);
 	}
 
 	public void setAttributeIdToJsonPath(Map<Integer, String> attributeIdToJsonPath) {

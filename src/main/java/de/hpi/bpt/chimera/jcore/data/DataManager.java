@@ -151,7 +151,10 @@ public class DataManager {
 	/**
 	 * Sets the values of data attributes and logs the attribute change.
 	 * Checks whether the values are of valid type for the attribute.
-	 *
+	 * 
+	 * Creates new DAI without reference to the DO, which causes errors when trying to get the JsonPath
+	 * for these DAIs. Hence it is deprecated, instead use {@code setAttributeValue()}.
+	 * @deprecated
 	 * @param activityInstanceId needed for the log entry
 	 * @param idToValue          map of attribute instance id to new value
 	 * @return true if all attributes could be set correctly, false if
@@ -162,6 +165,7 @@ public class DataManager {
 		for (Map.Entry<Integer, String> attributeInstanceIdToValue : idToValue.entrySet()) {
 			Integer dataAttributeInstanceId = attributeInstanceIdToValue.getKey();
 			String value = attributeInstanceIdToValue.getValue();
+			// do not create a new DAI
 			DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(dataAttributeInstanceId);
 			if (dataAttributeInstance.isValueAllowed(value)) {
 				new DbLogEntry().logDataAttributeTransition(dataAttributeInstanceId, value, activityInstanceId, scenarioInstance.getId());
@@ -175,7 +179,12 @@ public class DataManager {
 		}
 		return allValuesValid;
 	}
-
+	
+	/**
+	 * Replaces the DAI a DO has with a new DAI.
+	 * @deprecated, instead change the DAI directly
+	 * @param attributeInstance
+	 */
 	private void updateDataObjectAttribute(DataAttributeInstance attributeInstance) {
 		DbDataAttributeInstance db = new DbDataAttributeInstance();
 		int attributeInstanceId = attributeInstance.getId();
@@ -183,5 +192,18 @@ public class DataManager {
 		if (object.isPresent()) {
 			object.get().getDataAttributeInstanceMap().put(attributeInstanceId, attributeInstance);
 		}
+	}
+
+	/**
+	 * Sets the value of a data attribute instance, if the value is of the correct type.
+	 * 
+	 * @param dai
+	 * @param value
+	 * @return true, if the value could be set
+	 */
+	public void setAttributeValue(DataAttributeInstance dai, String value, Integer activityInstanceId) {
+		new DbLogEntry().logDataAttributeTransition(dai.getId(), value, activityInstanceId, scenarioInstance.getId());
+		dai.setValue(value);
+//		updateDataObjectAttribute(dataAttributeInstance);
 	}
 }

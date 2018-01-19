@@ -7,6 +7,8 @@ import de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  */
@@ -19,6 +21,7 @@ public class DataAttributeInstance {
 	private final String name;
 	private Object value;
 	private DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
+	private Logger log = Logger.getLogger(DataAttributeInstance.class);
 
 	/**
 	 * @param dataAttributeId The ID of the Data Attribute belonging to this
@@ -97,15 +100,21 @@ public class DataAttributeInstance {
 	}
 
 	/**
-	 * Checks if the value has the correct type.
-	 * If so, sets the value of the data attribute instance. It get also written in the database.
+	 * Tries to set this DataAttributeInstance to the provided value and update the database.
+	 * This can fail, if the value has not the correct data type, in which case the frontend is notified.
 	 *
 	 * @param value to set.
 	 */
 	public void setValue(String value) {
-		validateValueType(value);
-		this.value = value;
-		dbDataAttributeInstance.setValue(id, value);
+		if (isValueAllowed(value)) {
+			this.value = value;
+			dbDataAttributeInstance.setValue(id, value);
+		} else {
+			String errorMessage = String.format("Data attribute %s of data type %s could not be set to %s" + 
+					" because value has wrong data type.", getName(), getType(), value);
+			SseNotifier.notifyWarning(errorMessage);
+			log.error(errorMessage);
+		}
 	}
 
 	/**
@@ -124,35 +133,32 @@ public class DataAttributeInstance {
 	}
 
 	private void validateValueType(String value) {
-		// TODO notify frontend when value is wrong
-		String excp = "Could not set data attribute value " + "because it did not have the correct data type.";
-		try {
-			switch (this.getType()) {
-				case "Integer":
-					Integer.valueOf(value);
-					break;
-				case "Double":
-					Double.valueOf(value);
-					break;
-				case "Boolean":
-					if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
-						throw new IllegalArgumentException(excp);
-					}
-					break;
-				case "Date":
-					new SimpleDateFormat("dd.MM.yyyy").parse(value);
-					break;
-				case "String":
-				case "Enum":
-				case "Class":
-					break;
-				default:
-					throw new IllegalArgumentException("Attribute data type is not supported.");
+		switch (this.getType()) {
+		case "Integer":
+			Integer.valueOf(value);
+			break;
+		case "Double":
+			Double.valueOf(value);
+			break;
+		case "Boolean":
+			if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
+				throw new IllegalArgumentException();
 			}
-		} catch (IllegalArgumentException | ParseException e) {
-			SseNotifier.notifyWarning("Data attribute " + this.getName() + " could not be set " + "because the entered value did not match its data type.");
-			throw new IllegalArgumentException(excp);
-		}
+			break;
+		case "Date":
+			try {
+				new SimpleDateFormat("dd.MM.yyyy").parse(value);
+			} catch (ParseException e) {
+				throw new IllegalArgumentException();
+			}
+			break;
+		case "String":
+		case "Enum":
+		case "Class":
+			break;
+		default:
+			throw new IllegalArgumentException();
+		} 
 	}
 
 	/**
