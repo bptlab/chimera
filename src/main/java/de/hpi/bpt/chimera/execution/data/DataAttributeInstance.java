@@ -75,24 +75,32 @@ public class DataAttributeInstance {
 	 * @param value
 	 */
 	public void setValue(Object value) {
-		log.info("DataObject: Attribute value set.");
-		getCaseExecutioner().logDataAttributeTransition(this, value);
-		this.value = value.toString();
+		if (isValueAllowed(value.toString())) {
+			log.info("DataObject: Attribute value set.");
+			getCaseExecutioner().logDataAttributeTransition(this, value);
+			this.value = value.toString();
+		} else {
+			String errorMessage = String.format("Data attribute %s of data type %s could not be set to %s" + 
+					" because value has wrong data type.", getDataAttribute().getName(), 
+					getDataAttribute().getType(), value);
+//			SseNotifier.notifyWarning(errorMessage);
+			log.error(errorMessage);
+		}
+	}
 
-		// TODO: implement an independent version for the type of an value of an
-		// data attribute
-		// Class<? extends Object> clazz = dataAttribute.getType().getClass();
-		// if (clazz.isInstance(value)) {
-		// getCaseExecutioner().logDataAttributeTransition(this, value);
-		// this.value = value;
-		// } else {
-		// String errorMsg = String.format("Could not set value of DataAttribute
-		// %s. Expected: %s, Received: %s", dataAttribute.getName(),
-		// dataAttribute.getType().getClass().getName(),
-		// value.getClass().getName());
-		// throw new IllegalArgumentException(errorMsg);
-		// }
-
+	/**
+	 * Checks if a given value is allowed for this attribute instance,
+	 * e.g. if it fits to the data type.
+	 *
+	 * @param value
+	 */
+	public boolean isValueAllowed(String value) {
+		try {
+			validateValueType(value);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
 	}
 
 	// Copied from old version
@@ -125,7 +133,6 @@ public class DataAttributeInstance {
 				throw new IllegalArgumentException("Attribute data type is not supported.");
 			}
 		} catch (IllegalArgumentException | ParseException e) {
-			// SseNotifier.notifyWarning("Data attribute " + dataAttribute.getName() + " could not be set " + "because the entered value did not match its data type.");
 			throw new IllegalArgumentException(excp);
 		}
 	}

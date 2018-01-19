@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.jayway.jsonpath.JsonPath;
+
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
@@ -21,8 +23,10 @@ public class DataAttributeInstanceWriter {
 			}
 			String jsonPath = dataAttributeToJsonPath.get(dataAttributeInstance.getDataAttribute());
 			try {
-				Object value = com.jayway.jsonpath.JsonPath.read(json, jsonPath);
-				dataAttributeInstance.setValue(value);
+				if (jsonPath != null && !jsonPath.isEmpty()) {
+					String value = JsonPath.read(json, jsonPath).toString();
+					dataAttributeInstance.setValue(value);
+				}
 			} catch (Exception e) {
 				log.error("An Exception occured while parsing the given JSON according to the given JSON-Path. Maybe there is a mistake in the JSON-Path. " + e.getMessage());
 				dataAttributeInstance.setValue("ERROR");
