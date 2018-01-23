@@ -5,6 +5,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.*;
 import java.util.Date;
 
@@ -13,8 +17,12 @@ import java.util.Date;
  */
 @XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.NONE)
+@Entity
 public class LogEntry {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	int dbId;
 
 	private int id;
 	private Date timeStamp;
@@ -38,6 +46,14 @@ public class LogEntry {
 	 */
 	private int cause;
 
+	/**
+	 * for JPA only
+	 */
+	public LogEntry() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 	public LogEntry(int id, Date timeStamp, LogType type, String newValue, String label, int scenarioInstanceId, int loggedId, int cause) {
 		this.id = id;
 		this.timeStamp = timeStamp;
@@ -47,10 +63,6 @@ public class LogEntry {
 		this.scenarioInstanceId = scenarioInstanceId;
 		this.loggedId = loggedId;
 		this.cause = cause;
-	}
-
-	// Allow public default constructor to create more easily from database
-	public LogEntry() {
 	}
 
 	public void appendToTrace(Node traceElement) {

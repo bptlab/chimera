@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.history.transportationbeans;
 
+import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,7 +9,16 @@ import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 
 @XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.NONE)
+@Entity
 public class DataAttributeLog extends LogEntry {
+
+	/**
+	 * for JPA only
+	 */
+	public DataAttributeLog() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
 
 	public DataAttributeLog(DataAttributeInstance instance, Object oldValue, Object newValue) {
 		super();

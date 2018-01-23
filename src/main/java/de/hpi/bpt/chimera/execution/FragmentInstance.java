@@ -6,6 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
@@ -19,16 +28,34 @@ import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 
+@Entity
 public class FragmentInstance {
 	private static final Logger log = Logger.getLogger(FragmentInstance.class);
 
+	@Id
 	private String id;
+	@OneToOne
 	private Fragment fragment;
+	@OneToOne(cascade = CascadeType.ALL)
 	private Case caze;
 	// TODO: think about whether it is needed to store terminated events, etc.
 	// Activities should be recorded for the history.
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "MapControlNodeInstanceIdToInstanceVM")
 	private Map<String, ControlNodeInstance> controlNodeInstanceIdToInstance;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "MapControlNodeIdToInstanceVM")
 	private Map<String, ControlNodeInstance> controlNodeIdToInstance;
+
+
+	/**
+	 * for JPA only
+	 */
+	public FragmentInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	public FragmentInstance(Fragment fragment, Case caze) {
 		this.id = UUID.randomUUID().toString().replace("-", "");

@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.exception.IllegalObjectLifecycleStateSuccessorException;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
@@ -14,15 +19,29 @@ import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
+@Entity
 public class DataObject {
+	@Id
 	private String id;
+	@OneToOne(cascade = CascadeType.ALL)
 	private AtomicDataStateCondition condition;
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataManager dataManager;
 	private boolean locked;
 	/**
 	 * Map of id of DataAttributeInstance to DataAttributeInstance.
 	 */
 	private Map<String, DataAttributeInstance> dataAttributeInstanceIdToInstance;
+
+
+	/**
+	 * for JPA only
+	 */
+	public DataObject() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	/**
 	 * 

@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
+import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.ConditionsJaxBean;
@@ -45,6 +46,10 @@ public class ScenarioRestService extends AbstractRestService {
 	@Path("scenario")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenarios(@Context UriInfo uriInfo, @DefaultValue("") @QueryParam("filter") String filterString) {
+
+		// TODO move start of casePersistence
+		DomainModelPersistenceManager.startPermanentCasePersistence();
+
 		List<CaseModel> caseModels = CaseModelManager.getCaseModels();
 
 		if (!filterString.isEmpty()) {

@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -18,13 +22,25 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 
+@Entity
 public abstract class AbstractActivityInstance extends AbstractDataControlNodeInstance {
 	private static final Logger log = Logger.getLogger(AbstractActivityInstance.class);
 
 	private boolean isAutomaticTask;
 	// TODO: find out what canTerminate is exactly needed for
 	// private boolean canTerminate;
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<BoundaryEventInstance> attachedBoundaryEventInstances;
+
+
+	/**
+	 * for JPA only
+	 */
+	public AbstractActivityInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	/**
 	 * Create a new AbstractActivityInstance.

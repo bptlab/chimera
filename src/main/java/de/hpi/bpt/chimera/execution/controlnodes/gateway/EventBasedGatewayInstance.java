@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -14,11 +18,23 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispat
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.EventBasedGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.AbstractGateway;
 
+@Entity
 public class EventBasedGatewayInstance extends AbstractGatewayInstance {
 
 	private static final Logger logger = Logger.getLogger(EventBasedGatewayInstance.class);
 
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<AbstractEventInstance> eventsToSkip = new ArrayList();
+
+
+	/**
+	 * for JPA only
+	 */
+	public EventBasedGatewayInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	public EventBasedGatewayInstance(EventBasedGateway gateway, FragmentInstance fragmentInstance) {
 		super(gateway, fragmentInstance);

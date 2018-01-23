@@ -3,6 +3,10 @@ package de.hpi.bpt.chimera.execution.controlnodes.gateway;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.ExecutionService;
@@ -12,10 +16,23 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 
+@Entity
 public class ParallelGatewayInstance extends AbstractGatewayInstance {
 	private static final Logger log = Logger.getLogger(ParallelGatewayInstance.class);
 
+	// ToDo unecessary, because of inherets Gateway AbstractGatewayInstance?
+	@OneToOne(cascade = CascadeType.ALL)
 	private ParallelGateway parallelGateway;
+
+
+	/**
+	 * for JPA only
+	 */
+	public ParallelGatewayInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	/**
 	 * Create a new ParallelGatewayInstance

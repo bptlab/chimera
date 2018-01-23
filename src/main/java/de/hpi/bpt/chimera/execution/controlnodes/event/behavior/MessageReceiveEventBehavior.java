@@ -3,6 +3,8 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.behavior;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.persistence.Entity;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.controlnodes.State;
@@ -14,6 +16,7 @@ import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
+@Entity
 public class MessageReceiveEventBehavior extends AbstractEventBehavior {
 
 	private static final Logger logger = Logger.getLogger(IntermediateCatchEventInstance.class);
@@ -22,6 +25,16 @@ public class MessageReceiveEventBehavior extends AbstractEventBehavior {
 	private String unicornKey; // important for Unicorn
 
 	private String eventJson = "";
+
+
+	/**
+	 * for JPA only
+	 */
+	public MessageReceiveEventBehavior() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	public MessageReceiveEventBehavior(AbstractEventInstance eventInstance) {
 		super(eventInstance);

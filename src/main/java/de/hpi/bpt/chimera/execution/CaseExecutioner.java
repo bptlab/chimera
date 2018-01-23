@@ -5,6 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
@@ -27,16 +36,38 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
+@Entity
 public class CaseExecutioner {
 	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int dbId;
+
+	@OneToOne(cascade = CascadeType.ALL)
 	private Case caze;
+	@OneToOne
 	private CaseModel caseModel;
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataManager dataManager;
+	@Column(name = "CaseExecutionerTerminated")
 	private boolean terminated;
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<ActivityLog> activityLogs;
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataObjectLog> dataObjectLogs;
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataAttributeLog> dataAttributeLogs;
+
+
+	/**
+	 * for JPA only
+	 */
+	public CaseExecutioner() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	public CaseExecutioner(CaseModel caseModel, String caseName) {
 		this.activityLogs = new ArrayList<>();

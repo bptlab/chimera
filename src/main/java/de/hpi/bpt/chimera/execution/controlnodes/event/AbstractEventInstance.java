@@ -2,6 +2,11 @@ package de.hpi.bpt.chimera.execution.controlnodes.event;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -17,12 +22,25 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 
+@Entity
 public abstract class AbstractEventInstance extends AbstractDataControlNodeInstance {
 
 	private static final Logger log = Logger.getLogger(ControlNodeInstance.class);
 
+	@OneToOne(cascade = CascadeType.ALL)
 	private AbstractEventBehavior behavior;
+	@OneToOne
 	private EventBasedGatewayInstance previousEventBasedGatewayInstance;
+
+
+	/**
+	 * for JPA only
+	 */
+	public AbstractEventInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	public AbstractEventInstance(AbstractEvent event, FragmentInstance fragmentInstance) {
 		super(event, fragmentInstance);

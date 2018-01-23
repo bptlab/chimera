@@ -1,5 +1,7 @@
 package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
+import javax.persistence.Entity;
+
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -12,6 +14,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
+@Entity
 public class EmailActivityInstance extends AbstractActivityInstance {
 	private static final Logger log = Logger.getLogger(EmailActivityInstance.class);
 
@@ -22,6 +25,15 @@ public class EmailActivityInstance extends AbstractActivityInstance {
 	private String password;
 	private String subject;
 	private String message;
+
+
+	/**
+	 * for JPA only
+	 */
+	public EmailActivityInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
 
 
 	public EmailActivityInstance(EmailActivity mailActivity, FragmentInstance fragmentInstance) {

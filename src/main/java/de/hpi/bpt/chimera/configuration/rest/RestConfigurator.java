@@ -1,8 +1,10 @@
 package de.hpi.bpt.chimera.configuration.rest;
 
 import de.hpi.bpt.chimera.configuration.rest.beans.EmailActivityJaxBean;
-
+import de.hpi.bpt.chimera.execution.Case;
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
+import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.configuration.EmailConfiguration;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
@@ -52,6 +54,7 @@ public class RestConfigurator {
 	@PUT
 	@Path("scenario/{caseModelID}/emailtask/{emailtaskID}/")
 	public Response updateEmailConfiguration(@PathParam("caseModelID") String caseModelId, @PathParam("emailtaskID") String emailTaskId, final String input) {
+		
 		if (!CaseModelManager.isExistingCaseModel(caseModelId)) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 		}
@@ -110,6 +113,23 @@ public class RestConfigurator {
 	@Path("scenario/{scenarioId}/emailtask")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllEmailActivities(@PathParam("scenarioId") String caseModelID) {
+		// ToDo DELETE, only for quick and dirty testing. Completely useless
+		Case caze;
+		String caseId = "";
+		log.info("getAllEmailActivities()");
+		try {
+			caseId = ExecutionService.saveFirstCaseInMap();
+			log.info("saved a Case???");
+		} catch (Exception e) {
+			log.error("Save Case failed.", e);
+		}
+		try {
+			caze = DomainModelPersistenceManager.loadCase(caseId);
+			log.info("loaded a Case???");
+		} catch (Exception e) {
+			log.error("Load Case failed.", e);
+		}
+
 		List<EmailActivity> emailActivities = getAllEmailActiviesFromCaseModel(CaseModelManager.getCaseModel(caseModelID));
 		JSONArray jsonArray = new JSONArray(emailActivities.stream().map(emailActivty -> new EmailActivityJaxBean(emailActivty)).collect(Collectors.toList()));
 		return Response.ok(jsonArray.toString(), MediaType.APPLICATION_JSON).build();

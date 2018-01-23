@@ -2,6 +2,9 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.behavior;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -13,9 +16,21 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.TimerDefinition;
 
+@Entity
 public class TimerEventBehavior extends AbstractEventBehavior {
 	private static final Logger logger = Logger.getLogger(AbstractEventInstance.class);
+	// TODO how to persist this?
 	private org.quartz.JobKey jobKey = null;
+
+
+	/**
+	 * for JPA only
+	 */
+	public TimerEventBehavior() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	public TimerEventBehavior(AbstractEventInstance eventInstance) {
 		super(eventInstance);

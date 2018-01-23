@@ -4,19 +4,42 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
+@Entity
 public class DataAttributeInstance {
 
 	private static final Logger log = Logger.getLogger(DataAttributeInstance.class);
 
+	@Id
 	private String id;
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataAttribute dataAttribute;
+	// ToDo find a Way to persist this Object, now it leads to Errors
+	@Transient
 	private Object value;
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataObject dataObject;
+
+
+	/**
+	 * for JPA only
+	 */
+	public DataAttributeInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	public DataAttributeInstance(DataAttribute attribute, DataObject dataObject) {
 		this.id = UUID.randomUUID().toString().replace("-", "");

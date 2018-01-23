@@ -2,9 +2,10 @@ package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
 import java.util.Map;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -21,10 +22,22 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
 
+@Entity
 public class WebServiceTaskInstance extends AbstractActivityInstance {
 	private static final Logger log = Logger.getLogger(WebServiceTaskInstance.class);
 
+	@Transient
 	private Response webServiceResponse;
+
+
+	/**
+	 * for JPA only
+	 */
+	public WebServiceTaskInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
+
 
 	public WebServiceTaskInstance(WebServiceTask webServiceTask, FragmentInstance fragmentInstance) {
 		super(webServiceTask, fragmentInstance);
@@ -114,7 +127,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		case "PUT":
 			String postBody = getControlNode().getWebServiceBody();
 			String replacedPostBody = this.insertDataObjectValues(postBody);
-			return invocationBuilder.post(Entity.json(replacedPostBody));
+			return invocationBuilder.post(javax.ws.rs.client.Entity.json(replacedPostBody));
 		default:
 			throw new IllegalArgumentException(webServiceMethod + " is not implemented yet");
 			// return invocationBuilder.method(webServiceMethod);

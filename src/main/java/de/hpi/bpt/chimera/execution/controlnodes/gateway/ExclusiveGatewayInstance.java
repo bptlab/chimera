@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.apache.commons.lang3.tuple.Pair;
@@ -33,10 +36,22 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
  * which makes branching possible.
  *
  */
+@Entity
 public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	private static Logger log = Logger.getLogger(ExclusiveGatewayInstance.class);
 
+	// ToDo isn't persisted and leads to errors. Probably we have to defined a
+	// type which stores the
+	// second List, because List<List<>> isn't possible
 	private List<List<String>> branches = new ArrayList<>();
+
+	/**
+	 * for JPA only
+	 */
+	public ExclusiveGatewayInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
 
 	public ExclusiveGatewayInstance(ExclusiveGateway gateway, FragmentInstance fragmentInstance) {
 		super(gateway, fragmentInstance);

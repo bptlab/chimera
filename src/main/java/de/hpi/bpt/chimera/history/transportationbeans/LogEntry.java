@@ -2,13 +2,27 @@ package de.hpi.bpt.chimera.history.transportationbeans;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlTransient
 @XmlAccessorType(XmlAccessType.NONE)
+@Entity(name = "LogEntryTransportationBean")
+@MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class LogEntry {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	int dbId;
 
 	// TODO: think about cause
 	private String label;

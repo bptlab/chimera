@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.persistencemanager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -9,6 +10,8 @@ import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.Case;
+import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 
 public class DomainModelPersistenceManager {
@@ -18,9 +21,13 @@ public class DomainModelPersistenceManager {
 	// Otherwise the dababase will be reset every time.
 	private static final Logger log = Logger.getLogger(DomainModelPersistenceManager.class);
 
+	private static final int PERSISTENCE_INTERVAL = 100000;
+
 	private static final String PERSISTENCE_UNIT_NAME = "CaseModel";
 	private static EntityManagerFactory entityManagerFactory;
 	private static boolean isEntityManagerFactoryInitialized = false;
+
+	private static Timer timer;
 
 	private DomainModelPersistenceManager() {
 	}
@@ -56,6 +63,47 @@ public class DomainModelPersistenceManager {
 		entityManager.getTransaction().begin();
 		entityManager.merge(caseModel);
 		entityManager.getTransaction().commit();
+	}
+
+	// ToDo make a sober implementation of saving cases. Maybe with an own class
+	// and PersistenceUnit
+	/**
+	 * 
+	 * Only for quick and dirty testing.
+	 */
+	@Deprecated
+	public static void saveCase(Case caze) {
+		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
+
+		entityManager.getTransaction().begin();
+		entityManager.merge(caze);
+		entityManager.getTransaction().commit();
+	}
+
+	public static Case loadCase(String caseId) {
+		EntityManager em = getEntityManagerFactory().createEntityManager();
+		return em.find(Case.class, caseId);
+	}
+
+
+	/**
+	 * Starts a Timer that every {@link PERSISTENCE_INTERVAL} seconds saves all
+	 * existing cases to DB.
+	 */
+	public static void startPermanentCasePersistence() {
+		if (timer == null) {
+			timer = new Timer();
+			timer.scheduleAtFixedRate(new CasePersistenceTask(), 0, PERSISTENCE_INTERVAL);
+		}
+	}
+
+	/**
+	 * Stops the permanent persisting of all cases.
+	 */
+	public static void stopPermanentCasePersistence() {
+		if (timer != null) {
+			timer.cancel();
+		}
 	}
 
 

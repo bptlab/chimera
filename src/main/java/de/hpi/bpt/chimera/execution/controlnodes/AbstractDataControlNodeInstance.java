@@ -3,14 +3,29 @@ package de.hpi.bpt.chimera.execution.controlnodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
+@Entity
 public abstract class AbstractDataControlNodeInstance extends ControlNodeInstance {
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataObject> selectedDataObjects;
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataObject> outputDataObjects;
+
+	/**
+	 * for JPA only
+	 */
+	public AbstractDataControlNodeInstance() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
 
 	public AbstractDataControlNodeInstance(AbstractControlNode controlNode, FragmentInstance fragmentInstance) {
 		super(controlNode, fragmentInstance);

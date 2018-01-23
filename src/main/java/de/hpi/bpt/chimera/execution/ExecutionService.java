@@ -11,6 +11,7 @@ import de.hpi.bpt.chimera.execution.exception.IllegalCaseIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
+import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 /**
  * A static class that holds every running CaseExecution.
@@ -26,7 +27,19 @@ public class ExecutionService {
 	 */
 	private static Map<String, CaseExecutioner> cases = new HashMap<>();
 
-	private ExecutionService() {
+	public ExecutionService() {
+	}
+
+
+	// ToDo DELETE
+	/**
+	 * TO DELETE. DO NOT USE. Only for quick and dirty testing.
+	 */
+	@Deprecated
+	public static String saveFirstCaseInMap() {
+		Case caze = cases.get(cases.keySet().toArray()[0]).getCase();
+		DomainModelPersistenceManager.saveCase(caze);
+		return caze.getId();
 	}
 
 	/**
@@ -134,5 +147,9 @@ public class ExecutionService {
 		} else {
 			log.info(String.format("CaseModel with id: %s is not assigned or hadn't any cases", cmId));
 		}
+	}
+
+	public static List<CaseExecutioner> getAllExecutingCaseExecutioner() {
+		return new ArrayList(cases.values());
 	}
 }

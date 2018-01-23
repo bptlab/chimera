@@ -8,6 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -28,12 +37,26 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 /**
  * I manage the data objects of a case.
  */
+@Entity
 public class DataManager {
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	int dbId;
 	private static final Logger log = Logger.getLogger(DataManager.class);
-
+	@OneToOne(cascade = CascadeType.ALL)
 	private CaseExecutioner caseExecutioner;
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataModel dataModel;
+	@OneToMany(cascade = CascadeType.ALL)
 	private Map<String, DataObject> dataObjectIdToDataObject;
+
+	/**
+	 * for JPA only
+	 */
+	public DataManager() {
+		// JPA needs an empty constructor to instantiate objects of this class
+		// at runtime.
+	}
 
 	public DataManager(DataModel dataModel, CaseExecutioner caseExecutioner) {
 		this.setDataModel(dataModel);
