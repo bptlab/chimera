@@ -129,7 +129,11 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		case "PUT":
 			String postBody = getControlNode().getWebServiceBody();
 			String replacedPostBody = this.insertDataObjectValues(postBody);
-			return invocationBuilder.post(javax.ws.rs.client.Entity.json(replacedPostBody));
+			if ("POST".equals(webServiceMethod)) {
+				return invocationBuilder.post(javax.ws.rs.client.Entity.json(replacedPostBody));
+			} else {
+				return invocationBuilder.put(javax.ws.rs.client.Entity.json(replacedPostBody));
+			}
 		default:
 			throw new IllegalArgumentException(webServiceMethod + " is not implemented yet");
 			// return invocationBuilder.method(webServiceMethod);
