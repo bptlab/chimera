@@ -81,7 +81,9 @@ public class StartQuery {
 				JSONObject attrMapping = attributeMappings.getJSONObject(i);
 				String attrName = attrMapping.getString("attr");
 				String jsonPath = attrMapping.getString("path");
-				attributeNameToJsonPath.put(attrName, jsonPath);
+				if (! attrName.isEmpty() && ! jsonPath.isEmpty()) { 
+					attributeNameToJsonPath.put(attrName, jsonPath);
+				} 
 			}
 		}
 
