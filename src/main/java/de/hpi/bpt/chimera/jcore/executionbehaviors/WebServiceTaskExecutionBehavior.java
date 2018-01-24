@@ -97,7 +97,11 @@ public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
 		if ("POST".equals(method) || "PUT".equals(method)) {
 			String post = dbWebServiceTask.getPOSTBody(activityInstance.getControlNodeId());
 			String bodyWithAttributeValues = insertDataObjectValues(post, dataAttributeInstances);
-			return invocationBuilder.post(Entity.json(bodyWithAttributeValues));
+			if ("POST".equals(method)) {
+				return invocationBuilder.post(Entity.json(bodyWithAttributeValues));
+			} else {
+				return invocationBuilder.put(Entity.json(bodyWithAttributeValues));
+			}
 		} else {
 			return invocationBuilder.get();
 		}
