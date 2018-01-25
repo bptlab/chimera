@@ -99,11 +99,9 @@ public class FragmentInstance {
 	}
 
 	/**
-	 * Creates new control node instances.
-	 * Write the new instances in the database
+	 * Creates an instance of the start event and enables its control flow.
 	 */
 	private void initializeNewNodeInstanceForFragment() {
-		//gets the Start Event and then the following Control Node to initialize it
 		int startEventDatabaseId = dbControlNode.getStartEventID(fragmentId);
 		StartEvent startEvent = new StartEvent(startEventDatabaseId, this.id, this.scenarioInstance);
 		startEvent.enableControlFlow();

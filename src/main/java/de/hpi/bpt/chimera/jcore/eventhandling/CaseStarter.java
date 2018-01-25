@@ -26,7 +26,14 @@ public class CaseStarter {
 		this.startQueryParts = dbStartQuery.loadStartQueryParts(queryId, scenarioId);
 	}
 
-	public void startInstance(String json, ScenarioInstance scenarioInstance) {
+	/** 
+	 * Creates the data objects that are part of the start trigger and fills their attributes
+	 * according to the JsonPath expressions defined in the start trigger.
+	 *  
+	 * @param json - The triggering event sent by Unicorn 
+	 * @param scenarioInstance - The triggered instance
+	 */
+	public void createDOsFromEvent(String json, ScenarioInstance scenarioInstance) {
 		initializeDataObjects(scenarioInstance);
 		List<DataAttributeInstance> dataAttributes = new ArrayList<>(scenarioInstance.getDataManager().getDataAttributeInstances());
 		writeDataAttributes(dataAttributes, json, scenarioInstance.getId());
