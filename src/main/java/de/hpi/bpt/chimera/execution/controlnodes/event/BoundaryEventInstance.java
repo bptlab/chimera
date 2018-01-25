@@ -1,6 +1,8 @@
 package de.hpi.bpt.chimera.execution.controlnodes.event;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -10,7 +12,8 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 
 @Entity
 public class BoundaryEventInstance extends AbstractEventInstance {
-	@OneToOne
+	@ManyToOne
+	@JoinColumn(name = "BoundaryEventInstance_ID")
 	private AbstractActivityInstance attachedToActivity;
 
 	/**

@@ -113,23 +113,6 @@ public class RestConfigurator {
 	@Path("scenario/{scenarioId}/emailtask")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllEmailActivities(@PathParam("scenarioId") String caseModelID) {
-		// ToDo DELETE, only for quick and dirty testing. Completely useless
-		Case caze;
-		String caseId = "";
-		log.info("getAllEmailActivities()");
-		try {
-			caseId = ExecutionService.saveFirstCaseInMap();
-			log.info("saved a Case???");
-		} catch (Exception e) {
-			log.error("Save Case failed.", e);
-		}
-		try {
-			caze = DomainModelPersistenceManager.loadCase(caseId);
-			log.info("loaded a Case???");
-		} catch (Exception e) {
-			log.error("Load Case failed.", e);
-		}
-
 		List<EmailActivity> emailActivities = getAllEmailActiviesFromCaseModel(CaseModelManager.getCaseModel(caseModelID));
 		JSONArray jsonArray = new JSONArray(emailActivities.stream().map(emailActivty -> new EmailActivityJaxBean(emailActivty)).collect(Collectors.toList()));
 		return Response.ok(jsonArray.toString(), MediaType.APPLICATION_JSON).build();

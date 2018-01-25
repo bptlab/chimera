@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -15,8 +17,10 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 @Entity
 public abstract class AbstractDataControlNodeInstance extends ControlNodeInstance {
 	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "JoinTableSelectedDataControlNode_DataObject", joinColumns = @JoinColumn(name = "ControlNodeInstance_Id"), inverseJoinColumns = @JoinColumn(name = "DataObject_Id"))
 	private List<DataObject> selectedDataObjects;
 	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "JoinTableOutputDataControlNode_DataObject", joinColumns = @JoinColumn(name = "ControlNodeInstance_Id"), inverseJoinColumns = @JoinColumn(name = "DataObject_Id"))
 	private List<DataObject> outputDataObjects;
 
 	/**

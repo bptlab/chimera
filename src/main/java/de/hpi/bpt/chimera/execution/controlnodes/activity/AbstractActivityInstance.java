@@ -29,7 +29,7 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	private boolean isAutomaticTask;
 	// TODO: find out what canTerminate is exactly needed for
 	// private boolean canTerminate;
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "attachedToActivity")
 	private List<BoundaryEventInstance> attachedBoundaryEventInstances;
 
 

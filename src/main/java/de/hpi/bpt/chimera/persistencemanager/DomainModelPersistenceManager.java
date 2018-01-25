@@ -75,14 +75,24 @@ public class DomainModelPersistenceManager {
 	public static void saveCase(Case caze) {
 		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
 
-		entityManager.getTransaction().begin();
-		entityManager.merge(caze);
-		entityManager.getTransaction().commit();
+		try {
+			entityManager.getTransaction().begin();
+			entityManager.merge(caze);
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			log.error("Case persistence Exception", e);
+		}
 	}
 
 	public static Case loadCase(String caseId) {
-		EntityManager em = getEntityManagerFactory().createEntityManager();
-		return em.find(Case.class, caseId);
+		try{
+			EntityManager em = getEntityManagerFactory().createEntityManager();
+			return em.find(Case.class, caseId);
+		}
+		catch(Exception e){
+			log.error("Case load Exception", e);
+		}
+		return null;
 	}
 
 

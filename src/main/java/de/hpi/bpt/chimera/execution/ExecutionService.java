@@ -30,18 +30,6 @@ public class ExecutionService {
 	public ExecutionService() {
 	}
 
-
-	// ToDo DELETE
-	/**
-	 * TO DELETE. DO NOT USE. Only for quick and dirty testing.
-	 */
-	@Deprecated
-	public static String saveFirstCaseInMap() {
-		Case caze = cases.get(cases.keySet().toArray()[0]).getCase();
-		DomainModelPersistenceManager.saveCase(caze);
-		return caze.getId();
-	}
-
 	/**
 	 * 
 	 * @param caseId
@@ -49,7 +37,15 @@ public class ExecutionService {
 	 *         otherwise.
 	 */
 	public static boolean isExistingCase(String caseId) {
-		return cases.containsKey(caseId);
+		if (cases.containsKey(caseId)) {
+			return true;
+		}
+		Case caze = DomainModelPersistenceManager.loadCase(caseId);
+		if (caze != null) {
+			addCase(caze.getCaseExecutioner());
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -65,9 +61,14 @@ public class ExecutionService {
 			throw e;
 		}
 		if (!cases.containsKey(caseId)) {
-			IllegalCaseIdException e = new IllegalCaseIdException(cmId);
-			log.error(e.getMessage());
-			throw e;
+			Case caze = DomainModelPersistenceManager.loadCase(caseId);
+			if (caze == null) {
+				IllegalCaseIdException e = new IllegalCaseIdException(cmId);
+				log.error(e.getMessage());
+				throw e;
+			} else {
+				addCase(caze.getCaseExecutioner());
+			}
 		}
 
 		return cases.get(caseId);
