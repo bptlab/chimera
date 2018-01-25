@@ -294,7 +294,14 @@ public class ScenarioInstance {
 	 * For example it starts the email tasks.
 	 */
 	@SuppressWarnings("unchecked")
-	public void startAutomaticControlNodes() {
+	public synchronized void startAutomaticControlNodes() {
+//		List<AbstractControlNodeInstance> enabledNodes = this.getEnabledControlNodeInstances();
+//		for (AbstractControlNodeInstance node : enabledNodes) {
+//			if (node.getClass() == ActivityInstance.class &&
+//					((ActivityInstance) node).isAutomaticTask()) {
+//				node.begin();
+//			}
+//		}
 		//		List<AbstractControlNodeInstance> instancesClone = new ArrayList<>(
 		//                this.getEnabledControlNodeInstances());
 		//        for (AbstractControlNodeInstance controlNodeInstance : instancesClone) {
@@ -417,5 +424,18 @@ public class ScenarioInstance {
 
 	public DataManager getDataManager() {
 		return dataManager;
+	}
+	
+	/**
+	 * Dirty Hack ;-)
+	 */
+	public void triggerAutomaticExecution() {
+		List<AbstractControlNodeInstance> enabledNodes = this.getEnabledControlNodeInstances();
+		for (AbstractControlNodeInstance node : enabledNodes) {
+			if (node.getClass() == ActivityInstance.class &&
+					((ActivityInstance) node).isAutomaticTask()) {
+				node.begin();
+			}
+		}		
 	}
 }

@@ -158,16 +158,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		}
 	}
 
-	/**
-	 * @deprecated This is only called by Tests! Use begin(List<Integer>) instead which
-	 * expects a list of selected data objects the activity should work on
-	 */
-	@Override
-	public void begin() {
-		super.begin();
-		this.setState(State.RUNNING);
-	}
-
 	public void terminate(Map<String, String> dataClassNameToStateName) {
 		this.getOutgoingBehavior().terminate(dataClassNameToStateName);
 	}

@@ -79,12 +79,16 @@ public class ActivityExecutionBehavior extends AbstractExecutionBehavior {
     registerAttachedEvents();
     // now execute it!
     execute();
+    if (activityInstance.getState() == State.RUNNING) {
+    	activityInstance.terminate();
+    }
  }
 
 	/**
 	 * This method defines the behavior of the activity.
 	 */
 	public void execute() {
+		activityInstance.setState(State.RUNNING);
 	  //do nothing for human tasks
 	}
 

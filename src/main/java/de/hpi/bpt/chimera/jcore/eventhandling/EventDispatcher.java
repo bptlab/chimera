@@ -67,17 +67,32 @@ public final class EventDispatcher {
 		return Response.accepted("Event received.").build();
 	}
 
+	/**
+	 * Starts a case when the start trigger occurs, i.e. Unicorn sends an event.
+	 * TODO: why does it start two ScenarioInstances???
+	 * 
+	 * @param requestKey
+	 * @param eventJson
+	 * @return
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("casestart/{requestKey}")
 	public static Response startCase(@PathParam("requestKey") String requestKey, String eventJson) {
 		int scenarioId = new DbCaseStart().getScenarioId(requestKey);
-		int scenarioInstanceId = ExecutionService.startNewScenarioInstanceStatic(scenarioId);
-		ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
+//		int scenarioInstanceId = ExecutionService.startNewScenarioInstanceStatic(scenarioId);
+//		ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
+		ExecutionService ex = ExecutionService.getInstance(scenarioId);
+		int scenarioInstanceId = ex.startNewScenarioInstance();
+		ScenarioInstance instance = ex.getScenarioInstance(scenarioInstanceId);
+		
 		String queryId = new DbCaseStart().getQueryId(requestKey);
 		CaseStarter caseStarter = new CaseStarter(scenarioId, queryId);
 		try {
-			caseStarter.startInstance(eventJson, instance);
+			caseStarter.createDOsFromEvent(eventJson, instance);
+			instance.updateDataFlow();
+//			instance.startAutomaticControlNodes();
+			instance.triggerAutomaticExecution();
 			SseNotifier.notifyRefresh();
 		} catch (IllegalStateException e) {
 			logger.error("Could not start case from query", e);

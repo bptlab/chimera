@@ -102,7 +102,7 @@ public abstract class AbstractControlNodeInstance {
 		return state;
 	}
 
-	public void setState(State state) {
+	public synchronized void setState(State state) {
 		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 		dbControlNodeInstance.setState(state, this.controlNodeInstanceId);
 		this.state = state;

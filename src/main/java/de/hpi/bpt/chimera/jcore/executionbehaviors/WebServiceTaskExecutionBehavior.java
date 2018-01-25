@@ -35,18 +35,17 @@ public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
    */
 	@Override
   public void execute() {
-    WebTarget target = buildTarget();
-    log.info("Target for web service call constructed: " + target.toString());
-    Response response = executeWebserviceRequest(target);
-    if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
-      // store the response in the outgoing behavior
-      // TODO: Find a better way to achieve this
-      ((WebServiceTaskOutgoingBehavior) activityInstance.getOutgoingBehavior()).setResponse(response.readEntity(String.class));
-    } else {
-      log.error("Web service task did not execute properly, status code: " + response.getStatusInfo().getStatusCode());
-    }
-    // terminate
-//    activityInstance.getOutgoingBehavior().terminate();
+		super.execute(); // sets the state to running
+		WebTarget target = buildTarget();
+		log.info("Target for web service call constructed: " + target.toString());
+		Response response = executeWebserviceRequest(target);
+		if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
+			// store the response in the outgoing behavior
+			// TODO: Find a better way to achieve this
+			((WebServiceTaskOutgoingBehavior) activityInstance.getOutgoingBehavior()).setResponse(response.readEntity(String.class));
+		} else {
+			log.error("Web service task did not execute properly, status code: " + response.getStatusInfo().getStatusCode());
+		}
   }
 
   /**

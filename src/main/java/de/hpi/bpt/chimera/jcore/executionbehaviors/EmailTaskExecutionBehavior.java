@@ -36,6 +36,7 @@ public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 
 	@Override
 	public void execute() {
+		super.execute(); // set state to running
 		this.setValues();
 		this.sendMail();
 	}
