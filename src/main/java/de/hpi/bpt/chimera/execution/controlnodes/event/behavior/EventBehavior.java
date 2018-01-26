@@ -11,7 +11,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.Behaving;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 
 @Entity
-public class AbstractEventBehavior implements Behaving {
+public class EventBehavior implements Behaving {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
@@ -24,13 +24,13 @@ public class AbstractEventBehavior implements Behaving {
 	/**
 	 * for JPA only
 	 */
-	public AbstractEventBehavior() {
+	public EventBehavior() {
 		// JPA needs an empty constructor to instantiate objects of this class
 		// at runtime.
 	}
 
 
-	public AbstractEventBehavior(AbstractEventInstance eventInstance) {
+	public EventBehavior(AbstractEventInstance eventInstance) {
 		setEventInstance(eventInstance);
 	}
 

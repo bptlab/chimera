@@ -17,7 +17,7 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
 @Entity
-public class MessageReceiveEventBehavior extends AbstractEventBehavior {
+public class MessageReceiveEventBehavior extends EventBehavior {
 
 	private static final Logger logger = Logger.getLogger(IntermediateCatchEventInstance.class);
 

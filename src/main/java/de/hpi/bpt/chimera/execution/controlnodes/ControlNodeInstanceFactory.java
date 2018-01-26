@@ -13,7 +13,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.EndEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateThrowEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.StartEventInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.AbstractEventBehavior;
+import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.EventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageSendEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.TimerEventBehavior;
@@ -122,7 +122,7 @@ public class ControlNodeInstanceFactory {
 			eventInstance.setBehavior(new TimerEventBehavior(eventInstance));
 			break;
 		case NONE:
-			eventInstance.setBehavior(new AbstractEventBehavior(eventInstance));
+			eventInstance.setBehavior(new EventBehavior(eventInstance));
 			break;
 		default:
 			throw new IllegalArgumentException(String.format("Unsupported type of SpecialEventBehavior: %s", eventInstance.getControlNode().getSpecialBehavior().toString()));

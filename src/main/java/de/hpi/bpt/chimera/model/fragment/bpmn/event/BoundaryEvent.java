@@ -7,7 +7,7 @@ import javax.persistence.OneToOne;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 
 @Entity
-public class BoundaryEvent extends IntermediateCatchEvent {
+public class BoundaryEvent extends AbstractEvent {
 	@OneToOne(cascade = CascadeType.ALL)
 	private AbstractActivity attachedtoActivity;
 

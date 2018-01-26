@@ -13,7 +13,7 @@ import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
-import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.AbstractEventBehavior;
+import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.EventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.EventBasedGatewayInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
@@ -28,7 +28,7 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	private static final Logger log = Logger.getLogger(ControlNodeInstance.class);
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private AbstractEventBehavior behavior;
+	private EventBehavior behavior;
 	@OneToOne
 	private EventBasedGatewayInstance previousEventBasedGatewayInstance;
 
@@ -107,11 +107,11 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 		this.previousEventBasedGatewayInstance = previousEventBasedGatewayInstance;
 	}
 
-	public void setBehavior(AbstractEventBehavior behavior) {
+	public void setBehavior(EventBehavior behavior) {
 		this.behavior = behavior;
 	}
 
-	public AbstractEventBehavior getBehavior() {
+	public EventBehavior getBehavior() {
 		return behavior;
 	}
 }

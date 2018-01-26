@@ -17,7 +17,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispat
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.TimerDefinition;
 
 @Entity
-public class TimerEventBehavior extends AbstractEventBehavior {
+public class TimerEventBehavior extends EventBehavior {
 	private static final Logger logger = Logger.getLogger(AbstractEventInstance.class);
 	// TODO how to persist this?
 	private org.quartz.JobKey jobKey = null;

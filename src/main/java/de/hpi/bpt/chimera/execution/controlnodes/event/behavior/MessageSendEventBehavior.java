@@ -7,7 +7,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventSpawner;
 
 @Entity
-public class MessageSendEventBehavior extends AbstractEventBehavior {
+public class MessageSendEventBehavior extends EventBehavior {
 
 
 	/**
