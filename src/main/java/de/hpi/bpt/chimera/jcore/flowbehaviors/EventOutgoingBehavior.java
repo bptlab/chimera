@@ -33,7 +33,7 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 		scenarioInstance.updateDataFlow();
 
 		this.enableFollowing();
-		this.runAutomaticTasks();
+		scenarioInstance.triggerAutomaticExecution();
 		SseNotifier.notifyRefresh();
 	}
 
@@ -44,11 +44,11 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
 	public void terminate(String json) {
 		DbDataFlow dataFlow = new DbDataFlow();
+		// TODO: input DOs cannot be modeled yet 
 		List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
 		List<Integer> outputClassIds = dataFlow.getFollowingDataClassIds(this.getControlNodeId());
 		Set<Integer> toCreate = new HashSet<>(outputClassIds);
 		toCreate.removeAll(inputClassIds);
-
 		Map<String, String> dataClassNameToStateName = loadOnlyOutputSet();
 		createDataObjects(toCreate, dataClassNameToStateName);
 
