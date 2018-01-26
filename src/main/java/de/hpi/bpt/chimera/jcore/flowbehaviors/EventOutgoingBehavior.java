@@ -5,11 +5,13 @@ import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
+import de.hpi.bpt.chimera.jcore.data.DataObject;
 import de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.DataAttributeWriter;
 import org.apache.log4j.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -44,12 +46,31 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
 	public void terminate(String json) {
 		DbDataFlow dataFlow = new DbDataFlow();
-		// TODO: input DOs cannot be modeled yet 
+		// input DOs cannot be modeled yet, inputClassIds should be empty
 		List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
 		List<Integer> outputClassIds = dataFlow.getFollowingDataClassIds(this.getControlNodeId());
 		Set<Integer> toCreate = new HashSet<>(outputClassIds);
 		toCreate.removeAll(inputClassIds);
 		Map<String, String> dataClassNameToStateName = loadOnlyOutputSet();
+		/* <dirtyHack>
+		 * temporary hack to work around restriction that input DOs can not be modeled:
+		 * If there is exactly one DO with the class of the single element output set,
+		 * then use this DO instead of creating a new one.
+		 * TODO: purge this code from github 
+		 */
+		DataManager dataManager = this.getScenarioInstance().getDataManager();
+		List<DataObject> dataObjects = dataManager.getDataObjects();
+		List<Integer> filteredDOs = dataObjects.stream()
+				.map(dataObject -> dataObject.getDataClassId())
+				.filter(id -> outputClassIds.contains(id))
+				.collect(Collectors.toList());
+		if (filteredDOs.size() == 1) { // unique data object
+			Integer idToModify = filteredDOs.get(0);
+			toCreate.remove(idToModify); // do not create this DO
+			Map<Integer, Integer> dcIdToStateId = dataManager.translate(dataClassNameToStateName);
+			dataManager.changeDataObjectState(idToModify, dcIdToStateId.get(idToModify), -1);
+		}
+		// </dirtyHack>
 		createDataObjects(toCreate, dataClassNameToStateName);
 
 		if (json.isEmpty()) {

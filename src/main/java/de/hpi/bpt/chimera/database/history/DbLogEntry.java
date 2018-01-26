@@ -71,7 +71,8 @@ public class DbLogEntry extends DbObject {
 		int dataObjectId = new DbDataObject().getDataClassId(objectInstanceId);
 		String label = new DbDataClass().getName(dataObjectId);
 		String state = new DbState().getStateName(stateId);
-		this.insertLog(scenarioInstanceId, objectInstanceId, state, Optional.of(activityInstanceId), label, LogEntry.LogType.DATA_OBJECT);
+		Optional<Integer> activityIdOrNull = (activityInstanceId == -1) ? Optional.empty() : Optional.of(activityInstanceId);
+		this.insertLog(scenarioInstanceId, objectInstanceId, state, activityIdOrNull, label, LogEntry.LogType.DATA_OBJECT);
 	}
 
 	/**
