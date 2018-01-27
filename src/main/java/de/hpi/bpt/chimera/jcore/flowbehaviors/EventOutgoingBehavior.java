@@ -60,15 +60,15 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 		 */
 		DataManager dataManager = this.getScenarioInstance().getDataManager();
 		List<DataObject> dataObjects = dataManager.getDataObjects();
-		List<Integer> filteredDOs = dataObjects.stream()
-				.map(dataObject -> dataObject.getDataClassId())
-				.filter(id -> outputClassIds.contains(id))
+		List<DataObject> filteredDOs = dataObjects.stream()
+				.filter(dataObject -> outputClassIds.contains(dataObject.getDataClassId()))
 				.collect(Collectors.toList());
 		if (filteredDOs.size() == 1) { // unique data object
-			Integer idToModify = filteredDOs.get(0);
-			toCreate.remove(idToModify); // do not create this DO
+			Integer classIdToModify = filteredDOs.get(0).getDataClassId();
+			Integer doIdToModify = filteredDOs.get(0).getId();
+			toCreate.remove(classIdToModify); // do not create this DO
 			Map<Integer, Integer> dcIdToStateId = dataManager.translate(dataClassNameToStateName);
-			dataManager.changeDataObjectState(idToModify, dcIdToStateId.get(idToModify), -1);
+			dataManager.changeDataObjectState(doIdToModify, dcIdToStateId.get(classIdToModify), -1);
 		}
 		// </dirtyHack>
 		createDataObjects(toCreate, dataClassNameToStateName);
@@ -78,6 +78,7 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 		} else {
 			this.writeDataObjects(json);
 		}
+		filteredDOs.forEach(DataObject::unlock);
 		this.terminate();
 	}
 

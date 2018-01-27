@@ -80,7 +80,8 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
 
 	@Override
 	public void terminate() {
-		terminate("");
+		outgoingBehavior.terminate();
+		this.setState(State.TERMINATED);
 	}
 
 	/**
