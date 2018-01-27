@@ -213,7 +213,8 @@ public class ScenarioInstance {
 	 */
 	public void updateDataFlow() {
 		for (AbstractControlNodeInstance activityInstance : controlNodeInstances) {
-			if (activityInstance.getClass() == ActivityInstance.class) {
+			if (activityInstance.getClass() == ActivityInstance.class &&
+					! activityInstance.getState().equals(State.RUNNING)) {
 				((ActivityInstance) activityInstance).checkDataFlowEnabled();
 			}
 		}
