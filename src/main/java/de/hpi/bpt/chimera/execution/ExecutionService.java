@@ -14,23 +14,27 @@ import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 /**
- * A static class that holds every running CaseExecution.
+ * I manage all running cases and provide access to their {@link CaseExecutioner}s.
+ * I am a static class that provides only static methods and cannot be instantiated.
  */
-public class ExecutionService {
+public final class ExecutionService {
 	private static final Logger log = Logger.getLogger(ExecutionService.class);
 	/**
-	 * Map of CaseModelId to running CaseExecutions
+	 * Map of CaseModelId to a list of {@link CaseExecutioner}s.
 	 */
 	private static Map<String, List<CaseExecutioner>> caseExecutions = new HashMap<>();
 	/**
-	 * Map of CaseId to corresponding CaseExecution (Case)
+	 * Map of CaseId to their {@link CaseExecutioner}. These are the active cases stored in memory.
 	 */
 	private static Map<String, CaseExecutioner> cases = new HashMap<>();
 
-	public ExecutionService() {
+	// Do not instantiate 
+	private ExecutionService() {
 	}
 
 	/**
+	 * Checks whether a case specified by its caseId exists. If it is not active but exists in the
+	 * database, it will be loaded and added to the active cases.
 	 * 
 	 * @param caseId
 	 * @return true when the case identified by this caseId exists, false
@@ -49,10 +53,12 @@ public class ExecutionService {
 	}
 
 	/**
+	 * Hands out the {@link CaseExecutioner} responsible for executing a case.
+	 * Throws an exception if no case model exists with the given id, or no case exists with the given id.
 	 * 
-	 * @param cmId
-	 * @param caseId
-	 * @return CaseExecutioner
+	 * @param cmId - Id of the case model
+	 * @param caseId - Id of the case
+	 * @return CaseExecutioner - The CaseExecutioner responsible for the case
 	 */
 	public static CaseExecutioner getCaseExecutioner(String cmId, String caseId) {
 		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
@@ -70,36 +76,33 @@ public class ExecutionService {
 				addCase(caze.getCaseExecutioner());
 			}
 		}
-
 		return cases.get(caseId);
 	}
 
 	/**
-	 * Start a Case of an CaseModel.
+	 * Creates a new {@link CaseExecutioner} for the case model by the given id. 
+	 * The case executioner is added to the list of active cases. The caller still needs to
+	 * start the case, see {@link CaseExecutioner#startCase()}.
 	 * 
-	 * @param cmId
-	 * @param name
-	 *            for Case
-	 * @return created CaseExecutioner
+	 * @param cmId - case model id
+	 * @param name - name for the case
+	 * @return the created CaseExecutioner
 	 */
 	public static CaseExecutioner createCaseExecutioner(String cmId, String name) {
-		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-			// If name of Case isn't specified, use name of CaseModel
-			String caseName = cm.getName();
-			if (name == null || !name.isEmpty())
+			String caseName;
+			if (name == null || name.isEmpty()) { // no name specified, use name of case model
+				caseName = cm.getName();
+			} else {
 				caseName = name;
-
+			}
 			CaseExecutioner caseExecutioner = new CaseExecutioner(cm, caseName);
 			addCase(caseExecutioner);
 
 			log.info(String.format("Successfully created Case with Case-Id: %s", caseExecutioner.getCase().getId()));
 			return caseExecutioner;
-		} catch (IllegalArgumentException e) {
-			throw e;
 		}
-	}
 
 	private static void addCase(CaseExecutioner caseExecutioner) {
 		String caseId = caseExecutioner.getCase().getId();
@@ -117,10 +120,10 @@ public class ExecutionService {
 	}
 
 	/**
-	 * Get all Cases of an CaseModel.
+	 * Gets all cases of the case model by the given id.
 	 * 
-	 * @param cmId
-	 * @return List of all Cases
+	 * @param cmId - the case model id
+	 * @return List of all {@link CaseExecutioner}s
 	 */
 	public static List<CaseExecutioner> getAllCasesOfCaseModel(String cmId) {
 		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
@@ -133,7 +136,8 @@ public class ExecutionService {
 	}
 
 	/**
-	 * Delete a the Case Executions of a certain CaseModel.
+	 * Remove all active cases for a case model.
+	 * <b>The cases are not deleted in the database, they are just no longer stored in memory</b>.
 	 * 
 	 * @param cmId
 	 */
@@ -149,8 +153,13 @@ public class ExecutionService {
 			log.info(String.format("CaseModel with id: %s is not assigned or hadn't any cases", cmId));
 		}
 	}
-
+	
+	/**
+	 * Provides a list of {@link CaseExecutioner}s for all active cases.
+	 * 
+	 * @return List of all active CaseExecutioner
+	 */
 	public static List<CaseExecutioner> getAllExecutingCaseExecutioner() {
-		return new ArrayList(cases.values());
+		return new ArrayList<>(cases.values());
 	}
 }
