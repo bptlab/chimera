@@ -6,25 +6,25 @@ Chimera is an engine for executing fragment based case models, an approach that 
 * Integration to external events via the Complex Event Processing engine [Unicorn](https://bpt.hpi.uni-potsdam.de/UNICORN)
 * Usage of external APIs via webservice tasks.
 
-For further reference please visit our [website](https://bpt.hpi.uni-potsdam.de/Chimera/WebHome).
+For further reference please visit our [website](https://bpt.hpi.uni-potsdam.de/Chimera/WebHome) and check the [wiki](https://github.com/bptlab/chimera/wiki).
 
 ## Getting started
 
 #### Pre-requisites
 The following software is necessary to build and run Chimera:
 
-   * `Oracle JDK`  or `OpenJDK` available at  [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and make sure the environment variable `JAVA_HOME ` points to your JDK folder (e.g. like [this](http://www.wikihow.com/Set-Java-Home)).
-   * Apache `Tomcat 7` or 8, available at [here](https://tomcat.apache.org/download-70.cgi).
-   * `MySQL 5.7` Server, available [here](http://dev.mysql.com/downloads/mysql/).
-   * `git`, available  [here](https://git-scm.com/downloads), to access the code repositories.
-   * Apache Maven 3, available [here](http://maven.apache.org/install.html).
+   * Java 8 JDK available from [Oracle](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and make sure the environment variable `JAVA_HOME` points to your JDK folder (e.g. like [this](http://www.wikihow.com/Set-Java-Home)).
+   * `Apache Tomcat 7` or newer, available [here](https://tomcat.apache.org/download-70.cgi).
+   * `MySQL 5.7 Server`, available [here](http://dev.mysql.com/downloads/mysql/).
+   * `git`, available [here](https://git-scm.com/downloads), to access the code repositories.
+   * `Apache Maven 3`, available [here](http://maven.apache.org/install.html).
 
 #### Installation & Setup
 
    1. Checkout out the source code from [github](http://github.com/bptlab/chimera). From the command line you can run `git clone https://github.com/bptlab/chimera.git` to download the repository to your machine.
-   1. Copy the project configuration `/src/main/resources/config.properties` from the template `config_template.properties` and fill in your properties.
-   1. Start your `MySQL server` and create a database, either using the `MySQL Workbench` or from the command line: `mysql -u USER_NAME -p PASSWORD -e "create schema SCHEMA_NAME` where `SCHEMA_NAME` should be something like ChimeraDB.
+   1. Start your MySQL server and create a database, either using the MySQL Workbench or from the command line: `mysql -u USER_NAME -p PASSWORD -e "create schema SCHEMA_NAME` where `SCHEMA_NAME` should be something like 'chimeradb'.
    1. Build the source code using Maven: `mvn install -Ddb.user=USER_NAME -Ddb.password=PASSWORD -Ddb.schema=SCHEMA_NAME` Replace *USER_NAME*, *PASSWORD*, and *SCHEMA_NAME* with the values from the previous step.
+   1. Check whether the configuration file `config.properties` was copied to the main directory and whether the variables (`mysql.username`, `mysql.password` etc.) have been replaced correctly.
    1. Deploy the created war file `target/Chimera.war` to Tomcat by copying it to the webapps folder in your Tomcat installation.
       * Alternatively, use `mvn tomcat7:deploy-DskipTests` from the command line to automatically deploy the war file. Note however, that you need to configure your Tomcat credentials as described in [this article](http://www.mkyong.com/maven/how-to-deploy-maven-based-war-file-to-tomcat/).
    1. Start your Tomcat application server and visit http://localhost:8080/Chimera in your browser, replacing the default port 8080 with the one you configured in Tomcat. You should now be able to see the Chimera frontend.
