@@ -1,6 +1,9 @@
 package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -66,29 +69,78 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 	 */
 	private WebTarget buildTarget() {
 		String link = getControlNode().getWebServiceUrl();
-		String replacedLink = insertDataObjectValues(link);
+		String replacedLink = replaceVariableExpressions(link);
 
 		return parseWebTarget(replacedLink);
 	}
 
 	/**
-	 * This method is responsible for filling in values of selected DataObject,
-	 * which were selected at the beginning of the task, into a string.
-	 *
-	 * @param toReplace
-	 *            String which contains #dataObjectName.dataattributeName
-	 *            patterns
-	 * @return replaced link
+	 * If the input string contains a variable expression, i.e. {@code #DataClass} or {@code #DataClass.attributeName}, 
+	 * this method tries to find a {@link DataObject} of this data class among the selected data objects.
+	 * In the first case ({@code #DataClass}) the variable expression is replaced with the current state of the 
+	 * found data object (or "<not found>" if no such data object was found).
+	 * In the second case ({@code #DataClass.attributeName}) the attribute instances of the found data object are 
+	 * searched for one that matches {@code attributeName}. If such attribute instance is found, its value is used
+	 * to replace the variable expression in the input string. Otherwise, it is replaced with "<not found>".
+	 * 
+	 * If the input string contains multiple variable expression the first one is replaced and the method calls itself
+	 * recursively with the resulting string. The recursion ends, when the input no longer contains any variable 
+	 * expressions.
+	 *  
+	 * If the input string does not contain a variable expression, it is returned unchanged.
+	 * 
+ 	 * @param toReplace - the input string which might contain variable expressions {@code #DataClass} or {@code #DataClass.attributeName}
+	 * @return the input string with the variable expression replaced by the referenced data object state or data attribute value
 	 */
-	private String insertDataObjectValues(String toReplace) {
-		String replacedLink = toReplace;
-		for (DataObject dataObject : getSelectedDataObjects()) {
-			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
-				String toReplaceSpecified = String.format("#%s.%s", dataObject.getDataClass().getName(), dataAttributeInstance.getDataAttribute().getName());
-				replacedLink = replacedLink.replace(toReplaceSpecified, dataAttributeInstance.getValue().toString());
-			}
+	private String replaceVariableExpressions(String toReplace) {
+		Pattern p = Pattern.compile("#(\\w+)(?:\\.(\\w+))?\\b");
+		Matcher m = p.matcher(toReplace);
+		if (! m.find()) { // no variable used in input, end recursion
+			return toReplace;
 		}
-		return replacedLink;
+		final int attributeNameGroup = 2;
+		final int dataClassNameGroup = 1;
+		String dataClassName = m.group(dataClassNameGroup);
+		Optional<String> attrName = Optional.ofNullable(m.group(attributeNameGroup));
+		Optional<DataObject> foundDO = getSelectedDataObjects().stream()
+											.filter(d -> dataClassName.equals(d.getDataClass().getName()))
+											.findFirst();
+		if (! foundDO.isPresent()) { // no DO found for data class referenced in variable expression
+			log.error(String.
+					format("None of the selected data objects of the task '%s' matches the data class '%s' referenced in the variable expression %s.", 
+							getControlNode().getName(), dataClassName, m.group()));
+			// replace first match and recursive call to replace other potential variable expressions
+			String replacedFirstOccurrence = m.replaceFirst("<not found>");
+			return replaceVariableExpressions(replacedFirstOccurrence);
+		}
+		if (! attrName.isPresent()) { // no attribute referenced -> replace "#DataClass" with its state
+			// replace first match and recursive call to replace other potential variable expressions
+			String replacedFirstOccurrence = m.replaceFirst(foundDO.get().getObjectLifecycleState().toString());
+			return replaceVariableExpressions(replacedFirstOccurrence);
+		}
+		Optional<DataAttributeInstance> foundDAI = 
+					foundDO.get().getDataAttributeInstances().stream()
+					.filter(dai -> attrName.get().equals(dai.getDataAttribute().getName()))
+					.findFirst();
+		if (! foundDAI.isPresent()) { // no DAI found for attribute referenced in variable expression
+			log.error(String.
+					format("The found data object of class '%s' does not have a attribute with name '%s' specified in the variable expression %s.", 
+							dataClassName, attrName.get(), m.group()));
+			// replace first match and recursive call to replace other potential variable expressions
+			String replacedFirstOccurrence = m.replaceFirst("<not found>");
+			return replaceVariableExpressions(replacedFirstOccurrence);
+		}
+		Object value = foundDAI.get().getValue();
+		if (value == null) { // attribute value is null
+			log.error(String.
+					format("The attribute value of the variable expression '%s' is 'null'.", m.group()));
+			// replace first match and recursive call to replace other potential variable expressions
+			String replacedFirstOccurrence = m.replaceFirst("<value is 'null'>");
+			return replaceVariableExpressions(replacedFirstOccurrence);			
+		}
+		// replace first match and recursive call to replace other potential variable expressions
+		String replacedFirstOccurrence = m.replaceFirst(value.toString());
+		return replaceVariableExpressions(replacedFirstOccurrence);		
 	}
 
 	/**
@@ -128,7 +180,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		case "POST":
 		case "PUT":
 			String postBody = getControlNode().getWebServiceBody();
-			String replacedPostBody = this.insertDataObjectValues(postBody);
+			String replacedPostBody = this.replaceVariableExpressions(postBody);
 			if ("POST".equals(webServiceMethod)) {
 				return invocationBuilder.post(javax.ws.rs.client.Entity.json(replacedPostBody));
 			} else {
