@@ -167,9 +167,9 @@ public class DataManager {
 	 *            locked
 	 * @return List of locked DataObjects
 	 */
-	public List<DataObject> lockDataObjects(List<DataObject> dataObjects) {
+	public synchronized List<DataObject> lockDataObjects(Collection<DataObject> selectedDataObjects) {
 		List<DataObject> lockedDataObjects = new ArrayList<>();
-		for (DataObject dataObjectToLock : dataObjects) {
+		for (DataObject dataObjectToLock : selectedDataObjects) {
 			if (dataObjectToLock.isLocked()) {
 				unlockDataObjects(lockedDataObjects);
 				IllegalDataObjectLockException e = new IllegalDataObjectLockException(dataObjectToLock);
@@ -242,6 +242,27 @@ public class DataManager {
 		}
 
 		return availableDataObjects;
+	}
+	
+	/**
+	 * Find a set of data objects that fulfill the given {@link ConditionSet}.
+	 * This method should be used to find data objects that satisfy the input set
+	 * of a control node, e.g. a webservice task.
+	 * If several data objects satisfy the ConditionSet, one of them is selected randomly.
+	 * 
+	 * @param inputSet - a ConditionSet that needs to be satisfied
+	 * @return a set of data objects that satisfy the ConditionSet
+	 */
+	public Set<DataObject> getFulfillingDataObjects(ConditionSet inputSet) {
+		Set<DataObject> fulfillingDataObjects = new HashSet<>();
+		for (AtomicDataStateCondition condition : inputSet.getConditions()) {
+			DataObject fulfillingDataObject = getAvailableDataObjects(condition).iterator().next();
+			if (fulfillingDataObject == null) { // no fulfilling data object found
+				return new HashSet<>();
+			}
+			fulfillingDataObjects.add(fulfillingDataObject);
+		}
+		return fulfillingDataObjects;
 	}
 
 	/**

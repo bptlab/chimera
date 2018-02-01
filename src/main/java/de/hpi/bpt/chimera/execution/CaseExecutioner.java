@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.execution;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,6 @@ import de.hpi.bpt.chimera.history.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
 @Entity
 public class CaseExecutioner {
@@ -120,7 +120,7 @@ public class CaseExecutioner {
 	 *            - list of {@code ids } of DataObjects that are used by the
 	 *            AbstractActivityInstance
 	 */
-	public void beginActivityInstance(AbstractActivityInstance activityInstance, List<DataObject> selectedDataObjects) {
+	public void beginActivityInstance(AbstractActivityInstance activityInstance, Collection<DataObject> selectedDataObjects) {
 		try {
 			if (!activityInstance.getState().equals(State.READY)) {
 				IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(activityInstance, State.READY);
@@ -165,7 +165,7 @@ public class CaseExecutioner {
 	 * @param instance
 	 * @param selectedDataObjects
 	 */
-	private void beginDataControlNodeInstance(AbstractDataControlNodeInstance instance, List<DataObject> selectedDataObjects) {
+	private void beginDataControlNodeInstance(AbstractDataControlNodeInstance instance, Collection<DataObject> selectedDataObjects) {
 		try {
 			List<DataObject> lockedDataObjects = dataManager.lockDataObjects(selectedDataObjects);
 			instance.setSelectedDataObjects(lockedDataObjects);
@@ -254,12 +254,8 @@ public class CaseExecutioner {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Get an ControlNodeInstance over all FragmentInstances of the Case by an
 	 * id.
-=======
-	 * Get a ControlNodeInstance over all FragmentInstances of the Case.
->>>>>>> 5a0086cf4a2d8618df46db0aeb43e89c001fc55d
 	 * 
 	 * @param controlNodeId
 	 * @return the associated ControlNodeInstance, or {@code null} if the id is

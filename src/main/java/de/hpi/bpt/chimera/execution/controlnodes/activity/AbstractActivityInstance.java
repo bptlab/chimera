@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstanceFactory;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.event.BoundaryEventInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
@@ -72,10 +74,21 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 				getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
 			setState(State.READY);
 		}
-		// TODO: see #50 in github, allow automatic execution with unique input set
-		if (getState().equals(State.READY) && this.isAutomaticTask 
-				&& !getControlNode().hasPreCondition()) {
-			getCaseExecutioner().beginActivityInstance(this, new ArrayList<DataObject>());
+		if (getState().equals(State.READY) && this.isAutomaticTask) {
+			// automatically select data objects, input set must be unique
+			assert getControlNode().hasUniquePreCondition() : "For automatic execution tasks need an unique pre-condition";
+			List<ConditionSet> conditionSets = getControlNode().getPreCondition().getConditionSets();
+			ConditionSet inputSet = new ConditionSet();
+			if (! conditionSets.isEmpty()) {
+				inputSet = conditionSets.get(0);
+			}
+			Set<DataObject> fulfillingDataObjects = getDataManager().getFulfillingDataObjects(inputSet);
+			if (fulfillingDataObjects.isEmpty()) {
+				// this should not happen, someone changed a DO state we needed or locked a DO
+				checkDataFlow();
+			} else {
+				getCaseExecutioner().beginActivityInstance(this, fulfillingDataObjects);
+			}
 		}
 	}
 
