@@ -51,7 +51,7 @@
 
     <servlet>
         <servlet-name>SseServlet</servlet-name>
-        <servlet-class>de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier</servlet-class>
+        <servlet-class>de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.SseNotifier</servlet-class>
         <load-on-startup>1</load-on-startup>
         <async-supported>true</async-supported>
     </servlet>
