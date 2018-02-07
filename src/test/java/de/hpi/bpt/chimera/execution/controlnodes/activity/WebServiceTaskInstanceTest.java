@@ -19,7 +19,7 @@ import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.CaseModel;
 
 public class WebServiceTaskInstanceTest {
-	private final String filepath = "src/test/resources/execution/WebServiceTaskInstanceTest";
+	private final String filepath = "src/test/resources/execution/WebServiceTaskInstanceTest.json";
 	private CaseModel cm;
 	private CaseExecutioner caseExecutioner;
 
@@ -33,9 +33,9 @@ public class WebServiceTaskInstanceTest {
 	@Test
 	public void testAutoExecution() {
 		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Get ReiseWarnung");
+		assertNotNull(task0);
 		assertTrue("is automatic task was not parsed correctly", task0.isAutomaticTask());
 		assertTrue("task has precondition", task0.getControlNode().getPreCondition().getConditionSets().isEmpty());
-		assertNotNull(task0);
 
 		assertEquals("State of ActivityInstance is not TERMINATED", State.TERMINATED, task0.getState());
 

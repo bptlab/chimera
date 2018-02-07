@@ -171,7 +171,7 @@ angular.module('jfrontend')
                 }).error(function () {
                     console.log('request failed');
                     $location.path('/scenario/');
-                    $window.location.reload();
+                    // $window.location.reload();
                 });
             };
 
@@ -180,7 +180,7 @@ angular.module('jfrontend')
             // Got to the instance with the given Id
             this.goToDetailsFrom = function (id) {
                 $location.path("/scenario/" + $routeParams.id + "/instance/" + id);
-                $window.location.reload();
+                // $window.location.reload();
             };
 
             // returns the current instance object

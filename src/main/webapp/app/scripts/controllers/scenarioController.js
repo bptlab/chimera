@@ -20,7 +20,7 @@ angular.module('jfrontend')
                     }).error(function () {
                         console.log('request failed');
                         $location.path('scenario/');
-                        $window.location.reload();
+                        // $window.location.reload();
                     });
                 }
             });
@@ -83,7 +83,6 @@ angular.module('jfrontend')
             // navigating to the specified scenario
             this.goToDetailsFrom = function (id) {
                 $location.path('scenario/' + $routeParams.id + '/instance/' + id);
-                $window.location.reload();
             };
 
             // helper for accessing scenario details for a scenario
