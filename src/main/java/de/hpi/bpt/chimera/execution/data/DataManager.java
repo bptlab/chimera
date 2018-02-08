@@ -285,11 +285,12 @@ public class DataManager {
 	}
 
 	/**
-	 * Set value of DataObjects.
+	 * Set value of DataAttributeInstances by the ids of data objects and ids
+	 * data attribute instances.
 	 * 
 	 * @param dataAttributeValues
 	 */
-	public void setDataAttributeValues(Map<String, Map<String, Object>> dataAttributeValues) {
+	public void setDataAttributeValuesByIds(Map<String, Map<String, Object>> dataAttributeValues) {
 		for (Map.Entry<String, Map<String, Object>> transition : dataAttributeValues.entrySet()) {
 			String dataObjectId = transition.getKey();
 			if (!dataObjectIdToDataObject.containsKey(dataObjectId))
@@ -297,6 +298,36 @@ public class DataManager {
 			DataObject dataObject = dataObjectIdToDataObject.get(dataObjectId);
 			Map<String, Object> attributeValues = transition.getValue();
 			dataObject.setDataAttributeValues(attributeValues);
+		}
+	}
+
+	/**
+	 * Set value of DataAttributeInstances by the names of data objects and
+	 * names data attribute instances for certain data objects.
+	 * 
+	 * @param dataAttributeValues
+	 * @param usedDataObjects
+	 */
+	public void setDataAttributeValuesByNames(Map<String, Map<String, Object>> dataAttributeValues, List<DataObject> usedDataObjects) {
+		for (Map.Entry<String, Map<String, Object>> dataclassNameToDataAttributeValues : dataAttributeValues.entrySet()) {
+			String dataclassName = dataclassNameToDataAttributeValues.getKey();
+			DataObject usedDataObject = null;
+			for (DataObject dataObject : usedDataObjects) {
+				if (dataObject.getDataClass().getName().equals(dataclassName)) {
+					usedDataObject = dataObject;
+					break;
+				}
+			}
+			if (usedDataObject == null) {
+				continue;
+			}
+			for (Map.Entry<String, Object> dataAttributeNameToValue : dataclassNameToDataAttributeValues.getValue().entrySet()) {
+				String dataAttributeName = dataAttributeNameToValue.getKey();
+				DataAttributeInstance dataAttributeInstance = usedDataObject.getDataAttributeInstanceByName(dataAttributeName);
+				if (dataAttributeInstance != null) {
+					dataAttributeInstance.setValue(dataAttributeNameToValue.getValue());
+				}
+			}
 		}
 	}
 

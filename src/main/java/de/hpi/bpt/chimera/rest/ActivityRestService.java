@@ -217,9 +217,9 @@ public class ActivityRestService extends AbstractRestService {
 			Map<String, Map<String, Object>> dataAttributeValues = parseDataAttribueValues(post);
 
 			DataManager dataManager = caseExecutioner.getDataManager();
-			dataManager.setDataAttributeValues(dataAttributeValues);
+			dataManager.setDataAttributeValuesByIds(dataAttributeValues);
 
-			caseExecutioner.terminateActivityInstance(activityInstance);
+			// caseExecutioner.terminateActivityInstance(activityInstance);
 
 			return Response.status(201).build();
 		} catch (IllegalArgumentException e) {
@@ -229,12 +229,14 @@ public class ActivityRestService extends AbstractRestService {
 	}
 
 	/**
-	 * Parse the json post in a map of DataObject-Id to the a map of
-	 * DataAttributeInstance-Id to new DataAttribute-value.
+	 * Parse the json post in a map of DataObject-Id or DataObject-name to the a
+	 * map of DataAttributeInstance-Id or DataAttributeInstance-name to new
+	 * DataAttribute-value.
 	 * 
 	 * @param post
 	 *            - JSON
-	 * @return map from DataObjectId to DataAttributeInstanceId to new
+	 * @return map from DataObjectId or DataObject name to
+	 *         DataAttributeInstanceId or DataObject name to new
 	 *         DataAttributeInstance value
 	 */
 	private Map<String, Map<String, Object>> parseDataAttribueValues(String post) {
@@ -243,15 +245,15 @@ public class ActivityRestService extends AbstractRestService {
 		for (Object dataObject : dataObjectJson.keySet()) {
 			if (dataObject.getClass() != String.class)
 				continue;
-			String dataObjectId = (String) dataObject;
+			String dataObjectIdentification = (String) dataObject;
 
-			JSONObject attributeJson = dataObjectJson.getJSONObject(dataObjectId);
+			JSONObject attributeJson = dataObjectJson.getJSONObject(dataObjectIdentification);
 			Map<String, Object> dataAttributeValue = new HashMap<>();
 			for (Object attribute : attributeJson.keySet()) {
-				String attributeId = (String) attribute;
-				dataAttributeValue.put(attributeId, attributeJson.get(attributeId));
+				String attributeIdentification = (String) attribute;
+				dataAttributeValue.put(attributeIdentification, attributeJson.get(attributeIdentification));
 			}
-			dataAttributeValues.put(dataObjectId, dataAttributeValue);
+			dataAttributeValues.put(dataObjectIdentification, dataAttributeValue);
 		}
 		return dataAttributeValues;
 	}
@@ -334,38 +336,57 @@ public class ActivityRestService extends AbstractRestService {
 	/**
 	 * Changes the state of of an activity instance from running to terminated.
 	 *
-	 * @param scenarioId         Id of the scenario model.
-	 * @param scenarioInstanceId Id of the model instance.
-	 * @param activityInstanceId Id of the activity instance to terminate
-	 * @param postBody           Json Body containing a map from name of data object to state
-	 *                           specifying the resulting states of the data objects the activity works on
-	 * @return 202 (ACCEPTED) means that the activity was terminated successfully
-	 * 400 (BAD_REQUEST) Termination of the activity failed. Possible reasons are:
-	 * 1) The activity was not running
-	 * 2) The wanted state does not comply to the OLC
-	 * 3) The Body specifies not a resulting state for each data object.
+	 * @param scenarioId
+	 *            Id of the scenario model.
+	 * @param scenarioInstanceId
+	 *            Id of the model instance.
+	 * @param activityInstanceId
+	 *            Id of the activity instance to terminate
+	 * @param dataObjectPost
+	 *            Json Body containing a map from name of data object to state
+	 *            specifying the resulting states of the data objects the
+	 *            activity works on
+	 * @param attributePost
+	 *            Json Body containing a map from name of data class to a map
+	 *            from name of data attribute to the new value for the data
+	 *            attribute
+	 * @return 202 (ACCEPTED) means that the activity was terminated
+	 *         successfully 400 (BAD_REQUEST) Termination of the activity
+	 *         failed. Possible reasons are: 1) The activity was not running 2)
+	 *         The wanted state does not comply to the OLC 3) The Body specifies
+	 *         not a resulting state for each data object.
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
 	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
 		try {
+			log.info("Try to terminate Activity");
 			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+			// isTerminatable
+			JSONObject postJson = new JSONObject(post);
 
-			Map<String, String> dataClassToStateTransitionStrings = parseDataClassToStateTransitionStrings(post);
+			String dataObjectPost = postJson.getString("transitions");
+			String attributePost = postJson.getString("values");
+			
+			Map<String, String> dataClassToStateTransitionStrings = parseDataClassToStateTransitionStrings(dataObjectPost);
 			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(dataClassToStateTransitionStrings);
 			List<DataObject> usedDataObjects = caseExecutioner.handleActivityOutputTransitions(activityInstance, dataClassToStateTransitions);
 
-			JSONArray result = parseJsonForUsedDataObjects(usedDataObjects);
+			Map<String, Map<String, Object>> rawDataAttributeValues = parseDataAttribueValues(attributePost);
+			DataManager dataManager = caseExecutioner.getDataManager();
+			dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+
+			activityInstance.terminate();
 			
-			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
 		} catch (IllegalArgumentException e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
-	
+
 	/**
 	 * Parse the json body in map from dataclass of the DataObject to the new
 	 * ObjectLifecycleState.
@@ -385,33 +406,5 @@ public class ActivityRestService extends AbstractRestService {
 		}
 
 		return dataClassToStateTransitionStrings;
-	}
-
-	/**
-	 * Parse a json object for the used DataObjects during terminating an
-	 * {@link AbstractActivityInstance}. Therefore get the ids and DataClasses
-	 * by the DataObjects and the name and ids of their DataAttributeInstances
-	 * to exchange the name in the running frontend.
-	 * 
-	 * @param usedDataObjects
-	 * @return JSONArray
-	 */
-	JSONArray parseJsonForUsedDataObjects(List<DataObject> usedDataObjects) {
-		JSONArray result = new JSONArray();
-		for (DataObject dataObject : usedDataObjects) {
-			JSONObject dataObjectInfo = new JSONObject();
-			dataObjectInfo.put("id", dataObject.getId());
-			dataObjectInfo.put("dataclass", dataObject.getDataClass().getName());
-			JSONArray attributeInstanceInfo = new JSONArray();
-			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
-				JSONObject attributeInstance = new JSONObject();
-				attributeInstance.put("name", dataAttributeInstance.getDataAttribute().getName());
-				attributeInstance.put("id", dataAttributeInstance.getId());
-				attributeInstanceInfo.put(attributeInstance);
-			}
-			dataObjectInfo.put("attributeInstances", attributeInstanceInfo);
-			result.put(dataObjectInfo);
-		}
-		return result;
 	}
 }

@@ -133,6 +133,16 @@ public class DataObject {
 		return new ArrayList<>(dataAttributeInstances);
 	}
 
+	public DataAttributeInstance getDataAttributeInstanceByName(String name) {
+		for (DataAttributeInstance dataAttributeInstance : getDataAttributeInstances()) {
+			if (dataAttributeInstance.getDataAttribute().getName().equals(name)) {
+				return dataAttributeInstance;
+			}
+		}
+
+		return null;
+	}
+
 	public void setDataAttributeInstanceIdToInstance(Map<String, DataAttributeInstance> dataAttributeInstanceIdToInstance) {
 		this.dataAttributeInstanceIdToInstance = dataAttributeInstanceIdToInstance;
 	}

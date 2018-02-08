@@ -221,13 +221,17 @@ angular.module('jfrontend')
             };
 
             this.terminateActivity = function (activityInstanceId) {
-            	var dataObjectInfos = {};
+            	console.log('try to terminate activity')
+            	var inData = {};
+            	inData['transitions'] = JSON.stringify(instanceCtrl.selectedStates);
+            	inData['values'] = JSON.stringify(instanceCtrl.attributeValues);
             	// terminate activity with selected states
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                    "/activityinstance/" + activityInstanceId + "/terminate", JSON.stringify(instanceCtrl.selectedStates)).success(function (usedDataObjects) {
+                    "/activityinstance/" + activityInstanceId + "/terminate", JSON.stringify(inData)).success(function () {
                   	
                     // overwriting the structure of attributeValues with ids
+                    	/*
                     var adaptedTranisitons = {};
                     usedDataObjects.forEach(function (dataObject) {
                     	var dataObjectId = dataObject['id'];
@@ -242,7 +246,7 @@ angular.module('jfrontend')
                     
                     instanceCtrl.attributeValues = adaptedTranisitons;
                     instanceCtrl.setAttributeValues(activityInstanceId);
-                    
+                    */
                     // instanceCtrl.instanceDetails.activityInstances = {};
                     instanceCtrl.selectedStates = {};
                     instanceCtrl.attributeValues = {};
