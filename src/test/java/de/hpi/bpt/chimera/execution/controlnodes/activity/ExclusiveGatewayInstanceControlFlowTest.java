@@ -69,9 +69,8 @@ public class ExclusiveGatewayInstanceControlFlowTest {
 		caseExecutioner.startCase();
 
 		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity1");
-		caseExecutioner.beginActivityInstance(activityInst, new ArrayList<DataObject>());
-		caseExecutioner.handleActivityOutputTransitions(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
-		activityInst.terminate();
+		caseExecutioner.beginDataControlNodeInstance(activityInst, new ArrayList<DataObject>());
+		caseExecutioner.terminateDataControlNodeInstance(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
 
 		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getActivitiesWithState(State.READY);
 		Collection<String> readyActivities = new ArrayList<String>();
@@ -83,7 +82,7 @@ public class ExclusiveGatewayInstanceControlFlowTest {
 		assertTrue("Activity4 should be in State READY but isn't.", readyActivities.contains("activity4"));
 
 		HumanTaskInstance activityInst2 = (HumanTaskInstance) activityInstances.stream().filter(activity -> activity.getControlNode().getName().equals("activity2")).toArray()[0];
-		caseExecutioner.beginActivityInstance(activityInst2, new ArrayList<DataObject>());
+		caseExecutioner.beginDataControlNodeInstance(activityInst2, new ArrayList<DataObject>());
 		assertEquals("Activities aren't skipped properly.", caseExecutioner.getActivitiesWithState(State.READY).size(), 0);
 	}
 }

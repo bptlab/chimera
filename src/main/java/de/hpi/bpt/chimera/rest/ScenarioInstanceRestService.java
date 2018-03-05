@@ -154,7 +154,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	 */
 	private Response initializeNewInstance(UriInfo uriInfo, String cmId, String name) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.createCaseExecutioner(cmId, name);
+			CaseExecutioner caseExecutioner = ExecutionService.createCaseExecutioner(cmId, name);
 			caseExecutioner.startCase();
 
 			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
@@ -188,7 +188,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenarioInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 
 			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
@@ -232,7 +232,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response checkTermination(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 
 			TerminationCondition terminationCondition = caseExecutioner.getCaseModel().getTerminationCondition();
 			DataManager dataManager = caseExecutioner.getDataManager();

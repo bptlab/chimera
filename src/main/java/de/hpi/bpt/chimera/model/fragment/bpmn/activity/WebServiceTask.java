@@ -8,6 +8,14 @@ public class WebServiceTask extends AbstractActivity {
 	private String webServiceMethod;
 	private String webServiceBody;
 
+	/**
+	 * Email Activities are executed automatically.
+	 */
+	@Override
+	public boolean isAutomaticTask() {
+		return true;
+	}
+
 	public String getWebServiceUrl() {
 		return webServiceUrl;
 	}

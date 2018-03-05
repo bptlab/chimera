@@ -29,9 +29,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
 public class WebServiceTaskInstance extends AbstractActivityInstance {
 	private static final Logger log = Logger.getLogger(WebServiceTaskInstance.class);
 
-	@Transient
-	private Response webServiceResponse;
-
+	private String webServiceJson;
 
 	/**
 	 * for JPA only
@@ -44,7 +42,6 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 
 	public WebServiceTaskInstance(WebServiceTask webServiceTask, FragmentInstance fragmentInstance) {
 		super(webServiceTask, fragmentInstance);
-		allowAutomaticExecution();
 	}
 
 	@Override
@@ -53,9 +50,8 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		log.info("Target for web service call constructed: " + target.toString());
 		Response response = executeWebserviceRequest(target);
 		if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
-			// store the response in the outgoing behavior
-			// TODO: Find a better way to achieve this
-			setWebServiceResponse(response);
+			String webServiceResponseJson = response.readEntity(String.class);
+			setWebServiceResponse(webServiceResponseJson);
 		} else {
 			log.error("Web service task did not execute properly, status code: " + response.getStatusInfo().getStatusCode());
 		}
@@ -115,7 +111,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		}
 		if (! attrName.isPresent()) { // no attribute referenced -> replace "#DataClass" with its state
 			// replace first match and recursive call to replace other potential variable expressions
-			String replacedFirstOccurrence = m.replaceFirst(foundDO.get().getObjectLifecycleState().toString());
+			String replacedFirstOccurrence = m.replaceFirst(foundDO.get().getObjectLifecycleState().getName());
 			return replaceVariableExpressions(replacedFirstOccurrence);
 		}
 		Optional<DataAttributeInstance> foundDAI = 
@@ -202,20 +198,15 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 			log.info("Web service task has no output set, received data can not be stored.");
 			return;
 		}
-		if (webServiceResponse == null) {
+		if (webServiceJson == null) {
 			log.info("No response found, received data can not be stored.");
 	        return;
 	    }
-		String jsonResponse = webServiceResponse.readEntity(String.class);
-		if (jsonResponse == null) {
-			log.info("No response json was found, received data can not be stored.");
-			return;
-		}
 
 		for (DataObject dataObject : getOutputDataObjects()) {
 			AtomicDataStateCondition condition = dataObject.getCondition();
 			Map<DataAttribute, String> dataAttributeToJsonPath = getControlNode().getJsonPathMapping().get(condition);
-			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, jsonResponse);
+			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, webServiceJson);
 		}
 
 		super.terminate();
@@ -226,11 +217,11 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		return (WebServiceTask) super.getControlNode();
 	}
 
-	public Response getWebServiceResponse() {
-		return webServiceResponse;
+	public String getWebServiceResponse() {
+		return webServiceJson;
 	}
 
-	public void setWebServiceResponse(Response webServiceResponse) {
-		this.webServiceResponse = webServiceResponse;
+	public void setWebServiceResponse(String webServiceResponse) {
+		this.webServiceJson = webServiceResponse;
 	}
 }

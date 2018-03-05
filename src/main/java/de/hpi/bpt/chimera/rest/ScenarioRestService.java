@@ -67,15 +67,15 @@ public class ScenarioRestService extends AbstractRestService {
 	/**
 	 * This method enables the creation of new scenarios.
 	 *
-	 * @param scenario A Scenario JSON
+	 * @param jsonString A Scenario JSON
 	 * @return Information about the new scenario.
 	 */
 	@POST
 	@Path("scenario")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response postInstance(String scenario) {
+	public Response postCaseModel(String jsonString) {
 		try {
-			CaseModelManager.parseCaseModel(scenario);
+			CaseModelManager.parseCaseModel(jsonString);
 			log.info("Successfully parsed a CaseModel");
 			return Response.status(201).build();
 		} catch (Exception e) {

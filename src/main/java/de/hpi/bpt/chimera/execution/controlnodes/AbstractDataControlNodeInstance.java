@@ -37,6 +37,24 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 		this.outputDataObjects = new ArrayList<>();
 	}
 
+	/**
+	 * 
+	 * @return whether the data control node instance is in the correct state
+	 *         for termination.
+	 */
+	public boolean canTerminate() {
+		return getState().equals(State.RUNNING);
+	}
+
+	/**
+	 * 
+	 * @return whether the data control node instance is in the correct state
+	 *         for beginning.
+	 */
+	public boolean canBegin() {
+		return getState().equals(State.READY);
+	}
+
 	@Override
 	public AbstractDataControlNode getControlNode() {
 		return (AbstractDataControlNode) super.getControlNode();

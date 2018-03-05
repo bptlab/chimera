@@ -57,12 +57,14 @@ public class EmailActivityInstanceTest {
 		caseExecutioner.startCase();
 
 		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity1");
-		caseExecutioner.beginActivityInstance(activityInst, new ArrayList<DataObject>());
-		caseExecutioner.handleActivityOutputTransitions(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
-		activityInst.terminate();
+		caseExecutioner.beginDataControlNodeInstance(activityInst, new ArrayList<DataObject>());
+		caseExecutioner.terminateDataControlNodeInstance(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
 
-		EmailActivityInstance emailActivityInst = (EmailActivityInstance) caseExecutioner.getActivitiesWithState(State.READY).stream().filter(activity -> activity.getControlNode().getName().equals("activity2")).toArray()[0];
-		caseExecutioner.beginActivityInstance(emailActivityInst, new ArrayList<DataObject>());
+		EmailActivityInstance emailActivityInst = (EmailActivityInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity2");
+		
+		// TODO: check why this is here because the instance is already
+		// terminated
+		// caseExecutioner.beginDataControlNodeInstance(emailActivityInst, new ArrayList<DataObject>());
 
 		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getActivitiesWithState(State.READY);
 		Collection<String> readyActivities = new ArrayList<String>();

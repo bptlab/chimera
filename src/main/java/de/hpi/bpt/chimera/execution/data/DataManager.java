@@ -160,14 +160,13 @@ public class DataManager {
 	/**
 	 * Lock those {@link DataObject}{@code s} that are referred by the
 	 * dataObjectIds and returns these DataObjects. If a DataObject shall be
-	 * locked that is already locked throw a SecurityException.
+	 * locked that is already locked throw an IllegalDataObjectLockException.
 	 * 
 	 * @param dataObjectIds
 	 *            - list of {@code ids} which referring DataObjects shall be
 	 *            locked
-	 * @return List of locked DataObjects
 	 */
-	public synchronized List<DataObject> lockDataObjects(Collection<DataObject> selectedDataObjects) {
+	public synchronized void lockDataObjects(Collection<DataObject> selectedDataObjects) {
 		List<DataObject> lockedDataObjects = new ArrayList<>();
 		for (DataObject dataObjectToLock : selectedDataObjects) {
 			if (dataObjectToLock.isLocked()) {
@@ -179,8 +178,6 @@ public class DataManager {
 			dataObjectToLock.lock();
 			lockedDataObjects.add(dataObjectToLock);
 		}
-
-		return lockedDataObjects;
 	}
 
 	/**

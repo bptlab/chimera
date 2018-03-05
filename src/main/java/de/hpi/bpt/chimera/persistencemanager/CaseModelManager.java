@@ -71,6 +71,19 @@ public class CaseModelManager {
 		}
 	}
 
+	/**
+	 * Add a CaseModel and save it to the database.
+	 * 
+	 * @param cm
+	 */
+	public static void addCaseModel(CaseModel cm) {
+		try {
+			caseModels.put(cm.getId(), cm);
+			DomainModelPersistenceManager.saveCaseModel(cm);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 	/*
 	 * public static void addCaseModel(CaseModel model) { try {
 	 * DomainModelPersistenceManager.saveCaseModel(model);

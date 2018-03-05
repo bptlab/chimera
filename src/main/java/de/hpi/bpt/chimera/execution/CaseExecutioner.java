@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.execution;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -108,67 +109,26 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Begin an {@link AbstractActivityInstance}. Therefore lock all
-	 * {@link DataObject}s that are used by the AbstractActivityInstance and set
-	 * them in the AbstractActivityInstance. If the {@code activityInstance} is
-	 * not READY or one of the selected DataObjects is already locked the
-	 * AbstractActivityInstance cannot be begun.
+	 * Begin an {@link AbstractDataControlNodeInstance} if it is in the correct
+	 * state for begin. Therefore lock all {@link DataObject}s that are used by
+	 * the AbstractDataControlNodeInstance and set them for the
+	 * AbstractDataControlNodeInstance.
 	 * 
-	 * @param activityInstance
-	 *            AbstractActivityInstance that shall be begun
-	 * @param selectedDataObjectIds
-	 *            - list of {@code ids } of DataObjects that are used by the
+	 * @param instance
+	 *            - AbstractDataControlNodeInstance that shall begin
+	 * @param selectedDataObjects-
+	 *            list of {@code ids } of DataObjects that are used by the
 	 *            AbstractActivityInstance
 	 */
-	public void beginActivityInstance(AbstractActivityInstance activityInstance, Collection<DataObject> selectedDataObjects) {
+	public void beginDataControlNodeInstance(AbstractDataControlNodeInstance instance, List<DataObject> selectedDataObjects) {
 		try {
-			if (!activityInstance.getState().equals(State.READY)) {
-				IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(activityInstance, State.READY);
+			if (!instance.canBegin()) {
+				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot begin");
 				log.error(e.getMessage());
 				throw e;
 			}
-
-			beginDataControlNodeInstance((AbstractDataControlNodeInstance) activityInstance, selectedDataObjects);
-		} catch (IllegalArgumentException e) {
-			throw e;
-		}
-	}
-
-	/**
-	 * Begin an {@link AbstractEventInstance}. Therefore lock all
-	 * {@link DataObject}s that are used by the AbstractEventInstance and set
-	 * them in the AbstractEventInstance. If one of the selected DataObjects is
-	 * already locked the AbstractEventInstance cannot be begun.
-	 * 
-	 * @param eventInstance
-	 * @param selectedDataObjects
-	 */
-	public void beginEventInstance(AbstractEventInstance eventInstance, List<DataObject> selectedDataObjects) {
-		try {
-			if (!eventInstance.getState().equals(State.REGISTERED)) {
-				// IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(activityInstance, State.REGISTERED);
-				// log.error(e.getMessage());
-				// throw e;
-			}
-
-			beginDataControlNodeInstance((AbstractDataControlNodeInstance) eventInstance, selectedDataObjects);
-		} catch (IllegalArgumentException e) {
-			throw e;
-		}
-	}
-
-	/**
-	 * Begin an {@link AbstractDataControlNodeInstance}. Therefore lock all
-	 * {@link DataObject}s that are used by the AbstractDataControlNodeInstance
-	 * and set them in the AbstractDataControlNodeInstance.
-	 * 
-	 * @param instance
-	 * @param selectedDataObjects
-	 */
-	private void beginDataControlNodeInstance(AbstractDataControlNodeInstance instance, Collection<DataObject> selectedDataObjects) {
-		try {
-			List<DataObject> lockedDataObjects = dataManager.lockDataObjects(selectedDataObjects);
-			instance.setSelectedDataObjects(lockedDataObjects);
+			dataManager.lockDataObjects(selectedDataObjects);
+			instance.setSelectedDataObjects(selectedDataObjects);
 			// TODO: has this to be before lock?
 			instance.getFragmentInstance().skipAlternativeControlNodes(instance);
 			instance.begin();
@@ -178,54 +138,92 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Does everything for terminating an activity excepted from the actual
-	 * termination. This will be done after all DataObjects/DataAttributes are
-	 * set via a Rest-Method which will be called by the Front-End.
+	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
+	 * transitions of the DataObjects specified by
+	 * {@code dataClassToStateTransition}. For additionally specifying the
+	 * values for the DataAttributeInstances of the used DataObjects use
+	 * {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
+	 * terminateDataControlNodeInstance}.
 	 * 
-	 * @param activityInstanceId
+	 * @param controlNodeInstance
+	 *            - AbstractDataControlNodeInstance that shall terminate
 	 * @param dataClassToStateTransition
-	 * @return List of DataObjects that made a transition and those that are
-	 *         newly created
+	 *            - Map from DataClass to an ObjectLifecycleState of the
+	 *            DataClass to define the new State for the DataObject with the
+	 *            referred DataClass
+	 * 
+	 * @see {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
+	 *      terminateDataControlNodeInstance}
 	 */
-	public List<DataObject> handleActivityOutputTransitions(AbstractActivityInstance activityInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		try {
-			if (!activityInstance.getState().equals(State.RUNNING)) {
-				IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(activityInstance, State.RUNNING);
-				log.error(e.getMessage());
-				throw e;
-			}
-			
-			return handleDataControlNodeOutputTransitions((AbstractDataControlNodeInstance) activityInstance, dataClassToStateTransitions);
+			terminateDataControlNodeInstance(controlNodeInstance, dataClassToStateTransitions, new HashMap<>());
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
 	}
 
-	public List<DataObject> handleEventOutputTransitions(AbstractEventInstance eventInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+	/**
+	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
+	 * transitions of the DataObjects specified by
+	 * {@code dataClassToStateTransition}. After the transitions of the
+	 * DataObjects change the values of those DataAttributeInstances specified
+	 * by rawDataAttributeValues.
+	 * 
+	 * @param controlNodeInstance
+	 *            - AbstractDataControlNodeInstance that shall terminate
+	 * @param dataClassToStateTransitions
+	 *            - Map from DataClass to an ObjectLifecycleState of the
+	 *            DataClass to define the new State for the DataObject with the
+	 *            referred DataClass
+	 * @param rawDataAttributeValues
+	 *            - Map from name of DataClass to a Map from DataAttribute name
+	 *            to new DataAttributeInstance value
+	 */
+	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions, Map<String, Map<String, Object>> rawDataAttributeValues) {
 		try {
-			if (!eventInstance.getState().equals(State.RUNNING)) {
-				// IllegalActivityInstanceStateException e = new IllegalActivityInstanceStateException(eventInstance, State.RUNNING);
-				// log.error(e.getMessage());
-				// throw e;
+			if (!controlNodeInstance.canTerminate()) {
+				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
+				log.error(e.getMessage());
+				throw e;
 			}
 			
-			return handleDataControlNodeOutputTransitions((AbstractDataControlNodeInstance) eventInstance, dataClassToStateTransitions);
+			List<DataObject> usedDataObjects = handleDataControlNodeOutputTransitions(controlNodeInstance, dataClassToStateTransitions);
+			dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+			controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			controlNodeInstance.terminate();
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
 	}
 	
+	/**
+	 * Handle the data object transition for an AbstractControlNodeInstance.
+	 * Therefore unlock all DataObjects of the instance that were defined at the
+	 * beginning of the instance. In addition let the DataManager handle the
+	 * transitions of the DataObjects specified by the
+	 * dataClassToStateTransitions.
+	 * 
+	 * @param controlNodeInstance
+	 *            - AbstractDataControlNodeInstance to handle
+	 * @param dataClassToStateTransitions
+	 *            - Map from DataClass to an ObjectLifecycleState of the
+	 *            DataClass to define the new State for the DataObject with the
+	 *            referred DataClass
+	 * @return List of all DataObjects that were used as working items and
+	 *         created by the DataManager
+	 */
 	private List<DataObject> handleDataControlNodeOutputTransitions(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		try {
 			List<DataObject> workingItems = controlNodeInstance.getSelectedDataObjects();
 			dataManager.unlockDataObjects(workingItems);
 			
+			// TODO: validate whether this works correct
 			List<DataObject> usedDataObject = new ArrayList<>();
 			if (!controlNodeInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
 				usedDataObject = dataManager.handleDataObjectTransitions(workingItems, dataClassToStateTransitions);
 			}
 
-			controlNodeInstance.setOutputDataObjects(usedDataObject);
 			return usedDataObject;
 		} catch (IllegalArgumentException e) {
 			throw e;
@@ -246,11 +244,6 @@ public class CaseExecutioner {
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
-	}
-
-	// Do not implement this at the moment
-	public void startAutomaticTasks() {
-
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package de.hpi.bpt.chimera.parser;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
 import java.util.List;
@@ -44,7 +44,6 @@ public class DataFlowParserTest {
 		List<ConditionSet> postCondition = task.getPostCondition().getConditionSets();
 
 		// PreCondition
-		assertEquals(6, preCondition.size());
 		assertEquals("A1", preCondition.get(0).getConditions().get(0).getDataClassName() + preCondition.get(0).getConditions().get(0).getStateName());
 		assertEquals("B1", preCondition.get(0).getConditions().get(1).getDataClassName() + preCondition.get(0).getConditions().get(1).getStateName());
 		assertEquals("C1", preCondition.get(0).getConditions().get(2).getDataClassName() + preCondition.get(0).getConditions().get(2).getStateName());

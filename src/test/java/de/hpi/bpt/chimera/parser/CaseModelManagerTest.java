@@ -43,6 +43,7 @@ public class CaseModelManagerTest {
 		CaseModel cm2;
 		cm2 = CaseModelParser.parseCaseModel(jsonString);
 		cm2.setId("591330db1ed1325048306e41");
+		CaseModelManager.addCaseModel(cm2);
 		assertEquals("591330db1ed1325048306e41", cm2.getId());
 		cm2.saveCaseModelToDB();
 

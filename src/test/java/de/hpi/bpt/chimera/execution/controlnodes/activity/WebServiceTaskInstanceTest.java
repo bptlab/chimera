@@ -34,7 +34,8 @@ public class WebServiceTaskInstanceTest {
 	public void testAutoExecution() {
 		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Get ReiseWarnung");
 		assertNotNull(task0);
-		assertTrue("is automatic task was not parsed correctly", task0.isAutomaticTask());
+		assertTrue(task0 instanceof WebServiceTaskInstance);
+		assertTrue("is automatic task was not parsed correctly", task0.hasAutomaticBegin());
 		assertTrue("task has precondition", task0.getControlNode().getPreCondition().getConditionSets().isEmpty());
 
 		assertEquals("State of ActivityInstance is not TERMINATED", State.TERMINATED, task0.getState());

@@ -49,7 +49,7 @@ public class SimpleBeginHumanTaskTest {
 		assertNotNull(task0);
 
 		assertEquals("State of ActivityInstance is not READY", State.READY, task0.getState());
-		caseExecutioner.beginActivityInstance(task0, new ArrayList<DataObject>());
+		caseExecutioner.beginDataControlNodeInstance(task0, new ArrayList<DataObject>());
 		
 		assertEquals("State of ActivityInstance is not RUNNING", State.RUNNING, task0.getState());
 	}
@@ -86,7 +86,7 @@ public class SimpleBeginHumanTaskTest {
 		assertEquals("State of ActivityInstance is not READY", State.READY, task2.getState());
 
 		ArrayList<DataObject> dataObjects = new ArrayList<>(Arrays.asList(dataObject));
-		caseExecutioner.beginActivityInstance(task2, dataObjects);
+		caseExecutioner.beginDataControlNodeInstance(task2, dataObjects);
 
 		assertEquals("State of ActivityInstance is not RUNNING", State.RUNNING, task2.getState());
 		assertTrue("DataObject wasn't locked", dataObject.isLocked());

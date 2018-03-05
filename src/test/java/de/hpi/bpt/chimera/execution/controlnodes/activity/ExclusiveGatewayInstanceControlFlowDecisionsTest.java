@@ -57,9 +57,8 @@ public class ExclusiveGatewayInstanceControlFlowDecisionsTest {
 		caseExecutioner.startCase();
 
 		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity1");
-		caseExecutioner.beginActivityInstance(activityInst, new ArrayList<DataObject>());
-		caseExecutioner.handleActivityOutputTransitions(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
-		activityInst.terminate();
+		caseExecutioner.beginDataControlNodeInstance(activityInst, new ArrayList<DataObject>());
+		caseExecutioner.terminateDataControlNodeInstance(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
 
 		Collection<String> activityInstances = new ArrayList<String>();
 		activityInstances.addAll(caseExecutioner.getActivitiesWithState(State.READY).stream().map(activity -> activity.getControlNode().getName()).collect(Collectors.toList()));

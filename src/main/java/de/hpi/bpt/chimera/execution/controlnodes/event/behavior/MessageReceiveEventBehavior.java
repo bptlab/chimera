@@ -1,6 +1,5 @@
 package de.hpi.bpt.chimera.execution.controlnodes.event.behavior;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.persistence.Entity;

@@ -76,6 +76,7 @@ public class MessageReceiveBehaviorTest {
 		AbstractActivityInstance task = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task");
 		assertEquals("BoundaryEvents", task.getControlNode().getAttachedBoundaryEvents().size(), 1);
 		task.begin();
+		assertEquals("task has not begun properly", task.getState(), State.RUNNING);
 		assertEquals("StartEvent, Task and BoundaryEvent should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 3);
 
 		AbstractEventInstance receiveEvent = CaseExecutionerTestHelper.getEventInstanceByName(boundaryFragment, "boundaryReceiveEvent");

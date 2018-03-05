@@ -3,7 +3,6 @@ package de.hpi.bpt.chimera.rest;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
@@ -285,27 +284,31 @@ public class ActivityRestService extends AbstractRestService {
 	/**
 	 * Changes the state of an activityInstance from enabled to running.
 	 *
-	 * @param scenarioId         The id of a scenario model.
-	 * @param scenarioInstanceId the id of an scenario instance.
-	 * @param activityInstanceId the id of the activity instance.
-	 * @param postBody           Json Object containing the data objects on which the activity operates
-	 * @return a message regarding the success of the operation
-	 * A 202 (ACCEPTED) means that the POST was successful.
-	 * A 400 (BAD_REQUEST) if the transition was not allowed.
+	 * @param cmId
+	 *            The id of a case model.
+	 * @param caseId
+	 *            - the id of case.
+	 * @param activityInstanceId
+	 *            the id of the activity instance.
+	 * @param postBody
+	 *            - Json String containing the data objects on which the
+	 *            activity instance operates
+	 * @return a message regarding the success of the operation A 202 (ACCEPTED)
+	 *         means that the POST was successful. A 400 (BAD_REQUEST) if the
+	 *         transition was not allowed.
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/begin")
-	public Response beginActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
+	public Response beginActivityInstance(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
 		try {
 			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
 			List<String> selectedDataObjectIds = parseDataObjectIds(post);
 			List<DataObject> selectedDataObjects = caseExecutioner.getDataManager().getDataObjectsById(selectedDataObjectIds);
 
-			caseExecutioner.beginActivityInstance(activityInstance, selectedDataObjects);
+			caseExecutioner.beginDataControlNodeInstance(activityInstance, selectedDataObjects);
 			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
@@ -359,28 +362,21 @@ public class ActivityRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
-	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
+	public Response terminateActivityInstance(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
 		try {
-			log.info("Try to terminate Activity");
 			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-			// isTerminatable
-			JSONObject postJson = new JSONObject(post);
 
+			JSONObject postJson = new JSONObject(post);
 			String dataObjectPost = postJson.getString("transitions");
 			String attributePost = postJson.getString("values");
 			
 			Map<String, String> dataClassToStateTransitionStrings = parseDataClassToStateTransitionStrings(dataObjectPost);
 			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(dataClassToStateTransitionStrings);
-			List<DataObject> usedDataObjects = caseExecutioner.handleActivityOutputTransitions(activityInstance, dataClassToStateTransitions);
-
 			Map<String, Map<String, Object>> rawDataAttributeValues = parseDataAttribueValues(attributePost);
-			DataManager dataManager = caseExecutioner.getDataManager();
-			dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
 
-			activityInstance.terminate();
-			
+			caseExecutioner.terminateDataControlNodeInstance(activityInstance, dataClassToStateTransitions, rawDataAttributeValues);
+
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
 		} catch (IllegalArgumentException e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();

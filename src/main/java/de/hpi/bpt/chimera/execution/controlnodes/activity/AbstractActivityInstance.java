@@ -14,12 +14,10 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstanceFactory;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.event.BoundaryEventInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
@@ -29,9 +27,11 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 public abstract class AbstractActivityInstance extends AbstractDataControlNodeInstance {
 	private static final Logger log = Logger.getLogger(AbstractActivityInstance.class);
 
-	private boolean isAutomaticTask;
-	// TODO: find out what canTerminate is exactly needed for
-	// private boolean canTerminate;
+	/**
+	 * Decide whether the instance will begin automatically.
+	 */
+	private boolean hasAutomaticBegin;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "attachedToActivity")
 	private List<BoundaryEventInstance> attachedBoundaryEventInstances;
 
@@ -53,7 +53,7 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	 */
 	public AbstractActivityInstance(AbstractActivity activity, FragmentInstance fragmentInstance) {
 		super(activity, fragmentInstance);
-		this.isAutomaticTask = false;
+		allowAutomaticExecution();
 		this.attachedBoundaryEventInstances = new ArrayList<>();
 	}
 
@@ -74,20 +74,20 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 				getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
 			setState(State.READY);
 		}
-		if (getState().equals(State.READY) && this.isAutomaticTask) {
+		if (canBegin() && hasAutomaticBegin()) {
 			// automatically select data objects, input set must be unique
 			assert getControlNode().hasUniquePreCondition() : "For automatic execution tasks need an unique pre-condition";
 			List<ConditionSet> conditionSets = getControlNode().getPreCondition().getConditionSets();
 			ConditionSet inputSet = new ConditionSet();
-			if (! conditionSets.isEmpty()) {
+			if (!conditionSets.isEmpty()) {
 				inputSet = conditionSets.get(0);
 			}
 			Set<DataObject> fulfillingDataObjects = getDataManager().getFulfillingDataObjects(inputSet);
-			if (fulfillingDataObjects.isEmpty()) {
+			if (fulfillingDataObjects.isEmpty() && !conditionSets.isEmpty()) {
 				// this should not happen, someone changed a DO state we needed or locked a DO
 				checkDataFlow();
 			} else {
-				getCaseExecutioner().beginActivityInstance(this, fulfillingDataObjects);
+				getCaseExecutioner().beginDataControlNodeInstance(this, new ArrayList<>(fulfillingDataObjects));
 			}
 		}
 	}
@@ -128,28 +128,29 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	 */
 	@Override
 	public void begin() {
-		// assert ... maybe not needed
-		if (!getState().equals(State.READY)) {
+		if (!canBegin()) {
 			log.info(String.format("%s not set to running, because the activty isn't in state READY", this.getControlNode().getName()));
 			return;
 		}
-		// TODO: implement skipBehaviour
+
 		createAttachedBoundaryEvents();
 
 		setState(State.RUNNING);
-		log.info(String.format("enabled %d Boundary events", attachedBoundaryEventInstances.size()));
 		execute();
-		if (this.isAutomaticTask && getControlNode().hasUniquePostCondition()) {
+
+		if (this.hasAutomaticBegin && getControlNode().hasUniquePostCondition()) {
 			Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = new HashMap<>();
 			if (getControlNode().hasPostCondition()) {
 				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
 			}
 			
-			getCaseExecutioner().handleActivityOutputTransitions(this, dataObjectToObjectLifecycleTransition);
-			getCaseExecutioner().terminateActivityInstance(this);
+			getCaseExecutioner().terminateDataControlNodeInstance(this, dataObjectToObjectLifecycleTransition);
 		}
 	}
 
+	/**
+	 * Create instances for the attached boundary events and enable them.
+	 */
 	private void createAttachedBoundaryEvents() {
 		for (BoundaryEvent boundaryEvent : getControlNode().getAttachedBoundaryEvents()) {
 			BoundaryEventInstance boundaryEventInstance = (BoundaryEventInstance) getFragmentInstance().createControlNodeInstance(boundaryEvent);
@@ -186,14 +187,18 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 		setState(State.SKIPPED);
 	}
 
+	/**
+	 * Cancel the activity instance. Therefore the instance need to be running.
+	 * The data objects locked by the activity instance will be unlocked.
+	 */
 	public void cancel() {
-		if (!this.getState().equals(State.RUNNING)) {
+		if (!getState().equals(State.RUNNING)) {
 			String errorMsg = "Tried cancelling an activity instance, which is not running";
 			log.warn(errorMsg);
 			throw new IllegalStateException(errorMsg);
 		}
 		setState(State.CANCEL);
-		// TODO: is the following right?
+
 		List<DataObject> workingItems = getSelectedDataObjects();
 		this.getCaseExecutioner().getDataManager().unlockDataObjects(workingItems);
 	}
@@ -212,23 +217,26 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 		return (AbstractActivity) super.getControlNode();
 	}
 
-	public boolean isAutomaticTask() {
-		return isAutomaticTask;
+	public boolean hasAutomaticBegin() {
+		return hasAutomaticBegin;
 	}
 
 	/**
-	 * Tries to set the flag for automatic execution of this activity instance to {@literal true}. 
-	 * This fails if the activity has multiple input or output sets which would require user choice.
-	 * Gateways themselves take care to forbid automatic execution of their successor activities, 
-	 * @see ExclusiveGatewayInstance. 
+	 * Tries to set the flag for automatic execution of this activity instance
+	 * to {@literal true}. This fails if the activity has multiple input or
+	 * output sets which would require user choice. Gateways themselves take
+	 * care to forbid automatic execution of their successor activities,
+	 * 
+	 * @see {@link ExclusiveGatewayInstance}.
 	 */
 	public void allowAutomaticExecution() {
 		if (getControlNode().hasUniquePostCondition() &&
-				getControlNode().hasUniquePreCondition()) {
-			isAutomaticTask = true;
+				getControlNode().hasUniquePreCondition() &&
+					getControlNode().isAutomaticTask()) {
+			hasAutomaticBegin = true;
 		} else {
 			log.warn("Tasks with more than one input or output set cannot be executed automatically.");
-			isAutomaticTask = false;
+			hasAutomaticBegin = false;
 		}
 	}
 
@@ -239,9 +247,9 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	 * by the user.  
 	 */
 	public void forbidAutomaticStart() {
-		isAutomaticTask = false;
+		hasAutomaticBegin = false;
 	}
-	
+
 	public List<BoundaryEventInstance> getAttachedBoundaryEventInstances() {
 		return attachedBoundaryEventInstances;
 	}

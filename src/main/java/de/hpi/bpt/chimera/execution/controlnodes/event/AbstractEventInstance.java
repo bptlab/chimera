@@ -1,8 +1,5 @@
 package de.hpi.bpt.chimera.execution.controlnodes.event;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -14,12 +11,9 @@ import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.EventBehavior;
-import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.EventBasedGatewayInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 
 @Entity
@@ -75,7 +69,7 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 			previousEventBasedGatewayInstance.skipAlternativeGateways(this);
 		}
 
-		if (getControlNode().hasPostCondition() && getControlNode().hasUniquePostCondition()) {
+		if (getControlNode().hasUniquePostCondition() && getControlNode().hasPostCondition()) {
 			for (AtomicDataStateCondition condition : getControlNode().getPostCondition().getConditionSets().get(0).getConditions()) {
 				DataObject dataObject = getDataManager().createDataObject(condition);
 				getOutputDataObjects().add(dataObject);
@@ -91,6 +85,16 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	@Override
 	public void skip() {
 		this.setState(State.SKIPPED);
+	}
+
+	/**
+	 * 
+	 * @return whether the data control node instance is in the correct state
+	 *         for beginning.
+	 */
+	@Override
+	public boolean canBegin() {
+		return getState().equals(State.READY) || getState().equals(State.REGISTERED);
 	}
 
 	// GETTER & SETTER
