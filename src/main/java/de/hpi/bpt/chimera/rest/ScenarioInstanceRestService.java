@@ -61,6 +61,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
+			log.error("Error while requesting all Cases of a CaseModel.", e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}

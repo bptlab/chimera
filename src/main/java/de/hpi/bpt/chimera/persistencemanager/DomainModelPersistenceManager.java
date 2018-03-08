@@ -7,10 +7,12 @@ import java.util.Timer;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.Case;
+import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 
@@ -21,7 +23,7 @@ public class DomainModelPersistenceManager {
 	// Otherwise the dababase will be reset every time.
 	private static final Logger log = Logger.getLogger(DomainModelPersistenceManager.class);
 
-	private static final int PERSISTENCE_INTERVAL = 100000;
+	private static final int PERSISTENCE_INTERVAL = 5000;
 
 	private static final String PERSISTENCE_UNIT_NAME = "CaseModel";
 	private static EntityManagerFactory entityManagerFactory;
@@ -95,6 +97,33 @@ public class DomainModelPersistenceManager {
 		return null;
 	}
 
+	/**
+	 * Returns a list of all running Cases of a CaseModel (specified by Id).
+	 * 
+	 * @param cmId
+	 *            The Id of the CaseModel to which all executing Cases should be
+	 *            searched.
+	 * @return a List of CaseExecutioners, which executes cases of CaseModels
+	 *         with the given Id.
+	 */
+	public static List<CaseExecutioner> loadAllCaseExecutionersWithCaseModelId(String cmId) {
+		// TODO don't use this native query which depends on the column name
+		// CASEMODEL_CMID
+		String queryString = "SELECT * FROM CaseExecutioner ce WHERE ce.CASEMODEL_CMID = '" + cmId + "';";
+
+		try {
+			EntityManager em = getEntityManagerFactory().createEntityManager();
+			// TODO maybe remove this native statement and make code
+			// independent of the column name (CASEMODEL_CMID).
+			Query q = em.createNativeQuery(queryString, CaseExecutioner.class);
+			return q.getResultList();
+		} catch (Exception e) {
+			log.error("Error while loading all Cases of a CaseModel Id from database", e);
+		}
+
+		return null;
+	}
+
 
 	/**
 	 * Starts a Timer that every {@link PERSISTENCE_INTERVAL} seconds saves all
@@ -102,6 +131,7 @@ public class DomainModelPersistenceManager {
 	 */
 	public static void startPermanentCasePersistence() {
 		if (timer == null) {
+			log.info("Starting a new permanent repeating CasePersistenceTask");
 			timer = new Timer();
 			timer.scheduleAtFixedRate(new CasePersistenceTask(), 0, PERSISTENCE_INTERVAL);
 		}
@@ -172,4 +202,5 @@ public class DomainModelPersistenceManager {
 		entityManager.merge(eventMapper);
 		entityManager.getTransaction().commit();
 	}
+
 }

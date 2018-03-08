@@ -12,10 +12,14 @@ public class CasePersistenceTask extends TimerTask {
 
 	@Override
 	public void run() {
-		log.debug("Starting to persist all case-models.");
+		log.debug("Started persisting all case-models. (Timer hash: " + this.hashCode());
 		for (CaseExecutioner caseExecutioner : ExecutionService.getAllExecutingCaseExecutioner()) {
 			synchronized (this) {
+				try {
 				DomainModelPersistenceManager.saveCase(caseExecutioner.getCase());
+				} catch (Exception e) {
+					log.error("Error during persisting in regular persisting task", e);
+				}
 			}
 		}
 		log.debug("Finished persisting all case-modals.");

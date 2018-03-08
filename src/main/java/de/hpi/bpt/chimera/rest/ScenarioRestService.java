@@ -47,9 +47,6 @@ public class ScenarioRestService extends AbstractRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenarios(@Context UriInfo uriInfo, @DefaultValue("") @QueryParam("filter") String filterString) {
 
-		// TODO move start of casePersistence
-		DomainModelPersistenceManager.startPermanentCasePersistence();
-
 		List<CaseModel> caseModels = CaseModelManager.getCaseModels();
 
 		if (!filterString.isEmpty()) {

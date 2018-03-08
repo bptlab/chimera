@@ -105,6 +105,10 @@ public final class ExecutionService {
 		}
 
 	private static void addCase(CaseExecutioner caseExecutioner) {
+		if (cases.containsKey(caseExecutioner.getCase().getId())) {
+			return;
+		}
+
 		String caseId = caseExecutioner.getCase().getId();
 		String cmId = caseExecutioner.getCaseModel().getId();
 		cases.put(caseId, caseExecutioner);
@@ -127,9 +131,16 @@ public final class ExecutionService {
 	 */
 	public static List<CaseExecutioner> getAllCasesOfCaseModel(String cmId) {
 		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
-			IllegalCaseModelIdException e = new IllegalCaseModelIdException(cmId);
-			log.error(e.getMessage());
-			throw e;
+			List<CaseExecutioner> cases = DomainModelPersistenceManager.loadAllCaseExecutionersWithCaseModelId(cmId);
+			if (cases != null) {
+				for (CaseExecutioner ce : cases) {
+					addCase(ce);
+				}
+			} else {
+				IllegalCaseModelIdException e = new IllegalCaseModelIdException(cmId);
+				log.error(e.getMessage());
+				throw e;
+			}
 		}
 		log.info(String.format("Successfully requested all Case-Informations of CaseModel-Id: %s", cmId));
 		return caseExecutions.get(cmId);

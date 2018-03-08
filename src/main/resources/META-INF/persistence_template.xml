@@ -8,7 +8,7 @@
       <property name="javax.persistence.jdbc.url"    value="${mysql.url}" />
       <property name="javax.persistence.jdbc.user" value="${mysql.username}" />
       <property name="javax.persistence.jdbc.password" value="${mysql.password}" />
-      <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+      <property name="eclipselink.ddl-generation" value="none" />
       <property name="eclipselink.ddl-generation.output-mode" value="database" />
     </properties>
   </persistence-unit>
