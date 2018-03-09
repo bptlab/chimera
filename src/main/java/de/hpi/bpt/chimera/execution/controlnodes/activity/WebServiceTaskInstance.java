@@ -70,74 +70,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		return parseWebTarget(replacedLink);
 	}
 
-	/**
-	 * If the input string contains a variable expression, i.e. {@code #DataClass} or {@code #DataClass.attributeName}, 
-	 * this method tries to find a {@link DataObject} of this data class among the selected data objects.
-	 * In the first case ({@code #DataClass}) the variable expression is replaced with the current state of the 
-	 * found data object (or "<not found>" if no such data object was found).
-	 * In the second case ({@code #DataClass.attributeName}) the attribute instances of the found data object are 
-	 * searched for one that matches {@code attributeName}. If such attribute instance is found, its value is used
-	 * to replace the variable expression in the input string. Otherwise, it is replaced with "<not found>".
-	 * 
-	 * If the input string contains multiple variable expression the first one is replaced and the method calls itself
-	 * recursively with the resulting string. The recursion ends, when the input no longer contains any variable 
-	 * expressions.
-	 *  
-	 * If the input string does not contain a variable expression, it is returned unchanged.
-	 * 
- 	 * @param toReplace - the input string which might contain variable expressions {@code #DataClass} or {@code #DataClass.attributeName}
-	 * @return the input string with the variable expression replaced by the referenced data object state or data attribute value
-	 */
-	private String replaceVariableExpressions(String toReplace) {
-		Pattern p = Pattern.compile("#(\\w+)(?:\\.(\\w+))?\\b");
-		Matcher m = p.matcher(toReplace);
-		if (! m.find()) { // no variable used in input, end recursion
-			return toReplace;
-		}
-		final int attributeNameGroup = 2;
-		final int dataClassNameGroup = 1;
-		String dataClassName = m.group(dataClassNameGroup);
-		Optional<String> attrName = Optional.ofNullable(m.group(attributeNameGroup));
-		Optional<DataObject> foundDO = getSelectedDataObjects().stream()
-											.filter(d -> dataClassName.equals(d.getDataClass().getName()))
-											.findFirst();
-		if (! foundDO.isPresent()) { // no DO found for data class referenced in variable expression
-			log.error(String.
-					format("None of the selected data objects of the task '%s' matches the data class '%s' referenced in the variable expression %s.", 
-							getControlNode().getName(), dataClassName, m.group()));
-			// replace first match and recursive call to replace other potential variable expressions
-			String replacedFirstOccurrence = m.replaceFirst("<not found>");
-			return replaceVariableExpressions(replacedFirstOccurrence);
-		}
-		if (! attrName.isPresent()) { // no attribute referenced -> replace "#DataClass" with its state
-			// replace first match and recursive call to replace other potential variable expressions
-			String replacedFirstOccurrence = m.replaceFirst(foundDO.get().getObjectLifecycleState().getName());
-			return replaceVariableExpressions(replacedFirstOccurrence);
-		}
-		Optional<DataAttributeInstance> foundDAI = 
-					foundDO.get().getDataAttributeInstances().stream()
-					.filter(dai -> attrName.get().equals(dai.getDataAttribute().getName()))
-					.findFirst();
-		if (! foundDAI.isPresent()) { // no DAI found for attribute referenced in variable expression
-			log.error(String.
-					format("The found data object of class '%s' does not have a attribute with name '%s' specified in the variable expression %s.", 
-							dataClassName, attrName.get(), m.group()));
-			// replace first match and recursive call to replace other potential variable expressions
-			String replacedFirstOccurrence = m.replaceFirst("<not found>");
-			return replaceVariableExpressions(replacedFirstOccurrence);
-		}
-		Object value = foundDAI.get().getValue();
-		if (value == null) { // attribute value is null
-			log.error(String.
-					format("The attribute value of the variable expression '%s' is 'null'.", m.group()));
-			// replace first match and recursive call to replace other potential variable expressions
-			String replacedFirstOccurrence = m.replaceFirst("<value is 'null'>");
-			return replaceVariableExpressions(replacedFirstOccurrence);			
-		}
-		// replace first match and recursive call to replace other potential variable expressions
-		String replacedFirstOccurrence = m.replaceFirst(value.toString());
-		return replaceVariableExpressions(replacedFirstOccurrence);		
-	}
+
 
 	/**
 	 * Receive a WebTarget by parsing url and query params out of a given link.

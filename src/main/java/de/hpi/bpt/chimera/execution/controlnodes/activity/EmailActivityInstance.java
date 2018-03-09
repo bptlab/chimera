@@ -10,6 +10,7 @@ import org.apache.commons.mail.SimpleEmail;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
+import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
@@ -70,7 +71,11 @@ public class EmailActivityInstance extends AbstractActivityInstance {
 
 	private void setDataAttributes() {
 		// TODO
-		// DataManager dataManager = getScenarioInstance().getDataManager();
+		message = replaceVariableExpressions(message);
+		subject = replaceVariableExpressions(subject);
+		receiverMail = replaceVariableExpressions(receiverMail);
+
+		// DataManager dataManager = this.getCaseExecutioner().getDataManager();
 		// for (DataAttributeInstance dataAttributeInstance :
 		// dataManager.getDataAttributeInstances()) {
 		// message = message.replace("#" +

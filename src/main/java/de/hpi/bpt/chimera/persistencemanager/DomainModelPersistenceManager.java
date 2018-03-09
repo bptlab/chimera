@@ -23,7 +23,7 @@ public class DomainModelPersistenceManager {
 	// Otherwise the dababase will be reset every time.
 	private static final Logger log = Logger.getLogger(DomainModelPersistenceManager.class);
 
-	private static final int PERSISTENCE_INTERVAL = 5000;
+	private static final int PERSISTENCE_INTERVAL = 10000;
 
 	private static final String PERSISTENCE_UNIT_NAME = "CaseModel";
 	private static EntityManagerFactory entityManagerFactory;
