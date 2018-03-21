@@ -45,7 +45,7 @@ public class DataManager {
 	private static final Logger log = Logger.getLogger(DataManager.class);
 	@OneToOne(cascade = CascadeType.ALL)
 	private CaseExecutioner caseExecutioner;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne // (cascade = CascadeType.ALL)
 	private DataModel dataModel;
 	@OneToMany(cascade = CascadeType.ALL)
 	private Map<String, DataObject> dataObjectIdToDataObject;

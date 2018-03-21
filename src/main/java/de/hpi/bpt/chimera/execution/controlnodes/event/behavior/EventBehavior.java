@@ -17,7 +17,7 @@ public class EventBehavior implements Behaving {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	int dbId;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "behavior")
 	private AbstractEventInstance eventInstance;
 
 

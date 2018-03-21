@@ -16,7 +16,7 @@ public class CasePersistenceTask extends TimerTask {
 		for (CaseExecutioner caseExecutioner : ExecutionService.getAllExecutingCaseExecutioner()) {
 			synchronized (this) {
 				try {
-				DomainModelPersistenceManager.saveCase(caseExecutioner.getCase());
+					DomainModelPersistenceManager.saveCase(caseExecutioner.getCase());
 				} catch (Exception e) {
 					log.error("Error during persisting in regular persisting task", e);
 				}

@@ -78,23 +78,39 @@ public class DomainModelPersistenceManager {
 		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
 
 		try {
-			entityManager.getTransaction().begin();
-			entityManager.merge(caze);
-			entityManager.getTransaction().commit();
+			if (entityManager.find(Case.class, caze.getId()) == null) {
+				entityManager.getTransaction().begin();
+				entityManager.merge(caze);
+				entityManager.getTransaction().commit();
+			}
 		} catch (Exception e) {
 			log.error("Case persistence Exception", e);
 		}
 	}
 
 	public static Case loadCase(String caseId) {
+		Case caze = null;
 		try{
 			EntityManager em = getEntityManagerFactory().createEntityManager();
-			return em.find(Case.class, caseId);
+			caze = em.find(Case.class, caseId);
+			em.getTransaction().commit();
 		}
 		catch(Exception e){
 			log.error("Case load Exception", e);
 		}
-		return null;
+		return caze;
+	}
+
+	public static void deleteCase(Case caze) {
+		EntityManager em = getEntityManagerFactory().createEntityManager();
+		try {
+			em.getTransaction().begin();
+			Case caseToRemove = em.find(Case.class, caze.getId());
+			em.remove(caseToRemove);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
+		}
 	}
 
 	/**
@@ -110,18 +126,19 @@ public class DomainModelPersistenceManager {
 		// TODO don't use this native query which depends on the column name
 		// CASEMODEL_CMID
 		String queryString = "SELECT * FROM CaseExecutioner ce WHERE ce.CASEMODEL_CMID = '" + cmId + "';";
+		List<CaseExecutioner> caseExecutioners = null;
 
 		try {
 			EntityManager em = getEntityManagerFactory().createEntityManager();
 			// TODO maybe remove this native statement and make code
 			// independent of the column name (CASEMODEL_CMID).
 			Query q = em.createNativeQuery(queryString, CaseExecutioner.class);
-			return q.getResultList();
+			caseExecutioners = q.getResultList();
 		} catch (Exception e) {
 			log.error("Error while loading all Cases of a CaseModel Id from database", e);
 		}
 
-		return null;
+		return caseExecutioners;
 	}
 
 
@@ -156,8 +173,11 @@ public class DomainModelPersistenceManager {
 	 * @return the loaded CaseModel Object
 	 */
 	public static CaseModel loadCaseModel(String cmId) {
+		CaseModel caseModel = null;
 		EntityManager em = getEntityManagerFactory().createEntityManager();
-		return em.find(CaseModel.class, cmId);
+		caseModel = em.find(CaseModel.class, cmId);
+
+		return caseModel;
 	}
 
 	public static List<CaseModel> loadAllCaseModels() {

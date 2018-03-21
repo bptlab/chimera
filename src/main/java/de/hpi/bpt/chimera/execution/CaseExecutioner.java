@@ -45,7 +45,7 @@ public class CaseExecutioner {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int dbId;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "caseExecutioner")
 	private Case caze;
 	@OneToOne
 	private CaseModel caseModel;

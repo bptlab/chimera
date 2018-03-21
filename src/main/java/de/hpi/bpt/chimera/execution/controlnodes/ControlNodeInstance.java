@@ -21,7 +21,7 @@ public abstract class ControlNodeInstance implements Behaving {
 	// TODO: think about how to implement the Id
 	@Id
 	private String id = "";
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne // (cascade = CascadeType.ALL)
 	private AbstractControlNode controlNode;
 	@OneToOne(cascade = CascadeType.ALL)
 	private FragmentInstance fragmentInstance;

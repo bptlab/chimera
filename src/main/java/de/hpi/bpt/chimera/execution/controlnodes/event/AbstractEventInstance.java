@@ -23,7 +23,7 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private EventBehavior behavior;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private EventBasedGatewayInstance previousEventBasedGatewayInstance;
 
 
