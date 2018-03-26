@@ -38,8 +38,10 @@
 					<url>http://172.16.64.113:8080/manager/text</url> <server>chimera113</server> 
 					<path>/Chimera</path> </configuration> -->
 					
-					<!--  for faster loca testing -->
+					
+					<!--  for faster local testing -->
 					 <configuration>
+					 	<path>/Chimera</path>
           				<url>http://localhost:8080/manager/text</url>
         			</configuration>
 			</plugin>

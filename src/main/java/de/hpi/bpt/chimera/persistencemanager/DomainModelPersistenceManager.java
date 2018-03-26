@@ -27,6 +27,7 @@ public class DomainModelPersistenceManager {
 
 	private static final String PERSISTENCE_UNIT_NAME = "CaseModel";
 	private static EntityManagerFactory entityManagerFactory;
+	private static EntityManager entityManager = null;
 	private static boolean isEntityManagerFactoryInitialized = false;
 
 	private static Timer timer;
@@ -49,6 +50,32 @@ public class DomainModelPersistenceManager {
 	}
 
 	/**
+	 * Returns the EntityManager. If the EntityManager isn't initilized, then
+	 * first initialize it.
+	 * 
+	 * @return EntityManagerFactory
+	 */
+	public static EntityManager getEntityManager() {
+		if (entityManager == null || !entityManager.isOpen()) {
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+			entityManager = emf.createEntityManager();
+		}
+		return entityManager;
+	}
+
+
+	/**
+	 * Closes the EntityManager used for persistence. Usually invoked when
+	 * application context is destroyed (e.g. server shut down).
+	 * 
+	 */
+	public static void closeEntityManager() {
+		if (entityManager != null && entityManager.isOpen()) {
+			entityManager.close();
+		}
+	}
+
+	/**
 	 * Persists a given CaseModel to the database using the Java Persistence API
 	 * "EclipseLink".
 	 * 
@@ -60,11 +87,16 @@ public class DomainModelPersistenceManager {
 	 */
 	@Deprecated
 	public static void saveCaseModel(CaseModel caseModel) {
-		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
+		EntityManager em = getEntityManager();
 
-		entityManager.getTransaction().begin();
-		entityManager.merge(caseModel);
-		entityManager.getTransaction().commit();
+		em.getTransaction().begin();
+		CaseModel alreadyExistingCaseModel = em.find(CaseModel.class, caseModel.getId());
+		if (alreadyExistingCaseModel != null) {
+			em.remove(alreadyExistingCaseModel);
+		}
+		em.flush();
+		em.persist(caseModel);
+		em.getTransaction().commit();
 	}
 
 	// ToDo make a sober implementation of saving cases. Maybe with an own class
@@ -75,25 +107,24 @@ public class DomainModelPersistenceManager {
 	 */
 	@Deprecated
 	public static void saveCase(Case caze) {
-		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
+		EntityManager em = getEntityManager();
 
 		try {
-			if (entityManager.find(Case.class, caze.getId()) == null) {
-				entityManager.getTransaction().begin();
-				entityManager.merge(caze);
-				entityManager.getTransaction().commit();
-			}
+			em.getTransaction().begin();
+			em.persist(caze);
+			em.getTransaction().commit();
 		} catch (Exception e) {
 			log.error("Case persistence Exception", e);
 		}
+
+
 	}
 
 	public static Case loadCase(String caseId) {
 		Case caze = null;
 		try{
-			EntityManager em = getEntityManagerFactory().createEntityManager();
+			EntityManager em = getEntityManager();
 			caze = em.find(Case.class, caseId);
-			em.getTransaction().commit();
 		}
 		catch(Exception e){
 			log.error("Case load Exception", e);
@@ -102,7 +133,7 @@ public class DomainModelPersistenceManager {
 	}
 
 	public static void deleteCase(Case caze) {
-		EntityManager em = getEntityManagerFactory().createEntityManager();
+		EntityManager em = getEntityManager();
 		try {
 			em.getTransaction().begin();
 			Case caseToRemove = em.find(Case.class, caze.getId());
@@ -129,7 +160,7 @@ public class DomainModelPersistenceManager {
 		List<CaseExecutioner> caseExecutioners = null;
 
 		try {
-			EntityManager em = getEntityManagerFactory().createEntityManager();
+			EntityManager em = getEntityManager();
 			// TODO maybe remove this native statement and make code
 			// independent of the column name (CASEMODEL_CMID).
 			Query q = em.createNativeQuery(queryString, CaseExecutioner.class);
@@ -174,14 +205,14 @@ public class DomainModelPersistenceManager {
 	 */
 	public static CaseModel loadCaseModel(String cmId) {
 		CaseModel caseModel = null;
-		EntityManager em = getEntityManagerFactory().createEntityManager();
+		EntityManager em = getEntityManager();
 		caseModel = em.find(CaseModel.class, cmId);
 
 		return caseModel;
 	}
 
 	public static List<CaseModel> loadAllCaseModels() {
-		EntityManager em = getEntityManagerFactory().createEntityManager();
+		EntityManager em = getEntityManager();
 		em.getTransaction().begin();
 		List<CaseModel> caseModelList = em.createNamedQuery("CaseModel.getAll", CaseModel.class).getResultList();
 		em.getTransaction().commit();
@@ -193,7 +224,7 @@ public class DomainModelPersistenceManager {
 	}
 
 	public static void deleteCaseModel(String cmId) {
-		EntityManager em = getEntityManagerFactory().createEntityManager();
+		EntityManager em = getEntityManager();
 		CaseModel cmToRemove = em.find(CaseModel.class, cmId);
 		if (cmToRemove == null)
 			throw new IllegalArgumentException(String.format("CaseModel id : %s is not assigned.", cmId));
@@ -203,7 +234,7 @@ public class DomainModelPersistenceManager {
 	}
 
 	public static EventMapper loadEventMapper() {
-		EntityManager em = getEntityManagerFactory().createEntityManager();
+		EntityManager em = getEntityManager();
 		em.getTransaction().begin();
 		List<EventMapper> eventMapperList = em.createNamedQuery("EventMapper.get", EventMapper.class).getResultList();
 		em.getTransaction().commit();
@@ -216,7 +247,7 @@ public class DomainModelPersistenceManager {
 	}
 
 	public static void saveEventMapper(EventMapper eventMapper) {
-		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
+		EntityManager entityManager = getEntityManager();
 
 		entityManager.getTransaction().begin();
 		entityManager.merge(eventMapper);

@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class DataClass extends DataModelClass {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	private int dbId;
 	
 	private boolean isEvent;

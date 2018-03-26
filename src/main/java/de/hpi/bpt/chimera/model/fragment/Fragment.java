@@ -13,7 +13,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 @Entity
 public class Fragment {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	private int dbId;
 
 	private String id;

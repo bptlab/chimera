@@ -40,14 +40,14 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 @Entity
 public class DataManager {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	int dbId;
 	private static final Logger log = Logger.getLogger(DataManager.class);
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "dataManager")
 	private CaseExecutioner caseExecutioner;
 	@OneToOne // (cascade = CascadeType.ALL)
 	private DataModel dataModel;
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "dataManager")
 	private Map<String, DataObject> dataObjectIdToDataObject;
 
 	/**

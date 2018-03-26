@@ -14,7 +14,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 public class EventBehavior implements Behaving {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	int dbId;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "behavior")

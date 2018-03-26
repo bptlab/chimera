@@ -51,7 +51,7 @@ public final class EventDispatcher {
 	private static Map<String, AbstractEventInstance> idToRegisteredEvent = new HashMap<>();
 	private static Map<String, AbstractEventInstance> keyToRegisteredEvent = new HashMap<>();
 
-	private EventDispatcher() {
+	public EventDispatcher() {
 	}
 
 	@POST
@@ -114,7 +114,7 @@ public final class EventDispatcher {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
 	public static Response getRegisteredEvents(@PathParam("instanceId") int scenarioInstanceId, @PathParam("scenarioId") int scenarioId) {
-		logger.error("This function doesn't works with Chimera 2.0");
+		logger.error("This function doesn't work with Chimera 2.0");
 		// ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId,
 		// scenarioInstanceId);
 		// List<Integer> fragmentIds =
@@ -207,7 +207,7 @@ public final class EventDispatcher {
 		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
 		String query = insertAttributesIntoQueryString(eventInstance);
 		logger.info("Created query to register an Event at unicorn");
-		String notificationRuleId = sendQueryToEventService(query, requestId, 0 , 0);//last to Parameters 0 because we dont Integer Ids anymore but have to fit the unicorn Interface
+		String notificationRuleId = sendQueryToEventService(query, requestId, 0 , 0);//last to Parameters 0 because we dont have Integer Ids anymore but have to fit the unicorn Interface
 		receiveBehavior.setNotificationRule(notificationRuleId);
 		receiveBehavior.setUnicornKey(requestId);
 		
@@ -255,7 +255,7 @@ public final class EventDispatcher {
 	private static String sendQueryToEventService(String rawQuery, String requestId, String notificationPath) {
 		// since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
 		String query = StringEscapeUtils.unescapeHtml4(rawQuery);
-		logger.debug("Sending EventQuery to Unicorn: " + query + " " + requestId);
+		logger.debug("Prepared eventquery for Sending to Unicorn. Query: " + query + " RequestId:" + requestId);
 
 		JsonObject queryRequest = new JsonObject();
 		queryRequest.addProperty("queryString", query);
@@ -265,11 +265,13 @@ public final class EventDispatcher {
 		client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
 		client.property(ClientProperties.READ_TIMEOUT, 1000);
 		WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH);
+		logger.debug("The target URL is: " + target.getUri());
+		logger.debug("The queryRequest is: \"" + queryRequest + "\"");
 		try {
 			Response response = target.request().post(Entity.json(gson.toJson(queryRequest)));
 			if (response.getStatus() != 200) {
 				// throw new RuntimeException("Query could not be registered");
-				logger.warn("Could not register Query \"" + query + "\"");
+				logger.warn("Could not register Query \"" + query + "\". Response status: " + response.getStatus());
 				return "-1";
 			} else {
 				// return the UUID of the Notification Rule

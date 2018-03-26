@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -32,7 +33,7 @@ public class CaseModel {
 	public static final Logger log = Logger.getLogger(CaseModel.class);
 	@Id
 	private String cmId;
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	private int dbId;
 	private String name;
 	private int versionNumber;
@@ -45,6 +46,10 @@ public class CaseModel {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Fragment> fragments;
 
+
+	public CaseModel() {
+		setId(UUID.randomUUID().toString().replace("-", ""));
+	}
 
 	/**
 	 * Persists a the CaseModel to the database using the Java Persistence API

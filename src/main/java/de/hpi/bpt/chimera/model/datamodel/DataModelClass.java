@@ -17,7 +17,7 @@ import de.hpi.bpt.chimera.model.Nameable;
 @Entity
 public abstract class DataModelClass implements Nameable, Listable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	private int dbId;
 	private String name;
 	@OneToMany(cascade = CascadeType.ALL)

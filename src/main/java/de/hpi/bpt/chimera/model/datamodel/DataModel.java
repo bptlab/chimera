@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class DataModel {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	private int dbId;
 
 	private int versionNumber;

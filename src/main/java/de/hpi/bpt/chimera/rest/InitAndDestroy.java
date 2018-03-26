@@ -30,5 +30,6 @@ public class InitAndDestroy implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent arg0) {
 		log.info("shutdown process...");
 		DomainModelPersistenceManager.stopPermanentCasePersistence();
+		DomainModelPersistenceManager.closeEntityManager();
 	}
 }

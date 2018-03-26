@@ -38,8 +38,8 @@ public class CaseModelParser {
 		try {
 			JSONObject caseModelJson = new JSONObject(jsonString);
 
-			String id = caseModelJson.getString("_id");
-			caseModel.setId(id);
+			// String id = caseModelJson.getString("_id");
+			// caseModel.setId(id);
 
 			String name = caseModelJson.getString("name");
 			NameValidation.validateName(name);

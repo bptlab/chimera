@@ -18,7 +18,7 @@ import de.hpi.bpt.chimera.model.Nameable;
 @Entity
 public class ObjectLifecycleState implements Nameable, Listable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	private int dbId;
 
 	private String name;

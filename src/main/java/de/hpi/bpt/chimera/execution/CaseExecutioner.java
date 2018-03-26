@@ -42,8 +42,8 @@ public class CaseExecutioner {
 	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int dbId;
+	@GeneratedValue
+	public int dbId;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "caseExecutioner")
 	private Case caze;

@@ -20,7 +20,7 @@ public class DataAttribute implements Listable, Nameable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	private int dbId;
 
 	private String id;

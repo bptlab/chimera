@@ -21,7 +21,7 @@ import java.util.Date;
 public class LogEntry {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	int dbId;
 
 	private int id;

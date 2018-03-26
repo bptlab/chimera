@@ -16,7 +16,7 @@ import de.hpi.bpt.chimera.model.CaseModel;
 @Entity
 public class CaseStartTrigger {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	private int dbId;
 	@OneToOne(cascade = CascadeType.ALL)
 	private CaseModel parentCaseModel;

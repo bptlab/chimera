@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class SequenceFlowAssociation {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	private int dbId;
 
 	private String id;

@@ -12,7 +12,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 @Entity
 public class DataAttributeJsonPath {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	private int dbId;
 
 	@OneToOne(cascade = CascadeType.ALL)

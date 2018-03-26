@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity
 public class EventClass extends DataModelClass {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	private int dbId;
 
 }
