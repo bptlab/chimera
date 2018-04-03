@@ -221,21 +221,19 @@ public class ActivityRestService extends AbstractRestService {
 	 */
 	@PUT
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
-	// TODO: does this need to be here because the connection between postBody
-	// and activityInstance does not exist anymore
 	public Response setDataAttribute(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
 			Map<String, Map<String, Object>> dataAttributeValues = parseDataAttribueValues(post);
+			List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
 
 			DataManager dataManager = caseExecutioner.getDataManager();
-			dataManager.setDataAttributeValuesByIds(dataAttributeValues);
+			dataManager.setDataAttributeValuesByNames(dataAttributeValues, workingItems);
 
-			return Response.status(201).build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"data attribute instance values updated.\"}").build();
 		} catch (IllegalArgumentException e) {
-			log.error("REST setDataAttribute() Error", e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
@@ -329,27 +327,6 @@ public class ActivityRestService extends AbstractRestService {
 		} catch (Exception e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-	}
-
-	/**
-	 * Parse a List of DataObjectIds of the json post with the keyword
-	 * {@code dataobjects}.
-	 * 
-	 * @param post
-	 *            - JSONString
-	 * @return List of Stings
-	 */
-	private List<String> parseDataObjectIds(String post) {
-		List<String> dataObjectIds = new ArrayList<>();
-		JSONObject postJson = new JSONObject(post);
-		if (postJson.has("dataobjects")) {
-			JSONArray dataObjectsJson = postJson.getJSONArray("dataobjects");
-			for (int i = 0; i < dataObjectsJson.length(); i++) {
-				String dataObjectId = dataObjectsJson.getString(i);
-				dataObjectIds.add(dataObjectId);
-			}
-		}
-		return dataObjectIds;
 	}
 
 	/**

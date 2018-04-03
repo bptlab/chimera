@@ -3,23 +3,18 @@ package de.hpi.bpt.chimera.rest;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
-import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataAttributeJaxBean;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataObjectJaxBean;
 
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -29,7 +24,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +36,6 @@ import java.util.stream.Collectors;
  */
 @Path("interface/v2")
 public class DataDependencyRestService extends AbstractRestService {
-	private static final Logger log = Logger.getLogger(DataDependencyRestService.class);
 	/**
 	 * @param scenarioId
 	 *            The databaseID of the scenario.
@@ -78,11 +71,14 @@ public class DataDependencyRestService extends AbstractRestService {
 	}
 
 	/**
-	 * This method responds to a GET request by returning an array of
-	 * outputSets. Each contains the outputSetDatabaseID, the name of the
-	 * dataObject and their state as a Map & a link to get the
-	 * dataObjectInstances with their dataAttributesInstances. The result is
-	 * determined by:
+	 * This method responds to a GET request by returning an possible output
+	 * states and the attribute configuration for each of outputSets. Each
+	 * contains the outputSetDatabaseID, the name of the dataObject and their
+	 * state as a Map & a link to get the dataObjectInstances with their
+	 * dataAttributesInstances. Get the DataAttributes of all DataClasses that
+	 * occur in the Output Condition of the AbstractActivityInstance. If the
+	 * DataAttributes are already instantiated by a DataObject in the
+	 * workingItems return those. The result is determined by:
 	 *
 	 * @param uriInfo
 	 *            A UriInfo object, which holds the server context used for the
@@ -116,6 +112,7 @@ public class DataDependencyRestService extends AbstractRestService {
 			JSONObject result = new JSONObject();
 			for (Map.Entry<DataClass, List<ObjectLifecycleState>> doToOlc : possibleDataClassToObjectLifecycleStates.entrySet()) {
 				JSONObject output = new JSONObject();
+				output.put("state", "<TO BE CREATED>");
 				DataClass dataClass = doToOlc.getKey();
 				List<String> olcNames = doToOlc.getValue().stream().map(ObjectLifecycleState::getName).collect(Collectors.toList());
 				JSONArray states = new JSONArray(olcNames);
@@ -133,12 +130,14 @@ public class DataDependencyRestService extends AbstractRestService {
 				DataClass dataClass = workingItem.getDataClass();
 				List<DataAttributeJaxBean> attributes = workingItem.getDataAttributeInstances().stream().map(DataAttributeJaxBean::new).collect(Collectors.toList());
 				JSONArray attributeConfiguration = new JSONArray(attributes);
-				result.getJSONObject(dataClass.getName()).put("attributeConfiguration", attributeConfiguration);
+				JSONObject output = result.getJSONObject(dataClass.getName());
+				output.put("attributeConfiguration", attributeConfiguration);
+				output.put("state", workingItem.getObjectLifecycleState().getName());
 			}
 			
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
 
@@ -162,52 +161,5 @@ public class DataDependencyRestService extends AbstractRestService {
 		}
 
 		return possibleTransitions;
-	}
-
-	/**
-	 * Get the DataAttributes of all DataClasses that occur in the Output
-	 * Condition of the AbstractActivityInstance. If the DataAttributes are
-	 * already instantiated by a DataObject in the workingItems return those.
-	 * 
-	 * @param cmId
-	 * @param caseId
-	 * @param activityInstanceId
-	 * @return
-	 */
-	@GET
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/outputAttributes")
-	public Response getOuptutAttributes(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		try {
-			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
-			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-			JSONObject result = new JSONObject();
-			// early return
-			if (activityInstance.getControlNode().getPostCondition().isEmpty()) {
-				return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-			}
-			Set<AtomicDataStateCondition> outputConditions = activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions();
-			for (AtomicDataStateCondition outputCondition : outputConditions) {
-				JSONArray dataAttributeArray = new JSONArray();
-				for (DataAttribute dataAttribute : outputCondition.getDataClass().getDataAttributes()) {
-					dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttribute)));
-				}
-				result.put(outputCondition.getDataClassName(), dataAttributeArray);
-			}
-
-			// overrides
-			List<DataObject> selectedDataObjects = activityInstance.getSelectedDataObjects();
-			for (DataObject dataObject : selectedDataObjects) {
-				JSONArray dataAttributeArray = new JSONArray();
-				for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
-					dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttributeInstance)));
-				}
-				result.put(dataObject.getDataClass().getName(), dataAttributeArray);
-			}
-
-			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
-		}
 	}
 }

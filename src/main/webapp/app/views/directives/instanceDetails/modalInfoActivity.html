@@ -33,7 +33,7 @@
                                        ng-name="attrvalue"
                                        ng-model-options='{ debounce: 1000 }'
                                        ng-model="attr['value']"
-                                       ng-change="instanceCtrl.setAttributeTransition(dataobject.id, attr['id'], attr['value'])">
+                                       ng-change="instanceCtrl.setAttributeTransition(dataobject.dataclass, attr.name, attr['value'])">
                                 <br></td>
                         </tr>
                         </tbody>

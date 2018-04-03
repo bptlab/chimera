@@ -13,9 +13,31 @@
             <!-- /.modal header -->
             <!-- Body of the Modal -->
             <div class="modal-body">
-                <!-- display all attributes and let the user edit them -->
-                <div ng-repeat="(dataclassName, dataAttributes) in instanceCtrl.activityOutputAttributes[activityInstance['id']] track by $index">
-                    <b>{{dataclassName}}:</b>
+            	<div class="model-header">
+            		<div ng-show="(instanceCtrl.activityOutput[activityInstance['id']] | json) == '{}'">
+            			No Data Object for Output available.
+            		</div>
+            		<div ng-hide="(instanceCtrl.activityOutput[activityInstance['id']] | json) == '{}'">
+	               		Please select a state for each output.
+	            	</div>
+            	</div>
+            	<div ng-repeat="(dataclassName, output) in instanceCtrl.activityOutput[activityInstance['id']] track by $index">
+            		<b>{{dataclassName}}[{{output['state']}}]:</b>
+            		<!-- if outputsets are present display them with the option for termination -->
+	                <div ng-if="output['states'].length !== 0">
+	                    <div class="panel">
+	                        <div class="panel-body form-group">
+	                            <!-- <label for="{{'select' + dataclassName}}">{{dataclassName}}</label> -->
+	                            <select class="form-control" id="{{'select' + dataclassName}}"
+	                                    ng-model="lestate"
+	                                    ng-init="lestate=output['states'][0]; instanceCtrl.selectState(dataclassName, lestate)"
+	                                    ng-options="state for state in output['states']"
+	                                    ng-change="instanceCtrl.selectState(dataclassName, lestate)">
+	                            </select>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- display all attributes and let the user edit them -->
                     <table class="table">
                         <thead>
                         <tr>
@@ -24,7 +46,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="attr in dataAttributes">
+                        <tr ng-repeat="attr in output.attributeConfiguration">
                             <td>{{attr['name']}}</td>
                             <td><input type="text"
                                        ng-name="attrvalue"
@@ -33,27 +55,14 @@
                                        ng-change="instanceCtrl.setAttributeTransition(dataclassName, attr['name'], attr['value'])">
                                 <br></td>
                         </tr>
+                        <!--
+                        <tr ng-if="output[attributeConfiguration].length !== 0">
+                        	<td>No Data Attributes for this Data Class</td>
+                        </tr>
+                        -->
                         </tbody>
                     </table>
-                </div>
-                <!-- if outputsets are present display them with the option for termination -->
-                <div ng-if="instanceCtrl.availableOutputStates[activityInstance['id']].length !== 0">
-                    <div class="panel">
-                        <div class="panel-header">
-                            Please select a state for each output.
-                        </div>
-                        <div class="panel-body form-group"
-                             ng-repeat="(dclass, possiblestates) in instanceCtrl.availableOutputStates[activityInstance['id']] track by $index">
-                            <label for="{{'select' + dclass}}">{{dclass}}</label>
-                            <select class="form-control" id="{{'select' + dclass}}"
-                                    ng-model="lestate"
-                                    ng-init="lestate=possiblestates[0]; instanceCtrl.selectState(dclass, lestate)"
-                                    ng-options="state for state in possiblestates"
-                                    ng-change="instanceCtrl.selectState(dclass, lestate)">
-                            </select>
-                        </div>
-                    </div>
-                </div>
+	        	</div>
             </div> <!-- /.modal body -->
             <!-- Footer of the Modal -->
             <div class="modal-footer">

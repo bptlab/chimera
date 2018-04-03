@@ -26,6 +26,7 @@ angular.module('jfrontend')
             this.attributeValues = {};
             this.availableOutputStates = {};
             this.activityOutputAttributes = {};
+            this.activityOutput = {};
             
             this.alerts = [];
 
@@ -205,8 +206,6 @@ angular.module('jfrontend')
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
                     "/activityinstance/" + activityInstanceId + "/begin", dataObjectIds).success(function () {
-                    //instanceCtrl.instanceDetails.activityInstances = {};
-                    //instanceCtrl.selectedDataObjectIds = {};
                     //reloading content so the dashboard is uptodate
                     instanceCtrl.refreshPage();
                 }).error(function () {
@@ -224,24 +223,6 @@ angular.module('jfrontend')
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
                     "/activityinstance/" + activityInstanceId + "/terminate", JSON.stringify(inData)).success(function () {
                   	
-                    // overwriting the structure of attributeValues with ids
-                    	/*
-                    var adaptedTranisitons = {};
-                    usedDataObjects.forEach(function (dataObject) {
-                    	var dataObjectId = dataObject['id'];
-                    	var dataClassName = dataObject['dataclass']; 
-                    	adaptedTranisitons[dataObjectId] = {};
-                    	dataObject['attributeInstances'].forEach(function (dataAttribute) {
-                    		var dataAttributeId = dataAttribute['id'];
-                    		var dataAttributeName = dataAttribute['name'];
-                    		adaptedTranisitons[dataObjectId][dataAttributeId] = instanceCtrl.attributeValues[dataClassName][dataAttributeName];
-                    	});
-                    });
-                    
-                    instanceCtrl.attributeValues = adaptedTranisitons;
-                    instanceCtrl.setAttributeValues(activityInstanceId);
-                    */
-                    // instanceCtrl.instanceDetails.activityInstances = {};
                     instanceCtrl.selectedStates = {};
                     instanceCtrl.attributeValues = {};
                     //reloading content so the dashboard is uptodate
@@ -317,11 +298,13 @@ angular.module('jfrontend')
             };
             
             this.getActivityOutput = function (activityInstanceId) {
+            	instanceCtrl.activityOutput[activityInstanceId] = {};
             	instanceCtrl.availableOutputStates[activityInstanceId] = {};
             	instanceCtrl.activityOutputAttributes[activityInstanceId] = {};
                 $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
                     + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/output')
                     .success(function (data) {
+                    	instanceCtrl.activityOutput[activityInstanceId] = data;
                     	Object.keys(data).forEach(function (dataclass) {
                     		instanceCtrl.availableOutputStates[activityInstanceId][dataclass] = data[dataclass]['states'];
                     		

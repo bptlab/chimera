@@ -245,26 +245,28 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	/**
 	 * This method is used to terminate a scenario instance.
 	 *
-	 * @param scenarioId The Id of the scenario
-	 * @param instanceId The Id of the instance
+	 * @param cmId
+	 *            The Id of the scenario
+	 * @param caseId
+	 *            The Id of the instance
 	 * @return A Response: 200 if termination conditions are fulfilled and it
-	 * has been terminated, 400 if the termination conditions are not fulfilled,
-	 * 404 if the scenario instance is not found.
+	 *         has been terminated, 400 if the termination conditions are not
+	 *         fulfilled, 404 if the scenario instance is not found.
 	 */
 	@POST
 	@Path("scenario/{scenarioId}/instance/{instanceId}/terminate")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response terminateScenarioInstance(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
-		// TODO
-		/*
-		ScenarioInstance instance = new ScenarioInstance(scenarioId, instanceId);
-		if (instance.canTerminate()) {
-			instance.terminate();
-			return Response.status(Response.Status.OK).type(MediaType.TEXT_PLAIN).entity("Instance has been terminated").build();
-		} else {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Termination condition is not fulfilled").build();
+	public Response terminateScenarioInstance(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
+		try {
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+			if (caseExecutioner.canTerminate()) {
+				caseExecutioner.terminate();
+				return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"case terminated.\"}").build();
+			} else {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException("termination condition is not fulfilled.")).build();
+			}
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-		*/
-		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Not implemented yet").build();
 	}
 }

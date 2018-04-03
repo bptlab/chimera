@@ -287,6 +287,19 @@ public class CaseExecutioner {
 		return terminationCondition.isFulfilled(dataManager.getDataStateConditions());
 	}
 
+	/**
+	 * Terminate the Case. Only possible if the TerminationCondition is
+	 * fulfilled.
+	 * 
+	 * @see #canTerminate()
+	 */
+	public void terminate() {
+		// TODO think about the consequences
+		if (canTerminate()) {
+			setTerminated(true);
+		}
+	}
+
 	// LOGGING
 	/**
 	 * Log the transition of the {@link State} of an
