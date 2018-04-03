@@ -18,7 +18,7 @@
             	</div>
                 <!-- display all attributes and let the user edit them -->
                 <div ng-repeat="dataobject in instanceCtrl.workingItems[activityInstance['id']]">
-                    <b>{{dataobject.dataclass}} ({{dataobject.state}}):</b>
+                    <b>{{dataobject.dataclass}}[{{dataobject.state}}]:</b>
                     <table class="table">
                         <thead>
                         <tr>

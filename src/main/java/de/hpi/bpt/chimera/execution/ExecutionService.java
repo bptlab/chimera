@@ -132,7 +132,11 @@ public final class ExecutionService {
 	}
 
 	/**
-	 * Gets all cases of the case model by the given id.
+	 * Gets all cases of the case model by the given id. If the id is not
+	 * assigned load CaseExecutioner manually from database. If there are no
+	 * Cases but the request was successful return an empty list because the
+	 * CaseModel was not instantiated yet. If the request fails there is no
+	 * CaseModel with the specified id.
 	 * 
 	 * @param cmId
 	 *            - the case model id
@@ -141,7 +145,7 @@ public final class ExecutionService {
 	 *             if cmId is not assigned
 	 */
 	public static List<CaseExecutioner> getAllCasesOfCaseModel(String cmId) {
-		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
+		if (!CaseModelManager.isExistingCaseModel(cmId)) {
 			List<CaseExecutioner> cases = DomainModelPersistenceManager.loadAllCaseExecutionersWithCaseModelId(cmId);
 			if (cases != null) {
 				for (CaseExecutioner ce : cases) {
@@ -152,6 +156,10 @@ public final class ExecutionService {
 				log.error(e.getMessage());
 				throw e;
 			}
+		}
+		if (!caseExecutions.containsKey(cmId)) {
+			// no existing cases for existing casemodel
+			return new ArrayList<>();
 		}
 		log.info(String.format("Successfully requested all Case-Informations of CaseModel-Id: %s", cmId));
 		return caseExecutions.get(cmId);

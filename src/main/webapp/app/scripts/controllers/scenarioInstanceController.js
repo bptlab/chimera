@@ -316,6 +316,23 @@ angular.module('jfrontend')
                 })
             };
             
+            this.getActivityOutput = function (activityInstanceId) {
+            	instanceCtrl.availableOutputStates[activityInstanceId] = {};
+            	instanceCtrl.activityOutputAttributes[activityInstanceId] = {};
+                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
+                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/output')
+                    .success(function (data) {
+                    	Object.keys(data).forEach(function (dataclass) {
+                    		instanceCtrl.availableOutputStates[activityInstanceId][dataclass] = data[dataclass]['states'];
+                    		
+                    		instanceCtrl.activityOutputAttributes[activityInstanceId][dataclass] = data[dataclass]['attributeConfiguration'];
+                    		console.log(instanceCtrl.availableOutputStates[activityInstanceId]);
+                    	});
+                    }).error(function () {
+                    console.log('Loading activity output failed.');
+                });
+            };
+            
             this.setAttributeValues = function (activityInstanceId) {
             	$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
             			"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
@@ -325,24 +342,6 @@ angular.module('jfrontend')
                 	console.log('Saving attribute values failed.');
                 });
             }
-            
-            this.getActivityOutput = function (activityInstanceId) {
-                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
-                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/outputStates')
-                    .success(function (dataStates) {
-                        instanceCtrl.availableOutputStates[activityInstanceId] = dataStates;
-                    }).error(function () {
-                    console.log('Loading activity output states failed.');
-                });
-                
-                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
-                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/outputAttributes')
-                    .success(function (dataAttributes) {
-                        instanceCtrl.activityOutputAttributes[activityInstanceId] = dataAttributes;
-                    }).error(function () {
-                    console.log('Loading activity output attributes failed.');
-                });
-            };
             
             // set the transition for DataAttributes
             this.setAttributeTransition = function(dataClassName, dataAttributeName, value) {
