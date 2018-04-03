@@ -66,7 +66,7 @@ public class DataDependencyRestService extends AbstractRestService {
 			}
 			JSONArray result = new JSONArray(resultBeans);
 
-			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
@@ -146,17 +146,17 @@ public class DataDependencyRestService extends AbstractRestService {
 			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 			JSONObject result = new JSONObject();
-			// early exit
+			// early return
 			if (activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
 				return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 			}
 			Set<AtomicDataStateCondition> outputConditions = activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions();
-			for (AtomicDataStateCondition outputConiditon : outputConditions) {
+			for (AtomicDataStateCondition outputCondition : outputConditions) {
 				JSONArray dataAttributeArray = new JSONArray();
-				for (DataAttribute dataAttribute : outputConiditon.getDataClass().getDataAttributes()) {
+				for (DataAttribute dataAttribute : outputCondition.getDataClass().getDataAttributes()) {
 					dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttribute)));
 				}
-				result.put(outputConiditon.getDataClassName(), dataAttributeArray);
+				result.put(outputCondition.getDataClassName(), dataAttributeArray);
 			}
 
 			List<DataObject> selectedDataObjects = activityInstance.getSelectedDataObjects();

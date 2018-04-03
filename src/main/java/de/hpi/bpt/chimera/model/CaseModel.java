@@ -9,7 +9,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -19,12 +18,9 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
-import de.hpi.bpt.chimera.model.configuration.EmailConfiguration;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
-import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity
@@ -141,6 +137,12 @@ public class CaseModel {
 		this.fragments = fragments;
 	}
 
+	/**
+	 * Receive the bpmn-represantion for all {@link Fragment}s of the case
+	 * model.
+	 * 
+	 * @return bpmn-representation of all fragments as strings
+	 */
 	public List<String> getContentXmlStrings() {
 		List<String> contentXmlStrings = new ArrayList<>();
 		for (Fragment fragment : fragments) {

@@ -2,8 +2,7 @@ package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
-import de.hpi.bpt.chimera.execution.data.DataManager;
-import de.hpi.bpt.chimera.model.condition.TerminationCondition;
+import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
 
 import org.apache.log4j.Logger;
@@ -60,9 +59,8 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			}
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-		} catch (IllegalArgumentException e) {
-			log.error("Error while requesting all Cases of a CaseModel.", e);
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		} catch (IllegalCaseModelIdException e) {
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
 
@@ -94,22 +92,22 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	}
 
 	/**
-	 * Creates a new instance of a specified scenario.
-	 * This method assumes that the new instance will be named.
-	 * The name will be received as a JSON-Object inside the request
-	 * Body.
-	 * The JSON should have the format
-	 * {@code {"name": <nameOfInstance>}}.
-	 * The response will imply if the post was successful.
+	 * Creates a new instance of a specified scenario. This method assumes that
+	 * the new instance will be named. The name will be received as a
+	 * JSON-Object inside the request Body. The JSON should have the format
+	 * {"name": "nameOfInstance"}. The response will imply if the post was
+	 * successful.
 	 *
-	 * @param uriInfo    The context of the server, used to receive the url.
-	 * @param scenarioId the id of the scenario.
-	 * @param name       The name, which will be used for the new instance.
-	 * @return The Response of the PUT. The Response code will be
-	 * either a 201 (CREATED) if the post was successful or 400 (BAD_REQUEST)
-	 * if the scenarioID was invalid.
-	 * The content of the Response will be a JSON-Object containing information
-	 * about the new instance.
+	 * @param uriInfo
+	 *            - The context of the server.
+	 * @param scenarioId
+	 *            - The id of the scenario.
+	 * @param name
+	 *            - The name, which will be used for the new instance.
+	 * @return The Response of the PUT. The Response code will be either a 201
+	 *         (CREATED) if the post was successful or 400 (BAD_REQUEST) if the
+	 *         scenarioId was invalid. The content of the Response will be a
+	 *         JSON-Object containing information about the new instance.
 	 */
 	@PUT
 	@Path("scenario/{scenarioId}/instance")
@@ -136,6 +134,8 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	 * @param uriInfo
 	 * @param cmId
 	 * @return Response
+	 * @see {@link #initializeNewInstance(UriInfo, String, String) initialize
+	 *      with custom name}
 	 */
 	private Response initializeNewInstance(UriInfo uriInfo, String cmId) {
 		try {
@@ -166,23 +166,22 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	}
 
 	/**
-	 * This method provides detailed information about a scenario instance.
-	 * The information will contain the id, name, parent scenario and the
-	 * number of activities in the different states.
-	 * The Response is JSON-Object.
+	 * This method provides detailed information about a scenario instance. The
+	 * information will contain the id, name, parent scenario and the number of
+	 * activities in the different states. The Response is JSON-Object.
 	 *
-	 * @param uriInfo    Contains the context information, is used to build
-	 *                   links to other resources.
-	 * @param scenarioId The ID of the scenario.
-	 * @param instanceId The ID of the instance.
-	 * @return Will return a Response with a JSON-Object body, containing
-	 * the information about the instance.
-	 * If the instance ID or both are incorrect 404 (NOT_FOUND) will be
-	 * returned.
-	 * If the scenario ID is wrong but the instance ID is correct a 301
-	 * (REDIRECT) will be returned.
-	 * If both IDs are correct a 200 (OK) with the expected JSON-Content
-	 * will be returned.
+	 * @param uriInfo
+	 *            - Contains the context information, is used to build links to
+	 *            other resources.
+	 * @param scenarioId
+	 *            - The ID of the scenario.
+	 * @param instanceId
+	 *            - The ID of the instance.
+	 * @return Will return a Response with a JSON-Object body, containing the
+	 *         information about the instance. If the scenarioId or the
+	 *         instanceId is incorrect 404 (NOT_FOUND) will be returned. If both
+	 *         IDs are correct a 200 (OK) with the expected JSON-Content will be
+	 *         returned.
 	 */
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}")
@@ -194,7 +193,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
 
@@ -235,12 +234,8 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 
-			TerminationCondition terminationCondition = caseExecutioner.getCaseModel().getTerminationCondition();
-			DataManager dataManager = caseExecutioner.getDataManager();
-			boolean canTerminate = terminationCondition.isFulfilled(dataManager.getDataStateConditions());
-
 			JSONObject result = new JSONObject();
-			result.put("canTerminate", canTerminate);
+			result.put("canTerminate", caseExecutioner.canTerminate());
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
