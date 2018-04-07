@@ -3,6 +3,8 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.behavior;
 import java.util.Map;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 import org.apache.log4j.Logger;
 

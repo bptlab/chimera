@@ -61,7 +61,7 @@ public final class ExecutionService {
 	 * @return CaseExecutioner - The CaseExecutioner responsible for the case
 	 */
 	public static CaseExecutioner getCaseExecutioner(String cmId, String caseId) {
-		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
+		if (!CaseModelManager.isExistingCaseModel(cmId)){// || !caseExecutions.containsKey(cmId)) {
 			IllegalCaseModelIdException e = new IllegalCaseModelIdException(cmId);
 			log.error(e.getMessage());
 			throw e;

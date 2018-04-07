@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.TimerEventBehavior;
@@ -41,15 +42,17 @@ public final class EventDispatcher {
 	private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
 	private static final String REST_DEPLOY_URL = PropertyLoader.getProperty("unicorn.url") + PropertyLoader.getProperty("unicorn.path.deploy");
 	private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url") + PropertyLoader.getProperty("chimera.path.deploy");
-	private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%d/instance/%d/events/%s";
+	private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%s/instance/%s/events/%s";
 	private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/casestart/%s";
 
 	private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
 	// TODO move these maps in the EventMapper and add persistence or move them
 	// into the Case, so that each Case is responsible for its own events.
-	private static Map<String, AbstractEventInstance> idToRegisteredEvent = new HashMap<>();
-	private static Map<String, AbstractEventInstance> keyToRegisteredEvent = new HashMap<>();
+	// private static Map<String, AbstractEventInstance> idToRegisteredEvent =
+	// new HashMap<>();
+	// private static Map<String, AbstractEventInstance> keyToRegisteredEvent =
+	// new HashMap<>();
 
 	public EventDispatcher() {
 	}
@@ -57,20 +60,40 @@ public final class EventDispatcher {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
-	public static Response receiveEvent(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
-		logger.info("Receiving a Request from Unicorn.");
-		AbstractEventInstance eventInstance = keyToRegisteredEvent.get(requestId);
-		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
-		if (eventJson.isEmpty() || "{}".equals(eventJson)) {
-			receiveBehavior.setEventJson("");
-		} else {
-			receiveBehavior.setEventJson(eventJson);
+	public static Response receiveEvent(@PathParam("scenarioId") String scenarioId, @PathParam("instanceId") String scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
+		logger.info("Receiving a Request from Unicorn. \nscenarioId: " + scenarioId + "\nscenarioInstanceId: " + scenarioInstanceId + "\nrequestId: " + requestId);
+
+		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(scenarioId, scenarioInstanceId);
+		try {
+			AbstractEventInstance eventInstance = caseExecutioner.getRegisteredEventFromRegistrationKey(requestId);
+			logger.debug("eventInstance id:" + eventInstance.getId());
+			logger.debug("eventInstance behavior (to String):" + eventInstance.getBehavior());
+			MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
+			if (eventJson.isEmpty() || "{}".equals(eventJson)) {
+				receiveBehavior.setEventJson("");
+			} else {
+				receiveBehavior.setEventJson(eventJson);
+			}
+			eventInstance.terminate();
+			SseNotifier.notifyRefresh();
+		} catch (Exception e) {
+			logger.error("Error while processing a received event", e);
 		}
-		eventInstance.terminate();
-		SseNotifier.notifyRefresh();
-		/// unregisterEvent(event); >>>>>is now responsibility of
-		/// AbstractIntermediateCatchEvent
 		return Response.accepted("Event received.").build();
+		// AbstractEventInstance eventInstance =
+		// keyToRegisteredEvent.get(requestId);
+		// MessageReceiveEventBehavior receiveBehavior =
+		// (MessageReceiveEventBehavior) eventInstance.getBehavior();
+		// if (eventJson.isEmpty() || "{}".equals(eventJson)) {
+		// receiveBehavior.setEventJson("");
+		// } else {
+		// receiveBehavior.setEventJson(eventJson);
+		// }
+		// eventInstance.terminate();
+		// SseNotifier.notifyRefresh();
+		// /// unregisterEvent(event); >>>>>is now responsibility of
+		// /// AbstractIntermediateCatchEvent
+		// return Response.accepted("Event received.").build();
 	}
 
 	@POST
@@ -207,15 +230,20 @@ public final class EventDispatcher {
 		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
 		String query = insertAttributesIntoQueryString(eventInstance);
 		logger.info("Created query to register an Event at unicorn");
-		String notificationRuleId = sendQueryToEventService(query, requestId, 0 , 0);//last to Parameters 0 because we dont have Integer Ids anymore but have to fit the unicorn Interface
+		String notificationRuleId = sendQueryToEventService(query, requestId, eventInstance.getCaseExecutioner().getCase().getId(), eventInstance.getCaseExecutioner().getCaseModel().getId());
 		receiveBehavior.setNotificationRule(notificationRuleId);
 		receiveBehavior.setUnicornKey(requestId);
 		
-		if (!idToRegisteredEvent.containsKey(eventInstance.getId())) {
-			idToRegisteredEvent.put(eventInstance.getId(), eventInstance);
-			keyToRegisteredEvent.put(requestId, eventInstance);
+		CaseExecutioner caseExecutioner = eventInstance.getCaseExecutioner();
+		if (caseExecutioner.getRegisteredEventFromEventId(eventInstance.getId()) == null) {
+			caseExecutioner.registerEvent(requestId, eventInstance);
 		}
 		
+		// if (!idToRegisteredEvent.containsKey(eventInstance.getId())) {
+		// idToRegisteredEvent.put(eventInstance.getId(), eventInstance);
+		// keyToRegisteredEvent.put(requestId, eventInstance);
+		// }
+
 		logger.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requesId %s, getting back %s as NotificationRule", eventInstance.getId(), query, requestId, notificationRuleId));
 		
 	}
@@ -247,7 +275,7 @@ public final class EventDispatcher {
 	// events.forEach(AbstractEvent::enableControlFlow);
 	// }
 
-	private static String sendQueryToEventService(String rawQuery, String requestId, int scenarioInstanceId, int scenarioId) {
+	private static String sendQueryToEventService(String rawQuery, String requestId, String scenarioInstanceId, String scenarioId) {
 		String notificationPath = String.format(SELF_PATH_NODES, SELF_DEPLOY_URL, scenarioId, scenarioInstanceId, requestId);
 		return sendQueryToEventService(rawQuery, requestId, notificationPath);
 	}
@@ -288,8 +316,10 @@ public final class EventDispatcher {
 		String notificationRuleId = receiveBehavior.getNotificationRule();
 
 		unregisterNotificationRule(notificationRuleId);
-		keyToRegisteredEvent.remove(receiveBehavior.getUnicornKey());
-		idToRegisteredEvent.remove(eventInstance.getId());
+		CaseExecutioner caseExecutioner = eventInstance.getCaseExecutioner();
+		caseExecutioner.removeEvent(receiveBehavior.getUnicornKey(), eventInstance);
+		// keyToRegisteredEvent.remove(receiveBehavior.getUnicornKey());
+		// idToRegisteredEvent.remove(eventInstance.getId());
 		logger.info(String.format("Event with id %s and notification Rule %s unregistered", eventInstance.getId(), notificationRuleId));
 	}
 

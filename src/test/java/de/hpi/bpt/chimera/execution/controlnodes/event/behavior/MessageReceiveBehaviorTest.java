@@ -55,7 +55,7 @@ public class MessageReceiveBehaviorTest {
 		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) receiveEvent.getBehavior();
 		String requestId = receiveBehavior.getUnicornKey();
 		
-		EventDispatcher.receiveEvent(0, 0, requestId, eventJson);
+		EventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
 		assertEquals("ReceiveEvent terminated properly", receiveEvent.getState(), State.TERMINATED);
 		assertEquals("StartEvent, ReceiveEvent and EndEvent should be in the FragmentInstance", intermediateFragment.getControlNodeInstances().size(), 3);
 
@@ -87,7 +87,7 @@ public class MessageReceiveBehaviorTest {
 		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) receiveEvent.getBehavior();
 		String requestId = receiveBehavior.getUnicornKey();
 
-		EventDispatcher.receiveEvent(0, 0, requestId, eventJson);
+		EventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
 		assertEquals("ReceiveEvent terminated properly", receiveEvent.getState(), State.TERMINATED);
 		assertEquals("StartEvent, Task, BoundaryEvent and Task after BoundaryEvent should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 4);
 		assertEquals("Task was not canceled", task.getState(), State.CANCEL);

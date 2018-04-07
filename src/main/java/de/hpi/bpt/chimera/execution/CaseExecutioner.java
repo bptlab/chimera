@@ -8,11 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.MapKey;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -60,6 +67,27 @@ public class CaseExecutioner {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataAttributeLog> dataAttributeLogs;
 
+	// registered Events, used by the EventDispatcher
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "caseexecutioner_controlnodeinstance_map_id", joinColumns = {
+			@JoinColumn(name = "fk_caseexecutioner", referencedColumnName = "dbId") }, inverseJoinColumns = {
+					@JoinColumn(name = "fk_group", referencedColumnName = "id") })
+	@MapKey(name = "id")
+	public Map<String, AbstractEventInstance> idToRegisteredEvent;
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "caseexecutioner_controlnodeinstance_map_requestkey", joinColumns = {
+			@JoinColumn(name = "fk_caseexecutioner", referencedColumnName = "dbId") }, inverseJoinColumns = {
+					@JoinColumn(name = "fk_group", referencedColumnName = "id") })
+	@MapKeyColumn(name = "MapKeyColumn_requestkey")
+	@MapKey(name = "requestKey")
+	public Map<String, AbstractEventInstance> keyToRegisteredEvent;
+
+	// @ManyToMany(cascade = CascadeType.ALL)
+	// @JoinTable(name = "caseexecutioner_controlnodeinstance_map_requestkey")
+	// public Map<String, ControlNodeInstance> keyToRegisteredEvent;
+
+
 
 	/**
 	 * for JPA only
@@ -78,6 +106,9 @@ public class CaseExecutioner {
 		this.caseModel = caseModel;
 		this.caze = new Case(caseName, caseModel, this);
 		this.dataManager = new DataManager(caseModel.getDataModel(), this);
+
+		this.idToRegisteredEvent = new HashMap<>();
+		this.keyToRegisteredEvent = new HashMap<>();
 	}
 
 	/**
@@ -361,6 +392,28 @@ public class CaseExecutioner {
 	}
 
 	// GETTER & SETTER
+
+	public AbstractEventInstance getRegisteredEventFromEventId(String id) {
+		return (AbstractEventInstance) idToRegisteredEvent.get(id);
+	}
+
+	public AbstractEventInstance getRegisteredEventFromRegistrationKey(String key) {
+		return (AbstractEventInstance) keyToRegisteredEvent.get(key);
+	}
+
+	public void registerEvent(String registrationKey, AbstractEventInstance eventInstance) {
+		idToRegisteredEvent.put(eventInstance.getId(), eventInstance);
+		log.debug("Entry in Hashmap idToRegisteredEvent with id:" + eventInstance.getId());
+		((AbstractEventInstance) eventInstance).requestKey = registrationKey;
+		keyToRegisteredEvent.put(registrationKey, eventInstance);
+		log.debug("Entry in Hashmap keyToRegisteredEvent with key:" + registrationKey);
+	}
+
+	public void removeEvent(String registrationKey, AbstractEventInstance eventInstance) {
+		idToRegisteredEvent.remove(eventInstance.getId());
+		keyToRegisteredEvent.remove(registrationKey);
+	}
+
 	public Case getCase() {
 		return caze;
 	}
@@ -404,4 +457,6 @@ public class CaseExecutioner {
 	public List<DataAttributeLog> getDataAttributeLogs() {
 		return dataAttributeLogs;
 	}
+
+
 }

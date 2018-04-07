@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 
