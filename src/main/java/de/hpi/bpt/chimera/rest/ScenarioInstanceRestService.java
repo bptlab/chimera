@@ -60,6 +60,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalCaseModelIdException e) {
+			log.error("Error while searching all running Cases of a CaseModel Id.", e);
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}

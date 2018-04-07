@@ -156,7 +156,7 @@ public class DomainModelPersistenceManager {
 	public static List<CaseExecutioner> loadAllCaseExecutionersWithCaseModelId(String cmId) {
 		// TODO don't use this native query which depends on the column name
 		// CASEMODEL_CMID
-		String queryString = "SELECT * FROM CaseExecutioner ce WHERE ce.CASEMODEL_CMID = '" + cmId + "';";
+		String queryString = "SELECT * FROM caseexecutioner ce WHERE ce.CASEMODEL_CMID = '" + cmId + "';";
 		List<CaseExecutioner> caseExecutioners = null;
 
 		try {
