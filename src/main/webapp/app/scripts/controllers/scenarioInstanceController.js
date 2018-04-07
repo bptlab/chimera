@@ -20,13 +20,13 @@ angular.module('jfrontend')
             
             this.availableInput = {};
             this.selectedStates = {};
-            this.activityInputAttributes = {};
             this.workingItems = {};
             this.selectedDataObjectIds = {};
             
             this.attributeValues = {};
             this.availableOutputStates = {};
             this.activityOutputAttributes = {};
+            this.activityOutput = {};
             
             this.alerts = [];
 
@@ -199,22 +199,15 @@ angular.module('jfrontend')
 
             // begins an activity
             this.beginActivity = function (activityInstanceId) {
-                var dataObject = {'dataobjects': []};
-                for (var dclassname in instanceCtrl.selectedDataObjectIds) {
-                    if (instanceCtrl.selectedDataObjectIds.hasOwnProperty(dclassname)) {
-                        dataObject['dataobjects'].push(instanceCtrl.selectedDataObjectIds[dclassname])
-                    }
-                }
+                var dataObjectIds = [];
+                Object.values(instanceCtrl.selectedDataObjectIds).forEach(function(id) {
+                	dataObjectIds.push(id);
+                });
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                    "/activityinstance/" + activityInstanceId + "/begin", dataObject).success(function () {
-                    instanceCtrl.instanceDetails.activityInstances = {};
-                    instanceCtrl.availableInput = {};
-                    instanceCtrl.selectedDataObjectIds = {};
-                    instanceCtrl.activityInputAttributes = {};
+                    "/activityinstance/" + activityInstanceId + "/begin", dataObjectIds).success(function () {
                     //reloading content so the dashboard is uptodate
                     instanceCtrl.refreshPage();
-                    // $window.location.reload();
                 }).error(function () {
                     console.log('request failed');
                 });
@@ -230,24 +223,6 @@ angular.module('jfrontend')
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
                     "/activityinstance/" + activityInstanceId + "/terminate", JSON.stringify(inData)).success(function () {
                   	
-                    // overwriting the structure of attributeValues with ids
-                    	/*
-                    var adaptedTranisitons = {};
-                    usedDataObjects.forEach(function (dataObject) {
-                    	var dataObjectId = dataObject['id'];
-                    	var dataClassName = dataObject['dataclass']; 
-                    	adaptedTranisitons[dataObjectId] = {};
-                    	dataObject['attributeInstances'].forEach(function (dataAttribute) {
-                    		var dataAttributeId = dataAttribute['id'];
-                    		var dataAttributeName = dataAttribute['name'];
-                    		adaptedTranisitons[dataObjectId][dataAttributeId] = instanceCtrl.attributeValues[dataClassName][dataAttributeName];
-                    	});
-                    });
-                    
-                    instanceCtrl.attributeValues = adaptedTranisitons;
-                    instanceCtrl.setAttributeValues(activityInstanceId);
-                    */
-                    // instanceCtrl.instanceDetails.activityInstances = {};
                     instanceCtrl.selectedStates = {};
                     instanceCtrl.attributeValues = {};
                     //reloading content so the dashboard is uptodate
@@ -304,6 +279,7 @@ angular.module('jfrontend')
                             }
                             instanceCtrl.availableInput[activityInstanceId][dataobject['dataclass']].push(dataobject);
                         });
+                        console.log(instanceCtrl.availableInput[activityInstanceId]);
                     })
                     .error(function () {
                         console.log('Loading activity inputs failed.')
@@ -321,6 +297,25 @@ angular.module('jfrontend')
                 })
             };
             
+            this.getActivityOutput = function (activityInstanceId) {
+            	instanceCtrl.activityOutput[activityInstanceId] = {};
+            	instanceCtrl.availableOutputStates[activityInstanceId] = {};
+            	instanceCtrl.activityOutputAttributes[activityInstanceId] = {};
+                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
+                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/output')
+                    .success(function (data) {
+                    	instanceCtrl.activityOutput[activityInstanceId] = data;
+                    	Object.keys(data).forEach(function (dataclass) {
+                    		instanceCtrl.availableOutputStates[activityInstanceId][dataclass] = data[dataclass]['states'];
+                    		
+                    		instanceCtrl.activityOutputAttributes[activityInstanceId][dataclass] = data[dataclass]['attributeConfiguration'];
+                    		console.log(instanceCtrl.availableOutputStates[activityInstanceId]);
+                    	});
+                    }).error(function () {
+                    console.log('Loading activity output failed.');
+                });
+            };
+            
             this.setAttributeValues = function (activityInstanceId) {
             	$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
             			"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
@@ -331,30 +326,12 @@ angular.module('jfrontend')
                 });
             }
             
-            this.getActivityOutput = function (activityInstanceId) {
-                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
-                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/outputStates')
-                    .success(function (dataStates) {
-                        instanceCtrl.availableOutputStates[activityInstanceId] = dataStates;
-                    }).error(function () {
-                    console.log('Loading activity output states failed.');
-                });
-                
-                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
-                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/outputAttributes')
-                    .success(function (dataAttributes) {
-                        instanceCtrl.activityOutputAttributes[activityInstanceId] = dataAttributes;
-                    }).error(function () {
-                    console.log('Loading activity output attributes failed.');
-                });
-            };
-            
             // set the transition for DataAttributes
-            this.setAttributeTransition = function(dataObjectIdOrDataClassName, attributeIdOrDataAttributeName, value) {
-            	if(!this.attributeValues.hasOwnProperty(dataObjectIdOrDataClassName)) {
-            		this.attributeValues[dataObjectIdOrDataClassName] = {};
+            this.setAttributeTransition = function(dataClassName, dataAttributeName, value) {
+            	if(!this.attributeValues.hasOwnProperty(dataClassName)) {
+            		this.attributeValues[dataClassName] = {};
                 }
-            	this.attributeValues[dataObjectIdOrDataClassName][attributeIdOrDataAttributeName] = value;
+            	this.attributeValues[dataClassName][dataAttributeName] = value;
             };
 
             // TODO support referenced activities again
@@ -417,14 +394,13 @@ angular.module('jfrontend')
                 instanceCtrl.addAlert(event.msg, 'danger');
             })
 
-            this.selectDataObject = function (dclassname, dobjectid, attrconfiguration) {
-                instanceCtrl.activityInputAttributes[dclassname] = attrconfiguration;
+            this.selectDataObject = function (dclassname, dobjectid) {
                 instanceCtrl.selectedDataObjectIds[dclassname] = dobjectid;
             };
 
-            this.selectState = function (dclass, dstate) {
-            	console.log(dclass + ' ' + dstate);
-                instanceCtrl.selectedStates[dclass] = dstate;
+            this.selectState = function (dclassname, dstate) {
+            	console.log(dclassname + ' ' + dstate);
+                instanceCtrl.selectedStates[dclassname] = dstate;
             }
         }
     ]);

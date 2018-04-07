@@ -54,11 +54,18 @@ public final class ExecutionService {
 
 	/**
 	 * Hands out the {@link CaseExecutioner} responsible for executing a case.
-	 * Throws an exception if no case model exists with the given id, or no case exists with the given id.
+	 * Throws an exception if no case model exists with the given id, or no case
+	 * exists with the given id.
 	 * 
-	 * @param cmId - Id of the case model
-	 * @param caseId - Id of the case
-	 * @return CaseExecutioner - The CaseExecutioner responsible for the case
+	 * @param cmId
+	 *            - Id of the case model
+	 * @param caseId
+	 *            - Id of the case
+	 * @return The CaseExecutioner responsible for the case
+	 * @throws IllegalCaseModelIdException
+	 *             if cmId is not assigned
+	 * @throws IllegalCaseIdException
+	 *             if caseId is not assigned
 	 */
 	public static CaseExecutioner getCaseExecutioner(String cmId, String caseId) {
 		if (!CaseModelManager.isExistingCaseModel(cmId)){// || !caseExecutions.containsKey(cmId)) {
@@ -89,20 +96,21 @@ public final class ExecutionService {
 	 * @return the created CaseExecutioner
 	 */
 	public static CaseExecutioner createCaseExecutioner(String cmId, String name) {
-			CaseModel cm = CaseModelManager.getCaseModel(cmId);
+		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-			String caseName;
-			if (name == null || name.isEmpty()) { // no name specified, use name of case model
-				caseName = cm.getName();
-			} else {
-				caseName = name;
-			}
-			CaseExecutioner caseExecutioner = new CaseExecutioner(cm, caseName);
-			addCase(caseExecutioner);
-
-			log.info(String.format("Successfully created Case with Case-Id: %s", caseExecutioner.getCase().getId()));
-			return caseExecutioner;
+		String caseName;
+		if (name == null || name.isEmpty()) {
+			// no name specified, use name of case model
+			caseName = cm.getName();
+		} else {
+			caseName = name;
 		}
+		CaseExecutioner caseExecutioner = new CaseExecutioner(cm, caseName);
+		addCase(caseExecutioner);
+
+		log.info(String.format("Successfully created Case with Case-Id: %s", caseExecutioner.getCase().getId()));
+		return caseExecutioner;
+	}
 
 	private static void addCase(CaseExecutioner caseExecutioner) {
 		if (cases.containsKey(caseExecutioner.getCase().getId())) {
@@ -124,13 +132,20 @@ public final class ExecutionService {
 	}
 
 	/**
-	 * Gets all cases of the case model by the given id.
+	 * Gets all cases of the case model by the given id. If the id is not
+	 * assigned load CaseExecutioner manually from database. If there are no
+	 * Cases but the request was successful return an empty list because the
+	 * CaseModel was not instantiated yet. If the request fails there is no
+	 * CaseModel with the specified id.
 	 * 
-	 * @param cmId - the case model id
+	 * @param cmId
+	 *            - the case model id
 	 * @return List of all {@link CaseExecutioner}s
+	 * @throws IllegalCaseModelIdException
+	 *             if cmId is not assigned
 	 */
 	public static List<CaseExecutioner> getAllCasesOfCaseModel(String cmId) {
-		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
+		if (!CaseModelManager.isExistingCaseModel(cmId)) {
 			List<CaseExecutioner> cases = DomainModelPersistenceManager.loadAllCaseExecutionersWithCaseModelId(cmId);
 			if (cases != null) {
 				for (CaseExecutioner ce : cases) {
@@ -141,6 +156,10 @@ public final class ExecutionService {
 				log.error(e.getMessage());
 				throw e;
 			}
+		}
+		if (!caseExecutions.containsKey(cmId)) {
+			// no existing cases for existing casemodel
+			return new ArrayList<>();
 		}
 		log.info(String.format("Successfully requested all Case-Informations of CaseModel-Id: %s", cmId));
 		return caseExecutions.get(cmId);

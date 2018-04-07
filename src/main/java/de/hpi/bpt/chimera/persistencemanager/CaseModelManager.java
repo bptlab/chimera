@@ -84,11 +84,14 @@ public class CaseModelManager {
 			throw e;
 		}
 	}
-	/*
-	 * public static void addCaseModel(CaseModel model) { try {
-	 * DomainModelPersistenceManager.saveCaseModel(model);
-	 * caseModels.put(model.getId(), model); } catch (Exception e) { throw e; }
-	 * }
+
+	/**
+	 * Receive the CaseModel for a specific id.
+	 * 
+	 * @param id
+	 * @return CaseModel
+	 * @throws IllegalCaseModelIdException
+	 *             if the id is not assigned
 	 */
 	public static CaseModel getCaseModel(String id) {
 		mayInstantiate();

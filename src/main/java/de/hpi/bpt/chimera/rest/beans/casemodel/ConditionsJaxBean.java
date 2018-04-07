@@ -17,14 +17,14 @@ public class ConditionsJaxBean {
 	public ConditionsJaxBean(TerminationCondition terminationCondition) {
 
 		List<DataObjectStateConditionJaxBean[]> terminationConditionJaxBean = new ArrayList<>(terminationCondition.getConditionSets().size());
-		for (ConditionSet component : terminationCondition.getConditionSets()) {
+		for (ConditionSet conditionSet : terminationCondition.getConditionSets()) {
 
-			List<DataObjectStateConditionJaxBean> componentJaxBean = new ArrayList<>(component.getConditions().size());
-			for (AtomicDataStateCondition condition : component.getConditions()) {
+			List<DataObjectStateConditionJaxBean> componentJaxBean = new ArrayList<>(conditionSet.getConditions().size());
+			for (AtomicDataStateCondition condition : conditionSet.getConditions()) {
 				DataObjectStateConditionJaxBean conditionJaxBean = new DataObjectStateConditionJaxBean(condition);
 				componentJaxBean.add(conditionJaxBean);
 			}
-			DataObjectStateConditionJaxBean[] componentArray = componentJaxBean.toArray(new DataObjectStateConditionJaxBean[component.getConditions().size()]);
+			DataObjectStateConditionJaxBean[] componentArray = componentJaxBean.toArray(new DataObjectStateConditionJaxBean[conditionSet.getConditions().size()]);
 			terminationConditionJaxBean.add(componentArray);
 		}
 		DataObjectStateConditionJaxBean[][] terminationConditionArray = terminationConditionJaxBean.toArray(new DataObjectStateConditionJaxBean[terminationCondition.getConditionSets().size()][]);

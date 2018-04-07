@@ -13,7 +13,8 @@
             <!-- ./ panel header -->
             <!-- Body of the Modal -->
             <div class="modal-body">
-            	<div ng-if="instanceCtrl.availableInput[activityInstance['id']].length===0">
+            
+            	<div ng-show="(instanceCtrl.availableInput[activityInstance['id']] | json) == '{}'">
             		No Data Object for Input available.
             	</div>
                 <div ng-repeat="(dclass, dobjects) in instanceCtrl.availableInput[activityInstance['id']]">
@@ -24,9 +25,9 @@
                         <div class="panel-body form-group">
                             <select class="form-control"
                                     ng-model="obj"
-                                    ng-init="obj=dobjects[0]; instanceCtrl.selectDataObject(dclass, obj.id, obj.attributeConfiguration)"
+                                    ng-init="obj=dobjects[0]; instanceCtrl.selectDataObject(dclass, obj.id)"
                                     ng-options="dobject as dobject.id for dobject in dobjects"
-                                    ng-change="instanceCtrl.selectDataObject(dclass, obj.id, obj.attributeConfiguration)"
+                                    ng-change="instanceCtrl.selectDataObject(dclass, obj.id)"
                             ></select>
                         </div>
                         <table class="table">

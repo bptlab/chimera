@@ -2,7 +2,6 @@ package de.hpi.bpt.chimera.execution;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -33,7 +31,6 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
-import de.hpi.bpt.chimera.execution.exception.IllegalActivityInstanceStateException;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceTypeException;
 import de.hpi.bpt.chimera.history.transportationbeans.ActivityLog;
@@ -41,6 +38,7 @@ import de.hpi.bpt.chimera.history.transportationbeans.DataAttributeLog;
 import de.hpi.bpt.chimera.history.transportationbeans.DataObjectLog;
 import de.hpi.bpt.chimera.history.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
@@ -261,38 +259,24 @@ public class CaseExecutioner {
 		}
 	}
 
-
-	/**
-	 * Finally terminates the activity. Therefore this Method is called after
-	 * termination was prepared (prepareForActivityInstanceTermination() ) and
-	 * all DataAttributes were set.
-	 * 
-	 * @param activityInstanceId
-	 */
-	public void terminateActivityInstance(AbstractActivityInstance activityInstance) {
-		try {
-			activityInstance.terminate();
-		} catch (IllegalArgumentException e) {
-			throw e;
-		}
-	}
-
 	/**
 	 * Get an ControlNodeInstance over all FragmentInstances of the Case by an
 	 * id.
 	 * 
-	 * @param controlNodeId
-	 * @return the associated ControlNodeInstance, or {@code null} if the id is
-	 *         not assigned
+	 * @param instanceId
+	 *            - id of the ControlNodeInstance
+	 * @return the associated ControlNodeInstance if controlNodeId is assigned.
+	 * @throws IllegalControlNodeInstanceIdException
+	 *             if instanceId is not assigned.
 	 */
-	public ControlNodeInstance getControlNodeInstance(String controlNodeId) {
+	public ControlNodeInstance getControlNodeInstance(String instanceId) {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
-			if (fragmentInstance.getControlNodeInstanceIdToInstance().containsKey(controlNodeId)) {
-				return fragmentInstance.getControlNodeInstanceIdToInstance().get(controlNodeId);
+			if (fragmentInstance.getControlNodeInstanceIdToInstance().containsKey(instanceId)) {
+				return fragmentInstance.getControlNodeInstanceIdToInstance().get(instanceId);
 			}
 		}
 
-		IllegalControlNodeInstanceIdException e = new IllegalControlNodeInstanceIdException(controlNodeId);
+		IllegalControlNodeInstanceIdException e = new IllegalControlNodeInstanceIdException(instanceId);
 		log.error(e.getMessage());
 		throw e;
 	}
@@ -301,9 +285,12 @@ public class CaseExecutioner {
 	 * Get a specific ActivityInstance by an id.
 	 * 
 	 * @param activityInstanceId
-	 * @return the associated AbstractActivityInstance, or {@code null} if the
-	 *         id is not assigned, or {@code null} if the id is associated to a
-	 *         ControlNodeInstance which is not an ActivityInstance
+	 *            - Id of the ActivityInstance.
+	 * @return the associated AbstractActivityInstance
+	 * @throws IllegalControlNodeInstanceIdException
+	 *             if controlNodeId is not assigned.
+	 * @throws IllegalControlNodeInstanceTypeException
+	 *             if associated ControlNodeInstance is not an ActivityInstance.
 	 */
 	public AbstractActivityInstance getActivityInstance(String activityInstanceId) {
 		try {
@@ -318,6 +305,30 @@ public class CaseExecutioner {
 			return (AbstractActivityInstance) nodeInstance;
 		} catch (IllegalArgumentException e) {
 			throw e;
+		}
+	}
+
+	/**
+	 * Checks whether the Case can be terminated by testing if the
+	 * TerminationCondition is fulfilled.
+	 * 
+	 * @return true if the Case can be terminated.
+	 */
+	public boolean canTerminate() {
+		TerminationCondition terminationCondition = getCaseModel().getTerminationCondition();
+		return terminationCondition.isFulfilled(dataManager.getDataStateConditions());
+	}
+
+	/**
+	 * Terminate the Case. Only possible if the TerminationCondition is
+	 * fulfilled.
+	 * 
+	 * @see #canTerminate()
+	 */
+	public void terminate() {
+		// TODO think about the consequences
+		if (canTerminate()) {
+			setTerminated(true);
 		}
 	}
 

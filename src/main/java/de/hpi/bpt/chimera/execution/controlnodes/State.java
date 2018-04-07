@@ -25,6 +25,15 @@ public enum State {
 		return text;
 	}
 
+	/**
+	 * Receive a State by a given text.
+	 * 
+	 * @param text
+	 *            - of the state
+	 * @return the corresponding State
+	 * @throws IllegalStateNameException
+	 *             if the text does not match a State.
+	 */
 	public static State fromString(String text) {
 		if (text.isEmpty())
 			return null;

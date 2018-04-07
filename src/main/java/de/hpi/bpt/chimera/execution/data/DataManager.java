@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -64,6 +63,14 @@ public class DataManager {
 		this.dataObjectIdToDataObject = new HashMap<>();
 	}
 
+	/**
+	 * Create a DataObject with a given AtomicDataStateCondition and register
+	 * the DataObject in the DataManager.
+	 * 
+	 * @param condition
+	 *            - AtomicDataStateCondition for the DataObject.
+	 * @return the created DataObject.
+	 */
 	public DataObject createDataObject(AtomicDataStateCondition condition) {
 		DataObject dataObject = new DataObject(condition, this);
 		dataObjectIdToDataObject.put(dataObject.getId(), dataObject);
@@ -332,7 +339,10 @@ public class DataManager {
 	 * Get a specific DataObject by id.
 	 * 
 	 * @param dataObjectId
-	 * @return DataObject
+	 *            - Id of DataObject
+	 * @return corresponding DataObject
+	 * @throws IllegalDataObjectIdException
+	 *             if dataObjectId is not assigned
 	 */
 	public DataObject getDataObjectById(String dataObjectId) {
 		if (dataObjectIdToDataObject.containsKey(dataObjectId)) {
@@ -347,7 +357,10 @@ public class DataManager {
 	 * Get a List of specific DataObjects by their ids.
 	 * 
 	 * @param dataObjectIds
+	 *            - List of ids of DataObjects
 	 * @return List of DataObjects
+	 * @throws IllegalDataObjectIdException
+	 *             if one dataObjectId is not assigned
 	 */
 	public List<DataObject> getDataObjectsById(List<String> dataObjectIds) {
 		List<DataObject> dataObjects = new ArrayList<>();

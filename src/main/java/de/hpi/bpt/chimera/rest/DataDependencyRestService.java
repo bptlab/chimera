@@ -1,22 +1,20 @@
 package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
-import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataAttributeJaxBean;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataObjectJaxBean;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,8 +26,8 @@ import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class implements the REST interface for data based elements.
@@ -52,7 +50,7 @@ public class DataDependencyRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/availableInput")
 	public Response getAvailableInput(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
 			DataManager dataManager = caseExecutioner.getDataManager();
@@ -66,18 +64,21 @@ public class DataDependencyRestService extends AbstractRestService {
 			}
 			JSONArray result = new JSONArray(resultBeans);
 
-			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
 
 	/**
-	 * This method responds to a GET request by returning an array of
-	 * outputSets. Each contains the outputSetDatabaseID, the name of the
-	 * dataObject and their state as a Map & a link to get the
-	 * dataObjectInstances with their dataAttributesInstances. The result is
-	 * determined by:
+	 * This method responds to a GET request by returning an possible output
+	 * states and the attribute configuration for each of outputSets. Each
+	 * contains the outputSetDatabaseID, the name of the dataObject and their
+	 * state as a Map & a link to get the dataObjectInstances with their
+	 * dataAttributesInstances. Get the DataAttributes of all DataClasses that
+	 * occur in the Output Condition of the AbstractActivityInstance. If the
+	 * DataAttributes are already instantiated by a DataObject in the
+	 * workingItems return those. The result is determined by:
 	 *
 	 * @param uriInfo
 	 *            A UriInfo object, which holds the server context used for the
@@ -101,82 +102,64 @@ public class DataDependencyRestService extends AbstractRestService {
 	 *         of the array.
 	 */
 	@GET
-	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/outputStates")
+	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/output")
 	public Response getOutputDataObjects(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
-			// TODO: make the output states for the activity instance dependent
-			// to the existing data objects and the atomic datastateconditions
-			// in the inputset
-			Map<DataClass, Set<AtomicDataStateCondition>> dataClassToAtomicConditions = activityInstance.getControlNode().getPostCondition().getDataClassToAtomicDataStateConditions();
+			Map<DataClass, List<ObjectLifecycleState>> possibleDataClassToObjectLifecycleStates = getPossibleObjectLifecycleTransitions(activityInstance);
+			JSONObject result = new JSONObject();
+			for (Map.Entry<DataClass, List<ObjectLifecycleState>> doToOlc : possibleDataClassToObjectLifecycleStates.entrySet()) {
+				JSONObject output = new JSONObject();
+				output.put("state", "<TO BE CREATED>");
+				DataClass dataClass = doToOlc.getKey();
+				List<String> olcNames = doToOlc.getValue().stream().map(ObjectLifecycleState::getName).collect(Collectors.toList());
+				JSONArray states = new JSONArray(olcNames);
+				output.put("states", states);
 
-			JSONObject dataClassStateAssociation = new JSONObject();
-			for (Entry<DataClass, Set<AtomicDataStateCondition>> dataClassToAtomicCondition : dataClassToAtomicConditions.entrySet()) {
-				JSONArray conditionStateStrings = new JSONArray();
-				for (AtomicDataStateCondition condition : dataClassToAtomicCondition.getValue()) {
-					conditionStateStrings.put(condition.getStateName());
-				}
-				dataClassStateAssociation.put(dataClassToAtomicCondition.getKey().getName(), conditionStateStrings);
+				List<DataAttributeJaxBean> attributes = dataClass.getDataAttributes().stream().map(DataAttributeJaxBean::new).collect(Collectors.toList());
+				JSONArray attributeConfiguration = new JSONArray(attributes);
+				output.put("attributeConfiguration", attributeConfiguration);
+				result.put(dataClass.getName(), output);
 			}
-
-			return Response.ok(dataClassStateAssociation.toString(), MediaType.APPLICATION_JSON).build();
+			
+			// override attribute configuration if dataclass is instantiated by
+			// data object
+			for (DataObject workingItem : activityInstance.getSelectedDataObjects()) {
+				DataClass dataClass = workingItem.getDataClass();
+				List<DataAttributeJaxBean> attributes = workingItem.getDataAttributeInstances().stream().map(DataAttributeJaxBean::new).collect(Collectors.toList());
+				JSONArray attributeConfiguration = new JSONArray(attributes);
+				JSONObject output = result.getJSONObject(dataClass.getName());
+				output.put("attributeConfiguration", attributeConfiguration);
+				output.put("state", workingItem.getObjectLifecycleState().getName());
+			}
+			
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
 	}
 
 	/**
-	 * Get the DataAttributes of all DataClasses that occur in the Output
-	 * Condition of the AbstractActivityInstance. If the DataAttributes are
-	 * already instantiated by a DataObject in the workingItems return those.
+	 * Retrieve all possible ObjectLifecycle-Transitions for an ActivityInstance
+	 * with the available transitions in the post condition and the working
+	 * items of the instance.
 	 * 
-	 * @param cmId
-	 * @param caseId
-	 * @param activityInstanceId
+	 * @param activityInstance
 	 * @return
 	 */
-	@GET
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/outputAttributes")
-	public Response getOuptutAttributes(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-			JSONObject result = new JSONObject();
-			// early exit
-			if (activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
-				return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-			}
-			Set<AtomicDataStateCondition> outputConditions = activityInstance.getControlNode().getPostCondition().getAtomicDataStateConditions();
-			for (AtomicDataStateCondition outputConiditon : outputConditions) {
-				JSONArray dataAttributeArray = new JSONArray();
-				for (DataAttribute dataAttribute : outputConiditon.getDataClass().getDataAttributes()) {
-					dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttribute)));
-				}
-				result.put(outputConiditon.getDataClassName(), dataAttributeArray);
-			}
+	private Map<DataClass, List<ObjectLifecycleState>> getPossibleObjectLifecycleTransitions(AbstractActivityInstance activityInstance) {
+		Map<DataClass, List<ObjectLifecycleState>> possibleTransitions = activityInstance.getControlNode().getPostCondition().getDataClassToObjectLifecycleStates();
+		List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
 
-			List<DataObject> selectedDataObjects = activityInstance.getSelectedDataObjects();
-			for (DataObject dataObject : selectedDataObjects) {
-				JSONArray dataAttributeArray = new JSONArray();
-				for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
-					dataAttributeArray.put(new JSONObject(new DataAttributeJaxBean(dataAttributeInstance)));
-				}
-				result.put(dataObject.getDataClass().getName(), dataAttributeArray);
-			}
+		for (DataObject dataObject : workingItems) {
+			DataClass dataClass = dataObject.getDataClass();
+			ObjectLifecycleState olcState = dataObject.getObjectLifecycleState();
 
-			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			possibleTransitions.get(dataClass).removeIf(x -> !x.isSuccessorOf(olcState));
 		}
-	}
 
-	// List<DataObjectJaxBean> outputBeans =
-	// possibleInputs.stream().map(x
-	// -> buildDataObjectJaxBean(x,
-	// executionService)).collect(Collectors.toList());
-	// JSONArray array = new JSONArray(outputBeans);
+		return possibleTransitions;
+	}
 }

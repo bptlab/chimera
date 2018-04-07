@@ -1,10 +1,14 @@
 package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.execution.exception.IllegalCaseIdException;
+import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
+import de.hpi.bpt.chimera.execution.exception.IllegalStateNameException;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.rest.beans.activity.ActivityJaxBean;
@@ -29,36 +33,37 @@ import java.util.stream.Collectors;
  */
 @Path("interface/v2")
 public class ActivityRestService extends AbstractRestService {
-	private final static Logger log = Logger.getLogger(ActivityRestService.class);
+	private static final Logger log = Logger.getLogger(ActivityRestService.class);
+	
 	/**
-	 * Returns a JSON-Object containing information about all activity
-	 * instances of a specified scenario instance.
-	 * The JSON-Object will group the activities regarding their state.
-	 * If the scenario instance does not exist, the response code will
-	 * specify the error which occurred.
+	 * Returns a JSON-Object containing information about all activity instances
+	 * of a specified scenario instance. The JSON-Object will group the
+	 * activities regarding their state. If the scenario instance does not
+	 * exist, the response code will specify the error which occurred.
 	 *
-	 * @param uriInfo      The context object. It provides information
-	 *                     the server context.
-	 * @param scenarioID   The id of the scenario
-	 * @param instanceID   The id of the instance.
-	 * @param filterString Defines a search strings. Only activities
-	 *                     with a label containing this String will be
-	 *                     shown.
-	 * @param state        The state of the instance.
-	 * @return A Response with the status and content of the request.
-	 * A 200 (OK) implies that the instance was found and the
-	 * result contains the JSON-Object.
-	 * If only the scenario ID is incorrect a 301 (REDIRECT)
-	 * will point to the correct URL.
-	 * If the instance ID is incorrect a 404 (NOT_FOUND) will
-	 * be returned.
+	 * @param uriInfo
+	 *            - The context object. It provides information the server
+	 *            context.
+	 * @param scenarioId
+	 *            - The id of the scenario
+	 * @param instanceId
+	 *            - The id of the instance.
+	 * @param filterString
+	 *            - Defines a search strings. Only activities with a label
+	 *            containing this String will be shown.
+	 * @param state
+	 *            - The state of the activity instances.
+	 * @return A Response with the status and content of the request. A 200 (OK)
+	 *         implies that the instance was found and the result contains the
+	 *         JSON-Object. If the scenarioId or instanceId is incorrect a 404
+	 *         (NOT_FOUND) will be returned.
 	 */
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activity")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getActivitiesOfInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @QueryParam("filter") String filterString, @QueryParam("state") String stateName) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			// common
 			if (StringUtils.isEmpty(filterString)) {
 				if (StringUtils.isEmpty(stateName)) {
@@ -73,8 +78,8 @@ public class ActivityRestService extends AbstractRestService {
 				return getAllActivitiesOfInstanceWithFilter(caseExecutioner, filterString, uriInfo);
 			}
 			return getAllActivitiesWithFilterAndState(caseExecutioner, filterString, stateName, uriInfo);
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		} catch (IllegalCaseModelIdException | IllegalCaseIdException e) {
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
 
@@ -164,65 +169,71 @@ public class ActivityRestService extends AbstractRestService {
 			}
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalStateNameException e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
 
 	/**
 	 * This method is used to get all the information for an activity.
-	 * This means the label, id and a link for the input-/outputSets.
 	 *
-	 * @param uriInfo            A UriInfo object, which holds the server context.
-	 * @param scenarioId         The databaseID of a scenario.
-	 * @param scenarioInstanceId The databaseID of a scenarioInstance.
-	 * @param activityInstanceId The databaseID of an activityInstance.
-	 * @return a response Object with the status code:
-	 * 200 if everything was correct and holds the information about the activityInstance.
-	 * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstanceID is wrong.
+	 * @param uriInfo
+	 *            - A UriInfo object, which holds the server context.
+	 * @param scenarioId
+	 *            - The databaseID of a scenario.
+	 * @param scenarioInstanceId
+	 *            - The databaseID of a scenarioInstance.
+	 * @param activityInstanceId
+	 *            - The databaseID of an activityInstance.
+	 * @return a response Object with the status code: 200 if everything was
+	 *         correct and holds the information about the activityInstance. A
+	 *         404 Not Found is returned if the
+	 *         scenario/scenarioInstance/activityInstanceID is wrong.
+	 * @see {@link ActivityJaxBean}
 	 */
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
 	public Response getActivity(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 			ActivityJaxBean activity = new ActivityJaxBean(activityInstance);
 			return Response.ok(activity, MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
 
 
 	/**
-	 * This method updates the data attributes of a specific activity
-	 * defined via its activityID.
+	 * This method updates the data attributes of a specific activity defined
+	 * via its activityId.
 	 *
-	 * @param scenarioId         The id of a scenario model.
-	 * @param scenarioInstanceId the id of an scenario instance.
-	 * @param activityInstanceId the control node instance id of the activity.
-	 * @param input              data input.
+	 * @param scenarioId
+	 *            The id of a scenario model.
+	 * @param scenarioInstanceId
+	 *            the id of an scenario instance.
+	 * @param activityInstanceId
+	 *            the control node instance id of the activity.
+	 * @param input
+	 *            data input.
 	 * @return Status code with regard to its success / failure
 	 */
 	@PUT
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
 	public Response setDataAttribute(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
-		log.info("REST: setting DataAttributeInstances");
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
 			Map<String, Map<String, Object>> dataAttributeValues = parseDataAttribueValues(post);
+			List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
 
 			DataManager dataManager = caseExecutioner.getDataManager();
-			dataManager.setDataAttributeValuesByIds(dataAttributeValues);
+			dataManager.setDataAttributeValuesByNames(dataAttributeValues, workingItems);
 
-			// caseExecutioner.terminateActivityInstance(activityInstance);
-
-			return Response.status(201).build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"data attribute instance values updated.\"}").build();
 		} catch (IllegalArgumentException e) {
-			log.error("REST setDataAttribute() Error", e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
@@ -266,7 +277,7 @@ public class ActivityRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/workingItems")
 	public Response getWorkingItems(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
 			List<DataObject> selectedInstances = activityInstance.getSelectedDataObjects();
@@ -275,9 +286,9 @@ public class ActivityRestService extends AbstractRestService {
 			for (DataObject dataObject : selectedInstances) {
 				result.put(new JSONObject(new DataObjectJaxBean(dataObject)));
 			}
-			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 	}
 
@@ -291,8 +302,7 @@ public class ActivityRestService extends AbstractRestService {
 	 * @param activityInstanceId
 	 *            the id of the activity instance.
 	 * @param postBody
-	 *            - Json String containing the data objects on which the
-	 *            activity instance operates
+	 *            - Json String containing an array of ids for data objects.
 	 * @return a message regarding the success of the operation A 202 (ACCEPTED)
 	 *         means that the POST was successful. A 400 (BAD_REQUEST) if the
 	 *         transition was not allowed.
@@ -300,12 +310,16 @@ public class ActivityRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/begin")
-	public Response beginActivityInstance(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
+	public Response beginActivityInstance(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String postBody) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
-			List<String> selectedDataObjectIds = parseDataObjectIds(post);
+			List<String> selectedDataObjectIds = new ArrayList<>();
+			JSONArray rawDataObjectIds = new JSONArray(postBody);
+			for (int i = 0; i < rawDataObjectIds.length(); i++) {
+				selectedDataObjectIds.add(rawDataObjectIds.getString(i));
+			}
 			List<DataObject> selectedDataObjects = caseExecutioner.getDataManager().getDataObjectsById(selectedDataObjectIds);
 
 			caseExecutioner.beginDataControlNodeInstance(activityInstance, selectedDataObjects);
@@ -313,27 +327,6 @@ public class ActivityRestService extends AbstractRestService {
 		} catch (Exception e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-	}
-
-	/**
-	 * Parse a List of DataObjectIds of the json post with the keyword
-	 * {@code dataobjects}.
-	 * 
-	 * @param post
-	 *            - JSONString
-	 * @return List of Stings
-	 */
-	private List<String> parseDataObjectIds(String post) {
-		List<String> dataObjectIds = new ArrayList<>();
-		JSONObject postJson = new JSONObject(post);
-		if (postJson.has("dataobjects")) {
-			JSONArray dataObjectsJson = postJson.getJSONArray("dataobjects");
-			for (int i = 0; i < dataObjectsJson.length(); i++) {
-				String dataObjectId = dataObjectsJson.getString(i);
-				dataObjectIds.add(dataObjectId);
-			}
-		}
-		return dataObjectIds;
 	}
 
 	/**
@@ -364,7 +357,7 @@ public class ActivityRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
 	public Response terminateActivityInstance(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
 		try {
-			CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
 			JSONObject postJson = new JSONObject(post);

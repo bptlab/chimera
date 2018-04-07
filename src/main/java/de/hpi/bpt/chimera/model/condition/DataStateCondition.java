@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 // TODO: think of a better name
 /**
@@ -103,27 +104,26 @@ public class DataStateCondition {
 	}
 
 	/**
-	 * Get all DataStateConditions that occur in the ConditionSets associated to
-	 * their {@link DataClass}.
+	 * Get all possible ObjectLifecycleStates that occur in the ConditionSets
+	 * associated to their {@link DataClass}.
 	 * 
-	 * @return DataStateConditions that occur in the ConditionSets associated to
-	 *         their DataClass.
+	 * @return Map from DataClass to all possible ObjectLifecycleStates
 	 */
-	public Map<DataClass, Set<AtomicDataStateCondition>> getDataClassToAtomicDataStateConditions() {
-		Map<DataClass, Set<AtomicDataStateCondition>> dataClassToAtomicDataStateConditions = new HashMap<>();
+	public Map<DataClass, List<ObjectLifecycleState>> getDataClassToObjectLifecycleStates() {
+		Map<DataClass, List<ObjectLifecycleState>> dataClassToObjectLifecycleStates = new HashMap<>();
 
 		for (AtomicDataStateCondition condition : getAtomicDataStateConditions()) {
 			DataClass dataClass = condition.getDataClass();
-			if (dataClassToAtomicDataStateConditions.containsKey(dataClass)) {
-				dataClassToAtomicDataStateConditions.get(dataClass).add(condition);
+			ObjectLifecycleState olcState = condition.getObjectLifecycleState();
+			if (dataClassToObjectLifecycleStates.containsKey(dataClass)) {
+				dataClassToObjectLifecycleStates.get(dataClass).add(olcState);
 			} else {
-				dataClassToAtomicDataStateConditions.put(dataClass, new HashSet<>(Arrays.asList(condition)));
+				dataClassToObjectLifecycleStates.put(dataClass, new ArrayList<>(Arrays.asList(olcState)));
 			}
 		}
 
-		return dataClassToAtomicDataStateConditions;
+		return dataClassToObjectLifecycleStates;
 	}
-
 	public boolean isEmpty() {
 		return conditionSets.isEmpty();
 	}

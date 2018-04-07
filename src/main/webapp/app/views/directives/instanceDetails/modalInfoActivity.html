@@ -18,7 +18,7 @@
             	</div>
                 <!-- display all attributes and let the user edit them -->
                 <div ng-repeat="dataobject in instanceCtrl.workingItems[activityInstance['id']]">
-                    <b>{{dataobject.dataclass}} ({{dataobject.state}}):</b>
+                    <b>{{dataobject.dataclass}}[{{dataobject.state}}]:</b>
                     <table class="table">
                         <thead>
                         <tr>
@@ -33,7 +33,7 @@
                                        ng-name="attrvalue"
                                        ng-model-options='{ debounce: 1000 }'
                                        ng-model="attr['value']"
-                                       ng-change="instanceCtrl.setAttributeTransition(dataobject.id, attr['id'], attr['value'])">
+                                       ng-change="instanceCtrl.setAttributeTransition(dataobject.dataclass, attr.name, attr['value'])">
                                 <br></td>
                         </tr>
                         </tbody>
