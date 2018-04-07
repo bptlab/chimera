@@ -81,6 +81,10 @@ public class CaseExecutioner {
 	@MapKey(name = "requestKey")
 	public Map<String, AbstractEventInstance> keyToRegisteredEvent;
 
+	// @ManyToMany(cascade = CascadeType.ALL)
+	// @JoinTable(name = "caseexecutioner_controlnodeinstance_map_requestkey")
+	// public Map<String, ControlNodeInstance> keyToRegisteredEvent;
+
 
 
 	/**
@@ -410,12 +414,10 @@ public class CaseExecutioner {
 
 	public void registerEvent(String registrationKey, AbstractEventInstance eventInstance) {
 		idToRegisteredEvent.put(eventInstance.getId(), eventInstance);
-		// log.debug("Entry in Hashmap idToRegisteredEvent with id:" +
-		// eventInstance.getId());
+		log.debug("Entry in Hashmap idToRegisteredEvent with id:" + eventInstance.getId());
 		((AbstractEventInstance) eventInstance).requestKey = registrationKey;
 		keyToRegisteredEvent.put(registrationKey, eventInstance);
-		// log.debug("Entry in Hashmap keyToRegisteredEvent with key:" +
-		// registrationKey);
+		log.debug("Entry in Hashmap keyToRegisteredEvent with key:" + registrationKey);
 	}
 
 	public void removeEvent(String registrationKey, AbstractEventInstance eventInstance) {

@@ -66,6 +66,8 @@ public final class EventDispatcher {
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(scenarioId, scenarioInstanceId);
 		try {
 			AbstractEventInstance eventInstance = caseExecutioner.getRegisteredEventFromRegistrationKey(requestId);
+			logger.debug("eventInstance id:" + eventInstance.getId());
+			logger.debug("eventInstance behavior (to String):" + eventInstance.getBehavior());
 			MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
 			if (eventJson.isEmpty() || "{}".equals(eventJson)) {
 				receiveBehavior.setEventJson("");
