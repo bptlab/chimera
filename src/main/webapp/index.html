@@ -60,6 +60,14 @@
     <script src="app/scripts/directives/instanceDetails/unassignedTasks.js"></script>
 
     <base href="/Chimera">
+    
+    <!--TODO  This is a dirty fix, to get this annoying black overlay away which forced the user to reload the page.  -->
+    <style>
+		.modal-backdrop {
+			/* bug fix - no overlay */    
+			display: none;    
+		}
+	</style>
 </head>
 <body>
 
