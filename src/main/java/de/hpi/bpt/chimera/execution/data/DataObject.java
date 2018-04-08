@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
@@ -31,6 +32,7 @@ public class DataObject {
 	/**
 	 * Map of id of DataAttributeInstance to DataAttributeInstance.
 	 */
+	@OneToMany(cascade = CascadeType.ALL)
 	private Map<String, DataAttributeInstance> dataAttributeInstanceIdToInstance;
 
 

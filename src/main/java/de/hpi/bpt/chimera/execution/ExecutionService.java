@@ -68,7 +68,9 @@ public final class ExecutionService {
 	 *             if caseId is not assigned
 	 */
 	public static CaseExecutioner getCaseExecutioner(String cmId, String caseId) {
-		if (!CaseModelManager.isExistingCaseModel(cmId)){// || !caseExecutions.containsKey(cmId)) {
+		if (!CaseModelManager.isExistingCaseModel(cmId)) {// ||
+															// !caseExecutions.containsKey(cmId))
+															// {
 			IllegalCaseModelIdException e = new IllegalCaseModelIdException(cmId);
 			log.error(e.getMessage());
 			throw e;
@@ -145,7 +147,10 @@ public final class ExecutionService {
 	 *             if cmId is not assigned
 	 */
 	public static List<CaseExecutioner> getAllCasesOfCaseModel(String cmId) {
-		if (!CaseModelManager.isExistingCaseModel(cmId)) {
+		// TODO talk about the "|| !caseExecutions.containsKey(cmId)". One
+		// commit added it, another deleted it and a third added it again. Maybe
+		// we should clarify that ;).
+		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
 			List<CaseExecutioner> cases = DomainModelPersistenceManager.loadAllCaseExecutionersWithCaseModelId(cmId);
 			if (cases != null) {
 				for (CaseExecutioner ce : cases) {
