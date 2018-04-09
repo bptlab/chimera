@@ -221,7 +221,7 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		}	
 		for (AbstractControlNode node : toEnable) {
 			ControlNodeInstance controlNodeInstance = this.getFragmentInstance().createControlNodeInstance(node);
-			if (controlNodeInstance.getClass() == AbstractActivityInstance.class) {
+			if (AbstractActivityInstance.class.isInstance(controlNodeInstance)) {
 				((AbstractActivityInstance) controlNodeInstance).forbidAutomaticStart();
 			}
 			controlNodeInstance.enableControlFlow();

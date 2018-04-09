@@ -81,7 +81,7 @@ public class TimerEventBehavior extends EventBehavior {
 		String timerDefinition = getTimerDefinition().getTimerDuration();
 		TimeCalculator calculator = new TimeCalculator();
 		Date now = new Date();
-		// TODO replaxw P10S with the imerDefinition
+		// TODO replace P10S with the TimerDefinition
 		return calculator.getDatePlusInterval(now, timerDefinition);
 	}
 
