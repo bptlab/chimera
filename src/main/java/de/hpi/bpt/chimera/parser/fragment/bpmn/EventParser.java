@@ -60,7 +60,7 @@ public class EventParser {
 			TimerDefinition timerDefiniton = new TimerDefinition();
 			timerDefiniton.setTimerDuration(xmlEvent.getTimerDefinition().getTimerDuration());
 			event.setSpecialEventDefinition(timerDefiniton);
-		} else if (xmlEvent.hasMessageDefiniton()) {
+		} else if (xmlEvent.hasMessageDefiniton() || event instanceof IntermediateThrowEvent) {
 			if (event instanceof EndEvent || event instanceof IntermediateThrowEvent) {
 				event.setSpecialBehavior(SpecialBehavior.MESSAGE_SEND);
 			} else if (event instanceof StartEvent || event instanceof IntermediateCatchEvent || event instanceof BoundaryEvent) {

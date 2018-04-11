@@ -9,6 +9,8 @@ import de.hpi.bpt.chimera.util.PropertyLoader;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -43,9 +45,10 @@ public class EventSpawner {
 					return false;
 				}
 			}
+			log.info("Succesfully spawned an event!");
 			return true;
-		} catch (IllegalArgumentException e) {
-			log.error(e);
+		} catch (Exception e) {
+			log.error("Error while spawning an event for Unicorn", e);
 			return false;
 		}
 	}
@@ -56,11 +59,13 @@ public class EventSpawner {
 		}
 
 		List<DataObject> possibleInputObjects = new ArrayList<>();
-		for (AtomicDataStateCondition condition : eventInstance.getControlNode().getPostCondition().getAtomicDataStateConditions()) {
+		for (AtomicDataStateCondition condition : eventInstance.getControlNode().getPreCondition().getAtomicDataStateConditions()) {
 			if (!condition.getDataClass().isEvent()) {
 				throw new IllegalArgumentException("dataclass of input object is not an eventclass");
 			}
+
 			List<DataObject> availableDataObjects = new ArrayList<>(eventInstance.getDataManager().getAvailableDataObjects(condition));
+
 			if (availableDataObjects.size() == 1) {
 				DataObject dataObject = availableDataObjects.get(0);
 				possibleInputObjects.add(dataObject);
@@ -74,6 +79,11 @@ public class EventSpawner {
 
 	private static Response buildAndSendEvent(DataObject inputObject) {
 		Document eventXml = buildEventFromDataObject(inputObject);
+
+		DOMImplementationLS domImplementation = (DOMImplementationLS) eventXml.getImplementation();
+		LSSerializer lsSerializer = domImplementation.createLSSerializer();
+		log.info("The EventXML which will be send to Unicorn is:" + lsSerializer.writeToString(eventXml));
+
 		return sendEvent(eventXml);
 	}
 
@@ -118,7 +128,7 @@ public class EventSpawner {
 	private static void appendAttributes(Document doc, Element rootElement, List<DataAttributeInstance> attributes) {
 		attributes.stream().forEach(attr -> {
 			Element el = doc.createElement(attr.getDataAttribute().getName());
-			el.appendChild(doc.createTextNode(attr.getValue().toString()));
+			el.appendChild(doc.createTextNode(String.valueOf(attr.getValue())));
 			rootElement.appendChild(el);
 		});
 	}

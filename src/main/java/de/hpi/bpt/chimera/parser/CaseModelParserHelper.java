@@ -6,7 +6,6 @@ import java.util.Map;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
-import de.hpi.bpt.chimera.model.datamodel.DataModelClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.validation.ParsingHelperValidation;
 
@@ -17,8 +16,8 @@ import de.hpi.bpt.chimera.validation.ParsingHelperValidation;
  */
 public class CaseModelParserHelper {
 	private DataModel dataModel;
-	private Map<String, DataModelClass> nameToDataModelClass;
-	private Map<DataModelClass, Map<String, DataAttribute>> dataClassAndNameToDataAttribute;
+	private Map<String, DataClass> nameToDataModelClass;
+	private Map<DataClass, Map<String, DataAttribute>> dataClassAndNameToDataAttribute;
 	private Map<DataClass, Map<String, ObjectLifecycleState>> dataClassAndNameToOLCState;
 
 	public CaseModelParserHelper(DataModel dataModel) {
@@ -54,7 +53,7 @@ public class CaseModelParserHelper {
 	 * @param dataAttributeName
 	 * @return DataAttribute
 	 */
-	public DataAttribute getNameToDataAttribute(DataModelClass dataModelClass, String dataAttributeName) {
+	public DataAttribute getNameToDataAttribute(DataClass dataModelClass, String dataAttributeName) {
 		if (!this.dataClassAndNameToDataAttribute.containsKey(dataModelClass)) {
 			ParsingHelperValidation.validateList(dataModel.getDataModelClasses(), dataModelClass);
 
