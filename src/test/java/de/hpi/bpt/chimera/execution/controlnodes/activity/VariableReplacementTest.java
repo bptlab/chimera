@@ -4,34 +4,28 @@ import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
 
-public class WebServiceTaskVariableReplacementTest {
+public class VariableReplacementTest {
 	private final String filepath = "src/test/resources/execution/VariableReplacementTest";
 	private CaseModel cm;
 	private CaseExecutioner ex;
 	private DataManager dm;
 	private Method method;
-	private WebServiceTaskInstance wsTaskInstance;
-	private WebServiceTask wsTask;
+	private AbstractDataControlNodeInstance taskInstance;
 
 	@Before
 	public void setup() throws Exception {
@@ -72,23 +66,23 @@ public class WebServiceTaskVariableReplacementTest {
 		}
 		selectedDataObjects.add(DO1);
 		
-		wsTaskInstance = (WebServiceTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(ex, "call web service");
-		wsTaskInstance.setSelectedDataObjects(selectedDataObjects);
-		method = wsTaskInstance.getClass().getDeclaredMethod("replaceVariableExpressions", String.class);
+		taskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(ex, "call web service");
+		taskInstance.setSelectedDataObjects(selectedDataObjects);
+		method = AbstractDataControlNodeInstance.class.getDeclaredMethod("replaceVariableExpressions", String.class);
 		method.setAccessible(true);
 	}
 
 	@Test
 	public void testNoVariableExpressionContained() throws Exception {
 		String ts = "I do not contain a variable expression";
-		assertEquals("Strings without variable expression should not be left unchanged", ts, method.invoke(wsTaskInstance, ts));
+		assertEquals("Strings without variable expression should not be left unchanged", ts, method.invoke(taskInstance, ts));
 	}
 	
 	@Test
 	public void testNoSuchDataObject() throws Exception {
 		String ts = "#ThereIsNoSuchDataClass";
 		String tsResult = "<not found>";
-		assertEquals("", tsResult, method.invoke(wsTaskInstance, ts));
+		assertEquals("", tsResult, method.invoke(taskInstance, ts));
 	}
 	
 	@Test
@@ -97,10 +91,10 @@ public class WebServiceTaskVariableReplacementTest {
 		AtomicDataStateCondition DC1 = CaseModelTestHelper.createDataStateCondition(cm, "Person", "init");
 		DataObject DO1 = dm.createDataObject(DC1);
 		selectedDataObjects.add(DO1);
-		wsTaskInstance.setSelectedDataObjects(selectedDataObjects);
+		taskInstance.setSelectedDataObjects(selectedDataObjects);
 		String ts = "#Person.thereIsNoSuchAttribute";
 		String tsResult = "<not found>";
-		assertEquals("", tsResult, method.invoke(wsTaskInstance, ts));
+		assertEquals("", tsResult, method.invoke(taskInstance, ts));
 	}
 	
 	@Test
@@ -109,23 +103,23 @@ public class WebServiceTaskVariableReplacementTest {
 		AtomicDataStateCondition DC1 = CaseModelTestHelper.createDataStateCondition(cm, "Person", "init");
 		DataObject DO1 = dm.createDataObject(DC1);
 		selectedDataObjects.add(DO1);
-		wsTaskInstance.setSelectedDataObjects(selectedDataObjects);
+		taskInstance.setSelectedDataObjects(selectedDataObjects);
 		String ts = "#Person.thisIsNull";
 		String tsResult = "<value is 'null'>";
-		assertEquals("", tsResult, method.invoke(wsTaskInstance, ts));
+		assertEquals("", tsResult, method.invoke(taskInstance, ts));
 	}
 	
 	@Test
 	public void testVariableReplacement() throws Exception {
 		String ts = "https://reisewarnung.net/api/country=#D4t4Class2.country";
 		String tsResult = "https://reisewarnung.net/api/country=DE";
-		assertEquals("", tsResult, method.invoke(wsTaskInstance, ts));
+		assertEquals("", tsResult, method.invoke(taskInstance, ts));
 	}
 	
 	@Test
 	public void testMultipleExpressions() throws Exception {
 		String ts = "Hello my name is #Person.name, I am #Person.age years old and #Person.height cm high.";
 		String tsResult = "Hello my name is Chimera, I am 3 years old and 0.323 cm high.";
-		assertEquals("", tsResult, method.invoke(wsTaskInstance, ts));
+		assertEquals("", tsResult, method.invoke(taskInstance, ts));
 	}
 }
