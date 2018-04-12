@@ -20,10 +20,6 @@ public class CaseStartTrigger {
 	private List<CaseStartTriggerConsequence> triggerConsequences;
 
 	// Not in the Gryphon JSON data.
-	// Will be set during parsing from the EventDipetcher which gets the data
-	// from unicorn while registering the event.
-	private String eventKeyId; // The id under which the event is registered at
-								// unicorn.
 	private String notificationRuleId;
 
 	public String getQueryExecutionPlan() {
@@ -32,10 +28,6 @@ public class CaseStartTrigger {
 
 	public void setQueryExecutionPlan(String queryExecutionPlan) {
 		this.queryExecutionPlan = queryExecutionPlan;
-	}
-
-	public void setEventKeyId(String eventKeyId) {
-		this.eventKeyId = eventKeyId;
 	}
 
 	public String getNotificationRuleId() {

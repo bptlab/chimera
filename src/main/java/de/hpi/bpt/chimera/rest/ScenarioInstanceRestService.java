@@ -60,7 +60,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalCaseModelIdException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -87,7 +87,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 		try {
 			return initializeNewInstance(uri, cmId);
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -123,7 +123,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 				return initializeNewInstance(uriInfo, cmId);
 			}
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 
 	}
@@ -141,7 +141,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 		try {
 			return initializeNewInstance(uriInfo, cmId, "");
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -161,7 +161,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
 			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -193,7 +193,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -238,7 +238,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			result.put("canTerminate", caseExecutioner.canTerminate());
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -264,10 +264,10 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 				caseExecutioner.terminate();
 				return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"case terminated.\"}").build();
 			} else {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException("termination condition is not fulfilled.")).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("termination condition is not fulfilled.")).build();
 			}
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 }

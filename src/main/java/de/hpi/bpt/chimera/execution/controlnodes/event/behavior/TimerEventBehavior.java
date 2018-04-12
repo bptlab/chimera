@@ -18,7 +18,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.TimerDefinition;
 
 @Entity
 public class TimerEventBehavior extends EventBehavior {
-	private static final Logger logger = Logger.getLogger(AbstractEventInstance.class);
+	private static final Logger log = Logger.getLogger(AbstractEventInstance.class);
 	// TODO how to persist this?
 	private org.quartz.JobKey jobKey = null;
 
@@ -37,10 +37,15 @@ public class TimerEventBehavior extends EventBehavior {
 		eventInstance.setState(State.INIT);
 	}
 	
+	/**
+	 * Since timer events are not registered at a Event platform, but are
+	 * handled internally, calls specific method for timer events.
+	 */
 	@Override
 	public void enableControlFlow() {
-		logger.info("Controlflow of an TimerEvent enabled");
-		this.registerEvent();
+		log.info("Controlflow of an TimerEvent enabled");
+		EventDispatcher.registerTimerEvent(this);
+		log.info("Timerevent has registered itself at EventDispatcher");
 		getEventInstance().setState(State.REGISTERED);
 	}
 
@@ -53,22 +58,12 @@ public class TimerEventBehavior extends EventBehavior {
 				scheduler = new StdSchedulerFactory().getScheduler();
 				scheduler.deleteJob(jobKey);
 			} catch (SchedulerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage());
 			}
-			logger.info("Timerevent skipped");
+			log.info("Timerevent skipped");
 		}
 		 
 		getEventInstance().setState(State.SKIPPED);
-	}
-
-	/**
-	 * Since timer events are not registered at a Event platform, but are
-	 * handled internally, calls specific method for timer events.
-	 */
-	public void registerEvent() {
-		EventDispatcher.registerTimerEvent(getEventInstance(), this);
-		logger.info("Timerevent has registered itself at EventDispatcher");
 	}
 
 	/**

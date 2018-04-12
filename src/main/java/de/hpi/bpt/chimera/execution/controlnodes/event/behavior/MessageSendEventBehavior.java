@@ -20,10 +20,6 @@ public class MessageSendEventBehavior extends EventBehavior {
 		// at runtime.
 	}
 
-	@Override
-	public void enableControlFlow() {
-		super.enableControlFlow();
-	}
 	public MessageSendEventBehavior(AbstractEventInstance eventInstance) {
 		super(eventInstance);
 	}

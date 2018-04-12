@@ -14,7 +14,6 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.MessageReceiveDefin
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.util.PropertyLoader;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.ClientProperties;
@@ -29,8 +28,10 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Collectors;
+
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -45,44 +46,58 @@ public class EventDispatcher extends AbstractRestService {
 	private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url") + PropertyLoader.getProperty("chimera.path.deploy");
 	private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%s/instance/%s/events/%s";
 	private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/scenario/%s/casestart/%s";
+	private static final String NOTIFICATION_ERROR_ID = "-1";
 
 	private static Logger log = Logger.getLogger(EventDispatcher.class);
 
+	/**
+	 * This method notifies that a certain event instance received Event was
+	 * received. In addition the event instance will be terminated.
+	 * 
+	 * @param cmId
+	 *            The id of a case model.
+	 * @param caseId
+	 *            - the id of case.
+	 * @param requestId
+	 *            - the id of the event instance receiving the event
+	 * @param eventJson
+	 *            - the json content for the event instance
+	 * @return Response 202 because the Event was received by Chimera
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
-	public Response receiveEvent(@PathParam("scenarioId") String scenarioId, @PathParam("instanceId") String scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
+	public Response receiveEvent(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("requestKey") String requestId, String eventJson) {
 		try {
-			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(scenarioId, scenarioInstanceId);
-			AbstractEventInstance eventInstance = caseExecutioner.getRegisteredEventFromRegistrationKey(requestId);
-			MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+			MessageReceiveEventBehavior receiveBehavior = caseExecutioner.getRegisteredEventBehavior(requestId);
 			if (eventJson.isEmpty() || "{}".equals(eventJson)) {
 				receiveBehavior.setEventJson("");
 			} else {
 				receiveBehavior.setEventJson(eventJson);
 			}
+			AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
 			eventInstance.terminate();
 			SseNotifier.notifyRefresh();
 		} catch (Exception e) {
 			log.error("Error while processing a received event", e);
 		}
 		return Response.accepted("Event received.").build();
-		// AbstractEventInstance eventInstance =
-		// keyToRegisteredEvent.get(requestId);
-		// MessageReceiveEventBehavior receiveBehavior =
-		// (MessageReceiveEventBehavior) eventInstance.getBehavior();
-		// if (eventJson.isEmpty() || "{}".equals(eventJson)) {
-		// receiveBehavior.setEventJson("");
-		// } else {
-		// receiveBehavior.setEventJson(eventJson);
-		// }
-		// eventInstance.terminate();
-		// SseNotifier.notifyRefresh();
-		// /// unregisterEvent(event); >>>>>is now responsibility of
-		// /// AbstractIntermediateCatchEvent
-		// return Response.accepted("Event received.").build();
 	}
 
+	/**
+	 * Start a new Case of a specific {@link CaseModel} by one of the case
+	 * model's registered CaseStartTriggers.
+	 * 
+	 * @param cmId
+	 *            The id of a case model.
+	 * @param requestId
+	 *            - the id of the {@link CaseStartTrigger} receiving the event
+	 * @param eventJson
+	 *            - the json content for writing at the first data objects of
+	 *            the new case
+	 * @return Response 200 because the Event was received by Chimera
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/casestart/{requestKey}")
@@ -96,7 +111,7 @@ public class EventDispatcher extends AbstractRestService {
 			if (!caseStartTrigger.isPresent()) {
 				String message = String.format("The case start trigger id: %s is not assigned", requestKey);
 				log.error(message);
-				return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(message)).build();
+				return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(message)).build();
 			}
 
 			CaseExecutioner caseExecutioner = ExecutionService.createCaseExecutioner(cm, "Automatically Created Case");
@@ -111,16 +126,6 @@ public class EventDispatcher extends AbstractRestService {
 		return Response.ok("Event received.").build();
 	}
 
-	// Not supported anymore because we dont use Integers as Ids anymore.
-	// public static AbstractEvent findEvent(String requestId, int scenarioId,
-	// int instanceId) {
-	// ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId,
-	// instanceId);
-	// return getEvent(scenarioInstance, requestId);
-	// }
-
-	// TODO Do we need this function? Doesnt works with the new Chimera
-	// architecture because we dont uses Integers as ids any more.
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
@@ -138,26 +143,16 @@ public class EventDispatcher extends AbstractRestService {
 		return Response.serverError().type("unimplemented in Chimera 2.0").build();
 	}
 
-
-	// Not needed anymore???
-	// public static void unregisterEvent(AbstractIntermediateCatchEventInstance
-	// event) {
-	// if (isExclusiveEvent(event)) {
-	// discardAllAlternatives(event);
-	// } else {
-	// unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
-	// }
-	// }
-
-	// private static void discardAllAlternatives(AbstractEvent event) {
-	// DbEventMapping mapping = new DbEventMapping();
-	// int fragmentInstanceId = event.getFragmentInstanceId();
-	// List<Integer> alternativeEventNodes =
-	// mapping.getAlternativeEventsIds(event);
-	// alternativeEventNodes.forEach(x -> unregisterEvent(x,
-	// fragmentInstanceId));
-	// }
-
+	/**
+	 * Register an {@link CaseStartTrigger} for an specific {@link CaseModel} by
+	 * sending it to Unicorn. Set the returning notification rule id for
+	 * de-registration in the case start trigger.
+	 * 
+	 * @param cm
+	 *            - CaseModel the caseStartTrigger will instantiate
+	 * @param caseStartTrigger
+	 *            - CaseStartTrigger that will be registered
+	 */
 	public static void registerCaseStartEvent(CaseModel cm, CaseStartTrigger caseStartTrigger) {
 		final String requestId = caseStartTrigger.getId();
 		String notificationPath = String.format(SELF_PATH_CASESTART, SELF_DEPLOY_URL, cm.getId(), requestId);
@@ -165,9 +160,15 @@ public class EventDispatcher extends AbstractRestService {
 		caseStartTrigger.setNotificationRuleId(notificationRuleId);
 	}
 
-	public static void registerTimerEvent(AbstractEventInstance event, TimerEventBehavior timerBehavior) {
-		// String mappingKey = registerEvent(event, fragmentInstanceId,
-		// scenarioInstanceId, scenarioId);
+	/**
+	 * Register an event instance in Unicorn by its {@link TimerEventBehavior}.
+	 * Therefore create a new timer event job.
+	 * 
+	 * @param timerBehavior
+	 *            - TimerEventBehavior of the EventInstance to be registered
+	 */
+	public static void registerTimerEvent(TimerEventBehavior timerBehavior) {
+		AbstractEventInstance event = timerBehavior.getEventInstance();
 		Date terminationDate = timerBehavior.getTerminationDate();
 		assert (terminationDate.after(new Date())) : "Traveling back in time is not implemented yet, see feature request #CM-(-243)";
 		SchedulerFactory sf = new StdSchedulerFactory();
@@ -180,7 +181,6 @@ public class EventDispatcher extends AbstractRestService {
 		} catch (SchedulerException e) {
 			log.error(e.getMessage(), e);
 		}
-
 	}
 
 	private static JobDetail createJob(AbstractEventInstance event, TimerEventBehavior timerBehavior) {
@@ -189,37 +189,20 @@ public class EventDispatcher extends AbstractRestService {
 		return timeEventJob;
 	}
 
-	// private static boolean isExclusiveEvent(AbstractEvent event) {
-	// DbEventMapping mapping = new DbEventMapping();
-	// return mapping.isAlternativeEvent(event);
-	// }
+	// TODO: will we need something like EventLog?
 
-
-	// Not supported anymore because we dont use Integers as Ids anymore.
-	// private static AbstractEvent getEvent(ScenarioInstance instance, String
-	// requestId) {
-	// DbEventMapping eventMapping = new DbEventMapping();
-	// EventFactory factory = new EventFactory(instance);
-	//
-	// int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
-	// int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
-	// AbstractEvent event =
-	// factory.getEventForControlNodeId(eventControlNodeId, fragmentInstanceId);
-	// new DbLogEntry().logEvent(event.getControlNodeInstanceId(),
-	// instance.getId(), "received");
-	// return event;
-	// }
 
 	/**
-	 * Register an event instance in Unicorn. The notificationRuleId is set in
-	 * {@link MessageReceiveEventBehavior} and the MessageReceiveEventBehavior
-	 * will be stored in registered event instances in the case executioner of
-	 * the event instance.
+	 * Register an event instance in Unicorn by its
+	 * {@link MessageReceiveEventBehavior}. The notificationRuleId is set in the
+	 * message receive behavior and the message receive behavior will be stored
+	 * in the case executioner of the event instance.
 	 * 
 	 * @param receiveBehavior
-	 *            - MessageReceiveEventBehavior of the EventInstance to register
+	 *            - MessageReceiveEventBehavior of the EventInstance to be
+	 *            registered
 	 */
-	public static void registerEvent(MessageReceiveEventBehavior receiveBehavior) {
+	public static void registerReceiveEvent(MessageReceiveEventBehavior receiveBehavior) {
 		log.info("trying to register an Event at unicorn");
 		AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
 		final String requestId = eventInstance.getId();
@@ -233,10 +216,10 @@ public class EventDispatcher extends AbstractRestService {
 		String notificationRuleId = sendQueryToEventService(query, notificationPath);
 		receiveBehavior.setNotificationRule(notificationRuleId);
 		
-		if (caseExecutioner.getRegisteredEventFromEventId(eventInstance.getId()) == null) {
-			caseExecutioner.registerEvent(requestId, eventInstance);
+		if (!notificationRuleId.equals(NOTIFICATION_ERROR_ID)) {
+			caseExecutioner.addRegisteredEventBehavior(receiveBehavior);
+			log.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requestId %s, getting back %s as NotificationRule", eventInstance.getId(), query, requestId, notificationRuleId));
 		}
-		log.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requestId %s, getting back %s as NotificationRule", eventInstance.getId(), query, requestId, notificationRuleId));
 	}
 
 	/**
@@ -266,6 +249,7 @@ public class EventDispatcher extends AbstractRestService {
 	 */
 	private static String sendQueryToEventService(String rawQuery, String notificationPath) {
 		// since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
+		// TODO: what should happen if a send request fails
 		String query = StringEscapeUtils.unescapeHtml4(rawQuery);
 
 		JsonObject queryRequest = new JsonObject();
@@ -285,50 +269,79 @@ public class EventDispatcher extends AbstractRestService {
 				// so that it can be removed later
 				return response.readEntity(String.class);
 			} else {
-				// throw new RuntimeException("Query could not be registered");
 				log.warn("Could not register Query \"" + query + "\". Response status: " + response.getStatus());
-				return "-1";
+				return NOTIFICATION_ERROR_ID;
 			}
 		} catch (ProcessingException e) {
 			log.warn("Could not register Query \"" + query + "\"");
-			return "-1";
+			return NOTIFICATION_ERROR_ID;
 		}
 	}
 
-	public static void unregisterEvent(AbstractEventInstance eventInstance, MessageReceiveEventBehavior receiveBehavior) {
-		String notificationRuleId = receiveBehavior.getNotificationRule();
+	/**
+	 * De-register all events, which means {@link CaseStartTrigger} and
+	 * {@link MessageReceiveEventBehavior}, for a given {@link CaseModel}.
+	 * 
+	 * @param cm
+	 *            - case model which events should be de-registered
+	 */
+	public static void deregisterEvents(CaseModel cm) {
+		List<String> notificationRuleIds = cm.getStartCaseTrigger().stream().map(CaseStartTrigger::getNotificationRuleId).collect(Collectors.toList());
+		notificationRuleIds.forEach(EventDispatcher::deregisterNotificationRule);
 
-		unregisterNotificationRule(notificationRuleId);
-		CaseExecutioner caseExecutioner = eventInstance.getCaseExecutioner();
-		caseExecutioner.removeEvent(receiveBehavior.getRequestKey(), eventInstance);
-		log.info(String.format("Event with id %s and notification Rule %s unregistered", eventInstance.getId(), notificationRuleId));
+		List<CaseExecutioner> caseExecutioners = ExecutionService.getAllCasesOfCaseModel(cm.getId());
+		List<MessageReceiveEventBehavior> receiveBehaviors = caseExecutioners.stream().map(CaseExecutioner::getRegisteredEventBehaviors).flatMap(List::stream).collect(Collectors.toList());
+		receiveBehaviors.forEach(EventDispatcher::deregisterReceiveEvent);
 	}
 
-	private static void unregisterNotificationRule(String notificationRuleId) {
+	/**
+	 * De-register an event instance from Unicorn by its
+	 * {@link MessageReceiveEventBehavior}.
+	 * 
+	 * @param receiveBehavior
+	 *            - {@link MessageReceiveEventBehavior} of the
+	 *            {@link AbstractEventInstance}.
+	 */
+	public static void deregisterReceiveEvent(MessageReceiveEventBehavior receiveBehavior) {
+		String notificationRuleId = receiveBehavior.getNotificationRule();
+		if (notificationRuleId.equals(NOTIFICATION_ERROR_ID)) {
+			return;
+		}
+
+		if (deregisterNotificationRule(notificationRuleId)) {
+			AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
+			CaseExecutioner caseExecutioner = eventInstance.getCaseExecutioner();
+			caseExecutioner.removeRegisteredEventBehavior(receiveBehavior);
+			log.info(String.format("Event with id %s and notification Rule %s de-registered", eventInstance.getId(), notificationRuleId));
+		}
+	}
+
+	/**
+	 * De-register an notification rule from Unicorn.
+	 * 
+	 * @param notificationRuleId
+	 *            - Id of notification to be de-registered
+	 * @return true if the notification rule id was successfully de-registered
+	 *         or the event was never registered. false if the notification rule
+	 *         id was not successfully de-registered.
+	 */
+	private static boolean deregisterNotificationRule(String notificationRuleId) {
+		if (notificationRuleId.equals(NOTIFICATION_ERROR_ID)) {
+			return true;
+		}
 		Client client = ClientBuilder.newClient();
 		client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
 		client.property(ClientProperties.READ_TIMEOUT, 1000);
 		try {
 			WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH + "/" + notificationRuleId);
 			Response response = target.request().delete();
-			if (response.getStatus() != 200) {
-				log.debug("Could not unregister Query");
+			if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
+				return true;
 			}
-		} catch (ProcessingException e) {
 			log.debug("Could not unregister Query");
+		} catch (ProcessingException e) {
+			log.warn("Could not unregister Query " + e.getMessage());
 		}
+		return false;
 	}
-
-	// TODO: unregister
-	/*
-	public static void unregisterCaseStartEvent(int scenarioId) {
-		DbCaseStart caseStart = new DbCaseStart();
-		List<String> requestKeys = caseStart.getRequestKeys(scenarioId);
-		List<String> notificationRuleIds = requestKeys.stream().map(x -> caseStart.getNotificationRuleId(scenarioId, x)).collect(Collectors.toList());
-
-		notificationRuleIds.forEach(EventDispatcher::unregisterNotificationRule);
-
-		requestKeys.forEach(caseStart::deleteCaseMapping);
-	}
-	*/
 }

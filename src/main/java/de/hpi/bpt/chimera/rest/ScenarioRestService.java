@@ -77,7 +77,7 @@ public class ScenarioRestService extends AbstractRestService {
 			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"case model deployed.\"}").build();
 		} catch (Exception e) {
 			log.error("Chimera failed to parse the CaseModel!", e);
-			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -106,7 +106,7 @@ public class ScenarioRestService extends AbstractRestService {
 
 			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -128,7 +128,7 @@ public class ScenarioRestService extends AbstractRestService {
 			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"" + "casemodel deletion successful.\"}").build();
 		} catch (IllegalArgumentException e) {
 			log.error("deletion failed: " + e);
-			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -158,7 +158,7 @@ public class ScenarioRestService extends AbstractRestService {
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -178,7 +178,7 @@ public class ScenarioRestService extends AbstractRestService {
 			JSONArray result = new JSONArray(cm.getContentXmlStrings());
 			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 }

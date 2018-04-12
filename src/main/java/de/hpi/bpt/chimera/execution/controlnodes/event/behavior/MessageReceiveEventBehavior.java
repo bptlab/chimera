@@ -44,18 +44,18 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 	@Override
 	public void enableControlFlow() {
 		logger.info("Controlflow of IntermediateCatchEventInstance enabled");
-		EventDispatcher.registerEvent(this);
+		EventDispatcher.registerReceiveEvent(this);
 		getEventInstance().setState(State.REGISTERED);
 	}
 
 	@Override
 	public void skip() {
-		EventDispatcher.unregisterEvent(getEventInstance(), this);
+		EventDispatcher.deregisterReceiveEvent(this);
 	}
 
 	@Override
 	public void terminate() {
-		EventDispatcher.unregisterEvent(getEventInstance(), this);
+		EventDispatcher.deregisterReceiveEvent(this);
 		
 		if (eventJson.isEmpty()) {
 			logger.info("No event json present to write data attributes from.");

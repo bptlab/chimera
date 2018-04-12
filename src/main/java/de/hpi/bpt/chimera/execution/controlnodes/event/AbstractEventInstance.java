@@ -26,10 +26,6 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	@OneToOne(cascade = CascadeType.ALL)
 	private EventBasedGatewayInstance previousEventBasedGatewayInstance;
 
-	// only necessary for JPA as a workaround. Do not use this requestKey!
-	public String requestKey;
-
-
 	/**
 	 * for JPA only
 	 */
@@ -87,7 +83,7 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 
 	@Override
 	public void skip() {
-		this.setState(State.SKIPPED);
+		setState(State.SKIPPED);
 	}
 
 	/**

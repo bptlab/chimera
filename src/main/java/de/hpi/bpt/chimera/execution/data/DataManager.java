@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -150,7 +148,7 @@ public class DataManager {
 			workingItem.makeObjectLifecycleTransition(newObjectLifecycleState);
 			workingItemDataClasses.add(workingItem.getDataClass());
 		}
-		
+
 		// create new DataObjects
 		List<DataClass> transitionDataClasses = new ArrayList<>(dataClassToStateTransitions.keySet());
 		transitionDataClasses.removeAll(workingItemDataClasses);
@@ -209,7 +207,8 @@ public class DataManager {
 	}
 
 	/**
-	 * Get the {@link AtomicDataStateCondition}s of all unlocked {@link DataObject}s.
+	 * Get the {@link AtomicDataStateCondition}s of all unlocked
+	 * {@link DataObject}s.
 	 * 
 	 * @return List of DataStateConditions which referring DataObject is
 	 *         unlocked
@@ -247,21 +246,23 @@ public class DataManager {
 
 		return availableDataObjects;
 	}
-	
+
 	/**
 	 * Find a set of data objects that fulfill the given {@link ConditionSet}.
-	 * This method should be used to find data objects that satisfy the input set
-	 * of a control node, e.g. a webservice task.
-	 * If several data objects satisfy the ConditionSet, one of them is selected randomly.
+	 * This method should be used to find data objects that satisfy the input
+	 * set of a control node, e.g. a webservice task. If several data objects
+	 * satisfy the ConditionSet, one of them is selected randomly.
 	 * 
-	 * @param inputSet - a ConditionSet that needs to be satisfied
+	 * @param inputSet
+	 *            - a ConditionSet that needs to be satisfied
 	 * @return a set of data objects that satisfy the ConditionSet
 	 */
 	public Set<DataObject> getFulfillingDataObjects(ConditionSet inputSet) {
 		Set<DataObject> fulfillingDataObjects = new HashSet<>();
 		for (AtomicDataStateCondition condition : inputSet.getConditions()) {
 			DataObject fulfillingDataObject = getAvailableDataObjects(condition).iterator().next();
-			if (fulfillingDataObject == null) { // no fulfilling data object found
+			if (fulfillingDataObject == null) { // no fulfilling data object
+												// found
 				return new HashSet<>();
 			}
 			fulfillingDataObjects.add(fulfillingDataObject);

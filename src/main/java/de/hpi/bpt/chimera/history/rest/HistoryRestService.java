@@ -87,10 +87,12 @@ public class HistoryRestService {
 	}
 
 	/**
-	 * This method gives the log entries for all dataObjects for a specific scenario instance.
+	 * This method gives all log entries for a specific scenario instance.
 	 *
-	 * @param scenarioId         The id of the scenario belonging to the instance.
-	 * @param scenarioInstanceId The id of the scenario instance.
+	 * @param scenarioId
+	 *            The id of the scenario belonging to the instance.
+	 * @param scenarioInstanceId
+	 *            The id of the scenario instance.
 	 * @return a JSON-Object with the log entries.
 	 */
 	@GET

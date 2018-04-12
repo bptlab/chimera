@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import de.hpi.bpt.chimera.execution.ExecutionService;
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
@@ -119,6 +120,7 @@ public class CaseModelManager {
 		mayInstantiate();
 		if (caseModels.containsKey(cmId)) {
 			try {
+				EventDispatcher.deregisterEvents(caseModels.get(cmId));
 				ExecutionService.deleteCaseModel(cmId);
 				DomainModelPersistenceManager.deleteCaseModel(cmId);
 				caseModels.remove(cmId);

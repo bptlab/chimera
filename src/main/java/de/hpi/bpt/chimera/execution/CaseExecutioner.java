@@ -7,17 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.MapKey;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -28,6 +21,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
@@ -48,7 +42,7 @@ public class CaseExecutioner {
 
 	@Id
 	@GeneratedValue
-	public int dbId;
+	private int dbId;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "caseExecutioner")
 	private Case caze;
@@ -64,8 +58,10 @@ public class CaseExecutioner {
 	private List<DataObjectLog> dataObjectLogs;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataAttributeLog> dataAttributeLogs;
-
-	// registered Events, used by the EventDispatcher
+	@OneToMany(cascade = CascadeType.ALL)
+	private Map<String, MessageReceiveEventBehavior> registeredEventInstanceIdToReceiveBehavior;
+	// registered ReceiveEvents
+	/*
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "caseexecutioner_controlnodeinstance_map_id", joinColumns = {
 			@JoinColumn(name = "fk_caseexecutioner", referencedColumnName = "dbId") }, inverseJoinColumns = {
@@ -80,7 +76,7 @@ public class CaseExecutioner {
 	@MapKeyColumn(name = "MapKeyColumn_requestkey")
 	@MapKey(name = "requestKey")
 	public Map<String, AbstractEventInstance> keyToRegisteredEvent;
-
+	*/
 
 
 	/**
@@ -101,8 +97,7 @@ public class CaseExecutioner {
 		this.caze = new Case(caseName, caseModel, this);
 		this.dataManager = new DataManager(caseModel.getDataModel(), this);
 
-		this.idToRegisteredEvent = new HashMap<>();
-		this.keyToRegisteredEvent = new HashMap<>();
+		this.registeredEventInstanceIdToReceiveBehavior = new HashMap<>();
 	}
 
 	/**
@@ -409,27 +404,69 @@ public class CaseExecutioner {
 		logEntries.sort((l1, l2) -> l2.getTimeStamp().compareTo(l1.getTimeStamp()));
 	}
 
+	/**
+	 * Store the {@link MessageReceiveEventBehavior} of an
+	 * {@link AbstractEventInstance} that has previously been registered at
+	 * Unicorn by the message receive behavior of the event instance.
+	 * 
+	 * @param receiveBehavior
+	 *            - MessageReceiveEventBehavior of the registered EventInstance
+	 */
+	public void addRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
+		String instanceId = receiveBehavior.getEventInstance().getId();
+		if (!registeredEventInstanceIdToReceiveBehavior.containsKey(instanceId)) {
+			registeredEventInstanceIdToReceiveBehavior.put(instanceId, receiveBehavior);
+		}
+	}
+
+	/**
+	 * Remove the {@link MessageReceiveEventBehavior} of an
+	 * {@link AbstractEventInstance} that has previously been registered at
+	 * Unicorn by the message receive behavior of the event instance.
+	 * 
+	 * @param receiveBehavior
+	 *            - MessageReceiveEventBehavior of the EventInstance to be
+	 *            de-registered
+	 */
+	public void removeRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
+		String instanceId = receiveBehavior.getEventInstance().getId();
+		if (registeredEventInstanceIdToReceiveBehavior.containsKey(instanceId)) {
+			registeredEventInstanceIdToReceiveBehavior.remove(instanceId, receiveBehavior);
+		}
+	}
+
+	/**
+	 * Receive the {@link MessageReceiveEventBehavior} of an
+	 * {@link AbstractEventInstance} that has previously been registered at
+	 * Unicorn by the Id of the event instance.
+	 * 
+	 * @param eventInstanceId
+	 *            - Id of the registered event
+	 * @return MessageReceiveEventBehavior of the specified registered
+	 *         EventInstance
+	 * @throws IllegalArgumentException
+	 *             if the Id is not assigned
+	 */
+	public MessageReceiveEventBehavior getRegisteredEventBehavior(String eventInstanceId) {
+		if (registeredEventInstanceIdToReceiveBehavior.containsKey(eventInstanceId)) {
+			return registeredEventInstanceIdToReceiveBehavior.get(eventInstanceId);
+		}
+		String message = String.format("The case start trigger id: %s is not assigned", eventInstanceId);
+		log.error(message);
+		throw new IllegalArgumentException(message);
+	}
+
+	/**
+	 * Receive all {@link MessageReceiveEventBehavior} of previously registered
+	 * {@link AbstractEventInstance}.
+	 * 
+	 * @return List of {@link MessageReceiveEventBehavior} which
+	 *         {@link AbstractEventInstance} is registered in Unicorn.
+	 */
+	public List<MessageReceiveEventBehavior> getRegisteredEventBehaviors() {
+		return new ArrayList<>(registeredEventInstanceIdToReceiveBehavior.values());
+	}
 	// GETTER & SETTER
-
-	public AbstractEventInstance getRegisteredEventFromEventId(String id) {
-		return idToRegisteredEvent.get(id);
-	}
-
-	public AbstractEventInstance getRegisteredEventFromRegistrationKey(String key) {
-		return keyToRegisteredEvent.get(key);
-	}
-
-	public void registerEvent(String registrationKey, AbstractEventInstance eventInstance) {
-		idToRegisteredEvent.put(eventInstance.getId(), eventInstance);
-
-		((AbstractEventInstance) eventInstance).requestKey = registrationKey;
-		keyToRegisteredEvent.put(registrationKey, eventInstance);
-	}
-
-	public void removeEvent(String registrationKey, AbstractEventInstance eventInstance) {
-		idToRegisteredEvent.remove(eventInstance.getId());
-		keyToRegisteredEvent.remove(registrationKey);
-	}
 
 	public Case getCase() {
 		return caze;
@@ -475,5 +512,7 @@ public class CaseExecutioner {
 		return dataAttributeLogs;
 	}
 
-
+	public Map<String, MessageReceiveEventBehavior> getRegisteredEventInstanceIdToReceiveBehavior() {
+		return registeredEventInstanceIdToReceiveBehavior;
+	}
 }
