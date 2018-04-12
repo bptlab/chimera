@@ -20,7 +20,7 @@ public class DataModel {
 
 	private int versionNumber;
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<DataModelClass> dataModelClasses;
+	private List<DataClass> dataModelClasses;
 
 	public int getVersionNumber() {
 		return versionNumber;
@@ -30,11 +30,11 @@ public class DataModel {
 		this.versionNumber = versionNumber;
 	}
 
-	public List<DataModelClass> getDataModelClasses() {
+	public List<DataClass> getDataModelClasses() {
 		return dataModelClasses;
 	}
 
-	public void setDataModelClasses(List<DataModelClass> dataModelClasses) {
+	public void setDataModelClasses(List<DataClass> dataModelClasses) {
 		this.dataModelClasses = dataModelClasses;
 	}
 
@@ -43,10 +43,10 @@ public class DataModel {
 	 * 
 	 * @return HashMap
 	 */
-	public Map<String, DataModelClass> getNameToDataModelClass() {
-		Map<String, DataModelClass> nameToDataModelClass = new HashMap<>();
+	public Map<String, DataClass> getNameToDataModelClass() {
+		Map<String, DataClass> nameToDataModelClass = new HashMap<>();
 
-		for (DataModelClass dataModelClass : dataModelClasses) {
+		for (DataClass dataModelClass : dataModelClasses) {
 			nameToDataModelClass.put(dataModelClass.getName(), dataModelClass);
 		}
 		return nameToDataModelClass;
@@ -58,14 +58,18 @@ public class DataModel {
 	 * @return List of DataClasses
 	 */
 	public List<DataClass> getDataClasses() {
-		List<DataClass> dataClasses = new ArrayList<>();
-		for (DataModelClass dataModelClass : dataModelClasses) {
-			if (dataModelClass instanceof DataClass) {
-				DataClass dataClass = (DataClass) dataModelClass;
-				dataClasses.add(dataClass);
-			}
-		}
-		return dataClasses;
+		// TODO: Decide whether we want to distinguish between DataClasses and
+		// EventClasses.
+//		List<DataClass> dataClasses = new ArrayList<>();
+//		for (DataClass dataModelClass : dataModelClasses) {
+//			if (dataModelClass instanceof DataClass) {
+//				DataClass dataClass = (DataClass) dataModelClass;
+//				dataClasses.add(dataClass);
+//			}
+//		}
+//		return dataClasses;
+		
+		return dataModelClasses;
 	}
 
 	/**

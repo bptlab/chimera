@@ -375,6 +375,18 @@ public class DataManager {
 		return dataObjects;
 	}
 
+	/**
+	 * For debugging.
+	 * 
+	 * @return
+	 */
+	public void printAllDataObjects() {
+		log.info("Printing overview of all Dataobjects:...");
+		for (DataObject dataObject : dataObjectIdToDataObject.values()) {
+			log.info("DataClassName:" + dataObject.getCondition().getDataClassName() + "; LifecycleState:" + dataObject.getCondition().getObjectLifecycleState());
+		}
+	}
+
 	// GETTER & SETTER
 	public DataModel getDataModel() {
 		return dataModel;

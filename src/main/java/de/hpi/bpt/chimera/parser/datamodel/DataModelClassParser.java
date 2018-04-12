@@ -8,10 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.hpi.bpt.chimera.model.datamodel.DataModelClass;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.datamodel.EventClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycle;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 import de.hpi.bpt.chimera.validation.NameValidation;
@@ -44,18 +42,20 @@ public class DataModelClassParser {
 		return dataClass;
 	}
 
-	/**
-	 * Parse EventClass with eventClassJson.
-	 * 
-	 * @param eventClassJson
-	 * @return
-	 */
-	public static EventClass parseEventClass(final JSONObject eventClassJson) {
-		EventClass eventClass = new EventClass();
-		parseDataModelClass(eventClassJson, eventClass);
-
-		return eventClass;
-	}
+	
+//	/**
+//	 * Parse EventClass with eventClassJson.
+//	 * 
+//	 * @param eventClassJson
+//	 * @return
+//	 */
+//	public static DataClass parseEventClass(final JSONObject eventClassJson) {
+//		DataClass eventClass = new DataClass();
+//		parseDataModelClass(eventClassJson, eventClass);
+//		eventClass.setEvent(true);
+//
+//		return eventClass;
+//	}
 	
 	/**
 	 * Parse DataModelClass out of dataModelClassJson.
@@ -64,7 +64,7 @@ public class DataModelClassParser {
 	 * @param DataModelClass
 	 *            either DataClass or EventClass
 	 */
-	private static void parseDataModelClass(final JSONObject dataModelClassJson, DataModelClass dataModelClass) {
+	private static void parseDataModelClass(final JSONObject dataModelClassJson, DataClass dataModelClass) {
 		try {
 			String name = dataModelClassJson.getString("name");
 			NameValidation.validateName(name);

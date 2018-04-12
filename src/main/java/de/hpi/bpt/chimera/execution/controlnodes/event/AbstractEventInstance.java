@@ -26,6 +26,7 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	@OneToOne(cascade = CascadeType.ALL)
 	private EventBasedGatewayInstance previousEventBasedGatewayInstance;
 
+	// only necessary for JPA as a workaround. Do not use this requestKey!
 	public String requestKey;
 
 
