@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
-import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 
 public class DomainModelPersistenceManager {
@@ -232,26 +231,4 @@ public class DomainModelPersistenceManager {
 		em.remove(cmToRemove);
 		em.getTransaction().commit();
 	}
-
-	public static EventMapper loadEventMapper() {
-		EntityManager em = getEntityManager();
-		em.getTransaction().begin();
-		List<EventMapper> eventMapperList = em.createNamedQuery("EventMapper.get", EventMapper.class).getResultList();
-		em.getTransaction().commit();
-
-		if (eventMapperList.isEmpty()) {
-			return new EventMapper();
-		} else {
-			return eventMapperList.get(0);
-		}
-	}
-
-	public static void saveEventMapper(EventMapper eventMapper) {
-		EntityManager entityManager = getEntityManager();
-
-		entityManager.getTransaction().begin();
-		entityManager.merge(eventMapper);
-		entityManager.getTransaction().commit();
-	}
-
 }

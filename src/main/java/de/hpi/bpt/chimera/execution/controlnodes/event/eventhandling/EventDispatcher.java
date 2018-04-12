@@ -7,10 +7,12 @@ import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.TimerEventBehavior;
-import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
+import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.MessageReceiveDefinition;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
+import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -27,8 +29,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -37,34 +38,22 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * The event dispatcher class is responsible for manage registrations from Events to RestQueries.
  */
 @Path("eventdispatcher/")
-public final class EventDispatcher {
+public class EventDispatcher extends AbstractRestService {
 
 	private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
 	private static final String REST_DEPLOY_URL = PropertyLoader.getProperty("unicorn.url") + PropertyLoader.getProperty("unicorn.path.deploy");
 	private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url") + PropertyLoader.getProperty("chimera.path.deploy");
 	private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%s/instance/%s/events/%s";
-	private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/casestart/%s";
+	private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/scenario/%s/casestart/%s";
 
-	private static Logger logger = Logger.getLogger(EventDispatcher.class);
-
-	// TODO move these maps in the EventMapper and add persistence or move them
-	// into the Case, so that each Case is responsible for its own events.
-	// private static Map<String, AbstractEventInstance> idToRegisteredEvent =
-	// new HashMap<>();
-	// private static Map<String, AbstractEventInstance> keyToRegisteredEvent =
-	// new HashMap<>();
-
-	public EventDispatcher() {
-	}
+	private static Logger log = Logger.getLogger(EventDispatcher.class);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
-	public static Response receiveEvent(@PathParam("scenarioId") String scenarioId, @PathParam("instanceId") String scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
-		logger.info("Receiving a Request from Unicorn. \nscenarioId: " + scenarioId + "\nscenarioInstanceId: " + scenarioInstanceId + "\nrequestId: " + requestId);
-
-		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(scenarioId, scenarioInstanceId);
+	public Response receiveEvent(@PathParam("scenarioId") String scenarioId, @PathParam("instanceId") String scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
 		try {
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(scenarioId, scenarioInstanceId);
 			AbstractEventInstance eventInstance = caseExecutioner.getRegisteredEventFromRegistrationKey(requestId);
 			MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
 			if (eventJson.isEmpty() || "{}".equals(eventJson)) {
@@ -75,7 +64,7 @@ public final class EventDispatcher {
 			eventInstance.terminate();
 			SseNotifier.notifyRefresh();
 		} catch (Exception e) {
-			logger.error("Error while processing a received event", e);
+			log.error("Error while processing a received event", e);
 		}
 		return Response.accepted("Event received.").build();
 		// AbstractEventInstance eventInstance =
@@ -96,26 +85,27 @@ public final class EventDispatcher {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("casestart/{requestKey}")
-	public static Response startCase(@PathParam("requestKey") String requestKey, String eventJson) {
-		logger.info("CaseSartEvent received via REST-Interface.");
-		CaseStartTrigger caseStartTrigger = CaseModelManager.getCaseStartTrigger(requestKey);
-		// int scenarioInstanceId =
-		// ExecutionService.startNewScenarioInstanceStatic(scenarioId);
-		// ScenarioInstance instance = new ScenarioInstance(scenarioId,
-		// scenarioInstanceId);
-		// String queryId = new DbCaseStart().getQueryId(requestKey);
-		// TODO: setDataAttributes
-		// TODO: Maybe directly give the CaseModel via getParenCaseModel() to
-		// ExecutionService
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.createCaseExecutioner(caseStartTrigger.getParentCaseModel().getId(), "AutomaticallyCreatedInstance");
-		logger.info("An Event started a Case via REST-Interface.");
-		CaseStarter caseStarter = new CaseStarter(caseStartTrigger);
+	@Path("scenario/{scenarioId}/casestart/{requestKey}")
+	public Response startCase(@PathParam("scenarioId") String cmId, @PathParam("requestKey") String requestKey, String eventJson) {
+
+		log.info("An Event started a Case via REST-Interface.");
+
 		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
+			Optional<CaseStartTrigger> caseStartTrigger = cm.getStartCaseTrigger().stream().filter(c -> c.getId().equals(requestKey)).findFirst();
+			if (!caseStartTrigger.isPresent()) {
+				String message = String.format("The case start trigger id: %s is not assigned", requestKey);
+				log.error(message);
+				return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(message)).build();
+			}
+
+			CaseExecutioner caseExecutioner = ExecutionService.createCaseExecutioner(cm, "Automatically Created Case");
+
+			CaseStarter caseStarter = new CaseStarter(caseStartTrigger.get());
 			caseStarter.startCase(eventJson, caseExecutioner);
 			SseNotifier.notifyRefresh();
-		} catch (IllegalStateException e) {
-			logger.error("Could not start case from query", e);
+		} catch (IllegalCaseModelIdException e) {
+			log.error("Could not start case from query", e);
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
 		}
 		return Response.ok("Event received.").build();
@@ -134,8 +124,8 @@ public final class EventDispatcher {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
-	public static Response getRegisteredEvents(@PathParam("instanceId") int scenarioInstanceId, @PathParam("scenarioId") int scenarioId) {
-		logger.error("This function doesn't work with Chimera 2.0");
+	public Response getRegisteredEvents(@PathParam("instanceId") int scenarioInstanceId, @PathParam("scenarioId") int scenarioId) {
+		log.error("This function doesn't work with Chimera 2.0");
 		// ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId,
 		// scenarioInstanceId);
 		// List<Integer> fragmentIds =
@@ -168,13 +158,11 @@ public final class EventDispatcher {
 	// fragmentInstanceId));
 	// }
 
-	public static void registerCaseStartEvent(CaseStartTrigger caseStartTrigger) {
-		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
-		String notificationPath = String.format(SELF_PATH_CASESTART, SELF_DEPLOY_URL, requestId);
+	public static void registerCaseStartEvent(CaseModel cm, CaseStartTrigger caseStartTrigger) {
+		final String requestId = caseStartTrigger.getId();
+		String notificationPath = String.format(SELF_PATH_CASESTART, SELF_DEPLOY_URL, cm.getId(), requestId);
 		String notificationRuleId = sendQueryToEventService(caseStartTrigger.getQueryExecutionPlan(), notificationPath);
-		caseStartTrigger.setEventKeyId(requestId);
 		caseStartTrigger.setNotificationRuleId(notificationRuleId);
-		CaseModelManager.getEventMapper().registerCaseStartTrigger(requestId, caseStartTrigger);
 	}
 
 	public static void registerTimerEvent(AbstractEventInstance event, TimerEventBehavior timerBehavior) {
@@ -190,7 +178,7 @@ public final class EventDispatcher {
 			sched.start();
 			sched.scheduleJob(job, trigger);
 		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 
 	}
@@ -232,7 +220,7 @@ public final class EventDispatcher {
 	 *            - MessageReceiveEventBehavior of the EventInstance to register
 	 */
 	public static void registerEvent(MessageReceiveEventBehavior receiveBehavior) {
-		logger.info("trying to register an Event at unicorn");
+		log.info("trying to register an Event at unicorn");
 		AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
 		final String requestId = eventInstance.getId();
 		String query = insertAttributesIntoQueryString(receiveBehavior);
@@ -248,7 +236,7 @@ public final class EventDispatcher {
 		if (caseExecutioner.getRegisteredEventFromEventId(eventInstance.getId()) == null) {
 			caseExecutioner.registerEvent(requestId, eventInstance);
 		}
-		logger.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requestId %s, getting back %s as NotificationRule", eventInstance.getId(), query, requestId, notificationRuleId));
+		log.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requestId %s, getting back %s as NotificationRule", eventInstance.getId(), query, requestId, notificationRuleId));
 	}
 
 	/**
@@ -288,8 +276,8 @@ public final class EventDispatcher {
 		client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
 		client.property(ClientProperties.READ_TIMEOUT, 1000);
 		WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH);
-		logger.debug("The target URL is: " + target.getUri());
-		logger.debug("The queryRequest is: \"" + queryRequest + "\"");
+		log.debug("The target URL is: " + target.getUri());
+		log.debug("The queryRequest is: \"" + queryRequest + "\"");
 		try {
 			Response response = target.request().post(Entity.json(gson.toJson(queryRequest)));
 			if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
@@ -298,11 +286,11 @@ public final class EventDispatcher {
 				return response.readEntity(String.class);
 			} else {
 				// throw new RuntimeException("Query could not be registered");
-				logger.warn("Could not register Query \"" + query + "\". Response status: " + response.getStatus());
+				log.warn("Could not register Query \"" + query + "\". Response status: " + response.getStatus());
 				return "-1";
 			}
 		} catch (ProcessingException e) {
-			logger.warn("Could not register Query \"" + query + "\"");
+			log.warn("Could not register Query \"" + query + "\"");
 			return "-1";
 		}
 	}
@@ -313,7 +301,7 @@ public final class EventDispatcher {
 		unregisterNotificationRule(notificationRuleId);
 		CaseExecutioner caseExecutioner = eventInstance.getCaseExecutioner();
 		caseExecutioner.removeEvent(receiveBehavior.getRequestKey(), eventInstance);
-		logger.info(String.format("Event with id %s and notification Rule %s unregistered", eventInstance.getId(), notificationRuleId));
+		log.info(String.format("Event with id %s and notification Rule %s unregistered", eventInstance.getId(), notificationRuleId));
 	}
 
 	private static void unregisterNotificationRule(String notificationRuleId) {
@@ -324,10 +312,10 @@ public final class EventDispatcher {
 			WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH + "/" + notificationRuleId);
 			Response response = target.request().delete();
 			if (response.getStatus() != 200) {
-				logger.debug("Could not unregister Query");
+				log.debug("Could not unregister Query");
 			}
 		} catch (ProcessingException e) {
-			logger.debug("Could not unregister Query");
+			log.debug("Could not unregister Query");
 		}
 	}
 

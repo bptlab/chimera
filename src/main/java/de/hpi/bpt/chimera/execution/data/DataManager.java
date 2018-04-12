@@ -375,18 +375,6 @@ public class DataManager {
 		return dataObjects;
 	}
 
-	/**
-	 * For debugging.
-	 * 
-	 * @return
-	 */
-	public void printAllDataObjects() {
-		log.info("Printing overview of all Dataobjects:...");
-		for (DataObject dataObject : dataObjectIdToDataObject.values()) {
-			log.info("DataClassName:" + dataObject.getCondition().getDataClassName() + "; LifecycleState:" + dataObject.getCondition().getObjectLifecycleState());
-		}
-	}
-
 	// GETTER & SETTER
 	public DataModel getDataModel() {
 		return dataModel;
@@ -411,13 +399,5 @@ public class DataManager {
 
 	public Map<String, DataObject> getDataObjectIdToDataObject() {
 		return dataObjectIdToDataObject;
-	}
-
-	/**
-	 * 
-	 * @return all DataAttributeInstances in all existing DataObjects
-	 */
-	public List<DataAttributeInstance> getDataAttributeInstances() {
-		return this.getDataObjects().stream().map(DataObject::getDataAttributeInstances).flatMap(Collection::stream).collect(Collectors.toList());
 	}
 }

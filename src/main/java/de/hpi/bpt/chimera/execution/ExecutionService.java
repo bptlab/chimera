@@ -89,17 +89,43 @@ public final class ExecutionService {
 	}
 
 	/**
-	 * Creates a new {@link CaseExecutioner} for the case model by the given id. 
-	 * The case executioner is added to the list of active cases. The caller still needs to
-	 * start the case, see {@link CaseExecutioner#startCase()}.
+	 * Creates a new {@link CaseExecutioner} for the case model by the given id.
+	 * The case executioner is added to the list of active cases. The caller
+	 * still needs to start the case.
 	 * 
-	 * @param cmId - case model id
-	 * @param name - name for the case
+	 * @param cmId
+	 *            - id of CaseModel to be instantiated
+	 * @param name
+	 *            - name for the case
 	 * @return the created CaseExecutioner
+	 * @throws IllegalCaseModelIdException
+	 *             - if cmId is not assigned
+	 * @see {@link CaseExecutioner#startCase() startCase},
+	 *      {@link #createCaseExecutioner(CaseModel, String)
+	 *      createCaseExecutioner from CaseModel}
 	 */
 	public static CaseExecutioner createCaseExecutioner(String cmId, String name) {
-		CaseModel cm = CaseModelManager.getCaseModel(cmId);
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
+			return createCaseExecutioner(cm, name);
+		} catch (IllegalCaseModelIdException e) {
+			throw e;
+		}
+	}
 
+	/**
+	 * Creates a new {@link CaseExecutioner} for the given case model. The case
+	 * executioner is added to the list of active cases. The caller still needs
+	 * to start the case.
+	 * 
+	 * @param cm
+	 *            - case model to be instantiated
+	 * @param name
+	 *            - name for the case
+	 * @return the created CaseExecutioner
+	 * @see {@link CaseExecutioner#startCase() startCase}
+	 */
+	public static CaseExecutioner createCaseExecutioner(CaseModel cm, String name) {
 		String caseName;
 		if (name == null || name.isEmpty()) {
 			// no name specified, use name of case model

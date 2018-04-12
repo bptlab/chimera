@@ -21,8 +21,6 @@ public class CaseModelManager {
 	private static boolean isInstantiated = false;
 	private static Map<String, CaseModel> caseModels = new HashMap<>();
 
-	private static EventMapper eventMapper = new EventMapper();
-
 	private CaseModelManager() {
 	}
 
@@ -32,8 +30,6 @@ public class CaseModelManager {
 				caseModels.put(cm.getId(), cm);
 			}
 			log.info("updated CaseModels");
-			eventMapper = DomainModelPersistenceManager.loadEventMapper();
-			log.info("loaded Event Mapper");
 
 			isInstantiated = true;
 		}
@@ -59,11 +55,9 @@ public class CaseModelManager {
 	public static CaseModel parseCaseModel(String jsonString) {
 		mayInstantiate();
 		try {
-			eventMapper = DomainModelPersistenceManager.loadEventMapper();
 			CaseModel cm = CaseModelParser.parseCaseModel(jsonString);
 			caseModels.put(cm.getId(), cm);
 			DomainModelPersistenceManager.saveCaseModel(cm);
-			DomainModelPersistenceManager.saveEventMapper(eventMapper);
 			log.info(String.format("new CaseModel: %s deployed", cm.getName()));
 			return cm;
 		} catch (IllegalArgumentException | JSONException | IllegalCaseModelException e) {
@@ -136,19 +130,4 @@ public class CaseModelManager {
 		}
 	}
 
-	public static CaseStartTrigger getCaseStartTrigger(String eventKey) {
-		mayInstantiate();
-		CaseStartTrigger startTrigger;
-		startTrigger = eventMapper.getCaseStartTriggerToEventKey(eventKey);
-
-		return startTrigger;
-	}
-
-	public static EventMapper getEventMapper() {
-		return eventMapper;
-	}
-
-	public static void setEventMapper(EventMapper loadEventMapper) {
-		eventMapper = loadEventMapper;
-	}
 }

@@ -6,20 +6,14 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
-import de.hpi.bpt.chimera.model.CaseModel;
 
 @Entity
 public class CaseStartTrigger {
 	@Id
 	@GeneratedValue
 	private int dbId;
-	@OneToOne(cascade = CascadeType.ALL)
-	private CaseModel parentCaseModel;
 	private String id = UUID.randomUUID().toString().replaceAll("\\-", "");
 	private String queryExecutionPlan;
 	@OneToMany(cascade = CascadeType.ALL)
@@ -40,10 +34,6 @@ public class CaseStartTrigger {
 		this.queryExecutionPlan = queryExecutionPlan;
 	}
 
-	public String getEventKeyId() {
-		return eventKeyId;
-	}
-
 	public void setEventKeyId(String eventKeyId) {
 		this.eventKeyId = eventKeyId;
 	}
@@ -58,14 +48,6 @@ public class CaseStartTrigger {
 
 	public String getId() {
 		return id;
-	}
-
-	public CaseModel getParentCaseModel() {
-		return parentCaseModel;
-	}
-
-	public void setParentCaseModel(CaseModel parentCaseModel) {
-		this.parentCaseModel = parentCaseModel;
 	}
 
 	public List<CaseStartTriggerConsequence> getTriggerConsequences() {

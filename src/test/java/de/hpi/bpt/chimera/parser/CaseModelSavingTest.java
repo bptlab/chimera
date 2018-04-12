@@ -9,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 public class CaseModelSavingTest {
@@ -35,7 +33,6 @@ public class CaseModelSavingTest {
 	@Test
 	public void parseCaseModel() {
 
-		CaseModelManager.setEventMapper(DomainModelPersistenceManager.loadEventMapper());
 		CaseModel cm1;
 		cm1 = CaseModelParser.parseCaseModel(jsonString);
 		// assertEquals("59b51bda8eea331ea4b0440b", cm1.getId());
@@ -75,7 +72,5 @@ public class CaseModelSavingTest {
 		assertEquals("The First Fragments name wasn't saved correcty.", cm3.getFragments().get(0).getName(), cmLoaded2.getFragments().get(0).getName());
 		assertEquals("The First DataModelClass' name wasn't  saved correcty.", cm3.getDataModel().getDataModelClasses().get(0).getName(), cmLoaded2.getDataModel().getDataModelClasses().get(0).getName());
 		// assertEquals("The OLC wasn't saved correctly", ((DataClass) (cm3.getDataModel().getDataModelClasses().get(0))).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName(), ((DataClass) (cmLoaded2.getDataModel().getDataModelClasses()).get(0)).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName());
-
-		DomainModelPersistenceManager.saveEventMapper(CaseModelManager.getEventMapper());
 	}
 }

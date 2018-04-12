@@ -53,8 +53,9 @@ public class MessageReceiveBehaviorTest {
 		assertEquals("ReceiveEvent registered properly", receiveEvent.getState(), State.REGISTERED);
 
 		String requestId = receiveEvent.getId();
-		
-		EventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
+
+		EventDispatcher eventDispatcher = new EventDispatcher();
+		eventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
 		assertEquals("ReceiveEvent terminated properly", receiveEvent.getState(), State.TERMINATED);
 		assertEquals("StartEvent, ReceiveEvent and EndEvent should be in the FragmentInstance", intermediateFragment.getControlNodeInstances().size(), 3);
 
@@ -85,7 +86,8 @@ public class MessageReceiveBehaviorTest {
 
 		String requestId = receiveEvent.getId();
 
-		EventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
+		EventDispatcher eventDispatcher = new EventDispatcher();
+		eventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
 		assertEquals("ReceiveEvent terminated properly", receiveEvent.getState(), State.TERMINATED);
 		assertEquals("StartEvent, Task, BoundaryEvent and Task after BoundaryEvent should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 4);
 		assertEquals("Task was not canceled", task.getState(), State.CANCEL);

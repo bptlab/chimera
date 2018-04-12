@@ -56,7 +56,7 @@ public class CaseModelParser {
 			// CaseModelParserHelper
 			CaseModelParserHelper parserHelper = new CaseModelParserHelper(dataModel);
 
-			List<CaseStartTrigger> caseStartTrigger = getCaseStartTrigger(caseModelJson.getJSONArray("startconditions"), parserHelper, caseModel);
+			List<CaseStartTrigger> caseStartTrigger = getCaseStartTrigger(caseModelJson.getJSONArray("startconditions"), parserHelper);
 			caseModel.setStartCaseTrigger(caseStartTrigger);
 
 			TerminationCondition terminationCondition = TerminationConditionParser.parseTerminationCondition(caseModelJson.getJSONArray("terminationconditions"), parserHelper);
@@ -73,7 +73,7 @@ public class CaseModelParser {
 
 		// register the CaseStartTrigger at Unicorn
 		for (CaseStartTrigger cst : caseModel.getStartCaseTrigger()) {
-			EventDispatcher.registerCaseStartEvent(cst);
+			EventDispatcher.registerCaseStartEvent(caseModel, cst);
 		}
 
 		return caseModel;
@@ -87,14 +87,14 @@ public class CaseModelParser {
 	 * @param parserHelper
 	 * @return List of CaseStartTrigger
 	 */
-	private static List<CaseStartTrigger> getCaseStartTrigger(JSONArray caseStartTriggerjsonArray, CaseModelParserHelper parserHelper, CaseModel parentCaseModel) {
+	private static List<CaseStartTrigger> getCaseStartTrigger(JSONArray caseStartTriggerjsonArray, CaseModelParserHelper parserHelper) {
 		int arraySize = caseStartTriggerjsonArray.length();
 		List<CaseStartTrigger> caseStartTrigger = new ArrayList<>();
 
 		for (int i = 0; i < arraySize; i++) {
 			JSONObject caseStartTriggerJson = caseStartTriggerjsonArray.getJSONObject(i);
 
-			CaseStartTrigger startTrigger = CaseStartTriggerParser.parseCaseStarterTrigger(caseStartTriggerJson, parserHelper, parentCaseModel);
+			CaseStartTrigger startTrigger = CaseStartTriggerParser.parseCaseStarterTrigger(caseStartTriggerJson, parserHelper);
 			caseStartTrigger.add(startTrigger);
 		}
 
