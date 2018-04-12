@@ -257,6 +257,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/terminate")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response terminateScenarioInstance(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
+		// TODO: think about the consequences
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			if (caseExecutioner.canTerminate()) {

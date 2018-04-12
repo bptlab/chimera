@@ -1,10 +1,13 @@
 package de.hpi.bpt.chimera.configuration.rest;
 
 import de.hpi.bpt.chimera.configuration.rest.beans.EmailActivityJaxBean;
+import de.hpi.bpt.chimera.configuration.rest.beans.EmailConfigJaxBean;
 import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.ExecutionService;
+import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
+import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.configuration.EmailConfiguration;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
@@ -17,6 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -36,7 +40,7 @@ import java.util.stream.Collectors;
  * to access the database directly.
  */
 @Path("config/v2")
-public class RestConfigurator {
+public class RestConfigurator extends AbstractRestService {
 	private static final Logger log = Logger.getLogger(RestConfigurator.class);
 
 	// ************************** EMAIL SERVICE TASKS **********************************/
@@ -53,23 +57,33 @@ public class RestConfigurator {
 	 */
 	@PUT
 	@Path("scenario/{caseModelID}/emailtask/{emailtaskID}/")
-	public Response updateEmailConfiguration(@PathParam("caseModelID") String caseModelId, @PathParam("emailtaskID") String emailTaskId, final String input) {
+	public Response updateEmailConfiguration(@PathParam("caseModelID") String caseModelId, @PathParam("emailtaskID") String emailTaskId, final String configuration) {
 		
 		if (!CaseModelManager.isExistingCaseModel(caseModelId)) {
-			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+			IllegalCaseModelIdException e = new IllegalCaseModelIdException(caseModelId);
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-		AbstractActivity emailActivity = CaseModelManager.getCaseModel(caseModelId).getActivityById(emailTaskId);
-		if (!(emailActivity instanceof EmailActivity)) {
-			log.error("The activty for the given Id isn't an EmailActivit");
-			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
-		}
-		EmailConfiguration emailConfig = ((EmailActivity) (emailActivity)).getEmailConfiguration();
+		try {
+			AbstractActivity emailActivity = CaseModelManager.getCaseModel(caseModelId).getActivityById(emailTaskId);
+			if (!(emailActivity instanceof EmailActivity)) {
+				log.error("The activty for the given Id isn't an EmailActivit");
+				return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+			}
+			EmailConfiguration emailConfig = ((EmailActivity) (emailActivity)).getEmailConfiguration();
 
-		JSONObject json = new JSONObject(input);
-		emailConfig.setReceiverEmailAddress(json.getString("receiver"));
-		emailConfig.setSubject(json.getString("subject"));
-		emailConfig.setMessage(json.getString("message"));
-		return Response.status(Response.Status.ACCEPTED).build();
+			JSONObject json = new JSONObject(configuration);
+			String receiver = json.getString("receiver");
+			String subject = json.getString("subject");
+			String message = json.getString("message");
+
+			emailConfig.setReceiverEmailAddress(receiver);
+			emailConfig.setSubject(subject);
+			emailConfig.setMessage(message);
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"email task updated.\"}").build();
+		} catch (JSONException | IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
+
 	}
 	// @PUT
 	// @Path("/scenario2/{caseModelID}/emailtask/{emailtaskID}/")
@@ -105,16 +119,17 @@ public class RestConfigurator {
 	 * scenario. The information consists of the id and the label. A Json Object
 	 * will be returned with an array of ids and a Map from ids to labels.
 	 *
-	 * @param caseModelID
+	 * @param caseModelId
 	 *            The ID of the CaseModel, its mail tasks will be returned.
 	 * @return The JSON Object with ids and labels.
 	 */
 	@GET
 	@Path("scenario/{scenarioId}/emailtask")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllEmailActivities(@PathParam("scenarioId") String caseModelID) {
-		List<EmailActivity> emailActivities = getAllEmailActiviesFromCaseModel(CaseModelManager.getCaseModel(caseModelID));
-		JSONArray jsonArray = new JSONArray(emailActivities.stream().map(emailActivty -> new EmailActivityJaxBean(emailActivty)).collect(Collectors.toList()));
+	public Response getAllEmailActivities(@PathParam("scenarioId") String caseModelId, @DefaultValue("") @QueryParam("filter") String filterString) {
+		List<EmailActivity> emailActivities = getAllEmailActiviesFromCaseModel(CaseModelManager.getCaseModel(caseModelId));
+		emailActivities = emailActivities.stream().filter(emailActivity -> emailActivity.getName().contains(filterString)).collect(Collectors.toList());
+		JSONArray jsonArray = new JSONArray(emailActivities.stream().map(emailActivity -> new EmailActivityJaxBean(emailActivity)).collect(Collectors.toList()));
 		return Response.ok(jsonArray.toString(), MediaType.APPLICATION_JSON).build();
 //		DbEmailConfiguration mail = new DbEmailConfiguration();
 //		String jsonRepresentation = JsonUtil.jsonWrapperList(mail.getAllEmailTasksForScenario(scenarioID));
@@ -181,50 +196,6 @@ public class RestConfigurator {
 		// mailConfig.setMessage(mail.getMessage(mailTaskID));
 		// mailConfig.setSubject(mail.getSubject(mailTaskID));
 		// return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
-	}
-
-	// ************************** HELPER **********************************/
-
-	/**
-	 * This is a data class for the email configuration.
-	 * It is used by Jersey to deserialize JSON.
-	 * Also it can be used for tests to provide the correct contents.
-	 * This class in particular is used by the POST for the email configuration.
-	 * See the {@link #updateEmailConfiguration(int, EmailConfigJaxBean)}
-	 * updateEmailConfiguration} method for more information.
-	 */
-	@XmlRootElement
-	public static class EmailConfigJaxBean {
-
-		private String receiver;
-
-		private String subject;
-
-		private String message;
-
-		public String getReceiver() {
-			return receiver;
-		}
-
-		public void setReceiver(String receiver) {
-			this.receiver = receiver;
-		}
-
-		public String getSubject() {
-			return subject;
-		}
-
-		public void setSubject(String subject) {
-			this.subject = subject;
-		}
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
 	}
 
 	/**

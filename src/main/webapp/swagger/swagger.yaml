@@ -72,6 +72,29 @@ paths:
         description: The Id of the scenario used inside the database.
       responses:
         '200':
+          description: Case model deletion was successful.
+          schema:
+            $ref: '#/definitions/Message'
+        '404':
+          description: The scenario wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+        - scenario
+    delete:
+      description: Delete a scenario with all its instances..
+      operationId: deleteScenario_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioId
+        in: path
+        required: true
+        x-is-map: false
+        type: string
+        description: The Id of the scenario used inside the database.
+      responses:
+        '200':
           description: Detailed information about the scenario.
           schema:
             $ref: '#/definitions/CaseModelDetailsJaxBean'
@@ -80,7 +103,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       tags:
-        - scenario
+        - scenario       
   /scenario/{scenarioId}/terminationcondition:
     get:
       description: This method provides information about the termination condition.
@@ -133,7 +156,7 @@ paths:
             $ref: '#/definitions/Error'
       tags:
         - scenario
-  /scenario/{scenarioID}/emailtask:
+  /scenario/{scenarioId}/emailtask:
     get:
       description: >-
         This method provides information about all email Tasks inside
@@ -142,13 +165,12 @@ paths:
       produces:
       - application/json
       parameters:
-      - name: scenarioID
+      - name: scenarioId
         in: path
         required: true
         x-is-map: false
-        type: integer
-        format: int64
-        description: The ID of the scenario
+        type: string
+        description: The Id of the scenario
       - name: filter
         in: query
         required: false
@@ -169,27 +191,25 @@ paths:
       tags:
         - scenario
         - email
-  /scenario/{scenarioID}/emailtask/{emailTaskID}:
+  /scenario/{scenarioId}/emailtask/{emailTaskId}:
     get:
       description: This method provides information about an email Task.
       operationId: getEmailTaskConfiguration_
       produces:
       - application/json
       parameters:
-      - name: scenarioID
+      - name: scenarioId
         in: path
         required: true
         x-is-map: false
-        type: integer
-        format: int64
-        description: The ID of the scenario model.
-      - name: emailTaskID
+        type: string
+        description: The Id of the scenario model.
+      - name: emailTaskId
         in: path
         required: true
         x-is-map: false
-        type: integer
-        format: int64
-        description: The control node ID of the mail Task.
+        type: string
+        description: The control node Id of the mail task.
       responses:
         '200':
           description: Detailed information about the emailtask.
@@ -199,6 +219,47 @@ paths:
           description: There is no emailtask in the scenario with the given ids.
           schema:
             type: object
+      tags:
+        - scenario
+        - email
+    put:
+      description: This method updates the configuration for an email Task.
+      operationId: putEmailTaskConfiguration_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioId
+        in: path
+        required: true
+        x-is-map: false
+        type: string
+        description: The Id of the scenario model.
+      - name: emailTaskId
+        in: path
+        required: true
+        x-is-map: false
+        type: string
+        description: The control node Id of the mail task.
+      - name: configuration
+        in: body
+        required: true
+        x-is-map: false
+        description: The new configuration.
+        schema:
+          $ref: '#/definitions/EmailConfigJaxBean'
+      responses:
+        '200':
+          description: Email task was successfully updated.
+          schema:
+            $ref: '#/definitions/Message'
+        '400':
+          description: An error occured during the update.
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: The case model/ email task does not exist.
+          schema:
+            $ref: '#/definitions/Error'
       tags:
         - scenario
         - email
@@ -921,14 +982,19 @@ definitions:
         items:
           type: string
   EmailtaskList:
+    type: array
+    description: 'Information of all known emailtasks.'
+    items:
+      $ref: '#/definitions/EmailJaxBean'
+  EmailJaxBean:
     type: object
     properties:
-      ids:
-        type: array
-        description: 'IDs of all known emailtasks.'
-        items:
-          type: number
-          format: integer
+      id:
+        type: string
+        description: 'The id of the email task.'
+      label:
+        type: string
+        description: 'Name of the email task.'
   EmailConfigJaxBean:
     type: object
     properties:
@@ -938,9 +1004,9 @@ definitions:
       subject:
         type: string
         description: 'The subject of the email.'
-      content:
+      message:
         type: string
-        description: 'The content of the email.'
+        description: 'The message of the email.'
   ScenarioInstanceList:
     type: array
     description: 'Overview for all instances of a scenario.'
