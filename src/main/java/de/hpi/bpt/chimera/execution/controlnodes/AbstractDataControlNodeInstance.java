@@ -90,7 +90,7 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 	 * @return the input string with the variable expression replaced by the
 	 *         referenced data object state or data attribute value
 	 */
-	protected String replaceVariableExpressions(String toReplace) {
+	public String replaceVariableExpressions(String toReplace) {
 		Pattern p = Pattern.compile("#(\\w+)(?:\\.(\\w+))?\\b");
 		Matcher m = p.matcher(toReplace);
 		if (!m.find()) { // no variable used in input, end recursion
@@ -102,7 +102,7 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 		Optional<String> attrName = Optional.ofNullable(m.group(attributeNameGroup));
 		Optional<DataObject> foundDO = getSelectedDataObjects().stream().filter(d -> dataClassName.equals(d.getDataClass().getName())).findFirst();
 		if (!foundDO.isPresent()) { // no DO found for data class referenced in
-									// variable expression
+			// variable expression
 			log.error(String.format("None of the selected data objects of the task '%s' matches the data class '%s' referenced in the variable expression %s.", getControlNode().getName(), dataClassName, m.group()));
 			// replace first match and recursive call to replace other potential
 			// variable expressions
@@ -110,7 +110,7 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 			return replaceVariableExpressions(replacedFirstOccurrence);
 		}
 		if (!attrName.isPresent()) { // no attribute referenced -> replace
-										// "#DataClass" with its state
+			// "#DataClass" with its state
 			// replace first match and recursive call to replace other potential
 			// variable expressions
 			String replacedFirstOccurrence = m.replaceFirst(foundDO.get().getObjectLifecycleState().getName());
@@ -118,7 +118,7 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 		}
 		Optional<DataAttributeInstance> foundDAI = foundDO.get().getDataAttributeInstances().stream().filter(dai -> attrName.get().equals(dai.getDataAttribute().getName())).findFirst();
 		if (!foundDAI.isPresent()) { // no DAI found for attribute referenced in
-										// variable expression
+			// variable expression
 			log.error(String.format("The found data object of class '%s' does not have a attribute with name '%s' specified in the variable expression %s.", dataClassName, attrName.get(), m.group()));
 			// replace first match and recursive call to replace other potential
 			// variable expressions

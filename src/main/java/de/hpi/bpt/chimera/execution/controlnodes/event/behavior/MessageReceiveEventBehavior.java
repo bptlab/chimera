@@ -3,9 +3,6 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.behavior;
 import java.util.Map;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.controlnodes.State;
@@ -16,6 +13,7 @@ import de.hpi.bpt.chimera.execution.data.DataAttributeInstanceWriter;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.MessageReceiveDefinition;
 
 @Entity
 public class MessageReceiveEventBehavior extends EventBehavior {
@@ -23,7 +21,6 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 	private static final Logger logger = Logger.getLogger(IntermediateCatchEventInstance.class);
 
 	private String notificationRule; // important for Unicorn
-	private String unicornKey; // important for Unicorn
 
 	private String eventJson = "";
 
@@ -47,7 +44,7 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 	@Override
 	public void enableControlFlow() {
 		logger.info("Controlflow of IntermediateCatchEventInstance enabled");
-		EventDispatcher.registerEvent(getEventInstance(), this);
+		EventDispatcher.registerEvent(this);
 		getEventInstance().setState(State.REGISTERED);
 	}
 
@@ -77,20 +74,25 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 		}
 	}
 
+	/**
+	 * The request key is equal to Id of the EventInstance.
+	 * 
+	 * @return the Id the EventInstance is registered with at Unicorn.
+	 */
+	public String getRequestKey() {
+		return getEventInstance().getId();
+	}
+
+	public MessageReceiveDefinition getMessageDefinition() {
+		return (MessageReceiveDefinition) getEventInstance().getControlNode().getSpecialEventDefinition();
+	}
+
 	public String getNotificationRule() {
 		return notificationRule;
 	}
 
 	public void setNotificationRule(String notificationRule) {
 		this.notificationRule = notificationRule;
-	}
-
-	public String getUnicornKey() {
-		return unicornKey;
-	}
-
-	public void setUnicornKey(String unicornKey) {
-		this.unicornKey = unicornKey;
 	}
 
 	public String getEventJson() {

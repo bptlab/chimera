@@ -412,21 +412,18 @@ public class CaseExecutioner {
 	// GETTER & SETTER
 
 	public AbstractEventInstance getRegisteredEventFromEventId(String id) {
-		return (AbstractEventInstance) idToRegisteredEvent.get(id);
+		return idToRegisteredEvent.get(id);
 	}
 
 	public AbstractEventInstance getRegisteredEventFromRegistrationKey(String key) {
-		return (AbstractEventInstance) keyToRegisteredEvent.get(key);
+		return keyToRegisteredEvent.get(key);
 	}
 
 	public void registerEvent(String registrationKey, AbstractEventInstance eventInstance) {
 		idToRegisteredEvent.put(eventInstance.getId(), eventInstance);
-		// log.debug("Entry in Hashmap idToRegisteredEvent with id:" +
-		// eventInstance.getId());
+
 		((AbstractEventInstance) eventInstance).requestKey = registrationKey;
 		keyToRegisteredEvent.put(registrationKey, eventInstance);
-		// log.debug("Entry in Hashmap keyToRegisteredEvent with key:" +
-		// registrationKey);
 	}
 
 	public void removeEvent(String registrationKey, AbstractEventInstance eventInstance) {

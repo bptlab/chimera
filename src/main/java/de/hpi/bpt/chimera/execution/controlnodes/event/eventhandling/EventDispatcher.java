@@ -171,7 +171,7 @@ public final class EventDispatcher {
 	public static void registerCaseStartEvent(CaseStartTrigger caseStartTrigger) {
 		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
 		String notificationPath = String.format(SELF_PATH_CASESTART, SELF_DEPLOY_URL, requestId);
-		String notificationRuleId = sendQueryToEventService(caseStartTrigger.getQueryExecutionPlan(), requestId, notificationPath);
+		String notificationRuleId = sendQueryToEventService(caseStartTrigger.getQueryExecutionPlan(), notificationPath);
 		caseStartTrigger.setEventKeyId(requestId);
 		caseStartTrigger.setNotificationRuleId(notificationRuleId);
 		CaseModelManager.getEventMapper().registerCaseStartTrigger(requestId, caseStartTrigger);
@@ -222,66 +222,63 @@ public final class EventDispatcher {
 	// return event;
 	// }
 
-
-	public static void registerEvent(AbstractEventInstance eventInstance, MessageReceiveEventBehavior receiveBehavior) {
+	/**
+	 * Register an event instance in Unicorn. The notificationRuleId is set in
+	 * {@link MessageReceiveEventBehavior} and the MessageReceiveEventBehavior
+	 * will be stored in registered event instances in the case executioner of
+	 * the event instance.
+	 * 
+	 * @param receiveBehavior
+	 *            - MessageReceiveEventBehavior of the EventInstance to register
+	 */
+	public static void registerEvent(MessageReceiveEventBehavior receiveBehavior) {
 		logger.info("trying to register an Event at unicorn");
-		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
-		String query = insertAttributesIntoQueryString(eventInstance);
-		logger.info("Created query to register an Event at unicorn");
-		String notificationRuleId = sendQueryToEventService(query, requestId, eventInstance.getCaseExecutioner().getCase().getId(), eventInstance.getCaseExecutioner().getCaseModel().getId());
-		receiveBehavior.setNotificationRule(notificationRuleId);
-		receiveBehavior.setUnicornKey(requestId);
-		
+		AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
+		final String requestId = eventInstance.getId();
+		String query = insertAttributesIntoQueryString(receiveBehavior);
+
 		CaseExecutioner caseExecutioner = eventInstance.getCaseExecutioner();
+		String cmId = caseExecutioner.getCaseModel().getId();
+		String caseId = caseExecutioner.getCase().getId();
+		String notificationPath = String.format(SELF_PATH_NODES, SELF_DEPLOY_URL, cmId, caseId, requestId);
+
+		String notificationRuleId = sendQueryToEventService(query, notificationPath);
+		receiveBehavior.setNotificationRule(notificationRuleId);
+		
 		if (caseExecutioner.getRegisteredEventFromEventId(eventInstance.getId()) == null) {
 			caseExecutioner.registerEvent(requestId, eventInstance);
 		}
-		
-		// if (!idToRegisteredEvent.containsKey(eventInstance.getId())) {
-		// idToRegisteredEvent.put(eventInstance.getId(), eventInstance);
-		// keyToRegisteredEvent.put(requestId, eventInstance);
-		// }
-
-		logger.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requesId %s, getting back %s as NotificationRule", eventInstance.getId(), query, requestId, notificationRuleId));
-		
-	}
-
-	public static String insertAttributesIntoQueryString(AbstractEventInstance eventInstance) {
-		MessageReceiveDefinition messageDefinition = (MessageReceiveDefinition) eventInstance.getControlNode().getSpecialEventDefinition();
-		String queryString = messageDefinition.getEventQuerry();
-		if (queryString.contains("#")) {
-			for (DataAttributeInstance attribute : eventInstance.getDataManager().getDataAttributeInstances()) {
-				String dataattributePath = String.format("#%s.%s", attribute.getDataObject().getDataClass().getName(), attribute.getDataAttribute().getName());
-				queryString = queryString.replace(dataattributePath, attribute.getValue().toString());
-			}
-		}
-		return queryString;
+		logger.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requestId %s, getting back %s as NotificationRule", eventInstance.getId(), query, requestId, notificationRuleId));
 	}
 
 	/**
-	 * Saves that events are alternative to each other, so that they can be skipped when
-	 * one of the is triggered.
-	 * The events have to be registered
-	 *
-	 * @param events the events that are alternative to each other (e.g. behind a event
-	 *               based gateway)
+	 * Replace the variable expressions in the query of the
+	 * {@link MessageReceiveDefinition}.
+	 * 
+	 * @param receiveBehavior
+	 * @return String with replaced variable expressions.
 	 */
-	// not needed anymore
-	// public static void registerExclusiveEvents(List<AbstractEvent> events) {
-	// DbEventMapping mapping = new DbEventMapping();
-	// mapping.saveAlternativeEvents(events);
-	// events.forEach(AbstractEvent::enableControlFlow);
-	// }
-
-	private static String sendQueryToEventService(String rawQuery, String requestId, String scenarioInstanceId, String scenarioId) {
-		String notificationPath = String.format(SELF_PATH_NODES, SELF_DEPLOY_URL, scenarioId, scenarioInstanceId, requestId);
-		return sendQueryToEventService(rawQuery, requestId, notificationPath);
+	private static String insertAttributesIntoQueryString(MessageReceiveEventBehavior receiveBehavior) {
+		MessageReceiveDefinition messageDefinition = receiveBehavior.getMessageDefinition();
+		String queryString = messageDefinition.getEventQuerry();
+		return receiveBehavior.getEventInstance().replaceVariableExpressions(queryString);
 	}
 
-	private static String sendQueryToEventService(String rawQuery, String requestId, String notificationPath) {
+	/**
+	 * Register an event query in Unicorn by sending it to Unicorn. Unicorn will
+	 * respond at the specified notificationPath if the query matches an Event.
+	 * 
+	 * @param rawQuery
+	 *            - query with possible escaped symbols
+	 * @param notificationPath
+	 *            - path used for notification if the query matches an Event in
+	 *            Unicorn
+	 * @return id for notification. Equals the id the query is registered with
+	 *         in Unicorn.
+	 */
+	private static String sendQueryToEventService(String rawQuery, String notificationPath) {
 		// since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
 		String query = StringEscapeUtils.unescapeHtml4(rawQuery);
-		logger.debug("Prepared eventquery for Sending to Unicorn. Query: " + query + " RequestId:" + requestId);
 
 		JsonObject queryRequest = new JsonObject();
 		queryRequest.addProperty("queryString", query);
@@ -295,14 +292,14 @@ public final class EventDispatcher {
 		logger.debug("The queryRequest is: \"" + queryRequest + "\"");
 		try {
 			Response response = target.request().post(Entity.json(gson.toJson(queryRequest)));
-			if (response.getStatus() != 200) {
-				// throw new RuntimeException("Query could not be registered");
-				logger.warn("Could not register Query \"" + query + "\". Response status: " + response.getStatus());
-				return "-1";
-			} else {
+			if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
 				// return the UUID of the Notification Rule
 				// so that it can be removed later
 				return response.readEntity(String.class);
+			} else {
+				// throw new RuntimeException("Query could not be registered");
+				logger.warn("Could not register Query \"" + query + "\". Response status: " + response.getStatus());
+				return "-1";
 			}
 		} catch (ProcessingException e) {
 			logger.warn("Could not register Query \"" + query + "\"");
@@ -315,9 +312,7 @@ public final class EventDispatcher {
 
 		unregisterNotificationRule(notificationRuleId);
 		CaseExecutioner caseExecutioner = eventInstance.getCaseExecutioner();
-		caseExecutioner.removeEvent(receiveBehavior.getUnicornKey(), eventInstance);
-		// keyToRegisteredEvent.remove(receiveBehavior.getUnicornKey());
-		// idToRegisteredEvent.remove(eventInstance.getId());
+		caseExecutioner.removeEvent(receiveBehavior.getRequestKey(), eventInstance);
 		logger.info(String.format("Event with id %s and notification Rule %s unregistered", eventInstance.getId(), notificationRuleId));
 	}
 

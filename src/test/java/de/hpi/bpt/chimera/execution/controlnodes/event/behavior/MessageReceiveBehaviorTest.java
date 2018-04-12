@@ -52,8 +52,7 @@ public class MessageReceiveBehaviorTest {
 		assertTrue(MessageReceiveEventBehavior.class.isInstance(receiveEvent.getBehavior()));
 		assertEquals("ReceiveEvent registered properly", receiveEvent.getState(), State.REGISTERED);
 
-		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) receiveEvent.getBehavior();
-		String requestId = receiveBehavior.getUnicornKey();
+		String requestId = receiveEvent.getId();
 		
 		EventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
 		assertEquals("ReceiveEvent terminated properly", receiveEvent.getState(), State.TERMINATED);
@@ -84,8 +83,7 @@ public class MessageReceiveBehaviorTest {
 		assertTrue(MessageReceiveEventBehavior.class.isInstance(receiveEvent.getBehavior()));
 		assertEquals("ReceiveEvent registered properly", receiveEvent.getState(), State.REGISTERED);
 
-		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) receiveEvent.getBehavior();
-		String requestId = receiveBehavior.getUnicornKey();
+		String requestId = receiveEvent.getId();
 
 		EventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
 		assertEquals("ReceiveEvent terminated properly", receiveEvent.getState(), State.TERMINATED);
