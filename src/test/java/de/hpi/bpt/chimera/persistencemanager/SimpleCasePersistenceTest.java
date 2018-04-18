@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.CasePersistence;
+package de.hpi.bpt.chimera.persistencemanager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
