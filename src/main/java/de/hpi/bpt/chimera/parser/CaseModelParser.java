@@ -16,7 +16,7 @@ import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.parser.datamodel.DataModelParser;
 import de.hpi.bpt.chimera.parser.condition.CaseStartTriggerParser;
-import de.hpi.bpt.chimera.parser.condition.TerminationConditionParser;
+import de.hpi.bpt.chimera.parser.condition.DataStateConditionParser;
 import de.hpi.bpt.chimera.parser.fragment.FragmentParser;
 import de.hpi.bpt.chimera.validation.FragmentValidation;
 import de.hpi.bpt.chimera.validation.NameValidation;
@@ -59,7 +59,7 @@ public class CaseModelParser {
 			List<CaseStartTrigger> caseStartTrigger = getCaseStartTrigger(caseModelJson.getJSONArray("startconditions"), parserHelper);
 			caseModel.setStartCaseTrigger(caseStartTrigger);
 
-			TerminationCondition terminationCondition = TerminationConditionParser.parseTerminationCondition(caseModelJson.getJSONArray("terminationconditions"), parserHelper);
+			TerminationCondition terminationCondition = DataStateConditionParser.parseTerminationCondition(caseModelJson.getJSONArray("terminationconditions"), parserHelper);
 			caseModel.setTerminationCondition(terminationCondition);
 			
 			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"), parserHelper);
