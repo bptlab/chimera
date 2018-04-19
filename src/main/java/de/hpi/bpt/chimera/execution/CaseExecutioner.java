@@ -212,7 +212,6 @@ public class CaseExecutioner {
 			dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
 			controlNodeInstance.setOutputDataObjects(usedDataObjects);
 			controlNodeInstance.terminate();
-			updateDataFlow();
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
@@ -224,7 +223,8 @@ public class CaseExecutioner {
 	 */
 	public void updateDataFlow() {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
-			fragmentInstance.updateDataFlow();
+			fragmentInstance.getActivActivityInstances()
+				.forEach(AbstractActivityInstance::checkDataFlow);
 		}
 	}
 
