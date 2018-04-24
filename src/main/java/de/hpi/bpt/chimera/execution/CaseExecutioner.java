@@ -60,24 +60,6 @@ public class CaseExecutioner {
 	private List<DataAttributeLog> dataAttributeLogs;
 	@OneToMany(cascade = CascadeType.ALL)
 	private Map<String, MessageReceiveEventBehavior> registeredEventInstanceIdToReceiveBehavior;
-	// registered ReceiveEvents
-	/*
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "caseexecutioner_controlnodeinstance_map_id", joinColumns = {
-			@JoinColumn(name = "fk_caseexecutioner", referencedColumnName = "dbId") }, inverseJoinColumns = {
-					@JoinColumn(name = "fk_group", referencedColumnName = "id") })
-	@MapKey(name = "id")
-	public Map<String, AbstractEventInstance> idToRegisteredEvent;
-
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "caseexecutioner_controlnodeinstance_map_requestkey", joinColumns = {
-			@JoinColumn(name = "fk_caseexecutioner", referencedColumnName = "dbId") }, inverseJoinColumns = {
-					@JoinColumn(name = "fk_group", referencedColumnName = "id") })
-	@MapKeyColumn(name = "MapKeyColumn_requestkey")
-	@MapKey(name = "requestKey")
-	public Map<String, AbstractEventInstance> keyToRegisteredEvent;
-	*/
-
 
 	/**
 	 * for JPA only
@@ -167,7 +149,7 @@ public class CaseExecutioner {
 	 * 
 	 * @param controlNodeInstance
 	 *            - AbstractDataControlNodeInstance that shall terminate
-	 * @param dataClassToStateTransition
+	 * @param dataClassToStateTransitions
 	 *            - Map from DataClass to an ObjectLifecycleState of the
 	 *            DataClass to define the new State for the DataObject with the
 	 *            referred DataClass
@@ -207,7 +189,7 @@ public class CaseExecutioner {
 				log.error(e.getMessage());
 				throw e;
 			}
-			
+
 			List<DataObject> usedDataObjects = handleDataControlNodeOutputTransitions(controlNodeInstance, dataClassToStateTransitions);
 			dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
 			controlNodeInstance.setOutputDataObjects(usedDataObjects);

@@ -145,7 +145,7 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 			if (getControlNode().hasPostCondition()) {
 				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
 			}
-			
+
 			getCaseExecutioner().terminateDataControlNodeInstance(this, dataObjectToObjectLifecycleTransition);
 		}
 	}

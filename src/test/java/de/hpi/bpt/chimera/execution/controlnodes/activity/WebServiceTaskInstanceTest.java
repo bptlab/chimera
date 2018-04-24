@@ -30,6 +30,8 @@ public class WebServiceTaskInstanceTest {
 		caseExecutioner.startCase();
 	}
 
+	// TODO: rework because of concurrent fragment instances. another activity
+	// instance before the automatic task
 	@Test
 	public void testAutoExecution() {
 		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Get ReiseWarnung");
