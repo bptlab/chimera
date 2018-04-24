@@ -55,11 +55,13 @@ public class DomainModelPersistenceManager {
 	 * @return EntityManagerFactory
 	 */
 	public static EntityManager getEntityManager() {
-		if (entityManager == null || !entityManager.isOpen()) {
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-			entityManager = emf.createEntityManager();
-		}
-		return entityManager;
+		/*
+		 * if (entityManager == null || !entityManager.isOpen()) {
+		 * EntityManagerFactory emf =
+		 * Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+		 * entityManager = emf.createEntityManager(); }
+		 */
+		return getEntityManagerFactory().createEntityManager();
 	}
 
 
