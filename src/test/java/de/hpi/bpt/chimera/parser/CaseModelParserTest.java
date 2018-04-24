@@ -2,12 +2,10 @@ package de.hpi.bpt.chimera.parser;
 
 import static org.junit.Assert.*;
 
-import java.io.FileInputStream;
 import java.util.List;
-import org.apache.commons.io.IOUtils;
-import org.junit.Before;
 import org.junit.Test;
 
+import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.CaseStartTriggerConsequence;
@@ -22,27 +20,14 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 
 public class CaseModelParserTest {
-	String jsonString = "";
-	final String fileName = "JsonString";
-
-	@Before
-	public void getJsonString() {
-		try {
-			// String file = getClass().getResource(fileName).getFile();
-			String file = "src/test/resources/parser/JsonString";
-			FileInputStream inputStream = new FileInputStream(file);
-			jsonString = IOUtils.toString(inputStream);
-			inputStream.close();
-		} catch (Exception e) {
-			assertEquals("Error", 2, e);
-		}
-	}
+	final String filepath = "src/test/resources/parser/JsonString";
 
 	@Test
 	public void parseCaseModel() {
 		CaseModel caseModel;
-		caseModel = CaseModelParser.parseCaseModel(jsonString);
-		assertEquals("wrong CaseModel id", "591330db1ed1325048306e40", caseModel.getId());
+		caseModel = CaseModelTestHelper.parseCaseModel(filepath);
+		
+		// assertEquals("wrong CaseModel id", "591330db1ed1325048306e40", caseModel.getId());
 		assertEquals("wrong CaseModel name", "testScenario123", caseModel.getName());
 		assertEquals("wrong CaseModel version", 22, caseModel.getVersionNumber());
 

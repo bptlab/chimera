@@ -47,9 +47,13 @@ public final class FragmentParser {
 			String contentXML = fragmentJson.getString("content");
 			fragment.setContentXML(contentXML);
 
+			if (fragmentJson.has("preconditions")) {
+				FragmentPreCondition fragmentPreCondition = DataStateConditionParser.parseFragmentPreCondition(fragmentJson.getJSONArray("preconditions"), parserHelper);
+				fragment.setFragmentPreCondition(fragmentPreCondition);
+			} else {
+				fragment.setFragmentPreCondition(new FragmentPreCondition());
+			}
 
-			FragmentPreCondition fragmentPreCondition = DataStateConditionParser.parseFragmentPreCondition(fragmentJson.getJSONArray("preconditions"), parserHelper);
-			fragment.setFragmentPreCondition(fragmentPreCondition);
 
 			BpmnFragment bmpnFragment = BpmnXmlFragmentParser.parseBpmnXmlFragment(contentXML, parserHelper);
 			fragment.setBpmnFragment(bmpnFragment);
