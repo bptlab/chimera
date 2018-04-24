@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.execution.controlnodes.activity;
+package de.hpi.bpt.chimera.execution.controlnodes.gateway;
 
 import static org.junit.Assert.*;
 

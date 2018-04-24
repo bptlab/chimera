@@ -1,12 +1,7 @@
 package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
 import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -17,8 +12,6 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.State;
-import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstanceWriter;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
@@ -46,6 +39,9 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 
 	@Override
 	public void execute() {
+		if (getControlNode().getWebServiceUrl().isEmpty()) {
+			return;
+		}
 		WebTarget target = buildTarget();
 		log.info("Target for web service call constructed: " + target.toString());
 		Response response = executeWebserviceRequest(target);
@@ -123,24 +119,23 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 
 	@Override
 	public void terminate() {
-		if (!getState().equals(State.RUNNING)) {
+		if (!canTerminate()) {
 			log.info(String.format("%s not terminated, because the activity isn't in state RUNNING", this.getControlNode().getName()));
 			return;
 		}
+
 		if (!getControlNode().hasPostCondition()) {
 			log.info("Web service task has no output set, received data can not be stored.");
-			return;
 		}
 		if (webServiceJson == null) {
 			log.info("No response found, received data can not be stored.");
-	        return;
+		} else {
+			for (DataObject dataObject : getOutputDataObjects()) {
+				AtomicDataStateCondition condition = dataObject.getCondition();
+				Map<DataAttribute, String> dataAttributeToJsonPath = getControlNode().getJsonPathMapping().get(condition);
+				DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, webServiceJson);
+			}
 	    }
-
-		for (DataObject dataObject : getOutputDataObjects()) {
-			AtomicDataStateCondition condition = dataObject.getCondition();
-			Map<DataAttribute, String> dataAttributeToJsonPath = getControlNode().getJsonPathMapping().get(condition);
-			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, webServiceJson);
-		}
 
 		super.terminate();
 	}

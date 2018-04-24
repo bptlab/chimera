@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
+import de.hpi.bpt.chimera.model.condition.FragmentPreCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 
 @Entity
@@ -24,6 +25,8 @@ public class Fragment {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private BpmnFragment bpmnFragment;
+	@OneToOne(cascade = CascadeType.ALL)
+	private FragmentPreCondition fragmentPreCondition;
 
 	public String getId() {
 		return id;
@@ -57,5 +60,13 @@ public class Fragment {
 
 	public void setBpmnFragment(BpmnFragment bpmnFragment) {
 		this.bpmnFragment = bpmnFragment;
+	}
+
+	public FragmentPreCondition getFragmentPreCondition() {
+		return fragmentPreCondition;
+	}
+
+	public void setFragmentPreCondition(FragmentPreCondition fragmentPreCondition) {
+		this.fragmentPreCondition = fragmentPreCondition;
 	}
 }

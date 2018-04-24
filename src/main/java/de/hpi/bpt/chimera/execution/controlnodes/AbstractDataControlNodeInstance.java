@@ -47,21 +47,16 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 
 	/**
 	 * 
-	 * @return whether the data control node instance is in the correct state
-	 *         for termination.
+	 * @return whether the data control node instance should be able to begin.
 	 */
-	public boolean canTerminate() {
-		return getState().equals(State.RUNNING);
-	}
+	public abstract boolean canBegin();
 
 	/**
 	 * 
-	 * @return whether the data control node instance is in the correct state
-	 *         for beginning.
+	 * @return whether the data control node instance should be able to
+	 *         terminate.
 	 */
-	public boolean canBegin() {
-		return getState().equals(State.READY);
-	}
+	public abstract boolean canTerminate();
 
 	/**
 	 * If the input string contains a variable expression, i.e.

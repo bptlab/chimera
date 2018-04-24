@@ -64,6 +64,11 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	 */
 	@Override
 	public void terminate() {
+		if (!canTerminate()) {
+			log.info(String.format("The event instance of %s can not terminate", getControlNode().getName()));
+			return;
+		}
+
 		if (previousEventBasedGatewayInstance != null) {
 			previousEventBasedGatewayInstance.skipAlternativeGateways(this);
 		}
@@ -77,7 +82,7 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 
 		behavior.terminate();
 		setState(State.TERMINATED);
-		getFragmentInstance().updateDataFlow();
+		getCaseExecutioner().updateDataFlow();
 		getFragmentInstance().createFollowing(getControlNode());
 	}
 
@@ -87,12 +92,19 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	}
 
 	/**
-	 * 
-	 * @return whether the data control node instance is in the correct state
-	 *         for beginning.
+	 * An event instance should always be able to begin.
 	 */
 	@Override
 	public boolean canBegin() {
+		return true;
+	}
+
+	/**
+	 * An event instance should only terminate if it is in State READY or
+	 * REGISTERED.
+	 */
+	@Override
+	public boolean canTerminate() {
 		return getState().equals(State.READY) || getState().equals(State.REGISTERED);
 	}
 

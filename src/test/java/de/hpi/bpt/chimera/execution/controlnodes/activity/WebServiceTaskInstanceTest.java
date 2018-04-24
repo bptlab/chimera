@@ -22,33 +22,52 @@ public class WebServiceTaskInstanceTest {
 	private final String filepath = "src/test/resources/execution/WebServiceTaskInstanceTest.json";
 	private CaseModel cm;
 	private CaseExecutioner caseExecutioner;
+	private AbstractActivityInstance webserviceTaskInstance;
 
 	@Before
 	public void setup() {
 		cm = CaseModelTestHelper.parseCaseModel(filepath);
 		caseExecutioner = new CaseExecutioner(cm, cm.getName());
 		caseExecutioner.startCase();
+
+		AbstractActivityInstance precedingTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "First Activity");
+		precedingTaskInstance.begin();
+		precedingTaskInstance.terminate();
+		webserviceTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Get ReiseWarnung");
+		testInitialization();
+	}
+
+	private void testInitialization() {
+		assertNotNull(webserviceTaskInstance);
+		assertTrue(webserviceTaskInstance instanceof WebServiceTaskInstance);
+		assertTrue("WebServiceTaskInstance was not declared as automatic task", webserviceTaskInstance.hasAutomaticBegin());
+		assertTrue("WebServiceTaskInstance has precondition", webserviceTaskInstance.getControlNode().getPreCondition().getConditionSets().isEmpty());
 	}
 
 	@Test
-	public void testAutoExecution() {
-		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Get ReiseWarnung");
-		assertNotNull(task0);
-		assertTrue(task0 instanceof WebServiceTaskInstance);
-		assertTrue("is automatic task was not parsed correctly", task0.hasAutomaticBegin());
-		assertTrue("task has precondition", task0.getControlNode().getPreCondition().getConditionSets().isEmpty());
+	public void testAutomaticExecution() {
+		assertEquals("State of ActivityInstance is not TERMINATED", State.TERMINATED, webserviceTaskInstance.getState());
+	}
 
-		assertEquals("State of ActivityInstance is not TERMINATED", State.TERMINATED, task0.getState());
+	@Test
+	public void testRestRequest() {
+		DataObject dataObject = testDataObjectCreation();
 
-		List<DataObject> dataObjects = caseExecutioner.getDataManager().getDataObjects();
-		assertEquals("wrong creation of data objects", 1, dataObjects.size());
-
-		DataObject dataObject = dataObjects.get(0);
-
+		// an data attribute should be written by the webservice task instance
 		DataAttributeInstance dataAttributeInstance = dataObject.getDataAttributeInstances().get(0);
 		assertEquals("wrong data attribute value or api has changed", "de", dataAttributeInstance.getValue());
+	}
 
-		AbstractActivityInstance task1 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Look at Reisewarnung");
-		assertEquals("State of ActivityInstance is not READY", State.READY, task1.getState());
+	private DataObject testDataObjectCreation() {
+		List<DataObject> dataObjects = caseExecutioner.getDataManager().getDataObjects();
+		assertEquals("Wrong amount of created data objects", 1, dataObjects.size());
+		return dataObjects.get(0);
+	}
+
+	@Test
+	public void testFollowingControlNodeInstantion() {
+		AbstractActivityInstance followingTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Look at ReiseWarnung");
+		assertNotNull(followingTaskInstance);
+		assertEquals("State of ActivityInstance is not READY", State.READY, followingTaskInstance.getState());
 	}
 }

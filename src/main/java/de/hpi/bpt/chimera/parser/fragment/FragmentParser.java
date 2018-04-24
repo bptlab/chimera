@@ -4,10 +4,12 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.model.condition.FragmentPreCondition;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
+import de.hpi.bpt.chimera.parser.condition.DataStateConditionParser;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.BpmnXmlFragmentParser;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
@@ -17,6 +19,7 @@ public final class FragmentParser {
 	private FragmentParser() {
 	}
 
+	// TODO: validate fragment
 	/**
 	 * 
 	 * Parses a Fragment given as a JSONObject. Therefore calls the
@@ -43,9 +46,15 @@ public final class FragmentParser {
 
 			String contentXML = fragmentJson.getString("content");
 			fragment.setContentXML(contentXML);
-			// TODO: validate fragment
 
-			// TODO: add bpmn elements
+			if (fragmentJson.has("preconditions")) {
+				FragmentPreCondition fragmentPreCondition = DataStateConditionParser.parseFragmentPreCondition(fragmentJson.getJSONArray("preconditions"), parserHelper);
+				fragment.setFragmentPreCondition(fragmentPreCondition);
+			} else {
+				fragment.setFragmentPreCondition(new FragmentPreCondition());
+			}
+
+
 			BpmnFragment bmpnFragment = BpmnXmlFragmentParser.parseBpmnXmlFragment(contentXML, parserHelper);
 			fragment.setBpmnFragment(bmpnFragment);
 		} catch (JSONException e) {

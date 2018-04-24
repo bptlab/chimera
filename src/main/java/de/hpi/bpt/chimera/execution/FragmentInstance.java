@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
@@ -24,6 +22,9 @@ import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstan
 import de.hpi.bpt.chimera.execution.controlnodes.event.StartEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.AbstractGatewayInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.ExclusiveGatewayInstance;
+import de.hpi.bpt.chimera.execution.data.DataManager;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.condition.FragmentPreCondition;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
@@ -38,6 +39,7 @@ public class FragmentInstance {
 	private Fragment fragment;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Case caze;
+	private boolean started;
 	// TODO: think about whether it is needed to store terminated events, etc.
 	// Activities should be recorded for the history.
 	@OneToMany(cascade = CascadeType.ALL)
@@ -121,6 +123,23 @@ public class FragmentInstance {
 	}
 
 	/**
+	 * The fragment instance is data flow enabled if it has already started or
+	 * its {@link FragmentPreCondition} is empty. Otherwise if needs to be
+	 * fulfilled by the current {@link DataObject}s in the {@link DataManager}.
+	 * 
+	 * @return whether the fragment instance is data flow enabled
+	 */
+	public boolean isDataFlowEnabled() {
+		FragmentPreCondition preCondition = getFragment().getFragmentPreCondition();
+		if (preCondition.isEmpty() || isStarted()) {
+			return true;
+		}
+
+		List<AtomicDataStateCondition> existingConditions = getCase().getCaseExecutioner().getDataManager().getDataStateConditions();
+		return preCondition.isFulfilled(existingConditions);
+	}
+	// TODO: is this needed?
+	/**
 	 * 
 	 * @param controlNodes
 	 * @return
@@ -168,13 +187,10 @@ public class FragmentInstance {
 	 * @return true if the ControlNode is terminated.
 	 */
 	public boolean isTerminated(AbstractControlNode node) {
-		if (controlNodeIdToInstance.containsKey(node.getId()) && controlNodeIdToInstance.get(node.getId()).getState() == State.TERMINATED) {
-			return true;
-		} else {
-			return false;
-		}
+		return controlNodeIdToInstance.containsKey(node.getId()) && controlNodeIdToInstance.get(node.getId()).getState() == State.TERMINATED;
 	}
 
+	// TODO: is this accidentally switched?
 	// TODO maybe not needed >>> maybe a separate map for executing (Xor-)
 	// Gateways is better and faster
 	/**
@@ -231,7 +247,19 @@ public class FragmentInstance {
 		}
 	}
 
-
+	/**
+	 * 
+	 * @return all ActivityInstances from the FragmentInstance that are not
+	 *         terminated.
+	 */
+	public List<AbstractActivityInstance> getActivActivityInstances() {
+		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
+		getControlNodeInstances().stream()
+			.filter(x -> x instanceof AbstractActivityInstance && !x.getState().equals(State.TERMINATED))
+			.map(AbstractActivityInstance.class::cast)
+			.forEachOrdered(activityInstances::add);
+		return activityInstances;
+	}
 	// GETTER & SETTER
 	public String getId() {
 		return id;
@@ -267,5 +295,13 @@ public class FragmentInstance {
 
 	public void setCase(Case caze) {
 		this.caze = caze;
+	}
+
+	public boolean isStarted() {
+		return started;
+	}
+
+	public void setStarted(boolean started) {
+		this.started = started;
 	}
 }

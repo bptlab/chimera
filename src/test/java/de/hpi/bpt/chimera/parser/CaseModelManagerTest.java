@@ -9,39 +9,28 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 public class CaseModelManagerTest {
-	String jsonString = "";
-	final String fileName = "JsonString";
-
-	@Before
-	public void getJsonString() {
-		try {
-			String file = getClass().getResource(fileName).getFile();
-			FileInputStream inputStream = new FileInputStream(file);
-			jsonString = IOUtils.toString(inputStream);
-			inputStream.close();
-		} catch (Exception e) {
-			assertEquals("Error", 1, e);
-		}
-	}
+	final String filepath = "src/test/resources/parser/JsonString";
 
 	@Test
 	public void parseCaseModel() {
 		// TODO: use CaseModelManager for parsing
 		// Parse a CaseModel from jsonString and give it to the CaseModel
 		// manager
-		CaseModel cm1 = CaseModelManager.parseCaseModel(jsonString);
-		assertEquals("591330db1ed1325048306e40", cm1.getId());
+		CaseModel cm1 = CaseModelTestHelper.parseCaseModel(filepath);
+		CaseModelManager.addCaseModel(cm1);
+		// assertEquals("591330db1ed1325048306e40", cm1.getId());
 
 		// Parse another CaseModel from jsonString, but this time save it to
 		// database directly
 		CaseModel cm2;
-		cm2 = CaseModelParser.parseCaseModel(jsonString);
+		cm2 = CaseModelTestHelper.parseCaseModel(filepath);
 		cm2.setId("591330db1ed1325048306e41");
 		CaseModelManager.addCaseModel(cm2);
 		assertEquals("591330db1ed1325048306e41", cm2.getId());
@@ -49,7 +38,7 @@ public class CaseModelManagerTest {
 
 		// get back the first Model from the CaseModel manager
 		CaseModel cmLoaded;
-		cmLoaded = CaseModelManager.getCaseModel("591330db1ed1325048306e40");
+		cmLoaded = CaseModelManager.getCaseModel(cm1.getId());
 		assertEquals("The id wasn't saved correctly.", cm1.getId(), cmLoaded.getId());
 		assertEquals("The name wasn't saved correcty.", cm1.getName(), cmLoaded.getName());
 		assertEquals("The DataModel VersionNumber wasn't saved correcty.", cm1.getDataModel().getVersionNumber(), cmLoaded.getDataModel().getVersionNumber());
@@ -60,14 +49,15 @@ public class CaseModelManagerTest {
 		// generate a second Version from the first CaseModel and give it to the
 		// CaseModel manager
 		CaseModel cm3;
-		cm3 = CaseModelManager.parseCaseModel(jsonString);
-		assertEquals("591330db1ed1325048306e40", cm1.getId());
+		cm3 = CaseModelTestHelper.parseCaseModel(filepath);
+		// assertEquals("591330db1ed1325048306e40", cm1.getId());
+		cm3.setId(cm1.getId());
 		cm3.setName(cm1.getName() + "_Version2");
 
 		// Load the first Model from the CaseModel manager again,
 		// but this time we should get the newer Version (cm3)
 		CaseModel cmLoaded2;
-		cmLoaded2 = CaseModelManager.getCaseModel("591330db1ed1325048306e40");
+		cmLoaded2 = CaseModelManager.getCaseModel(cm3.getId());
 		assertEquals("The id wasn't saved correctly.", cm3.getId(), cmLoaded2.getId());
 		assertEquals("The name wasn't saved correcty.", cm3.getName(), cmLoaded2.getName());
 		assertEquals("The DataModel VersionNumber wasn't saved correcty.", cm3.getDataModel().getVersionNumber(), cmLoaded2.getDataModel().getVersionNumber());

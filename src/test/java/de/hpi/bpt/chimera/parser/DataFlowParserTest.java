@@ -2,41 +2,25 @@ package de.hpi.bpt.chimera.parser;
 
 import static org.junit.Assert.*;
 
-import java.io.FileInputStream;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.Before;
 import org.junit.Test;
 
+import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 
 public class DataFlowParserTest {
-	String jsonString = "";
-	final String fileName = "JsonStringExtendedDataFlow";
+	final String filepath = "src/test/resources/parser/JsonStringExtendedDataFlow";
 
-	@Before
-	public void getJsonString() {
-		try {
-			// String file = getClass().getResource(fileName).getFile();
-			String file = "src/test/resources/parser/JsonStringExtendedDataFlow";
-			FileInputStream inputStream = new FileInputStream(file);
-			jsonString = IOUtils.toString(inputStream);
-			inputStream.close();
-		} catch (Exception e) {
-			assertEquals("Error", 1, e);
-		}
-	}
-
-
+	// TODO: make this independent from positions in list
 	@Test
 	public void parseCaseModel() {
 
 		// Parse a CaseModel from jsonString and give it to the CaseModel
 		// manager
-		CaseModel cm = CaseModelParser.parseCaseModel(jsonString);
+		CaseModel cm = CaseModelTestHelper.parseCaseModel(filepath);
 
 		AbstractActivity task = cm.getFragments().get(0).getBpmnFragment().getActivities().get(0);
 		assertEquals(12, cm.getFragments().get(0).getBpmnFragment().getConditions().size());

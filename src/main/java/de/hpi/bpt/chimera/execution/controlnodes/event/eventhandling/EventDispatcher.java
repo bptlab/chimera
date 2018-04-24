@@ -7,13 +7,10 @@ import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.TimerEventBehavior;
-import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.MessageReceiveDefinition;
-import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
-import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -26,23 +23,18 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
-/**
- * The event dispatcher class is responsible for manage registrations from Events to RestQueries.
- */
-@Path("eventdispatcher/")
-public class EventDispatcher extends AbstractRestService {
+public class EventDispatcher {
+	// TODO: will we need something like EventLog?
 
 	private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
 	private static final String REST_DEPLOY_URL = PropertyLoader.getProperty("unicorn.url") + PropertyLoader.getProperty("unicorn.path.deploy");
@@ -53,97 +45,7 @@ public class EventDispatcher extends AbstractRestService {
 
 	private static Logger log = Logger.getLogger(EventDispatcher.class);
 
-	/**
-	 * This method notifies that a certain event instance received Event was
-	 * received. In addition the event instance will be terminated.
-	 * 
-	 * @param cmId
-	 *            The id of a case model.
-	 * @param caseId
-	 *            - the id of case.
-	 * @param requestId
-	 *            - the id of the event instance receiving the event
-	 * @param eventJson
-	 *            - the json content for the event instance
-	 * @return Response 202 because the Event was received by Chimera
-	 */
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
-	public Response receiveEvent(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("requestKey") String requestId, String eventJson) {
-		try {
-			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
-			MessageReceiveEventBehavior receiveBehavior = caseExecutioner.getRegisteredEventBehavior(requestId);
-			if (eventJson.isEmpty() || "{}".equals(eventJson)) {
-				receiveBehavior.setEventJson("");
-			} else {
-				receiveBehavior.setEventJson(eventJson);
-			}
-			AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
-			eventInstance.terminate();
-			SseNotifier.notifyRefresh();
-		} catch (Exception e) {
-			log.error("Error while processing a received event", e);
-		}
-		return Response.accepted("Event received.").build();
-	}
-
-	/**
-	 * Start a new Case of a specific {@link CaseModel} by one of the case
-	 * model's registered CaseStartTriggers.
-	 * 
-	 * @param cmId
-	 *            The id of a case model.
-	 * @param requestId
-	 *            - the id of the {@link CaseStartTrigger} receiving the event
-	 * @param eventJson
-	 *            - the json content for writing at the first data objects of
-	 *            the new case
-	 * @return Response 200 because the Event was received by Chimera
-	 */
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("scenario/{scenarioId}/casestart/{requestKey}")
-	public Response startCase(@PathParam("scenarioId") String cmId, @PathParam("requestKey") String requestKey, String eventJson) {
-
-		log.info("An Event started a Case via REST-Interface.");
-
-		try {
-			CaseModel cm = CaseModelManager.getCaseModel(cmId);
-			Optional<CaseStartTrigger> caseStartTrigger = cm.getStartCaseTrigger().stream().filter(c -> c.getId().equals(requestKey)).findFirst();
-			if (!caseStartTrigger.isPresent()) {
-				String message = String.format("The case start trigger id: %s is not assigned", requestKey);
-				log.error(message);
-				return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(message)).build();
-			}
-
-			CaseExecutioner caseExecutioner = ExecutionService.createCaseExecutioner(cm, "Automatically Created Case");
-
-			CaseStarter caseStarter = new CaseStarter(caseStartTrigger.get());
-			caseStarter.startCase(eventJson, caseExecutioner);
-			SseNotifier.notifyRefresh();
-		} catch (IllegalCaseModelIdException e) {
-			log.error("Could not start case from query", e);
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
-		}
-		return Response.ok("Event received.").build();
-	}
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
-	public Response getRegisteredEvents(@PathParam("instanceId") int scenarioInstanceId, @PathParam("scenarioId") int scenarioId) {
-		log.error("This function doesn't work with Chimera 2.0");
-		// ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId,
-		// scenarioInstanceId);
-		// List<Integer> fragmentIds =
-		// scenarioInstance.getFragmentInstances().stream().map(FragmentInstance::getFragmentId).collect(Collectors.toList());
-		// DbEventMapping eventMapping = new DbEventMapping();
-		// List<String> requestKeys =
-		// fragmentIds.stream().map(eventMapping::getRequestKeysForFragment).flatMap(Collection::stream).collect(Collectors.toList());
-		// JSONArray jsonArray = new JSONArray(requestKeys);
-		// Response.ok().type(MediaType.APPLICATION_JSON).entity(jsonArray.toString()).build();
-		return Response.serverError().type("unimplemented in Chimera 2.0").build();
+	private EventDispatcher() {
 	}
 
 	/**
@@ -191,9 +93,6 @@ public class EventDispatcher extends AbstractRestService {
 		timerBehavior.setJobKey(timeEventJob.getKey());
 		return timeEventJob;
 	}
-
-	// TODO: will we need something like EventLog?
-
 
 	/**
 	 * Register an event instance in Unicorn by its
@@ -289,9 +188,11 @@ public class EventDispatcher extends AbstractRestService {
 	 *            - case model which events should be de-registered
 	 */
 	public static void deregisterEvents(CaseModel cm) {
+		// de-register case start trigger
 		List<String> notificationRuleIds = cm.getStartCaseTrigger().stream().map(CaseStartTrigger::getNotificationRuleId).collect(Collectors.toList());
 		notificationRuleIds.forEach(EventDispatcher::deregisterNotificationRule);
 
+		// de-register receive events
 		List<CaseExecutioner> caseExecutioners = ExecutionService.getAllCasesOfCaseModel(cm.getId());
 		List<MessageReceiveEventBehavior> receiveBehaviors = caseExecutioners.stream().map(CaseExecutioner::getRegisteredEventBehaviors).flatMap(List::stream).collect(Collectors.toList());
 		receiveBehaviors.forEach(EventDispatcher::deregisterReceiveEvent);
