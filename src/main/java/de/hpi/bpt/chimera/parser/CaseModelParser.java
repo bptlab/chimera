@@ -9,7 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventRegistrant;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
@@ -75,6 +77,14 @@ public class CaseModelParser {
 		for (CaseStartTrigger cst : caseModel.getStartCaseTrigger()) {
 			EventDispatcher.registerCaseStartEvent(caseModel, cst);
 		}
+
+		// register the EventTypes at Unicorn
+		for (DataClass dataClass : caseModel.getDataModel().getDataClasses()) {
+			if (dataClass.isEvent()) {
+				EventRegistrant.registerEventType(dataClass);
+			}
+		}
+
 
 		return caseModel;
 	}

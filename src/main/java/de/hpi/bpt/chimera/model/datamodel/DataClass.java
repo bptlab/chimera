@@ -23,7 +23,9 @@ public class DataClass implements Nameable, Listable {
 	
 	private String name;
 
-	private boolean isEvent;
+	// Only when the DataClass is EventType
+	private boolean isEventType;
+	private String timestampName;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataAttribute> dataAttributes;
@@ -83,10 +85,18 @@ public class DataClass implements Nameable, Listable {
 	}
 
 	public boolean isEvent() {
-		return isEvent;
+		return isEventType;
 	}
 
 	public void setEvent(boolean isEvent) {
-		this.isEvent = isEvent;
+		this.isEventType = isEvent;
+	}
+
+	public String getTimestampName() {
+		return timestampName;
+	}
+
+	public void setTimestampName(String timestampName) {
+		this.timestampName = timestampName;
 	}
 }

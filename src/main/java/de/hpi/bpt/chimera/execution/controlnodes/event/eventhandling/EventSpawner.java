@@ -21,7 +21,18 @@ import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,11 +91,25 @@ public class EventSpawner {
 	private static Response buildAndSendEvent(DataObject inputObject) {
 		Document eventXml = buildEventFromDataObject(inputObject);
 
-		DOMImplementationLS domImplementation = (DOMImplementationLS) eventXml.getImplementation();
-		LSSerializer lsSerializer = domImplementation.createLSSerializer();
-		log.info("The EventXML which will be send to Unicorn is:" + lsSerializer.writeToString(eventXml));
+		// DOMImplementationLS domImplementation = (DOMImplementationLS)
+		// eventXml.getImplementation();
+		// LSSerializer lsSerializer = domImplementation.createLSSerializer();
+		DOMSource domSource = new DOMSource(eventXml);
+		// FileOutputStream out = new FileOutputStream("test.xml");
+		StringWriter out = new StringWriter();
+		String xmlAsString = "";
 
-		return sendEvent(eventXml);
+		try {
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.transform(domSource, new StreamResult(out));
+			xmlAsString = out.getBuffer().toString();
+		} catch (Exception e) {
+			log.error("Error while generating the string out of the XML-Document", e);
+		}
+		log.info("The EventXML which will be send to Unicorn is:" + xmlAsString);
+
+		return sendEvent(xmlAsString);
 	}
 
 	private static Document buildEventFromDataObject(DataObject inputObject) {
@@ -95,9 +120,16 @@ public class EventSpawner {
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = db.newDocument();
 
+
 			Element rootElement = createRootElement(doc, eventName);
 			doc.appendChild(rootElement);
 			appendAttributes(doc, rootElement, attributes);
+
+			// appendTimestamp
+			String timestamp = new Timestamp(System.currentTimeMillis()).toString();
+			Element el = doc.createElement(inputObject.getDataClass().getTimestampName());
+			el.appendChild(doc.createTextNode(String.valueOf(timestamp)));
+			rootElement.appendChild(el);
 
 			return doc;
 		} catch (ParserConfigurationException e) {
@@ -106,12 +138,12 @@ public class EventSpawner {
 		}
 	}
 
-	private static Response sendEvent(Document eventXml) {
+	private static Response sendEvent(String eventXml) {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(EVENT_URL).path(EVENT_PATH);
-		Response response = target.request(MediaType.APPLICATION_XML).post(Entity.xml(eventXml));
+		Response response = target.request().post(Entity.xml(eventXml));
 		if (response.getStatus() != 200) {
-			log.warn("Event was not sent correctly. Response status: " + response.getStatus());
+			log.warn("Event was not sent correctly. Response status: " + response.getStatus() + response.readEntity(String.class));
 		}
 		return response;
 	}
@@ -131,5 +163,6 @@ public class EventSpawner {
 			el.appendChild(doc.createTextNode(String.valueOf(attr.getValue())));
 			rootElement.appendChild(el);
 		});
+
 	}
 }

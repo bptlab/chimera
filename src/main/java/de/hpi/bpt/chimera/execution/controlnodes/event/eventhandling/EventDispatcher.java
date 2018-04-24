@@ -10,6 +10,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.TimerEventBehavi
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.MessageReceiveDefinition;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
@@ -27,6 +28,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

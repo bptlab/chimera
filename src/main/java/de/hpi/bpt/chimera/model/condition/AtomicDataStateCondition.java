@@ -15,7 +15,6 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class AtomicDataStateCondition {
 	@Id
 	@GeneratedValue
