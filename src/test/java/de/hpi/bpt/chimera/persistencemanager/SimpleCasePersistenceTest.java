@@ -43,7 +43,7 @@ public class SimpleCasePersistenceTest {
 	public void SimpleCasePersistenceTest() {
 		CaseExecutioner caseExecutioner = new CaseExecutioner(cm, cm.getName());
 		doSomeControlFlow(caseExecutioner);
-		DomainModelPersistenceManager.saveCase(caseExecutioner.getCase());
+		caseExecutioner = DomainModelPersistenceManager.saveCase(caseExecutioner.getCase()).getCaseExecutioner();
 		caseExecutioner = DomainModelPersistenceManager.loadCase(caseExecutioner.getCase().getId()).getCaseExecutioner();
 		doRestOfControlflow(caseExecutioner);
 	}

@@ -57,8 +57,7 @@ public class CaseModelManager {
 		mayInstantiate();
 		try {
 			CaseModel cm = CaseModelParser.parseCaseModel(jsonString);
-			caseModels.put(cm.getId(), cm);
-			DomainModelPersistenceManager.saveCaseModel(cm);
+			caseModels.put(cm.getId(), DomainModelPersistenceManager.saveCaseModel(cm));
 			log.info(String.format("new CaseModel: %s deployed", cm.getName()));
 			return cm;
 		} catch (IllegalArgumentException | JSONException | IllegalCaseModelException e) {
@@ -73,8 +72,7 @@ public class CaseModelManager {
 	 */
 	public static void addCaseModel(CaseModel cm) {
 		try {
-			caseModels.put(cm.getId(), cm);
-			DomainModelPersistenceManager.saveCaseModel(cm);
+			caseModels.put(cm.getId(), DomainModelPersistenceManager.saveCaseModel(cm));
 		} catch (Exception e) {
 			throw e;
 		}

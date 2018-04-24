@@ -224,4 +224,8 @@ public final class ExecutionService {
 	public static List<CaseExecutioner> getAllExecutingCaseExecutioner() {
 		return new ArrayList<>(cases.values());
 	}
+
+	public static Map<String, CaseExecutioner> getCasesMap() {
+		return cases;
+	}
 }

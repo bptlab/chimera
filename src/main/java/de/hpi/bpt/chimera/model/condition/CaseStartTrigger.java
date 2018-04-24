@@ -6,13 +6,14 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
 public class CaseStartTrigger {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 	private String id = UUID.randomUUID().toString().replaceAll("\\-", "");
 	private String queryExecutionPlan;

@@ -24,7 +24,7 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 public class DataObject {
 	@Id
 	private String id;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne()
 	private AtomicDataStateCondition condition;
 	@OneToOne(cascade = CascadeType.ALL)
 	private DataManager dataManager;

@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class EmailConfiguration {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 
 	private String receiverEmailAddress = "";

@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -37,7 +38,7 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 @Entity
 public class DataManager {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	int dbId;
 	private static final Logger log = Logger.getLogger(DataManager.class);
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "dataManager")

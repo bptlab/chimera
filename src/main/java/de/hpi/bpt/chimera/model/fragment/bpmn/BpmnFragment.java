@@ -26,7 +26,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 @Entity
 public class BpmnFragment {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 
 

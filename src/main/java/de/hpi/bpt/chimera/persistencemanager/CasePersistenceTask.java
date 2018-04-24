@@ -1,5 +1,7 @@
 package de.hpi.bpt.chimera.persistencemanager;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimerTask;
 
@@ -16,7 +18,8 @@ public class CasePersistenceTask extends TimerTask {
 	@Override
 	public void run() {
 		log.debug("Started persisting all case-models. (Timer hash: " + this.hashCode());
-		for (CaseExecutioner caseExecutioner : ExecutionService.getAllExecutingCaseExecutioner()) {
+
+		for (Map.Entry<String, CaseExecutioner> entry : ExecutionService.getCasesMap().entrySet()) {
 			// TODO delete the following part when we don't need to comment it
 			// in for testing any more.
 //			log.debug("CaseExecutionier with Case Id:" + caseExecutioner.getCase().getId());
@@ -30,7 +33,7 @@ public class CasePersistenceTask extends TimerTask {
 //			}
 			synchronized (this) {
 				try {
-					DomainModelPersistenceManager.saveCase(caseExecutioner.getCase());
+					entry.setValue(DomainModelPersistenceManager.saveCase(entry.getValue().getCase()).getCaseExecutioner());
 				} catch (Exception e) {
 					log.error("Error during persisting in regular persisting task", e);
 				}

@@ -17,7 +17,7 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 @Entity
 public class AtomicDataStateCondition {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 	@OneToOne(cascade = CascadeType.ALL)
 	protected DataClass dataClass;
