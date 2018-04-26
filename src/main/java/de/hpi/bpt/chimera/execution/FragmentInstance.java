@@ -39,7 +39,8 @@ public class FragmentInstance {
 	private Fragment fragment;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Case caze;
-	private boolean started;
+
+	private FragmentState state;
 	// TODO: think about whether it is needed to store terminated events, etc.
 	// Activities should be recorded for the history.
 	@OneToMany(cascade = CascadeType.ALL)
@@ -61,6 +62,7 @@ public class FragmentInstance {
 
 	public FragmentInstance(Fragment fragment, Case caze) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
+		setState(FragmentState.CREATED);
 		this.fragment = fragment;
 		this.caze = caze;
 		this.controlNodeInstanceIdToInstance = new HashMap<>();
@@ -71,7 +73,16 @@ public class FragmentInstance {
 	 * Start the Case by creating an Instance of the StartEvent and enable the
 	 * ControlFlow of that Instance.
 	 */
-	public void start() {
+	public void enable() {
+		if (!state.equals(FragmentState.CREATED)) {
+			log.info(String.format("The fragment instance of %s cannot start because it is not in state CREATED", getFragment().getName()));
+			return;
+		}
+		if (!isDataFlowEnabled()) {
+			log.info(String.format("The fragment instance of %s cannot start because it is the fragment precondition is not fulfilled", getFragment().getName()));
+			return;
+		}
+		setState(FragmentState.ENABLED);
 		StartEvent startEvent = fragment.getBpmnFragment().getStartEvent();
 		StartEventInstance startEventInstance = (StartEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(startEvent, this);
 		addControlNodeInstance(startEventInstance);
@@ -137,6 +148,55 @@ public class FragmentInstance {
 
 		List<AtomicDataStateCondition> existingConditions = getCase().getCaseExecutioner().getDataManager().getDataStateConditions();
 		return preCondition.isFulfilled(existingConditions);
+	}
+
+	/**
+	 * The control node instances in a fragment instance can only be executed if
+	 * the fragment instance is in the {@link FragmentState} ENABLED or STARTED.
+	 * 
+	 * @return true if the fragment instance is in the {@link FragmentState}
+	 *         ENABLED or STARTED.
+	 */
+	public boolean isExecutable() {
+		return state.equals(FragmentState.ENABLED) || state.equals(FragmentState.STARTED);
+	}
+
+	public boolean isStarted() {
+		return state.equals(FragmentState.STARTED);
+	}
+
+	public void started() {
+		if (state.equals(FragmentState.ENABLED)) {
+			setState(FragmentState.STARTED);
+			// TODO: implement concurrency here
+		}
+	}
+
+	/**
+	 * Adapt the {@link FragmentState} of the fragment instance by checking the
+	 * data flow.
+	 */
+	public void checkDataFlow() {
+		if (state.equals(FragmentState.STARTED)) {
+			return;
+		}
+
+		// automaton
+		if (isDataFlowEnabled()) {
+			switch (state) {
+				case CREATED:
+					enable();
+					break;
+				case DISABLED:
+					setState(FragmentState.ENABLED);
+					break;
+				default:
+			}	
+		} else {
+			if (state.equals(FragmentState.ENABLED)) {
+				setState(FragmentState.DISABLED);
+			}
+		}
 	}
 	// TODO: is this needed?
 	/**
@@ -297,11 +357,11 @@ public class FragmentInstance {
 		this.caze = caze;
 	}
 
-	public boolean isStarted() {
-		return started;
+	public FragmentState getState() {
+		return state;
 	}
 
-	public void setStarted(boolean started) {
-		this.started = started;
+	public void setState(FragmentState state) {
+		this.state = state;
 	}
 }

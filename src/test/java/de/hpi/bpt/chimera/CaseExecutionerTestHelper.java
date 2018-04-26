@@ -1,13 +1,22 @@
 package de.hpi.bpt.chimera;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
+import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 public class CaseExecutionerTestHelper {
 	/**
@@ -76,4 +85,40 @@ public class CaseExecutionerTestHelper {
 		}
 		return searchedFragmentInstance;
 	}
+
+	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, String name) {
+		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, name);
+		assertNotNull(humanTaskInstance);
+
+		DataStateCondition postCondition = humanTaskInstance.getControlNode().getPostCondition();
+		Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = postCondition.getConditionSets().get(0).getDataClassToObjectLifecycleState();
+		caseExecutioner.beginDataControlNodeInstance(humanTaskInstance, new ArrayList<>());
+		caseExecutioner.terminateDataControlNodeInstance(humanTaskInstance, dataObjectToObjectLifecycleTransition);
+		assertEquals("State of human task instance is not TERMINATED", State.TERMINATED, humanTaskInstance.getState());
+		return humanTaskInstance;
+	}
+
+	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, String name, ArrayList<DataObject> inputDataObjects) {
+		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, name);
+		assertNotNull(humanTaskInstance);
+
+		DataStateCondition postCondition = humanTaskInstance.getControlNode().getPostCondition();
+		Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = postCondition.getConditionSets().get(0).getDataClassToObjectLifecycleState();
+		caseExecutioner.beginDataControlNodeInstance(humanTaskInstance, inputDataObjects);
+		caseExecutioner.terminateDataControlNodeInstance(humanTaskInstance, dataObjectToObjectLifecycleTransition);
+		assertEquals("State of human task instance is not TERMINATED", State.TERMINATED, humanTaskInstance.getState());
+		return humanTaskInstance;
+	}
+
+	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, String name, List<DataObject> inputDataObjects, Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition) {
+		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, name);
+		assertNotNull(humanTaskInstance);
+
+		caseExecutioner.beginDataControlNodeInstance(humanTaskInstance, inputDataObjects);
+		caseExecutioner.terminateDataControlNodeInstance(humanTaskInstance, dataObjectToObjectLifecycleTransition);
+		assertEquals("State of human task instance is not TERMINATED", State.TERMINATED, humanTaskInstance.getState());
+		return humanTaskInstance;
+	}
+
+
 }

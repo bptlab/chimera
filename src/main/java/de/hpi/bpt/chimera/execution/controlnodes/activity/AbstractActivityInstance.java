@@ -98,14 +98,15 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	 * Used for updating the DataFlow of the ActivityInstance.
 	 */
 	public void checkDataFlow() {
-		if (getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
+		if (getFragmentInstance().isExecutable()
+				&& getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
 			enableDataFlow();
 		} else {
 			disableDataFlow();
 		}
 	}
 
-	private void enableDataFlow() {
+	public void enableDataFlow() {
 		if (getState().equals(State.INIT)) {
 			setState(State.DATAFLOW_ENABLED);
 		} else if (getState().equals(State.CONTROLFLOW_ENABLED)) {
@@ -113,7 +114,7 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 		}
 	}
 
-	private void disableDataFlow() {
+	public void disableDataFlow() {
 		if (getState().equals(State.DATAFLOW_ENABLED)) {
 			setState(State.INIT);
 		} else if (getState().equals(State.READY)) {
@@ -134,7 +135,7 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 			log.info(String.format("The activity instance of %s can not begin", this.getControlNode().getName()));
 			return;
 		}
-		getFragmentInstance().setStarted(true);
+		getFragmentInstance().started();
 		createAttachedBoundaryEvents();
 
 		setState(State.RUNNING);
@@ -253,11 +254,11 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 
 	/**
 	 * An activity instance can only begin if it is in State READY and the
-	 * FragmentPreCondition for the fragment instance is fulfilled.
+	 * fragment instance allows exceution.
 	 */
 	@Override
 	public boolean canBegin() {
-		return getState().equals(State.READY) && getFragmentInstance().isDataFlowEnabled();
+		return getState().equals(State.READY) && getFragmentInstance().isExecutable();
 	}
 
 	/**

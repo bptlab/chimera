@@ -88,7 +88,7 @@ public class CaseExecutioner {
 	 */
 	public void startCase() {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
-			fragmentInstance.start();
+			fragmentInstance.enable();
 		}
 	}
 
@@ -206,6 +206,7 @@ public class CaseExecutioner {
 	 */
 	public void updateDataFlow() {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
+			fragmentInstance.checkDataFlow();
 			fragmentInstance.getActivActivityInstances()
 				.forEach(AbstractActivityInstance::checkDataFlow);
 		}
