@@ -14,6 +14,12 @@
 
 	<build>
 		<finalName>Chimera</finalName>
+		<testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
@@ -469,6 +475,12 @@
 								</goals>
 								<configuration>
 									<outputDirectory>${basedir}</outputDirectory>
+									<testResources>
+							            <testResource>
+							                <directory>src/test/resources</directory>
+							                <filtering>true</filtering>
+							            </testResource>
+							        </testResources>
 									<resources>
 										<resource>
 											<directory>${basedir}/src/main/resources</directory>
