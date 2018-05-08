@@ -73,16 +73,19 @@ public class CaseModelParser {
 			throw e;
 		}
 
-		// register the CaseStartTrigger at Unicorn
-		for (CaseStartTrigger cst : caseModel.getStartCaseTrigger()) {
-			EventDispatcher.registerCaseStartEvent(caseModel, cst);
-		}
-
 		// register the EventTypes at Unicorn
 		for (DataClass dataClass : caseModel.getDataModel().getDataClasses()) {
 			if (dataClass.isEvent()) {
 				EventRegistrant.registerEventType(dataClass);
 			}
+		}
+
+		// register the CaseStartTrigger at Unicorn
+		// hast to be done AFTER REGISTRATION OF THE EVENTTYPES because you can
+		// only register CaseStartEvents which have an EventType registered at
+		// Unicorn
+		for (CaseStartTrigger cst : caseModel.getStartCaseTrigger()) {
+			EventDispatcher.registerCaseStartEvent(caseModel, cst);
 		}
 
 
