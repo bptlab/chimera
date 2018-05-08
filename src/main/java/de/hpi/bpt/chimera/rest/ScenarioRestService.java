@@ -2,12 +2,12 @@ package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
-import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.ConditionsJaxBean;
 
 import org.apache.log4j.Logger;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,18 +83,40 @@ public class ScenarioRestService extends AbstractRestService {
 	}
 
 	/**
-	 * This method provides information about one scenario.
-	 * The scenario is specified by an given id.
-	 * The response of this request will contain a valid JSON-Object
-	 * containing detailed information about the scenario.
-	 * If there is no scenario with the specific id a 404 will be returned,
-	 * with a meaningful error message.
+	 * Import a case model
 	 *
-	 * @param scenarioId The Id of the scenario used inside the database.
-	 * @param uri        Request URI
-	 * @return Returns a JSON-Object with detailed information about one scenario.
-	 * The Information contain the id, label, number of instances, latest version
-	 * and more.
+	 * @return a http response whether import succeeded or failed
+	 */
+	@POST
+	@Path("upload")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response importCaseModel(@FormDataParam("file") InputStream file) {
+		try {
+			log.info("A case model file was uploaded");
+			java.util.Scanner s = new java.util.Scanner(file).useDelimiter("\\A");
+			String caseModelContent = s.hasNext() ? s.next() : "";
+			CaseModelManager.parseCaseModel(caseModelContent);
+			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"case model deployed.\"}").build();
+		} catch (Exception e) {
+			log.error("Chimera failed to parse the CaseModel!", e);
+			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	/**
+	 * This method provides information about one scenario. The scenario is
+	 * specified by an given id. The response of this request will contain a
+	 * valid JSON-Object containing detailed information about the scenario. If
+	 * there is no scenario with the specific id a 404 will be returned, with a
+	 * meaningful error message.
+	 *
+	 * @param scenarioId
+	 *            The Id of the scenario used inside the database.
+	 * @param uri
+	 *            Request URI
+	 * @return Returns a JSON-Object with detailed information about one
+	 *         scenario. The Information contain the id, label, number of
+	 *         instances, latest version and more.
 	 */
 	@GET
 	@Path("scenario/{scenarioId}")

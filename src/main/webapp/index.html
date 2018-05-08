@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Roboto'/>
     <link rel="stylesheet" href="app/styles/main.css"/>
-
+	<link rel="stylesheet" href="app/styles/btnUpload.min.css"/>
+	
     <script>document.write("<base href=\"" + document.location + "\">")</script>
 
     <!-- CDN external sources -->
@@ -34,7 +35,8 @@
     <script src="app/scripts/app.js"></script>
     <script src="app/scripts/adminConfiguration.js"></script>
     <script src="app/scripts/bpmn-io-packaged.js"></script>
-
+	<script src="app/scripts/angular-upload.min.js"></script>
+	
     <!-- load controllers -->
     <script src="app/scripts/controllers/mailConfig.js"></script>
     <script src="app/scripts/controllers/scenarioController.js"></script>
@@ -106,7 +108,18 @@
 		    		</li>
                 </ul>
             </li>
-
+			<!-- Upload button -->
+            <li>
+              	<div class="btn btn-upload"
+               		upload-button
+  				 	url="api/interface/v2/upload">
+<!--   				 	TODO: alerts not working -->
+<!--   				 	on-success="instanceCtrl.addAlert('testAlert','success')" -->
+<!--   				 	on-error="instanceCtrl.addAlert('testAlert','error')"> -->
+  				 	<i class="fa fa-upload fa-fw"></i>
+  				 	Import Case Model
+  				</div>
+  			</li>
             <li>
                 <a ng-href="#/scenario"><i class="fa fa-dashboard fa-fw"></i> Admin<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">

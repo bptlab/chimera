@@ -60,7 +60,16 @@
         <url-pattern>/sse</url-pattern>
     </servlet-mapping>
 
-
+	<servlet>
+        <servlet-name>de.hpi.bpt.chimera.rest.ChimeraBackend</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+         	<param-name>javax.ws.rs.Application</param-name>	
+			<param-value>de.hpi.bpt.chimera.rest.ChimeraBackend</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
     <!-- DATABASE: Config  (JUserManagement) -->
     <env-entry>
         <env-entry-name>username</env-entry-name>

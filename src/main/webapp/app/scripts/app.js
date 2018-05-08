@@ -17,7 +17,8 @@ var source = new EventSource(JEngine_Server_URL + '/' + InstanceName + '/sse');
     var jfrontend = angular.module('jfrontend', [
         'ngRoute',
         'adminConfiguration',
-        'ui.bootstrap'
+        'ui.bootstrap',
+        'lr.upload'
     ]);
 
     // Defining Routes for the AngularJS App
