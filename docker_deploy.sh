@@ -9,7 +9,6 @@ cd $DEPLOY_PATH
 unzip /Chimera/Chimera.war > /dev/null
 
 envsubst < /Chimera/config.properties.tpl > $DEPLOY_PATH/WEB-INF/classes/config.properties
-envsubst < /Chimera/src/main/resources/META-INF/persistence.xml.tpl > $DEPLOY_PATH/classes/META-INF/persistence.xml
-envsubst < /Chimera/src/main/resources/META-INF/persistence.xml.tpl > $DEPLOY_PATH/Chimera/WEB-INF/classes/META-INF/persistence.xml
+envsubst < /Chimera/persistence.xml.tpl > $DEPLOY_PATH/WEB-INF/classes/META-INF/persistence.xml
 
 catalina.sh run
