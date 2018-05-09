@@ -4,9 +4,9 @@
 mysql.schema=$CHIMERA_DB_NAME
 mysql.username=$CHIMERA_DB_USERNAME
 mysql.password=$CHIMERA_DB_PASSWORD
-mysql.url=jdbc:mysql://$CHIMERA_DB_HOST:$CHIMERA_DB_PORT/$CHIMERA_DB_NAME
+mysql.url=jdbc:mysql://$CHIMERA_DB_HOST:$CHIMERA_DB_PORT/$CHIMERA_DB_NAME?createDatabaseIfNotExist=true
 mysql.test.schema=$CHIMERA_DB_TEST_NAME
-mysql.test.url=jdbc:mysql://$CHIMERA_DB_HOST:$CHIMERA_DB_PORT/$CHIMERA_DB_TEST_NAME
+mysql.test.url=jdbc:mysql://$CHIMERA_DB_HOST:$CHIMERA_DB_PORT/$CHIMERA_DB_TEST_NAME?createDatabaseIfNotExist=true
 #connection parameter for the email task
 mailtask.hostname=smtp.googlemail.com
 mailtask.port=465
