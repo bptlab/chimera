@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.persistence.Entity;
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
@@ -72,6 +73,17 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 			Map<DataAttribute, String> dataAttributeToJsonPath = getEventInstance().getControlNode().getJsonPathMapping().get(condition);
 			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, eventJson);
 		}
+	}
+
+	/**
+	 * An receive event can only terminate if the {@link FragmentInstance} is
+	 * executable.
+	 * 
+	 * @see FragmentInstance#isExecutable() isExecutable
+	 */
+	@Override
+	public boolean canTerminate() {
+		return getEventInstance().getFragmentInstance().isExecutable();
 	}
 
 	/**
