@@ -12,7 +12,7 @@
       <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
       <property name="eclipselink.ddl-generation.output-mode" value="database" />
       <property name="eclipselink.logging.parameters" value="true"/>
-      <property name="eclipselink.logging.level" value="ERROR" />
+      <property name="eclipselink.logging.level" value="WARNING" />
     </properties>
   </persistence-unit>
 </persistence>
