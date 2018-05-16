@@ -53,6 +53,8 @@ public class ScenarioRestService extends AbstractRestService {
 			caseModels = caseModels.stream().filter(cm -> cm.getName().contains(filterString)).collect(Collectors.toList());
 		}
 
+		caseModels.sort((c1, c2) -> c1.getDeployment().compareTo(c2.getDeployment()));
+
 		JSONArray result = new JSONArray();
 		for (CaseModel cm : caseModels) {
 			result.put(new JSONObject(new CaseModelOverviewJaxBean(cm)));

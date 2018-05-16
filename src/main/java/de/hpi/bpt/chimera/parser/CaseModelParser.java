@@ -37,6 +37,7 @@ public class CaseModelParser {
 	 */
 	public static CaseModel parseCaseModel(final String jsonString) {
 		CaseModel caseModel = new CaseModel();
+		caseModel.deployed();
 		try {
 			JSONObject caseModelJson = new JSONObject(jsonString);
 

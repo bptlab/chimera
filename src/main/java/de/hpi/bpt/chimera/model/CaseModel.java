@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,6 +35,7 @@ public class CaseModel {
 	private int dbId;
 	private String name;
 	private int versionNumber;
+	private Date deployment;
 	@OneToOne(cascade = CascadeType.ALL)
 	private DataModel dataModel;
 	@OneToMany(cascade = CascadeType.ALL)
@@ -46,8 +48,13 @@ public class CaseModel {
 
 	public CaseModel() {
 		setId(UUID.randomUUID().toString().replace("-", ""));
+		Date date = new Date();
+		setDeployment(new java.sql.Timestamp(date.getTime()));
 	}
 
+	public void deployed() {
+
+	}
 	/**
 	 * Persists a the CaseModel to the database using the Java Persistence API
 	 * "EclipseLink".
@@ -150,5 +157,13 @@ public class CaseModel {
 			contentXmlStrings.add(fragment.getContentXML());
 		}
 		return contentXmlStrings;
+	}
+
+	public Date getDeployment() {
+		return deployment;
+	}
+
+	public void setDeployment(Date deployment) {
+		this.deployment = deployment;
 	}
 }
