@@ -1,7 +1,8 @@
 'use strict';
 // global constants
 var JEngine_Server_URL = window.location.origin;
-var InstanceName = window.location.pathname.split('/')[1];
+// InstanceName is path without leading/trailing slash, e.g. for url with "/bpt/chimera/#/scenario/" it will be "bpt/chimera"
+var InstanceName = window.location.pathname.replace(/^\//, "").replace(/\/$/, "");
 var JUserManagement_Server_URL = window.location.origin;
 // vars defining the URIs of the REST-APIs
 var JCore_REST_Interface = InstanceName + "/api/interface/v2";
