@@ -2,8 +2,27 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.behavior;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockserver.client.server.MockServerClient;
+import org.mockserver.junit.MockServerRule;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
+
+import com.github.tomakehurst.wiremock.client.WireMock;
 
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
@@ -15,26 +34,76 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.BoundaryEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.StartEventInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.rest.EventRestService;
 
-public class MessageReceiveBehaviorTest {
+public class MessageReceiveBehaviorTest extends JerseyTest {
 	private final String filepath = "src/test/resources/execution/event/receiveEventBehaviorTest.json";
 	private CaseModel cm;
 	private CaseExecutioner caseExecutioner;
 	private String eventJson = "{" + "\"a\": \"1\"," + "\"b\": \"2\"," + "}";
 
+	private WebTarget base;
+
+	@Rule
+	public MockServerRule mockServerRule = new MockServerRule(this, 8090);
+
+	private MockServerClient unicorn;
+
+	@Override
+	protected Application configure() {
+		return new ResourceConfig(EventRestService.class);
+	}
+
 	@Before
 	public void setup() {
+		base = target("eventdispatcher");
+
+//		Response response = base.path("scenario/1/instance/1/events").request().get();
+//		String r = response.readEntity(String.class);
+//		assertEquals(201, r);
+		String host = "localhost";
+		int port = 8090;
+		// WireMock.configureFor(host, port);
+
+		unicorn = new MockServerClient(host, port).reset();
+
+		String unicornPathDeploy = "/Unicorn-unicorn_BP15_dev/webapi/REST/EventQuery/REST";
+		unicorn.when(
+				HttpRequest.request()
+					.withMethod("POST")
+					.withPath(unicornPathDeploy))
+			.respond(
+				HttpResponse.response()
+					.withStatusCode(201)
+								.withBody("1"));
+		EventDispatcher.setUrl(String.format("http://%s:%d", host, port));
+
 		cm = CaseModelTestHelper.parseCaseModel(filepath);
 		caseExecutioner = new CaseExecutioner(cm, cm.getName());
+
+
 		caseExecutioner.startCase();
 	}
 
+	@After
+	public void tearDown() throws Exception {
+		super.tearDown();
+		unicorn.close();
+	}
 	// TODO: to test receive event properly you need to mock unicorn
 	@Test
 	public void testIntermediateReceiveBehavior() {
+		// Client client = ClientBuilder.newClient();
+		// Response response =
+		// client.target("http://localhost:8080").path("/Unicorn-unicorn_BP15_dev/webapi/REST/EventQuery/REST").request().post(null);
+		//
+		// // assert response
+		// assertEquals(response.getStatus(), 202);
+
 		FragmentInstance intermediateFragment = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "IntermediateFragment");
 		assertNotNull(intermediateFragment);
 
@@ -50,18 +119,19 @@ public class MessageReceiveBehaviorTest {
 		assertTrue(MessageReceiveEventBehavior.class.isInstance(eventInstance.getBehavior()));
 
 		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
+		assertEquals("Notification Rule Id was not set", "1", receiveBehavior.getNotificationRule());
 		assertEquals("ReceiveEvent in incorrect state", State.REGISTERED, eventInstance.getState());
 
-		if (caseExecutioner.getRegisteredEventBehaviors().size() == 0) {
-			// the event instance was not properly registered in Unicorn so it
-			// needs to be added manually to the CaseExecutioner
-			caseExecutioner.addRegisteredEventBehavior(receiveBehavior);
-		}
+		assertFalse("No registered events", caseExecutioner.getRegisteredEventBehaviors().isEmpty());
+
+		// TODO:
+		// CaseExecutionerTestHelper.triggerEvent(caseExecutioner,
+		// eventInstance, base, eventJson);
 
 		// elude the call of receive event in EventRestService
 		receiveBehavior.setEventJson(eventJson);
 		eventInstance.terminate();
-
+		
 		assertEquals("ReceiveEvent terminated properly", State.TERMINATED, eventInstance.getState());
 		assertEquals("StartEvent, ReceiveEvent and EndEvent should be in the FragmentInstance", 3, intermediateFragment.getControlNodeInstances().size());
 
@@ -89,6 +159,7 @@ public class MessageReceiveBehaviorTest {
 		assertTrue(BoundaryEventInstance.class.isInstance(eventInstance));
 		assertTrue(MessageReceiveEventBehavior.class.isInstance(eventInstance.getBehavior()));
 		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
+		assertEquals("Notification Rule Id was not set", "1", receiveBehavior.getNotificationRule());
 		assertEquals("ReceiveEvent registered properly", eventInstance.getState(), State.REGISTERED);
 
 		// elude the call of receive event in EventRestService
