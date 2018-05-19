@@ -126,10 +126,10 @@ public class DataStateConditionParser {
 
 			AtomicDataStateCondition condition = new AtomicDataStateCondition();
 			
-			DataClass dataClass = parserHelper.getNameToDataClass(dataClassName);
+			DataClass dataClass = parserHelper.getDataClassByName(dataClassName);
 			condition.setDataClass(dataClass);
 			
-			ObjectLifecycleState objectLifecycleState = parserHelper.getNameToObjectLifecycleState(dataClass, objectLifecycleStateName);
+			ObjectLifecycleState objectLifecycleState = parserHelper.getObjectLifecycleStateByName(dataClass, objectLifecycleStateName);
 			condition.setObjectLifecycleState(objectLifecycleState);
 					
 			conditionComponent.addCondition(condition);

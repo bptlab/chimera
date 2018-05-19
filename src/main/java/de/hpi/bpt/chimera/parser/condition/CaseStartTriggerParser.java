@@ -75,11 +75,11 @@ public class CaseStartTriggerParser {
 				AtomicDataStateCondition dataObjectStateCondition = new AtomicDataStateCondition();
 
 				String dataClassName = triggerConsequenceJson.getString("classname");
-				DataClass dataClass = parserHelper.getNameToDataClass(dataClassName);
+				DataClass dataClass = parserHelper.getDataClassByName(dataClassName);
 				dataObjectStateCondition.setDataClass(dataClass);
 
 				String objectLifecycleStateName = triggerConsequenceJson.getString("state");
-				ObjectLifecycleState objectLifecycleState = parserHelper.getNameToObjectLifecycleState(dataClass, objectLifecycleStateName);
+				ObjectLifecycleState objectLifecycleState = parserHelper.getObjectLifecycleStateByName(dataClass, objectLifecycleStateName);
 				dataObjectStateCondition.setObjectLifecycleState(objectLifecycleState);
 
 				List<DataAttributeJsonPath> dataAttributeJsonPath = parseDataAttributeJsonPaths(triggerConsequenceJson.getJSONArray("mapping"), parserHelper, dataClass);
