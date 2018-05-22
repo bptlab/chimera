@@ -36,12 +36,12 @@
       		<filter>${basedir}/config.properties</filter>
    	 	</filters>
 		<testResources>
+		<testResource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
             <testResource>
-                <directory>${basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-            </testResource>
-             <testResource>
-                <directory>${basedir}/src/test/resources</directory>
+                <directory>${basedir}src/test/resources</directory>
                 <filtering>true</filtering>
             </testResource>
         </testResources>
@@ -51,9 +51,9 @@
 				<filtering>true</filtering>
 			</resource>
 			<resource>
-				<directory>${basedir}/src/test/resources</directory>
-				<filtering>true</filtering>
-			</resource>
+                <directory>${basedir}src/test/resources</directory>
+                <filtering>true</filtering>
+            </resource>
 		</resources>
 		
 			<plugins>
@@ -65,13 +65,13 @@
 						<!-- the copying is necessary because JPA does not use the persistence.xml stored under test/resources -->
 						<execution>
 					      <id>copy-test-persistence</id>
-					      <phase>process-test-resources</phase>
+					      <phase>test-compile</phase>
 					      <configuration>
 					        <tasks>
 					          <!--backup the "proper" persistence.xml-->
 					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml.proper"/>
 					          <!--replace the "proper" persistence.xml with the "test" version-->
-					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml"/>
+					          <copy file="${project.build.testOutputDirectory}/META-INF/persistence.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml"/>
 					        </tasks>
 					      </configuration>
 					      <goals>
@@ -84,7 +84,7 @@
 					      <configuration>
 					        <tasks>
 					          <!--restore the "proper" persistence.xml-->
-					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml.proper" tofile="${project.build.outputDirectory}/META-INF/persistence.xml"/>
+					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml.proper" tofile="${project.build.outputDirectory}/META-INF/persistence.xml" overwrite="true"/>
 					        </tasks>
 					      </configuration>
 					      <goals>
