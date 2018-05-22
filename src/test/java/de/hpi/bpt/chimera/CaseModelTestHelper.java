@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -49,6 +50,13 @@ public class CaseModelTestHelper {
 		return CaseModelParser.parseCaseModel(jsonString);
 	}
 
+	public static Fragment getFragmentByName(CaseModel cm, String name) {
+		Optional<Fragment> fragment = cm.getFragments().stream().filter(f -> f.getName().equals(name)).findFirst();
+		if (fragment.isPresent()) {
+			return fragment.get();
+		}
+		return null;
+	}
 	/**
 	 * Create a DataStateCondition by a given name of a DataClass and a given
 	 * name of a ObjectLifecycleState by getting the concrete Objects in the

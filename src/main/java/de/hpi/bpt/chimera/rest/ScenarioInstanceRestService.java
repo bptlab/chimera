@@ -53,6 +53,8 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			if (!filterString.isEmpty())
 				caseExecutions = caseExecutions.stream().filter(instance -> instance.getCase().getName().contains(filterString)).collect(Collectors.toList());
 
+			caseExecutions.sort((e1, e2) -> e1.getCase().getInstantiation().compareTo(e2.getCase().getInstantiation()));
+
 			JSONArray result = new JSONArray();
 			for (CaseExecutioner caseExecutioner : caseExecutions) {
 				result.put(new JSONObject(new CaseOverviewJaxBean(caseExecutioner)));

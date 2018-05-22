@@ -9,7 +9,6 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEv
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.TimerEventBehavior;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.MessageReceiveDefinition;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -24,8 +23,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status.Family;
-
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,8 +33,10 @@ import static org.quartz.TriggerBuilder.newTrigger;
 public class EventDispatcher {
 	// TODO: will we need something like EventLog?
 
+	private static String url = PropertyLoader.getProperty("unicorn.url");
+	private static final String REST_DEPLOY_PATH = PropertyLoader.getProperty("unicorn.path.deploy");
 	private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
-	private static final String REST_DEPLOY_URL = PropertyLoader.getProperty("unicorn.url") + PropertyLoader.getProperty("unicorn.path.deploy");
+
 	private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url") + PropertyLoader.getProperty("chimera.path.deploy");
 	private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%s/instance/%s/events/%s";
 	private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/scenario/%s/casestart/%s";
@@ -161,7 +160,8 @@ public class EventDispatcher {
 		Client client = ClientBuilder.newClient();
 		client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
 		client.property(ClientProperties.READ_TIMEOUT, 1000);
-		WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH);
+		WebTarget target = client.target(getRestDeployUrl()).path(REST_PATH);
+
 		log.debug("The target URL is: " + target.getUri());
 		log.debug("The queryRequest is: \"" + queryRequest + "\"");
 		try {
@@ -237,7 +237,7 @@ public class EventDispatcher {
 		client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
 		client.property(ClientProperties.READ_TIMEOUT, 1000);
 		try {
-			WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH + "/" + notificationRuleId);
+			WebTarget target = client.target(getRestDeployUrl()).path(REST_PATH + "/" + notificationRuleId);
 			Response response = target.request().delete();
 			if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
 				return true;
@@ -247,5 +247,17 @@ public class EventDispatcher {
 			log.warn("Could not unregister Query " + e.getMessage());
 		}
 		return false;
+	}
+
+	public static String getUrl() {
+		return url;
+	}
+
+	public static void setUrl(String url) {
+		EventDispatcher.url = url;
+	}
+
+	public static String getRestDeployUrl() {
+		return url + REST_DEPLOY_PATH;
 	}
 }

@@ -61,6 +61,16 @@ public class EventBehavior implements Behaving {
 		// no special behavior
 	}
 
+	/**
+	 * By default all events can terminate to prevent deadlocks because once
+	 * begun there is no possibility for the user to terminate them manually.
+	 * 
+	 * @return true
+	 */
+	public boolean canTerminate() {
+		return true;
+	}
+
 	public AbstractEventInstance getEventInstance() {
 		return eventInstance;
 	}

@@ -60,7 +60,10 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	}
 
 	/**
-	 * OutgoingBehaviour
+	 * Terminate the Event Instance. If the event instance is an successor of an
+	 * event based gateway skip the alternatives. Create Data Object for the
+	 * post condition. If the Event Instance is not a Start Event inform the
+	 * {@link FragmentInstance} that it has started now.
 	 */
 	@Override
 	public void terminate() {
@@ -80,6 +83,9 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 			}
 		}
 
+		if (!(this instanceof StartEventInstance)) {
+			getFragmentInstance().isStarted();
+		}
 		behavior.terminate();
 		setState(State.TERMINATED);
 		getCaseExecutioner().updateDataFlow();
@@ -105,7 +111,7 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	 */
 	@Override
 	public boolean canTerminate() {
-		return getState().equals(State.READY) || getState().equals(State.REGISTERED);
+		return (getState().equals(State.READY) || getState().equals(State.REGISTERED)) && behavior.canTerminate();
 	}
 
 	// GETTER & SETTER

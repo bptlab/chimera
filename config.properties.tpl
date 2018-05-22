@@ -4,9 +4,9 @@
 mysql.schema=$CHIMERA_DB_NAME
 mysql.username=$CHIMERA_DB_USERNAME
 mysql.password=$CHIMERA_DB_PASSWORD
-mysql.url=jdbc:mysql://$CHIMERA_DB_HOST:$CHIMERA_DB_PORT/$CHIMERA_DB_NAME
+mysql.url=jdbc:mysql://$CHIMERA_DB_HOST:$CHIMERA_DB_PORT/$CHIMERA_DB_NAME?createDatabaseIfNotExist=true
 mysql.test.schema=$CHIMERA_DB_TEST_NAME
-mysql.test.url=jdbc:mysql://$CHIMERA_DB_HOST:$CHIMERA_DB_PORT/$CHIMERA_DB_TEST_NAME
+mysql.test.url=jdbc:mysql://$CHIMERA_DB_HOST:$CHIMERA_DB_PORT/$CHIMERA_DB_TEST_NAME?createDatabaseIfNotExist=true
 #connection parameter for the email task
 mailtask.hostname=smtp.googlemail.com
 mailtask.port=465
@@ -16,7 +16,7 @@ mailtask.mail.password=
 #unicorn.url=http://172.16.64.105:8080
 #unicorn.path.deploy=/Unicorn-unicorn_BP15_dev
 unicorn.url=$UNICORN_URL
-unicorn.path.deploy=$UNICORN_DEPLOY_NAME
+unicorn.path.deploy=$UNICORN_DEPLOY_PATH
 unicorn.path.eventtype=/webapi/REST/EventType
 unicorn.path.event=/webapi/REST/Event
 unicorn.path.query.rest=/webapi/REST/EventQuery/REST

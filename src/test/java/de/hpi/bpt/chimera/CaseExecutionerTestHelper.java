@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
@@ -120,5 +124,15 @@ public class CaseExecutionerTestHelper {
 		return humanTaskInstance;
 	}
 
+	public static void triggerEvent(CaseExecutioner caseExecutioner, AbstractEventInstance eventInstance, WebTarget base, String body) {
+		String cmId = caseExecutioner.getCaseModel().getId();
+		String caseId = caseExecutioner.getCase().getId();
+		String eventInstanceId = eventInstance.getId();
+		String route = String.format("scenario/%s/instance/%s/events/%s", cmId, caseId, eventInstanceId);
 
+		Response response = base.path(route).request().post(Entity.json(body));
+		if (true) {
+			throw new IllegalArgumentException(response.getStatus() + ": " + response.readEntity(String.class));
+		}
+	}
 }

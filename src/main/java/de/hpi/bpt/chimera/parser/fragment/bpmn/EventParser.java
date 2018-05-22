@@ -1,13 +1,26 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
+import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
+
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.condition.ConditionSet;
+import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
+import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
+import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
@@ -16,6 +29,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.MessageReceiveDefinition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.SpecialBehavior;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.behavior.TimerDefinition;
+import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateCatchEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.IntermediateThrowEvent;
@@ -34,11 +48,12 @@ public class EventParser {
 	 * @param fragXmlWrap
 	 * @param sfResolver
 	 * @param dfResolver
+	 * @param parserHelper
 	 */
-	public static void parseEvents(BpmnFragment fragment, FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+	public static void parseEvents(BpmnFragment fragment, FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver, CaseModelParserHelper parserHelper) {
 		fragment.setStartEvent(getStartEventFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.setEndEvent(getEndEventFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
-		fragment.setIntermediateCatchEvents(getIntermediateCatchEventsFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.setIntermediateCatchEvents(getIntermediateCatchEventsFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver, parserHelper));
 		fragment.setIntermediateThrowEvents(getIntermediateThrowEventsFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.setBoundaryEvents(getBoundaryEventsFromXmlWrapper(fragXmlWrap, fragment.getActivities(), sfResolver, dfResolver));
 	}
@@ -107,20 +122,83 @@ public class EventParser {
 	 * @param fragXmlWrap
 	 * @param sfResolver
 	 * @param dfResolver
+	 * @param parserHelper
 	 * @return List of IntermediaCatchEvents
 	 */
-	private static List<IntermediateCatchEvent> getIntermediateCatchEventsFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+	private static List<IntermediateCatchEvent> getIntermediateCatchEventsFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver, CaseModelParserHelper parserHelper) {
 		List<IntermediateCatchEvent> intermediateCatchEventList = new ArrayList<>();
 
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.IntermediateCatchEvent xmlIntermediateCatchEvent : fragXmlWrap.getIntermediateCatchEvents()) {
 			IntermediateCatchEvent intermediateCatchEvent = new IntermediateCatchEvent();
 			parseEvent(intermediateCatchEvent, xmlIntermediateCatchEvent, sfResolver, dfResolver);
 
+			modifyCatchEventJsonMapping(intermediateCatchEvent, parserHelper);
 			intermediateCatchEventList.add(intermediateCatchEvent);
 		}
 		return intermediateCatchEventList;
 	}
 
+	/**
+	 * If a {@link IntermediateCatchEvent} with an event query has a data object
+	 * under some conditions all values of the received event will be copied to
+	 * the data object. Therefore the mapping from {@link DataAttribute} to its
+	 * JsonPath will be adjusted. The conditions are, the output control node
+	 * needs to be an event class, the event class of the output DO needs to
+	 * conform to the event type in the query (assume that the query is always
+	 * of the form Select * from 'eventclass') and the attribute mapping for all
+	 * attributes need to be empty (no JsonPath expression specified).
+	 * 
+	 * @param intermediateCatchEvent
+	 *            - which postconditon may be adjusted
+	 * @param parserHelper
+	 *            - that contains information about the casemodel
+	 */
+	private static void modifyCatchEventJsonMapping(IntermediateCatchEvent intermediateCatchEvent, CaseModelParserHelper parserHelper) {
+		if (intermediateCatchEvent.hasPostCondition() && intermediateCatchEvent.hasUniquePostCondition()
+			&& intermediateCatchEvent.getSpecialBehavior().equals(SpecialBehavior.MESSAGE_RECEIVE)) {
+
+			MessageReceiveDefinition receiveDefinition = (MessageReceiveDefinition) intermediateCatchEvent.getSpecialEventDefinition();
+			Pattern p = Pattern.compile("Select \\* from (\\w+)\\b");
+			Matcher m = p.matcher(receiveDefinition.getEventQuerry());
+			
+			if (!m.find()) {
+				return;
+			}
+
+			int dataclassGroup = 1;
+			String dataClassName = m.group(dataclassGroup);
+
+			DataClass dataclass;
+			try {
+				dataclass = parserHelper.getDataClassByName(dataClassName);
+			} catch (IllegalArgumentException e) {
+				log.info(String.format("Dataclass %s in event querry of Catch Event %s does not exist.", dataClassName, intermediateCatchEvent.getId()));
+				return;
+			}
+
+			if (!dataclass.isEvent()) {
+				return;
+			}
+
+			ConditionSet conditionSet = intermediateCatchEvent.getPostCondition().getConditionSets().get(0);
+			Optional<AtomicDataStateCondition> condition = conditionSet.getConditions().stream().filter(c -> c.getDataClassName().equals(dataClassName)).findFirst();
+
+			if (!condition.isPresent()) {
+				return;
+			}
+
+			DataNode dataNode = (DataNode) condition.get();
+			String format = "$.%s";
+
+			if (dataNode.getDataAttributeJsonPaths().isEmpty()) {
+				List<DataAttributeJsonPath> modified = dataclass.getDataAttributes().stream()
+																					.map(d -> new DataAttributeJsonPath(d, String.format(format, d.getName())))
+																					.collect(Collectors.toList());
+
+				dataNode.setDataAttributeJsonPaths(modified);
+			}
+		}
+	}
 	/**
 	 * Get the IntermediateThrowEvents of a fragment.
 	 * 
@@ -133,10 +211,10 @@ public class EventParser {
 		List<IntermediateThrowEvent> intermediateThrowEventList = new ArrayList<>();
 
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.IntermediateThrowEvent xmlIntermediateThrowEvent : fragXmlWrap.getIntermediateThrowEvents()) {
-			IntermediateThrowEvent intermediateCatchEvent = new IntermediateThrowEvent();
-			parseEvent(intermediateCatchEvent, xmlIntermediateThrowEvent, sfResolver, dfResolver);
+			IntermediateThrowEvent intermediateThrowEvent = new IntermediateThrowEvent();
+			parseEvent(intermediateThrowEvent, xmlIntermediateThrowEvent, sfResolver, dfResolver);
 
-			intermediateThrowEventList.add(intermediateCatchEvent);
+			intermediateThrowEventList.add(intermediateThrowEvent);
 		}
 		return intermediateThrowEventList;
 	}

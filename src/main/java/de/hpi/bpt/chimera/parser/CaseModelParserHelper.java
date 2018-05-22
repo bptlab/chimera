@@ -35,10 +35,13 @@ public class CaseModelParserHelper {
 	 * @param dataClassName
 	 * @return DataClass
 	 */
-	public DataClass getNameToDataClass(String dataClassName) {
-		ParsingHelperValidation.validateMap(this.nameToDataModelClass, dataClassName);
-		ParsingHelperValidation.validateType(this.nameToDataModelClass.get(dataClassName), DataClass.class);
-		return (DataClass) this.nameToDataModelClass.get(dataClassName);
+	public DataClass getDataClassByName(String dataClassName) {
+		try {
+			ParsingHelperValidation.validateMap(this.nameToDataModelClass, dataClassName);
+			return this.nameToDataModelClass.get(dataClassName);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
 	}
 
 	/**
@@ -76,7 +79,7 @@ public class CaseModelParserHelper {
 	 * @param objectLifecycleStateName
 	 * @return ObjectLifecycleState
 	 */
-	public ObjectLifecycleState getNameToObjectLifecycleState(DataClass dataClass, String objectLifecycleStateName) {
+	public ObjectLifecycleState getObjectLifecycleStateByName(DataClass dataClass, String objectLifecycleStateName) {
 		if (!this.dataClassAndNameToOLCState.containsKey(dataClass)) {
 			ParsingHelperValidation.validateList(dataModel.getDataModelClasses(), dataClass);
 			

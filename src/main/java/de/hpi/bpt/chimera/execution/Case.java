@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.execution;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import de.hpi.bpt.chimera.model.fragment.Fragment;
 public class Case {
 	@Id
 	private String id;
+	private Date instantiation;
 	private String name;
 	@OneToOne(cascade = CascadeType.ALL)
 	private CaseExecutioner caseExecutioner;
@@ -34,6 +36,8 @@ public class Case {
 
 	public Case(String caseName, CaseModel caseModel, CaseExecutioner caseExecutioner) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
+		Date date = new Date();
+		this.instantiation = new java.sql.Timestamp(date.getTime());
 		this.name = caseName;
 		this.caseExecutioner = caseExecutioner;
 		this.fragmentInstances = new HashMap<>();
@@ -87,5 +91,15 @@ public class Case {
 
 	public void setCaseExecutioner(CaseExecutioner caseExecutioner) {
 		this.caseExecutioner = caseExecutioner;
+	}
+
+
+	public Date getInstantiation() {
+		return instantiation;
+	}
+
+
+	public void setInstantiation(Date instantiation) {
+		this.instantiation = instantiation;
 	}
 }
