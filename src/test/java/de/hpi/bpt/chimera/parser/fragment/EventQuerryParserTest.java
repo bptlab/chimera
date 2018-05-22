@@ -33,12 +33,7 @@ public class EventQuerryParserTest {
 	public void testModifyingJsonPath() {
 		Fragment fragment = CaseModelTestHelper.getFragmentByName(cm, "Event Querry fits Event Class");
 		AbstractEvent event = CaseModelTestHelper.getEventByName(fragment, "Receive Event");
-
-		DataStateCondition postCondition = event.getPostCondition();
-		ConditionSet conditionSet = postCondition.getConditionSets().get(0);
-
-		DataNode dataNode = (DataNode) conditionSet.getConditions().get(0);
-		List<String> actualjsonPaths = dataNode.getDataAttributeJsonPaths().stream().map(p -> p.getJsonPath()).collect(Collectors.toList());
+		List<String> actualjsonPaths = getOutputJsonPathsForEvent(event);
 
 		assertThat(actualjsonPaths, containsInAnyOrder("$.attribute1", "$.attribute2"));
 	}
@@ -47,12 +42,7 @@ public class EventQuerryParserTest {
 	public void testNotModifyingJsonPathWithPredefienedMapping() {
 		Fragment fragment = CaseModelTestHelper.getFragmentByName(cm, "Event Querry fits Event Class with Json Mapping");
 		AbstractEvent event = CaseModelTestHelper.getEventByName(fragment, "Receive Event");
-
-		DataStateCondition postCondition = event.getPostCondition();
-		ConditionSet conditionSet = postCondition.getConditionSets().get(0);
-
-		DataNode dataNode = (DataNode) conditionSet.getConditions().get(0);
-		List<String> actualjsonPaths = dataNode.getDataAttributeJsonPaths().stream().map(p -> p.getJsonPath()).collect(Collectors.toList());
+		List<String> actualjsonPaths = getOutputJsonPathsForEvent(event);
 
 		assertThat(actualjsonPaths, hasSize(1));
 		assertThat(actualjsonPaths, contains("$.attribute1"));
@@ -62,12 +52,7 @@ public class EventQuerryParserTest {
 	public void testNotModifyingJsonPathWrongEventQuerryName() {
 		Fragment fragment = CaseModelTestHelper.getFragmentByName(cm, "Event Querry does not fit Event Class Name");
 		AbstractEvent event = CaseModelTestHelper.getEventByName(fragment, "Receive Event");
-
-		DataStateCondition postCondition = event.getPostCondition();
-		ConditionSet conditionSet = postCondition.getConditionSets().get(0);
-
-		DataNode dataNode = (DataNode) conditionSet.getConditions().get(0);
-		List<String> actualjsonPaths = dataNode.getDataAttributeJsonPaths().stream().map(p -> p.getJsonPath()).collect(Collectors.toList());
+		List<String> actualjsonPaths = getOutputJsonPathsForEvent(event);
 
 		assertTrue(actualjsonPaths.isEmpty());
 	}
@@ -76,13 +61,17 @@ public class EventQuerryParserTest {
 	public void testNotModifyingJsonPathWithDataClass() {
 		Fragment fragment = CaseModelTestHelper.getFragmentByName(cm, "Event Querry is for Data Class");
 		AbstractEvent event = CaseModelTestHelper.getEventByName(fragment, "Receive Event");
+		List<String> actualjsonPaths = getOutputJsonPathsForEvent(event);
 
+		assertTrue(actualjsonPaths.isEmpty());
+	}
+
+	private List<String> getOutputJsonPathsForEvent(AbstractEvent event) {
 		DataStateCondition postCondition = event.getPostCondition();
 		ConditionSet conditionSet = postCondition.getConditionSets().get(0);
 
 		DataNode dataNode = (DataNode) conditionSet.getConditions().get(0);
 		List<String> actualjsonPaths = dataNode.getDataAttributeJsonPaths().stream().map(p -> p.getJsonPath()).collect(Collectors.toList());
-
-		assertTrue(actualjsonPaths.isEmpty());
+		return actualjsonPaths;
 	}
 }
