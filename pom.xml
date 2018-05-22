@@ -14,9 +14,34 @@
 
 	<build>
 		<finalName>Chimera</finalName>
-		<testResources>
+		<!--<testResources>
             <testResource>
                 <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+		<resources>
+			<resource>
+				<directory>${basedir}</directory>
+				<excludes>
+					<exclude>src/test/*</exclude>
+				</excludes>
+				<includes>
+					<include>config.properties</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>-->
+		<filters>
+      		<filter>${basedir}/config.properties</filter>
+   	 	</filters>
+		<testResources>
+            <testResource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+             <testResource>
+                <directory>${basedir}/src/test/resources</directory>
                 <filtering>true</filtering>
             </testResource>
         </testResources>
@@ -26,15 +51,51 @@
 				<filtering>true</filtering>
 			</resource>
 			<resource>
-				<directory>${basedir}</directory>
-				<excludes>
-					<exclude>src/test/*</exclude>
-				</excludes>
-				<includes>
-					<include>config.properties</include>
-				</includes>
+				<directory>${basedir}/src/test/resources</directory>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
+		
+			<plugins>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.8</version>
+					<executions>
+						<!-- using a different persistence.xml for testing so we can specify and use a second test database -->
+						<!-- the copying is necessary because JPA does not use the persistence.xml stored under test/resources -->
+						<execution>
+					      <id>copy-test-persistence</id>
+					      <phase>process-test-resources</phase>
+					      <configuration>
+					        <tasks>
+					          <!--backup the "proper" persistence.xml-->
+					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml.proper"/>
+					          <!--replace the "proper" persistence.xml with the "test" version-->
+					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml"/>
+					        </tasks>
+					      </configuration>
+					      <goals>
+					        <goal>run</goal>
+					      </goals>
+					    </execution>
+					    <execution>
+					      <id>restore-persistence</id>
+					      <phase>prepare-package</phase>
+					      <configuration>
+					        <tasks>
+					          <!--restore the "proper" persistence.xml-->
+					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml.proper" tofile="${project.build.outputDirectory}/META-INF/persistence.xml"/>
+					        </tasks>
+					      </configuration>
+					      <goals>
+					        <goal>run</goal>
+					      </goals>
+					    </execution>
+					</executions>
+				</plugin>
+			</plugins>
+		
+		<pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
@@ -61,7 +122,7 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!--<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>
@@ -74,7 +135,7 @@
 						</fileset>
 					</filesets>
 				</configuration>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -101,26 +162,6 @@
 					</execution>
 				</executions>
 			</plugin>
-		<plugin>
-    		<groupId>com.coderplus.maven.plugins</groupId>
-    		<artifactId>copy-rename-maven-plugin</artifactId>
-    		<version>1.0.1</version>
-    		<executions>
-      			<execution>
-        			<id>rename-file</id>
-        			<phase>prepare-package</phase>
-        			<goals>
-          				<goal>rename</goal>
-        			</goals>
-        			<configuration>
-						<sourceFile>${project.build.outputDirectory}/META-INF/persistence_template.xml
-						</sourceFile>
-						<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml
-						</destinationFile>						
-					</configuration>
-				</execution>
-			</executions>
-		</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
@@ -131,12 +172,6 @@
 					<!-- aggregated reports for multi-module projects -->
 					<aggregate>true</aggregate>
 					<!-- Exclude Debug-Files -->
-					<instrumentation>
-						<excludes>
-							<exclude>**/Ausprobieren.class</exclude>
-							<exclude>**/debugClass.class</exclude>
-						</excludes>
-					</instrumentation>
 					<check />
 				</configuration>
 			</plugin>
@@ -183,6 +218,8 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.3</version>
 			</plugin>
+			
+			
 			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
 				<version>2.9.1</version> <executions> <execution> <id>generate-service-docs</id> 
 				<phase>generate-resources</phase> <configuration> <doclet>com.carma.swagger.doclet.ServiceDoclet</doclet> 
@@ -193,6 +230,7 @@
 				</configuration> <goals> <goal>javadoc</goal> </goals> </execution> </executions> 
 				</plugin> -->
 		</plugins>
+		</pluginManagement>
 	</build>
 
 	<properties>
