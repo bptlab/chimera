@@ -14,46 +14,27 @@
 
 	<build>
 		<finalName>Chimera</finalName>
-		<!--<testResources>
+		<filters>
+      		<filter>${basedir}/config.properties</filter>
+   	 	</filters>
+		<testResources>
             <testResource>
-                <directory>src/test/resources</directory>
+                <directory>${basedir}/src/test/resources</directory>
                 <filtering>true</filtering>
             </testResource>
         </testResources>
 		<resources>
 			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
 				<directory>${basedir}</directory>
-				<excludes>
-					<exclude>src/test/*</exclude>
-				</excludes>
 				<includes>
 					<include>config.properties</include>
 				</includes>
 				<filtering>true</filtering>
 			</resource>
-		</resources>-->
-		<filters>
-      		<filter>${basedir}/config.properties</filter>
-   	 	</filters>
-		<testResources>
-		<testResource>
-				<directory>${basedir}/src/main/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-            <testResource>
-                <directory>${basedir}src/test/resources</directory>
-                <filtering>true</filtering>
-            </testResource>
-        </testResources>
-		<resources>
-			<resource>
-				<directory>${basedir}/src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-			<resource>
-                <directory>${basedir}src/test/resources</directory>
-                <filtering>true</filtering>
-            </resource>
 		</resources>
 		
 			<plugins>
@@ -122,20 +103,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<!--<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>${basedir}/src/main/resources</directory>
-							<includes>
-								<include>config.properties</include>
-							</includes>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
