@@ -17,12 +17,6 @@
 		<filters>
       		<filter>${basedir}/config.properties</filter>
    	 	</filters>
-		<testResources>
-            <testResource>
-                <directory>${basedir}/src/test/resources</directory>
-                <filtering>true</filtering>
-            </testResource>
-        </testResources>
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
@@ -52,7 +46,7 @@
 					          <!--backup the "proper" persistence.xml-->
 					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml.proper"/>
 					          <!--replace the "proper" persistence.xml with the "test" version-->
-					          <copy file="${project.build.testOutputDirectory}/META-INF/persistence.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml"/>
+					          <copy file="${project.build.outputDirectory}/META-INF/persistenceTest.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml"/>
 					        </tasks>
 					      </configuration>
 					      <goals>
