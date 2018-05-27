@@ -2,6 +2,8 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
+import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
@@ -87,6 +89,17 @@ public class EventDispatcher {
 		}
 	}
 
+	/**
+	 * Creates a Quarz job for an {@link AbstractEventInstance} and register the
+	 * jobKey at the {@link TimerEventBehavior} of the EventInstance.
+	 * 
+	 * @param event
+	 *            - the EventInstance which should be registered as TimerEvent
+	 * @param timerBehavior
+	 *            - the {@link EventBehavior} of that EventInstance
+	 * 
+	 * @return a Quarz job
+	 */
 	private static JobDetail createJob(AbstractEventInstance event, TimerEventBehavior timerBehavior) {
 		JobDetail timeEventJob = newJob(TimeEventJob.class).usingJobData("CaseModelId", event.getCaseExecutioner().getCaseModel().getId()).usingJobData("CaseId", event.getFragmentInstance().getCase().getId()).usingJobData("ControlNodeInstanceId", event.getId()).build();
 		timerBehavior.setJobKey(timeEventJob.getKey());
@@ -193,9 +206,25 @@ public class EventDispatcher {
 		notificationRuleIds.forEach(EventDispatcher::deregisterNotificationRule);
 
 		// de-register receive events
+		// TODO refactor and use deregisterReceiveEventsOfCase
 		List<CaseExecutioner> caseExecutioners = ExecutionService.getAllCasesOfCaseModel(cm.getId());
 		List<MessageReceiveEventBehavior> receiveBehaviors = caseExecutioners.stream().map(CaseExecutioner::getRegisteredEventBehaviors).flatMap(List::stream).collect(Collectors.toList());
 		receiveBehaviors.forEach(EventDispatcher::deregisterReceiveEvent);
+	}
+
+	/**
+	 * De-register all {@link MessageReceiveEventBehavior} for a given
+	 * {@link Case}.
+	 * 
+	 * @param caze
+	 *            - Case which events should be de-registered
+	 */
+	public static void deregisterReceiveEventsOfCase(Case caze) {
+		// de-register receive events
+		CaseExecutioner caseExecutioner = caze.getCaseExecutioner();
+		List<MessageReceiveEventBehavior> receiveBehaviors = caseExecutioner.getRegisteredEventBehaviors();
+		receiveBehaviors.forEach(EventDispatcher::deregisterReceiveEvent);
+		log.info("Deregistered all MessageReceiveEvents of Case " + caze.getName());
 	}
 
 	/**

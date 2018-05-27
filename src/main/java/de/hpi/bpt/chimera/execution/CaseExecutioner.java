@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +24,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
@@ -314,6 +316,14 @@ public class CaseExecutioner {
 	public void terminate() {
 		// TODO think about the consequences
 		if (canTerminate()) {
+			// set all ControlNodeInstances to state Skipped, so no further
+			// controlflow is possible.
+			List<ControlNodeInstance> controlNodeInstances = this.getCase().getFragmentInstances().values().stream().map(FragmentInstance::getControlNodeInstances).flatMap(List::stream).collect(Collectors.toList());
+			controlNodeInstances.forEach(each -> each.setState(State.SKIPPED));
+			log.info("Terminating the Case" + this.getCase().getName() + ". All ControlNodeInstances are skipped.");
+
+			EventDispatcher.deregisterReceiveEventsOfCase(this.getCase());
+
 			setTerminated(true);
 		}
 	}
