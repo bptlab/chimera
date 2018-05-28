@@ -27,11 +27,6 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 public abstract class AbstractActivityInstance extends AbstractDataControlNodeInstance {
 	private static final Logger log = Logger.getLogger(AbstractActivityInstance.class);
 
-	/**
-	 * Decide whether the instance will begin automatically.
-	 */
-	private boolean hasAutomaticBegin;
-
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "attachedToActivity")
 	private List<BoundaryEventInstance> attachedBoundaryEventInstances;
 
@@ -53,7 +48,6 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	 */
 	public AbstractActivityInstance(AbstractActivity activity, FragmentInstance fragmentInstance) {
 		super(activity, fragmentInstance);
-		allowAutomaticExecution();
 		this.attachedBoundaryEventInstances = new ArrayList<>();
 	}
 
@@ -217,48 +211,6 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	@Override
 	public AbstractActivity getControlNode() {
 		return (AbstractActivity) super.getControlNode();
-	}
-
-	public boolean hasAutomaticBegin() {
-		return hasAutomaticBegin;
-	}
-
-	/**
-	 * Tries to set the flag for automatic execution of this activity instance
-	 * to {@literal true}. This fails if the activity has multiple input or
-	 * output sets which would require user choice. Gateways themselves take
-	 * care to forbid automatic execution of their successor activities,
-	 * 
-	 * @see {@link ExclusiveGatewayInstance}.
-	 */
-	public void allowAutomaticExecution() {
-		if (getControlNode().hasUniquePostCondition() &&
-				getControlNode().hasUniquePreCondition() &&
-					getControlNode().isAutomaticTask()) {
-			hasAutomaticBegin = true;
-		} else {
-			log.warn("Tasks with more than one input or output set cannot be executed automatically.");
-			hasAutomaticBegin = false;
-		}
-	}
-
-	/**
-	 * Sets the flag for automatic execution of this activity to {@literal false}. 
-	 * This is used by exclusive gateways to prevent that the branch starting with the automatic
-	 * activity is always taken. In this case, the automatic activity has to be started manually
-	 * by the user.  
-	 */
-	public void forbidAutomaticStart() {
-		hasAutomaticBegin = false;
-	}
-
-	/**
-	 * An activity instance can only begin if it is in State READY and the
-	 * fragment instance allows exceution.
-	 */
-	@Override
-	public boolean canBegin() {
-		return getState().equals(State.READY) && getFragmentInstance().isExecutable();
 	}
 
 	/**

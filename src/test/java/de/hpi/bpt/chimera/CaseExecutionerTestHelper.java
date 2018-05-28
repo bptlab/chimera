@@ -130,9 +130,8 @@ public class CaseExecutionerTestHelper {
 		String eventInstanceId = eventInstance.getId();
 		String route = String.format("scenario/%s/instance/%s/events/%s", cmId, caseId, eventInstanceId);
 
-		Response response = base.path(route).request().post(Entity.json(body));
-		if (true) {
-			throw new IllegalArgumentException(response.getStatus() + ": " + response.readEntity(String.class));
-		}
+		// Response response =
+		// base.path(route).request().post(Entity.json(body));
+		base.path(route).request().post(Entity.json(body));
 	}
 }

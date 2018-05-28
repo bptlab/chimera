@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.execution.controlnodes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,8 +16,10 @@ import javax.persistence.OneToMany;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
@@ -32,6 +35,11 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 	private List<DataObject> outputDataObjects;
 
 	/**
+	 * Decide whether the instance will begin automatically.
+	 */
+	private boolean hasAutomaticBegin;
+
+	/**
 	 * for JPA only
 	 */
 	public AbstractDataControlNodeInstance() {
@@ -43,13 +51,120 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 		super(controlNode, fragmentInstance);
 		this.selectedDataObjects = new ArrayList<>();
 		this.outputDataObjects = new ArrayList<>();
+		allowAutomaticExecution();
 	}
 
 	/**
-	 * 
-	 * @return whether the data control node instance should be able to begin.
+	 * Enables the incoming control flow of the DataControlNodeInstance. Any
+	 * previously selected DataObjects are cleared. If state is INIT, it is set
+	 * to CONTROLFLOW_ENABLED. If data preconditions are fulfilled (or state is
+	 * already DATAFLOW_ENABLED), state is set to READY. If an
+	 * DataControlNodeInstance that is allow to begin automatically is READY, it
+	 * is started. However, if it is the first ActivityInstance in the
+	 * FragmentInstance, which means the FragmentInstance has not started yet,
+	 * it can not begin automatically.
 	 */
-	public abstract boolean canBegin();
+	@Override
+	public void enableControlFlow() {
+		getSelectedDataObjects().clear();
+		if (getState().equals(State.INIT)) {
+			setState(State.CONTROLFLOW_ENABLED);
+		}
+		if (getState().equals(State.DATAFLOW_ENABLED) || getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
+			setState(State.READY);
+		}
+		if (canBeginAutomatically()) {
+			// automatically select data objects, input set must be unique
+			assert getControlNode().hasUniquePreCondition() : "For automatic execution tasks need an unique pre-condition";
+			List<ConditionSet> conditionSets = getControlNode().getPreCondition().getConditionSets();
+			ConditionSet inputSet = new ConditionSet();
+			if (!conditionSets.isEmpty()) {
+				inputSet = conditionSets.get(0);
+			}
+			Set<DataObject> fulfillingDataObjects = getDataManager().getFulfillingDataObjects(inputSet);
+			if (fulfillingDataObjects.isEmpty() && !conditionSets.isEmpty()) {
+				// this should not happen, someone changed a DO state we needed
+				// or locked a DO
+				checkDataFlow();
+			} else {
+				getCaseExecutioner().beginDataControlNodeInstance(this, new ArrayList<>(fulfillingDataObjects));
+			}
+		}
+	}
+
+	/**
+	 * Used for updating the DataFlow of the ActivityInstance.
+	 */
+	public void checkDataFlow() {
+		if (getFragmentInstance().isExecutable() && getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
+			enableDataFlow();
+		} else {
+			disableDataFlow();
+		}
+	}
+
+	public void enableDataFlow() {
+		if (getState().equals(State.INIT)) {
+			setState(State.DATAFLOW_ENABLED);
+		} else if (getState().equals(State.CONTROLFLOW_ENABLED)) {
+			setState(State.READY);
+		}
+	}
+
+	public void disableDataFlow() {
+		if (getState().equals(State.DATAFLOW_ENABLED)) {
+			setState(State.INIT);
+		} else if (getState().equals(State.READY)) {
+			setState(State.CONTROLFLOW_ENABLED);
+		}
+	}
+
+	/**
+	 * Tries to set the flag for automatic execution of this activity instance
+	 * to {@literal true}. This fails if the activity has multiple input or
+	 * output sets which would require user choice. Gateways themselves take
+	 * care to forbid automatic execution of their successor activities,
+	 * 
+	 * @see {@link ExclusiveGatewayInstance}.
+	 */
+	public void allowAutomaticExecution() {
+		if (getControlNode().hasUniquePostCondition() && getControlNode().hasUniquePreCondition() && getControlNode().isAutomatic()) {
+			hasAutomaticBegin = true;
+		} else {
+			log.warn("Tasks with more than one input or output set cannot be executed automatically.");
+			hasAutomaticBegin = false;
+		}
+	}
+
+	/**
+	 * Sets the flag for automatic execution of this activity to
+	 * {@literal false}. This is used by exclusive gateways to prevent that the
+	 * branch starting with the automatic activity is always taken. In this
+	 * case, the automatic activity has to be started manually by the user.
+	 */
+	public void forbidAutomaticStart() {
+		hasAutomaticBegin = false;
+	}
+
+	/**
+	 * @return true if the DataControlNodeInstance is in the correct state, is
+	 *         allowed to begin automatically and the corresponding
+	 *         FragmentInstance is already started. However,
+	 *         {@link IntermediateCatchEventInstance} can also begin
+	 *         automatically if the FragmentInstance has not started yet because
+	 *         they need to be registered.
+	 */
+	public boolean canBeginAutomatically() {
+		return canBegin() && hasAutomaticBegin() && getFragmentInstance().isStarted();
+	}
+
+	/**
+	 * A data control node instance can only begin if it is in State READY and
+	 * the fragment instance allows execution.
+	 */
+	public boolean canBegin() {
+		return getState().equals(State.READY) && getFragmentInstance().isExecutable();
+	}
 
 	/**
 	 * 
@@ -137,6 +252,10 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 	@Override
 	public AbstractDataControlNode getControlNode() {
 		return (AbstractDataControlNode) super.getControlNode();
+	}
+
+	public boolean hasAutomaticBegin() {
+		return hasAutomaticBegin;
 	}
 
 	public List<DataObject> getSelectedDataObjects() {

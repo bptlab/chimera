@@ -20,6 +20,7 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
 public class CaseModelTestHelper {
 	/**

@@ -43,15 +43,6 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	}
 
 	/**
-	 * IncomingBehaviour
-	 */
-	@Override
-	public void enableControlFlow() {
-		setState(State.READY);
-		behavior.enableControlFlow();
-	}
-
-	/**
 	 * ExecutionBehaviour
 	 */
 	@Override
@@ -95,14 +86,6 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	@Override
 	public void skip() {
 		setState(State.SKIPPED);
-	}
-
-	/**
-	 * An event instance should always be able to begin.
-	 */
-	@Override
-	public boolean canBegin() {
-		return true;
 	}
 
 	/**

@@ -12,7 +12,7 @@ public class WebServiceTask extends AbstractActivity {
 	 * Email Activities are executed automatically.
 	 */
 	@Override
-	public boolean isAutomaticTask() {
+	public boolean isAutomatic() {
 		return true;
 	}
 

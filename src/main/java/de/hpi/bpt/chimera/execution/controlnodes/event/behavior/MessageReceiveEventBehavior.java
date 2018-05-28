@@ -40,10 +40,10 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 	}
 
 	/**
-	 * IncomingBehaviour
+	 * ExecutionBehaviour
 	 */
 	@Override
-	public void enableControlFlow() {
+	public void begin() {
 		logger.info("Controlflow of IntermediateCatchEventInstance enabled");
 		EventDispatcher.registerReceiveEvent(this);
 		getEventInstance().setState(State.REGISTERED);

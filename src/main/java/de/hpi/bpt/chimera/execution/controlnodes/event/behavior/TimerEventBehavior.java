@@ -42,7 +42,7 @@ public class TimerEventBehavior extends EventBehavior {
 	 * handled internally, calls specific method for timer events.
 	 */
 	@Override
-	public void enableControlFlow() {
+	public void begin() {
 		log.info("Controlflow of an TimerEvent enabled");
 		EventDispatcher.registerTimerEvent(this);
 		log.info("Timerevent has registered itself at EventDispatcher");

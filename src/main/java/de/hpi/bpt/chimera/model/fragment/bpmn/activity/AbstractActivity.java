@@ -26,10 +26,4 @@ public abstract class AbstractActivity extends AbstractDataControlNode {
 	public void addAttachedBoundaryEvent(BoundaryEvent attachedBoundaryEvent) {
 		this.attachedBoundaryEvents.add(attachedBoundaryEvent);
 	}
-
-	/**
-	 * 
-	 * @return true if the activity type executes automatically.
-	 */
-	public abstract boolean isAutomaticTask();
 }
