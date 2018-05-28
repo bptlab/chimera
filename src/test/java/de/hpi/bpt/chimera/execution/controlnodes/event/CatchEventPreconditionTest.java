@@ -37,6 +37,7 @@ public class CatchEventPreconditionTest extends JerseyTest {
 	private final String body = "{" + "\"attribute\": \"1\"," + "}";
 	private WebTarget base;
 	private MockServerClient unicorn;
+	private final int port = 8081;
 
 	@Override
 	protected Application configure() {
@@ -44,15 +45,13 @@ public class CatchEventPreconditionTest extends JerseyTest {
 	}
 
 	@Rule
-	public MockServerRule mockServerRule = new MockServerRule(this, 8081);
+	public MockServerRule mockServerRule = new MockServerRule(this, port);
 
 	@SuppressWarnings("resource")
 	@Before
 	public void setup() {
 		base = target("eventdispatcher");
 		String host = "localhost";
-		int port = 8081;
-		// WireMock.configureFor(host, port);
 
 		unicorn = new MockServerClient(host, port).reset();
 		

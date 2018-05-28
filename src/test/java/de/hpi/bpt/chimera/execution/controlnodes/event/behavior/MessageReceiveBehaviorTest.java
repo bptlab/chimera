@@ -2,15 +2,8 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.behavior;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
-
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
@@ -22,11 +15,10 @@ import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
-
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
@@ -38,18 +30,19 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispat
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.EventRestService;
 
 public class MessageReceiveBehaviorTest extends JerseyTest {
 	private final String filepath = "src/test/resources/execution/event/receiveEventBehaviorTest.json";
-	private CaseModel cm;
+
 	private CaseExecutioner caseExecutioner;
 	private String eventJson = "{" + "\"a\": \"1\"," + "\"b\": \"2\"," + "}";
 
 	private WebTarget base;
-
+	private final int port = 8081;
 	@Rule
-	public MockServerRule mockServerRule = new MockServerRule(this, 8090);
+	public MockServerRule mockServerRule = new MockServerRule(this, port);
 
 	private MockServerClient unicorn;
 
@@ -58,18 +51,14 @@ public class MessageReceiveBehaviorTest extends JerseyTest {
 		return new ResourceConfig(EventRestService.class);
 	}
 
+	@SuppressWarnings("resource")
 	@Before
 	public void setup() {
 		base = target("eventdispatcher");
-
-//		Response response = base.path("scenario/1/instance/1/events").request().get();
-//		String r = response.readEntity(String.class);
-//		assertEquals(201, r);
 		String host = "localhost";
-		int port = 8090;
-		// WireMock.configureFor(host, port);
 
 		unicorn = new MockServerClient(host, port).reset();
+		EventDispatcher.setUrl(String.format("http://%s:%d", host, port));
 
 		String unicornPathDeploy = "/Unicorn-unicorn_BP15_dev/webapi/REST/EventQuery/REST";
 		unicorn.when(
@@ -79,13 +68,12 @@ public class MessageReceiveBehaviorTest extends JerseyTest {
 			.respond(
 				HttpResponse.response()
 					.withStatusCode(201)
-								.withBody("1"));
-		EventDispatcher.setUrl(String.format("http://%s:%d", host, port));
-
-		cm = CaseModelTestHelper.parseCaseModel(filepath);
-		caseExecutioner = new CaseExecutioner(cm, cm.getName());
+					.withBody("1"));
 
 
+		String json = CaseModelTestHelper.getJsonString(filepath);
+		CaseModel cm = CaseModelManager.parseCaseModel(json);
+		caseExecutioner = ExecutionService.createCaseExecutioner(cm, cm.getName());
 		caseExecutioner.startCase();
 	}
 
@@ -94,16 +82,9 @@ public class MessageReceiveBehaviorTest extends JerseyTest {
 		super.tearDown();
 		unicorn.close();
 	}
-	// TODO: to test receive event properly you need to mock unicorn
+
 	@Test
 	public void testIntermediateReceiveBehavior() {
-		// Client client = ClientBuilder.newClient();
-		// Response response =
-		// client.target("http://localhost:8080").path("/Unicorn-unicorn_BP15_dev/webapi/REST/EventQuery/REST").request().post(null);
-		//
-		// // assert response
-		// assertEquals(response.getStatus(), 202);
-
 		FragmentInstance intermediateFragment = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "IntermediateFragment");
 		assertNotNull(intermediateFragment);
 
@@ -124,13 +105,7 @@ public class MessageReceiveBehaviorTest extends JerseyTest {
 
 		assertFalse("No registered events", caseExecutioner.getRegisteredEventBehaviors().isEmpty());
 
-		// TODO:
-		// CaseExecutionerTestHelper.triggerEvent(caseExecutioner,
-		// eventInstance, base, eventJson);
-
-		// elude the call of receive event in EventRestService
-		receiveBehavior.setEventJson(eventJson);
-		eventInstance.terminate();
+		CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, base, eventJson);
 		
 		assertEquals("ReceiveEvent terminated properly", State.TERMINATED, eventInstance.getState());
 		assertEquals("StartEvent, ReceiveEvent and EndEvent should be in the FragmentInstance", 3, intermediateFragment.getControlNodeInstances().size());
@@ -162,17 +137,15 @@ public class MessageReceiveBehaviorTest extends JerseyTest {
 		assertEquals("Notification Rule Id was not set", "1", receiveBehavior.getNotificationRule());
 		assertEquals("ReceiveEvent registered properly", eventInstance.getState(), State.REGISTERED);
 
-		// elude the call of receive event in EventRestService
-		receiveBehavior.setEventJson(eventJson);
-		eventInstance.terminate();
+		CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, base, eventJson);
 
 		assertEquals("ReceiveEvent terminated properly", eventInstance.getState(), State.TERMINATED);
 		assertEquals("StartEvent, Task, BoundaryEvent and Task after BoundaryEvent should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 4);
 		assertEquals("Task was not canceled", task.getState(), State.CANCEL);
 
-		assertEquals("One DataObject should be created", caseExecutioner.getDataManager().getDataObjects().size(), 1);
+		assertEquals("One DataObject should be created", 1, caseExecutioner.getDataManager().getDataObjects().size());
 		DataObject dataObject = caseExecutioner.getDataManager().getDataObjects().get(0);
 		DataAttributeInstance attributeInstance = dataObject.getDataAttributeInstances().get(0);
-		assertEquals("DataObject was not properly written", attributeInstance.getValue(), "2");
+		assertEquals("DataObject was not properly written", "2", attributeInstance.getValue());
 	}
 }
