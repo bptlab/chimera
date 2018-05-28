@@ -73,7 +73,7 @@ public class EventRestService extends AbstractRestService {
 			}
 
 			AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
-			eventInstance.terminate();
+			caseExecutioner.terminateDataControlNodeInstance(eventInstance);
 			SseNotifier.notifyRefresh();
 		} catch (Exception e) {
 			log.error("Error while processing a received event", e);

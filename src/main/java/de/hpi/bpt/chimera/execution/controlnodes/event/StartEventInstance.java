@@ -24,6 +24,12 @@ public class StartEventInstance extends AbstractEventInstance {
 	}
 
 	@Override
+	public void enableControlFlow() {
+		setState(State.READY);
+		begin();
+	}
+
+	@Override
 	public StartEvent getControlNode() {
 		return (StartEvent) super.getControlNode();
 	}

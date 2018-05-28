@@ -51,7 +51,6 @@ public class TimerEventBehavior extends EventBehavior {
 
 	@Override
 	public void skip() {
-		super.skip();
 		if (this.getJobKey() != null) { 
 			Scheduler scheduler;
 			try {
@@ -64,6 +63,11 @@ public class TimerEventBehavior extends EventBehavior {
 		}
 		 
 		getEventInstance().setState(State.SKIPPED);
+	}
+
+	@Override
+	public void terminate() {
+		getEventInstance().getFragmentInstance().isStarted();
 	}
 
 	/**

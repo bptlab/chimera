@@ -70,7 +70,7 @@ public class FragmentPreConditionExecutionTest {
 		// automatic task in one fragment
 		automaticTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Automatic Task");
 		assertNotNull(automaticTaskInstance);
-		assertTrue(automaticTaskInstance.getControlNode().isAutomaticTask());
+		assertTrue(automaticTaskInstance.getControlNode().isAutomatic());
 		assertTrue("is automatic task was not initialized correctly", automaticTaskInstance.hasAutomaticBegin());
 		assertEquals("State of automatic task instance is wrong", State.READY, automaticTaskInstance.getState());
 	}

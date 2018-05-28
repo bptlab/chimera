@@ -46,6 +46,7 @@ public class CatchEventPreconditionTest extends JerseyTest {
 	@Rule
 	public MockServerRule mockServerRule = new MockServerRule(this, 8081);
 
+	@SuppressWarnings("resource")
 	@Before
 	public void setup() {
 		base = target("eventdispatcher");
@@ -80,12 +81,13 @@ public class CatchEventPreconditionTest extends JerseyTest {
 
 	@Test
 	public void testCatchEventWithUniquePrecondition() {
+		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "First Fragment");
+
 		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, "Create Dataobject");
 
 		DataManager dataManager = caseExecutioner.getDataManager();
 		DataObject DO = dataManager.getDataObjects().get(0);
 
-		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "First Fragment");
 		AbstractEventInstance eventInstance = CaseExecutionerTestHelper.getEventInstanceByName(fragmentInstance, "CatchEvent");
 
 		CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, base, body);
@@ -93,5 +95,6 @@ public class CatchEventPreconditionTest extends JerseyTest {
 		assertEquals("There is not exactly one data object", 1, dataManager.getDataObjects().size());
 		assertEquals("eventclass", DO.getDataClass().getName());
 		assertEquals("The data object did not changed its state", "State 2", DO.getObjectLifecycleState().getName());
+		assertEquals("1", DO.getDataAttributeInstances().get(0).getValue());
 	}
 }

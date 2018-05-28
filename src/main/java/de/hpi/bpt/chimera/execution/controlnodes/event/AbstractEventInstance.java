@@ -12,8 +12,6 @@ import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.EventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.EventBasedGatewayInstance;
-import de.hpi.bpt.chimera.execution.data.DataObject;
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 
 @Entity
@@ -67,16 +65,10 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 			previousEventBasedGatewayInstance.skipAlternativeGateways(this);
 		}
 
-		if (getControlNode().hasUniquePostCondition() && getControlNode().hasPostCondition()) {
-			for (AtomicDataStateCondition condition : getControlNode().getPostCondition().getConditionSets().get(0).getConditions()) {
-				DataObject dataObject = getDataManager().createDataObject(condition);
-				getOutputDataObjects().add(dataObject);
-			}
-		}
-
-		if (!(this instanceof StartEventInstance)) {
+		if (!(this instanceof StartEventInstance || this instanceof EndEventInstance)) {
 			getFragmentInstance().isStarted();
 		}
+
 		behavior.terminate();
 		setState(State.TERMINATED);
 		getCaseExecutioner().updateDataFlow();
@@ -85,6 +77,7 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 
 	@Override
 	public void skip() {
+		behavior.skip();
 		setState(State.SKIPPED);
 	}
 

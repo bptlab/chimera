@@ -52,71 +52,6 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	}
 
 	/**
-	 * Enables the incoming control flow of the ActivityInstance. Any previously
-	 * selected DataObjects are cleared. If state is INIT, it is set to
-	 * CONTROLFLOW_ENABLED. If data preconditions are fulfilled (or state is
-	 * already DATAFLOW_ENABLED), state is set to READY. If an automatic tasks
-	 * is READY, it is started. However, if it is the first ActivityInstance in
-	 * the FragmentInstance, which means the FragmentInstance has not started
-	 * yet, it can not begin automatically.
-	 */
-	@Override
-	public void enableControlFlow() {
-		getSelectedDataObjects().clear();
-		if (getState().equals(State.INIT)) {
-			setState(State.CONTROLFLOW_ENABLED);
-		}
-		if (getState().equals(State.DATAFLOW_ENABLED) || 
-				getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
-			setState(State.READY);
-		}
-		if (canBegin() && hasAutomaticBegin() && getFragmentInstance().isStarted()) {
-			// automatically select data objects, input set must be unique
-			assert getControlNode().hasUniquePreCondition() : "For automatic execution tasks need an unique pre-condition";
-			List<ConditionSet> conditionSets = getControlNode().getPreCondition().getConditionSets();
-			ConditionSet inputSet = new ConditionSet();
-			if (!conditionSets.isEmpty()) {
-				inputSet = conditionSets.get(0);
-			}
-			Set<DataObject> fulfillingDataObjects = getDataManager().getFulfillingDataObjects(inputSet);
-			if (fulfillingDataObjects.isEmpty() && !conditionSets.isEmpty()) {
-				// this should not happen, someone changed a DO state we needed or locked a DO
-				checkDataFlow();
-			} else {
-				getCaseExecutioner().beginDataControlNodeInstance(this, new ArrayList<>(fulfillingDataObjects));
-			}
-		}
-	}
-
-	/**
-	 * Used for updating the DataFlow of the ActivityInstance.
-	 */
-	public void checkDataFlow() {
-		if (getFragmentInstance().isExecutable()
-				&& getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
-			enableDataFlow();
-		} else {
-			disableDataFlow();
-		}
-	}
-
-	public void enableDataFlow() {
-		if (getState().equals(State.INIT)) {
-			setState(State.DATAFLOW_ENABLED);
-		} else if (getState().equals(State.CONTROLFLOW_ENABLED)) {
-			setState(State.READY);
-		}
-	}
-
-	public void disableDataFlow() {
-		if (getState().equals(State.DATAFLOW_ENABLED)) {
-			setState(State.INIT);
-		} else if (getState().equals(State.READY)) {
-			setState(State.CONTROLFLOW_ENABLED);
-		}
-	}
-
-	/**
 	 * Begin the Activity Instance. Inform the {@link FragmentInstance} that has
 	 * started now. The selected DataObjects were set by the CaseExecutioner. If
 	 * the ActivityInstance is an automatic task and has one or none condition
@@ -136,12 +71,7 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 		execute();
 
 		if (hasAutomaticBegin()) {
-			Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = new HashMap<>();
-			if (getControlNode().hasPostCondition()) {
-				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
-			}
-
-			getCaseExecutioner().terminateDataControlNodeInstance(this, dataObjectToObjectLifecycleTransition);
+			getCaseExecutioner().terminateDataControlNodeInstance(this);
 		}
 	}
 

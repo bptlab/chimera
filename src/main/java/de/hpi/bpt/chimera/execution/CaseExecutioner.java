@@ -35,6 +35,7 @@ import de.hpi.bpt.chimera.history.transportationbeans.DataAttributeLog;
 import de.hpi.bpt.chimera.history.transportationbeans.DataObjectLog;
 import de.hpi.bpt.chimera.history.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
@@ -137,6 +138,47 @@ public class CaseExecutioner {
 			// TODO: has this to be before lock?
 			instance.getFragmentInstance().skipAlternativeControlNodes(instance);
 			instance.begin();
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
+	 * transitions of the DataObjects that result from the
+	 * {@link DataStateCondition PostCondition}. Therefore the post condition
+	 * needs to be unique. If the post condition is not unique,
+	 * {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map)
+	 * terminateDataControlNodeInstance} needs to be used. For additionally
+	 * specifying the values for the DataAttributeInstances of the used
+	 * DataObjects use
+	 * {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
+	 * terminateDataControlNodeInstance}.
+	 * 
+	 * @param controlNodeInstance
+	 *            - AbstractDataControlNodeInstance that shall terminate
+	 * 
+	 * @see {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
+	 *      terminateDataControlNodeInstance}
+	 */
+	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance) {
+		try {
+			if (!controlNodeInstance.canTerminate()) {
+				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
+				log.error(e.getMessage());
+				throw e;
+			}
+
+			if (!controlNodeInstance.getControlNode().hasUniquePostCondition()) {
+				return;
+			}
+
+			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = new HashMap<>();
+			if (controlNodeInstance.getControlNode().hasPostCondition()) {
+				dataClassToStateTransitions = controlNodeInstance.getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
+			}
+
+			terminateDataControlNodeInstance(controlNodeInstance, dataClassToStateTransitions, new HashMap<>());
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}

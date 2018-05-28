@@ -73,6 +73,8 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 			Map<DataAttribute, String> dataAttributeToJsonPath = getEventInstance().getControlNode().getJsonPathMapping().get(condition);
 			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, eventJson);
 		}
+
+		getEventInstance().getFragmentInstance().isStarted();
 	}
 
 	/**
