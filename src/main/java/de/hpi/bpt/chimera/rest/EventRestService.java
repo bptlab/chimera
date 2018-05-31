@@ -15,7 +15,9 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
@@ -123,6 +125,32 @@ public class EventRestService extends AbstractRestService {
 		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Event received.\"}").build();
 	}
 
+	/**
+	 * Get the case start triggers of a case model.
+	 * 
+	 * @param cmId - the id of the case model
+	 * @return the request key and event query of a case start trigger
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("scenario/{scenarioId}/casestart")
+	public Response getCaseStartTriggers(@PathParam("scenarioId") String cmId) {
+
+		CaseModel cm = CaseModelManager.getCaseModel(cmId);
+		Object[] caseStartTriggers = cm.getStartCaseTrigger().toArray();
+		JSONArray jsonArray = new JSONArray();
+		for (Object cst : caseStartTriggers) {
+			String id = ((CaseStartTrigger) cst).getId();
+			String plan = ((CaseStartTrigger) cst).getQueryExecutionPlan();
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.append("id", id);
+			jsonObject.append("plan", plan);
+			jsonArray.put(jsonObject);
+		}
+		return Response.ok(jsonArray.toString(), MediaType.APPLICATION_JSON).build();
+	}
+
+	
 	/**
 	 * Retrieve all registered events for an specific {@link Case}.
 	 * 
