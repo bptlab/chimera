@@ -56,8 +56,13 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 
 	@Override
 	public void terminate() {
+		if (!getEventInstance().canTerminate()) {
+			return;
+		}
+
 		EventDispatcher.deregisterReceiveEvent(this);
 		
+		getEventInstance().getFragmentInstance().activate();
 		if (eventJson.isEmpty()) {
 			logger.info("No event json present to write data attributes from.");
 			return;
@@ -73,8 +78,6 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 			Map<DataAttribute, String> dataAttributeToJsonPath = getEventInstance().getControlNode().getJsonPathMapping().get(condition);
 			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, eventJson);
 		}
-
-		getEventInstance().getFragmentInstance().activate();
 	}
 
 	/**

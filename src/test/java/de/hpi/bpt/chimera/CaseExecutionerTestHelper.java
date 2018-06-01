@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Entity;
@@ -24,6 +23,7 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 public class CaseExecutionerTestHelper {
 	/**
+	 * Better use {@link #getActivityInstanceByName(FragmentInstance, String)}.
 	 * Get the AbstractActivityInstance that is currently hold in a
 	 * CaseExecutioner by its name. If the name does not occur return null.
 	 * 
@@ -32,6 +32,7 @@ public class CaseExecutionerTestHelper {
 	 * @return AbstractActivityInstance or {@code null} if the name does not
 	 *         occur.
 	 */
+	@Deprecated
 	public static AbstractActivityInstance getActivityInstanceByName(CaseExecutioner caseExecutioner, String name) {
 		List<AbstractActivityInstance> possibleActivityInstances = caseExecutioner.getCase().getFragmentInstances().values().stream()
 																		.map(f -> getActivityInstanceByName(f, name))
@@ -44,40 +45,35 @@ public class CaseExecutionerTestHelper {
 		List<AbstractActivityInstance> possibleActivityInstances = fragmentInstance.getActivActivityInstances().stream()
 																		.filter(a -> a.getControlNode().getName().equals(name))
 																		.collect(Collectors.toList());
-		assertEquals(String.format("The name %s is not unique in the fragment", name), possibleActivityInstances.size(), 1);
-		return possibleActivityInstances.get(0);
+		// TODO: think about how to handle concurrency
+		if (possibleActivityInstances.size() == 1) {
+			return possibleActivityInstances.get(0);
+		}
+		throw new IllegalArgumentException(String.format("The name %s is not unique in the fragment", name));
 	}
 
-	public static AbstractEventInstance getEventInstanceByName(FragmentInstance fragmentInstance, String eventInstanceName) {
-		for (AbstractEventInstance eventInstance : getEventInstances(fragmentInstance)) {
-			if (eventInstance.getControlNode().getName().equals(eventInstanceName)) {
-				return eventInstance;
-			}
+	public static AbstractEventInstance getEventInstanceByName(FragmentInstance fragmentInstance, String name) {
+		List<AbstractEventInstance> possibleEventInstances = fragmentInstance.getControlNodeInstances().stream()
+																.filter(c -> c instanceof AbstractEventInstance && c.getControlNode().getName().equals(name))
+																.map(AbstractEventInstance.class::cast)
+																.collect(Collectors.toList());
+
+		if (possibleEventInstances.size() == 1) {
+			return possibleEventInstances.get(0);
 		}
-		return null;
+		throw new IllegalArgumentException(String.format("The name %s is not unique in the fragment", name));
 	}
 
-	public static List<AbstractEventInstance> getEventInstances(FragmentInstance fragmentInstance) {
-		List<AbstractEventInstance> eventInstances = new ArrayList<>();
-		for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstanceIdToInstance().values()) {
-			if (nodeInstance instanceof AbstractEventInstance) {
-				eventInstances.add((AbstractEventInstance) nodeInstance);
-			}
-		}
-		return eventInstances;
-	}
+
 
 	public static FragmentInstance getFragmentInstanceByName(CaseExecutioner caseExecutioner, String name) {
-		FragmentInstance searchedFragmentInstance = null;
-		for (FragmentInstance fragmentInstance : caseExecutioner.getCase().getFragmentInstances().values()) {
-			if (fragmentInstance.getFragment().getName().equals(name)) {
-				if (searchedFragmentInstance != null) {
-					throw new IllegalArgumentException(String.format("more than fragment exists with this name: %s", name));
-				}
-				searchedFragmentInstance = fragmentInstance;
-			}
+		List<FragmentInstance> possibleFragmentInstances = caseExecutioner.getCase().getFragmentInstances().values().stream()
+																.filter(f -> f.getFragment().getName().equals(name))
+																.collect(Collectors.toList());
+		if (possibleFragmentInstances.size() == 1) {
+			return possibleFragmentInstances.get(0);
 		}
-		return searchedFragmentInstance;
+		throw new IllegalArgumentException(String.format("The name %s is not a unique fragment name in the case", name));
 	}
 	
 	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, String name) {
