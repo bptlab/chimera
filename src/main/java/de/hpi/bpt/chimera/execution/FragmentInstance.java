@@ -162,7 +162,8 @@ public class FragmentInstance {
 	public void activate() {
 		if (state.equals(FragmentState.ENABLED)) {
 			setState(FragmentState.ACTIVE);
-			getCase().addFragmentInstance(fragment);
+			FragmentInstance fragmentInstance = getCase().addFragmentInstance(fragment);
+			fragmentInstance.enable();
 		}
 	}
 

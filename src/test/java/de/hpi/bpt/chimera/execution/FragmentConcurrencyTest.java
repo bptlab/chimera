@@ -1,17 +1,20 @@
 package de.hpi.bpt.chimera.execution;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
-import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
@@ -38,13 +41,19 @@ public class FragmentConcurrencyTest extends Unicorn {
 	 */
 	@Test
 	public void testActivity() {
-		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "Fragment with Activity");
+		String fragmentName = "Fragment with Activity";
+		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, fragmentName);
 		AbstractActivityInstance activityInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, "Task");
 		assertEquals(FragmentState.ENABLED, fragmentInstance.getState());
 
 		caseExecutioner.beginDataControlNodeInstance(activityInstance, new ArrayList<DataObject>());
-		assertEquals("Fragment does not changed in State Active.", FragmentState.ACTIVE, fragmentInstance.getState());
-		assertEquals("Exactly one Fragment Instance has to be created.", fragmentAmount + 1, caseExecutioner.getCase().getFragmentInstances().size());
+		assertEquals("Fragment Instance does not changed in State Active.", FragmentState.ACTIVE, fragmentInstance.getState());
+		
+		List<FragmentInstance> fragmentInstances = CaseExecutionerTestHelper.getFragmentInstancesByName(caseExecutioner, fragmentName);
+		assertEquals(2, fragmentInstances.size());
+		
+		FragmentInstance newFragmentInstance = fragmentInstances.stream().filter(f -> !f.getId().equals(fragmentInstance.getId())).findFirst().get();
+		assertEquals("New Fragment Instance is not enabled.", FragmentState.ENABLED, newFragmentInstance.getState());
 	}
 
 	@Test
@@ -65,13 +74,34 @@ public class FragmentConcurrencyTest extends Unicorn {
 		assertEquals(FragmentState.ENABLED, fragmentInstance.getState());
 
 		CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), "");
-		assertEquals(State.TERMINATED, eventInstance.getState());
 		assertEquals("Fragment does not changed in State Active.", FragmentState.ACTIVE, fragmentInstance.getState());
 		assertEquals("Exactly one Fragment Instance has to be created.", fragmentAmount + 1, caseExecutioner.getCase().getFragmentInstances().size());
 	}
 
 	@Test
-	public void testSendEvent() {
+	public void testThrowEvent() {
+		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "Fragment with Throw Event");
+		AbstractEventInstance eventInstance = CaseExecutionerTestHelper.getEventInstanceByName(fragmentInstance, "Throw Event");
+		assertEquals(FragmentState.ENABLED, fragmentInstance.getState());
+		
+		caseExecutioner.beginDataControlNodeInstance(eventInstance, new ArrayList<DataObject>());
+		assertEquals("Fragment does not changed in State Active.", FragmentState.ACTIVE, fragmentInstance.getState());
+		assertEquals("Exactly one Fragment Instance has to be created.", fragmentAmount + 1, caseExecutioner.getCase().getFragmentInstances().size());
+	}
 
+	@Test
+	public void testTestFiniteFragmentInstanceAmount() {
+//		for (int i = 0; i < 500; i++) {
+//			Optional<MessageReceiveEventBehavior> receiveBehavior = caseExecutioner.getRegisteredEventBehaviors().stream().findFirst();
+//			if (receiveBehavior.isPresent()) {
+//				AbstractEventInstance eventInstance = receiveBehavior.get().getEventInstance();
+//				CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), "");
+//			}
+//		}
+//
+//		List<FragmentInstance> fragmentInstance = caseExecutioner.getCase().getFragmentInstances().values()
+//													.stream().filter(f -> f.getFragment().getName().equals("Fragment with Catch Event"))
+//													.collect(Collectors.toList());
+//		assertEquals("Not the expcted amount of Fragment Instances were created", 100, fragmentInstance.size());
 	}
 }

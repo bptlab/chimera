@@ -19,7 +19,9 @@ public class Unicorn extends JerseyTest {
 
 	private WebTarget base;
 	private final int port = 8081;
-	private final String unicornPathDeploy = "/Unicorn-unicorn_BP15_dev/webapi/REST/EventQuery/REST";
+	private final String catchEventDeploy = "/Unicorn-unicorn_BP15_dev/webapi/REST/EventQuery/REST";
+	// TODO: set up a response for throw events
+	private final String throwEventDeploy = "/Unicorn-unicorn_BP15_dev/webapi/REST/Event";
 	@Rule
 	public MockServerRule mockServerRule = new MockServerRule(this, port);
 
@@ -44,7 +46,7 @@ public class Unicorn extends JerseyTest {
 		unicorn.when(
 				HttpRequest.request()
 					.withMethod("POST")
-					.withPath(unicornPathDeploy))
+					.withPath(catchEventDeploy))
 			.respond(
 				HttpResponse.response()
 					.withStatusCode(201)

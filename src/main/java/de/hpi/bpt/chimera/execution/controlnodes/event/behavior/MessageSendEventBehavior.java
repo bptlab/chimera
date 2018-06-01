@@ -31,6 +31,7 @@ public class MessageSendEventBehavior extends EventBehavior {
 			return;
 		}
 		EventSpawner.spawnEvent(getEventInstance());
+		getEventInstance().getFragmentInstance().activate();
 		getEventInstance().getCaseExecutioner().terminateDataControlNodeInstance(getEventInstance());
 	}
 }

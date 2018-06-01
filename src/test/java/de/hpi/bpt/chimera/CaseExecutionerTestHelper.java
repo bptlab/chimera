@@ -12,7 +12,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
@@ -65,11 +64,14 @@ public class CaseExecutionerTestHelper {
 	}
 
 
+	public static List<FragmentInstance> getFragmentInstancesByName(CaseExecutioner caseExecutioner, String name) {
+		return caseExecutioner.getCase().getFragmentInstances().values().stream()
+				.filter(f -> f.getFragment().getName().equals(name))
+				.collect(Collectors.toList());
+	}
 
 	public static FragmentInstance getFragmentInstanceByName(CaseExecutioner caseExecutioner, String name) {
-		List<FragmentInstance> possibleFragmentInstances = caseExecutioner.getCase().getFragmentInstances().values().stream()
-																.filter(f -> f.getFragment().getName().equals(name))
-																.collect(Collectors.toList());
+		List<FragmentInstance> possibleFragmentInstances = getFragmentInstancesByName(caseExecutioner, name);
 		if (possibleFragmentInstances.size() == 1) {
 			return possibleFragmentInstances.get(0);
 		}

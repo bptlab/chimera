@@ -24,7 +24,8 @@ public class Case {
 	@OneToMany(cascade = CascadeType.ALL)
 	private Map<String, FragmentInstance> fragmentInstances;
 
-
+	// TODO: need to make this adaptable
+	private final int FRAGMENT_INSTANCES_OF_ONE_KIND_LIMIT = 100;
 	/**
 	 * for JPA only
 	 */
@@ -55,9 +56,15 @@ public class Case {
 		}
 	}
 
-	public void addFragmentInstance(Fragment fragment) {
-		FragmentInstance fragmentInstance = new FragmentInstance(fragment, this);
-		fragmentInstances.put(fragmentInstance.getId(), fragmentInstance);
+	public FragmentInstance addFragmentInstance(Fragment fragment) {
+		long amount = getFragmentInstances().values().stream().filter(f -> f.getFragment().equals(fragment)).count();
+
+		if (amount < FRAGMENT_INSTANCES_OF_ONE_KIND_LIMIT) {
+			FragmentInstance fragmentInstance = new FragmentInstance(fragment, this);
+			fragmentInstances.put(fragmentInstance.getId(), fragmentInstance);
+			return fragmentInstance;
+		}
+		return null;
 	}
 
 	// GETTER & SETTER
