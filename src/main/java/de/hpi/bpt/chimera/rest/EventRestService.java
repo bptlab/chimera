@@ -58,12 +58,6 @@ public class EventRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
 	public Response receiveEvent(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("requestKey") String requestId, String eventJson) {
 
-		// TODO
-		// WHY?
-		// if (true) {
-		// throw new IllegalArgumentException("Event Rest Service");
-		// }
-
 		log.info("Receiving an event...");
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);

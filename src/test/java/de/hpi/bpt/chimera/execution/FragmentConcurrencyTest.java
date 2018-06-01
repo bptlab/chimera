@@ -88,20 +88,4 @@ public class FragmentConcurrencyTest extends Unicorn {
 		assertEquals("Fragment does not changed in State Active.", FragmentState.ACTIVE, fragmentInstance.getState());
 		assertEquals("Exactly one Fragment Instance has to be created.", fragmentAmount + 1, caseExecutioner.getCase().getFragmentInstances().size());
 	}
-
-	@Test
-	public void testTestFiniteFragmentInstanceAmount() {
-//		for (int i = 0; i < 500; i++) {
-//			Optional<MessageReceiveEventBehavior> receiveBehavior = caseExecutioner.getRegisteredEventBehaviors().stream().findFirst();
-//			if (receiveBehavior.isPresent()) {
-//				AbstractEventInstance eventInstance = receiveBehavior.get().getEventInstance();
-//				CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), "");
-//			}
-//		}
-//
-//		List<FragmentInstance> fragmentInstance = caseExecutioner.getCase().getFragmentInstances().values()
-//													.stream().filter(f -> f.getFragment().getName().equals("Fragment with Catch Event"))
-//													.collect(Collectors.toList());
-//		assertEquals("Not the expcted amount of Fragment Instances were created", 100, fragmentInstance.size());
-	}
 }

@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
@@ -118,6 +120,9 @@ public class CaseExecutionerTestHelper {
 		String eventInstanceId = eventInstance.getId();
 		String route = String.format("scenario/%s/instance/%s/events/%s", cmId, caseId, eventInstanceId);
 
-		base.path(route).request().post(Entity.json(body));
+		Response response = base.path(route).request().post(Entity.json(body));
+		if (response.getStatus() != 200) {
+			throw new IllegalArgumentException(String.format("%s : %s", response.getStatus(), response.readEntity(String.class)));
+		}
 	}
 }

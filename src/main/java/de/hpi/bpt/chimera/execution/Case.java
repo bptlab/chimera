@@ -10,6 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import org.apache.log4j.Logger;
+
+import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 
@@ -26,6 +31,8 @@ public class Case {
 
 	// TODO: need to make this adaptable
 	private final int FRAGMENT_INSTANCES_OF_ONE_KIND_LIMIT = 100;
+	private static Logger log = Logger.getLogger(Case.class);
+
 	/**
 	 * for JPA only
 	 */
@@ -63,8 +70,22 @@ public class Case {
 			FragmentInstance fragmentInstance = new FragmentInstance(fragment, this);
 			fragmentInstances.put(fragmentInstance.getId(), fragmentInstance);
 			return fragmentInstance;
+		} else {
+			log.warn("No instances of fragment %s because the maximum amount of concurrent running instances of this fragment has been reached.");
 		}
 		return null;
+	}
+
+	public void removeFragmentInstance(FragmentInstance fragmentInstance) {
+		String fragmentInstanceId = fragmentInstance.getId();
+		if (fragmentInstances.containsKey(fragmentInstanceId)) {
+			fragmentInstance.getControlNodeInstances().stream()
+				.filter(c -> !c.getState().equals(State.TERMINATED))
+				.forEach(ControlNodeInstance::skip);
+			fragmentInstance.getControlNodeIdToInstance().clear();
+			fragmentInstance.getControlNodeInstanceIdToInstance().clear();
+			fragmentInstances.remove(fragmentInstanceId);
+		}
 	}
 
 	// GETTER & SETTER

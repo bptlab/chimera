@@ -163,8 +163,14 @@ public class FragmentInstance {
 		if (state.equals(FragmentState.ENABLED)) {
 			setState(FragmentState.ACTIVE);
 			FragmentInstance fragmentInstance = getCase().addFragmentInstance(fragment);
-			fragmentInstance.enable();
+			if (fragmentInstance != null) {
+				fragmentInstance.enable();
+			}
 		}
+	}
+
+	public void terminate() {
+		caze.removeFragmentInstance(this);
 	}
 
 	/**

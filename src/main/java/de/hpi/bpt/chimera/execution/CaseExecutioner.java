@@ -487,7 +487,7 @@ public class CaseExecutioner {
 		if (registeredEventInstanceIdToReceiveBehavior.containsKey(eventInstanceId)) {
 			return registeredEventInstanceIdToReceiveBehavior.get(eventInstanceId);
 		}
-		String message = String.format("The case start trigger id: %s is not assigned", eventInstanceId);
+		String message = String.format("The catch event id: %s is not assigned", eventInstanceId);
 		log.error(message);
 		throw new IllegalArgumentException(message);
 	}
