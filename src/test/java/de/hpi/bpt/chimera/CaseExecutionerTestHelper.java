@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -30,14 +32,20 @@ public class CaseExecutionerTestHelper {
 	 * @return AbstractActivityInstance or {@code null} if the name does not
 	 *         occur.
 	 */
-	public static AbstractActivityInstance getActivityInstanceByName(CaseExecutioner caseExecutioner, String activityInstanceName) {
-		List<AbstractActivityInstance> activityInstances = getActivityInstances(caseExecutioner);
-		for (AbstractActivityInstance activityInstance : activityInstances) {
-			if (activityInstance.getControlNode().getName().equals(activityInstanceName)) {
-				return activityInstance;
-			}
-		}
-		return null;
+	public static AbstractActivityInstance getActivityInstanceByName(CaseExecutioner caseExecutioner, String name) {
+		List<AbstractActivityInstance> possibleActivityInstances = caseExecutioner.getCase().getFragmentInstances().values().stream()
+																		.map(f -> getActivityInstanceByName(f, name))
+																		.collect(Collectors.toList());
+		assertEquals(String.format("The name %s is not unique in the case", name), possibleActivityInstances.size(), 1);
+		return possibleActivityInstances.get(0);
+	}
+
+	public static AbstractActivityInstance getActivityInstanceByName(FragmentInstance fragmentInstance, String name) {
+		List<AbstractActivityInstance> possibleActivityInstances = fragmentInstance.getActivActivityInstances().stream()
+																		.filter(a -> a.getControlNode().getName().equals(name))
+																		.collect(Collectors.toList());
+		assertEquals(String.format("The name %s is not unique in the fragment", name), possibleActivityInstances.size(), 1);
+		return possibleActivityInstances.get(0);
 	}
 
 	public static AbstractEventInstance getEventInstanceByName(FragmentInstance fragmentInstance, String eventInstanceName) {
@@ -47,22 +55,6 @@ public class CaseExecutionerTestHelper {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * 
-	 * @return all AbstractActivityInstances in all FragmentInstances.
-	 */
-	public static List<AbstractActivityInstance> getActivityInstances(CaseExecutioner caseExecutioner) {
-		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
-		for (FragmentInstance fragmentInstance : caseExecutioner.getCase().getFragmentInstances().values()) {
-			for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstanceIdToInstance().values()) {
-				if (nodeInstance instanceof AbstractActivityInstance) {
-					activityInstances.add((AbstractActivityInstance) nodeInstance);
-				}
-			}
-		}
-		return activityInstances;
 	}
 
 	public static List<AbstractEventInstance> getEventInstances(FragmentInstance fragmentInstance) {
@@ -87,7 +79,7 @@ public class CaseExecutionerTestHelper {
 		}
 		return searchedFragmentInstance;
 	}
-
+	
 	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, String name) {
 		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, name);
 		assertNotNull(humanTaskInstance);

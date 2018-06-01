@@ -74,7 +74,7 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, eventJson);
 		}
 
-		getEventInstance().getFragmentInstance().isStarted();
+		getEventInstance().getFragmentInstance().activate();
 	}
 
 	/**

@@ -48,7 +48,11 @@ public class CaseModelTestHelper {
 	 */
 	public static CaseModel parseCaseModel(String filepath) {
 		String jsonString = getJsonString(filepath);
-		return CaseModelParser.parseCaseModel(jsonString);
+		try {
+			return CaseModelParser.parseCaseModel(jsonString);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
 	}
 
 	public static Fragment getFragmentByName(CaseModel cm, String name) {

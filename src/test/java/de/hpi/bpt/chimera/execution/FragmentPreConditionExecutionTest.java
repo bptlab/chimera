@@ -91,6 +91,6 @@ public class FragmentPreConditionExecutionTest {
 		// automatic task should still be in state to ready to begin
 		caseExecutioner.beginDataControlNodeInstance(automaticTaskInstance, new ArrayList<>());
 		assertEquals("Automatic task instance was not successfully executed", State.TERMINATED, automaticTaskInstance.getState());
-		assertEquals("Fragment instance is in wrong state", FragmentState.STARTED, fragmentInstance.getState());
+		assertEquals("Fragment instance is in wrong state", FragmentState.ACTIVE, fragmentInstance.getState());
 	}
 }

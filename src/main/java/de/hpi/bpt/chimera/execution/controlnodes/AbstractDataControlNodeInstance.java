@@ -155,7 +155,7 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 	 *         they need to be registered.
 	 */
 	public boolean canBeginAutomatically() {
-		return canBegin() && hasAutomaticBegin() && getFragmentInstance().isStarted();
+		return canBegin() && hasAutomaticBegin() && getFragmentInstance().isActive();
 	}
 
 	/**

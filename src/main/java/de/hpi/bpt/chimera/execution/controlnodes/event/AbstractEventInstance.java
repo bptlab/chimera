@@ -65,10 +65,6 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 			previousEventBasedGatewayInstance.skipAlternativeGateways(this);
 		}
 
-		if (!(this instanceof StartEventInstance || this instanceof EndEventInstance)) {
-			getFragmentInstance().isStarted();
-		}
-
 		behavior.terminate();
 		setState(State.TERMINATED);
 		getCaseExecutioner().updateDataFlow();

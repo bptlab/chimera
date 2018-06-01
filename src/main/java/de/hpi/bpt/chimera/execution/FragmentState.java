@@ -1,5 +1,5 @@
 package de.hpi.bpt.chimera.execution;
 
 public enum FragmentState {
-	CREATED, ENABLED, DISABLED, STARTED;
+	CREATED, ENABLED, DISABLED, ACTIVE;
 }

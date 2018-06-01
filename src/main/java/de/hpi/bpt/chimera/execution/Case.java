@@ -42,9 +42,6 @@ public class Case {
 		this.caseExecutioner = caseExecutioner;
 		this.fragmentInstances = new HashMap<>();
 		instantiate(caseModel);
-
-		// something to start automatic running control node instances e.g.
-		// e-mail task, but this function is not implemented in old version
 	}
 
 	/**
@@ -54,9 +51,13 @@ public class Case {
 	 */
 	private void instantiate(CaseModel caseModel) {
 		for (Fragment fragment : caseModel.getFragments()) {
-			FragmentInstance fragmentInstance = new FragmentInstance(fragment, this);
-			fragmentInstances.put(fragmentInstance.getId(), fragmentInstance);
+			addFragmentInstance(fragment);
 		}
+	}
+
+	public void addFragmentInstance(Fragment fragment) {
+		FragmentInstance fragmentInstance = new FragmentInstance(fragment, this);
+		fragmentInstances.put(fragmentInstance.getId(), fragmentInstance);
 	}
 
 	// GETTER & SETTER

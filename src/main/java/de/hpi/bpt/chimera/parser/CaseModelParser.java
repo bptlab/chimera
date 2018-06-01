@@ -20,7 +20,7 @@ import de.hpi.bpt.chimera.parser.datamodel.DataModelParser;
 import de.hpi.bpt.chimera.parser.condition.CaseStartTriggerParser;
 import de.hpi.bpt.chimera.parser.condition.DataStateConditionParser;
 import de.hpi.bpt.chimera.parser.fragment.FragmentParser;
-import de.hpi.bpt.chimera.validation.FragmentValidation;
+import de.hpi.bpt.chimera.validation.FragmentValidator;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
 public class CaseModelParser {
@@ -124,7 +124,7 @@ public class CaseModelParser {
 	 */
 	private static List<Fragment> getFragments(JSONArray fragmentJsonArray, CaseModelParserHelper parserHelper) {
 		int arraySize = fragmentJsonArray.length();
-		FragmentValidation.validateFragmentAmount(arraySize);
+		FragmentValidator.validateFragmentAmount(arraySize);
 		List<Fragment> fragments = new ArrayList<>();
 
 		for (int i = 0; i < arraySize; i++) {

@@ -11,6 +11,7 @@ import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 import de.hpi.bpt.chimera.parser.condition.DataStateConditionParser;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.BpmnXmlFragmentParser;
+import de.hpi.bpt.chimera.validation.FragmentValidator;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
 public final class FragmentParser {
@@ -57,9 +58,12 @@ public final class FragmentParser {
 
 			BpmnFragment bmpnFragment = BpmnXmlFragmentParser.parseBpmnXmlFragment(contentXML, parserHelper);
 			fragment.setBpmnFragment(bmpnFragment);
-		} catch (JSONException e) {
+
+			FragmentValidator validator = new FragmentValidator(fragment);
+			validator.validate();
+		} catch (JSONException | IllegalArgumentException e) {
 			log.error(e);
-			throw new IllegalCaseModelException("Invalid Fragment->" + e.getMessage());
+			throw new IllegalCaseModelException("Invalid Fragment: " + e.getMessage());
 		}
 
 

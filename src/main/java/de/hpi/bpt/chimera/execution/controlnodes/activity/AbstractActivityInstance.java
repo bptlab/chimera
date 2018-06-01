@@ -64,7 +64,7 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 			log.info(String.format("The activity instance of %s can not begin", this.getControlNode().getName()));
 			return;
 		}
-		getFragmentInstance().started();
+		getFragmentInstance().activate();
 		createAttachedBoundaryEvents();
 
 		setState(State.RUNNING);

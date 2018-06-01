@@ -90,17 +90,6 @@ public class FragmentInstance {
 	}
 
 	/**
-	 * Update DataFlow of all ActivityInstances.
-	 */
-	public void updateDataFlow() {
-		for (ControlNodeInstance nodeInstance : controlNodeInstanceIdToInstance.values()) { 
-			if (nodeInstance instanceof AbstractActivityInstance) {
-				((AbstractActivityInstance) nodeInstance).checkDataFlow();
-			}
-		} 
-	}
-
-	/**
 	 * Create Instances of the following ControlNodes of controlNode and enable
 	 * the ControlFlow of them.
 	 * 
@@ -142,7 +131,7 @@ public class FragmentInstance {
 	 */
 	public boolean isDataFlowEnabled() {
 		FragmentPreCondition preCondition = getFragment().getFragmentPreCondition();
-		if (preCondition.isEmpty() || isStarted()) {
+		if (preCondition.isEmpty() || isActive()) {
 			return true;
 		}
 
@@ -152,23 +141,28 @@ public class FragmentInstance {
 
 	/**
 	 * The control node instances in a fragment instance can only be executed if
-	 * the fragment instance is in the {@link FragmentState} ENABLED or STARTED.
+	 * the fragment instance is in the {@link FragmentState} ENABLED or {@link #isActive()}.
 	 * 
 	 * @return true if the fragment instance is in the {@link FragmentState}
-	 *         ENABLED or STARTED.
+	 *         ENABLED or {@link #isActive()}.
 	 */
 	public boolean isExecutable() {
-		return state.equals(FragmentState.ENABLED) || state.equals(FragmentState.STARTED);
+		return state.equals(FragmentState.ENABLED) || isActive();
 	}
 
-	public boolean isStarted() {
-		return state.equals(FragmentState.STARTED);
+	/**
+	 * 
+	 * @return true if the fragment instance is {@link FragmentState#ACTIVE
+	 *         active}
+	 */
+	public boolean isActive() {
+		return state.equals(FragmentState.ACTIVE);
 	}
 
-	public void started() {
+	public void activate() {
 		if (state.equals(FragmentState.ENABLED)) {
-			setState(FragmentState.STARTED);
-			// TODO: implement concurrency here
+			setState(FragmentState.ACTIVE);
+			getCase().addFragmentInstance(fragment);
 		}
 	}
 
@@ -177,7 +171,7 @@ public class FragmentInstance {
 	 * data flow.
 	 */
 	public void checkDataFlow() {
-		if (state.equals(FragmentState.STARTED)) {
+		if (state.equals(FragmentState.ACTIVE)) {
 			return;
 		}
 

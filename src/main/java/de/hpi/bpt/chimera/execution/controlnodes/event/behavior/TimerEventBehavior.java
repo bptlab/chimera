@@ -65,11 +65,6 @@ public class TimerEventBehavior extends EventBehavior {
 		getEventInstance().setState(State.SKIPPED);
 	}
 
-	@Override
-	public void terminate() {
-		getEventInstance().getFragmentInstance().isStarted();
-	}
-
 	/**
 	 * Calculate the termination of the timer from the current time and the
 	 * specified time span.
