@@ -12,6 +12,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
@@ -44,7 +45,7 @@ public class CaseExecutionerTestHelper {
 
 	public static AbstractActivityInstance getActivityInstanceByName(FragmentInstance fragmentInstance, String name) {
 		List<AbstractActivityInstance> possibleActivityInstances = fragmentInstance.getActivActivityInstances().stream()
-																		.filter(a -> a.getControlNode().getName().equals(name))
+				.filter(a -> a.getControlNode().getName().equals(name))
 																		.collect(Collectors.toList());
 		// TODO: think about how to handle concurrency
 		if (possibleActivityInstances.size() == 1) {

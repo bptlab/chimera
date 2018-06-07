@@ -71,4 +71,8 @@ public abstract class ControlNodeInstance implements Behaving {
 	public State getState() {
 		return state;
 	}
+
+	public void skip() {
+		this.setState(State.SKIPPED);
+	}
 }

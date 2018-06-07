@@ -361,7 +361,7 @@ public class CaseExecutioner {
 			// set all ControlNodeInstances to state Skipped, so no further
 			// controlflow is possible.
 			List<ControlNodeInstance> controlNodeInstances = this.getCase().getFragmentInstances().values().stream().map(FragmentInstance::getControlNodeInstances).flatMap(List::stream).collect(Collectors.toList());
-			controlNodeInstances.forEach(each -> each.setState(State.SKIPPED));
+			controlNodeInstances.forEach(each -> each.skip());
 			log.info("Terminating the Case" + this.getCase().getName() + ". All ControlNodeInstances are skipped.");
 
 			EventDispatcher.deregisterReceiveEventsOfCase(this.getCase());
