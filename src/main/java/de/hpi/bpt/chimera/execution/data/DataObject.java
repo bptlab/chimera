@@ -100,8 +100,8 @@ public class DataObject {
 		if (!newObjectLifecycleState.isSuccessorOf(oldObjectLifecycleState)) {
 			throw new IllegalObjectLifecycleStateSuccessorException(condition.getDataClass(), oldObjectLifecycleState, newObjectLifecycleState);
 		}
-		getCaseExecutioner().logDataObjectTransition(this, newObjectLifecycleState);
 		this.condition.setObjectLifecycleState(newObjectLifecycleState);
+		getCaseExecutioner().logDataObjectTransition(this, newObjectLifecycleState);
 	}
 
 	// GETTER & SETTER

@@ -119,48 +119,44 @@ public class DataManager {
 	 * of one {@code dataObjectsToTransition} lead to a new DataObject with the
 	 * referred ObjectLifecycleState.
 	 * 
-	 * @param workingItems
+	 * @param boundDataObjects
 	 * @param dataClassToStateTransitions
 	 * @return the List of DataObject that had a transition and were newly
 	 *         created
 	 */
-	public List<DataObject> handleDataObjectTransitions(List<DataObject> workingItems, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+	public List<DataObject> handleDataObjectTransitions(List<DataObject> boundDataObjects, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		// validation
-		List<DataObject> dataObjectToTransition = new ArrayList<>();
-		for (DataObject dataObject : workingItems) {
+		List<DataObject> transitionedDataObjects = new ArrayList<>();
+		List<DataClass> classesToHandle = new ArrayList<>(dataClassToStateTransitions.keySet());
+		for (DataObject dataObject : boundDataObjects) {
 			DataClass dataClass = dataObject.getDataClass();
-			if (!dataClassToStateTransitions.containsKey(dataClass)) {
+			if (!dataClassToStateTransitions.containsKey(dataClass)) { // no transition requested, DO only read
 				continue;
 			}
-			dataObjectToTransition.add(dataObject);
+			// check whether OLC allows transition
 			ObjectLifecycleState oldOlcState = dataObject.getObjectLifecycleState();
 			ObjectLifecycleState newOlcState = dataClassToStateTransitions.get(dataClass);
-			if (!newOlcState.isSuccessorOf(oldOlcState)) {
+			if (!newOlcState.isSuccessorOf(oldOlcState)) { // invalid transition -> throw exception
 				IllegalObjectLifecycleStateSuccessorException e = new IllegalObjectLifecycleStateSuccessorException(dataClass, oldOlcState, newOlcState);
 				log.error(e.getMessage());
 				throw e;
+			} else {
+				// make transition
+				dataObject.makeObjectLifecycleTransition(newOlcState);
+				transitionedDataObjects.add(dataObject);
+				// transition made, remove the data class from the unhandled list
+				classesToHandle.remove(dataClass);
 			}
 		}
 
-		// make transitions
-		List<DataClass> workingItemDataClasses = new ArrayList<>();
-		for (DataObject workingItem : dataObjectToTransition) {
-			ObjectLifecycleState newObjectLifecycleState = dataClassToStateTransitions.get(workingItem.getDataClass());
-			workingItem.makeObjectLifecycleTransition(newObjectLifecycleState);
-			workingItemDataClasses.add(workingItem.getDataClass());
-		}
-
-		// create new DataObjects
-		List<DataClass> transitionDataClasses = new ArrayList<>(dataClassToStateTransitions.keySet());
-		transitionDataClasses.removeAll(workingItemDataClasses);
-		for (DataClass dataClass : transitionDataClasses) {
+		// create new DataObjects for the yet unhandled data classes
+		for (DataClass dataClass : classesToHandle) { 
 			ObjectLifecycleState olcState = dataClassToStateTransitions.get(dataClass);
 			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
 			DataObject dataObject = createDataObject(condition);
-			dataObjectToTransition.add(dataObject);
+			transitionedDataObjects.add(dataObject);
 		}
-
-		return dataObjectToTransition;
+		return transitionedDataObjects;
 	}
 
 	/**

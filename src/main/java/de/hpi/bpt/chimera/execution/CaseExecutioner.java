@@ -229,15 +229,23 @@ public class CaseExecutioner {
 	 */
 	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions, Map<String, Map<String, Object>> rawDataAttributeValues) {
 		try {
+			// check whether activity instance can terminate
 			if (!controlNodeInstance.canTerminate()) {
 				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
 				log.error(e.getMessage());
 				throw e;
 			}
-
-			List<DataObject> usedDataObjects = handleDataControlNodeOutputTransitions(controlNodeInstance, dataClassToStateTransitions);
-			dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
-			controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			
+			List<DataObject> boundDataObjects = controlNodeInstance.getSelectedDataObjects();
+			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
+			// modify bound DOs 
+			if (! postCondition.isEmpty()) {
+				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
+				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+				controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			}
+			// set bound DOs free
+			dataManager.unlockDataObjects(boundDataObjects);
 			controlNodeInstance.terminate();
 		} catch (IllegalArgumentException e) {
 			throw e;
@@ -256,38 +264,6 @@ public class CaseExecutioner {
 		}
 	}
 
-	/**
-	 * Handle the data object transition for an AbstractControlNodeInstance.
-	 * Therefore unlock all DataObjects of the instance that were defined at the
-	 * beginning of the instance. In addition let the DataManager handle the
-	 * transitions of the DataObjects specified by the
-	 * dataClassToStateTransitions.
-	 * 
-	 * @param controlNodeInstance
-	 *            - AbstractDataControlNodeInstance to handle
-	 * @param dataClassToStateTransitions
-	 *            - Map from DataClass to an ObjectLifecycleState of the
-	 *            DataClass to define the new State for the DataObject with the
-	 *            referred DataClass
-	 * @return List of all DataObjects that were used as working items and
-	 *         created by the DataManager
-	 */
-	private List<DataObject> handleDataControlNodeOutputTransitions(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
-		try {
-			List<DataObject> workingItems = controlNodeInstance.getSelectedDataObjects();
-			dataManager.unlockDataObjects(workingItems);
-			
-			// TODO: validate whether this works correct
-			List<DataObject> usedDataObject = new ArrayList<>();
-			if (!controlNodeInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
-				usedDataObject = dataManager.handleDataObjectTransitions(workingItems, dataClassToStateTransitions);
-			}
-
-			return usedDataObject;
-		} catch (IllegalArgumentException e) {
-			throw e;
-		}
-	}
 
 	/**
 	 * Get an ControlNodeInstance over all FragmentInstances of the Case by an
