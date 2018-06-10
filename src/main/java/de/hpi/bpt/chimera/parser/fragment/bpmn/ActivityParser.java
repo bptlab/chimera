@@ -76,6 +76,7 @@ public class ActivityParser {
 			webServiceTask.setWebServiceUrl(xmlWebTask.getWebServiceUrl());
 			webServiceTask.setWebServiceMethod(xmlWebTask.getWebServiceMethod());
 			webServiceTask.setWebServiceBody(xmlWebTask.getWebServiceBody());
+			webServiceTask.setWebServiceHeader(xmlWebTask.getWebServiceHeader());
 			webServiceTasks.add(webServiceTask);
 		}
 		return webServiceTasks;
