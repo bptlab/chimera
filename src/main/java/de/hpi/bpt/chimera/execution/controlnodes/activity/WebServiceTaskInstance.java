@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
+import java.util.Iterator;
 import java.util.Map;
 import javax.persistence.Entity;
 import javax.ws.rs.client.Client;
@@ -7,6 +8,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
@@ -17,6 +20,8 @@ import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @Entity
 public class WebServiceTaskInstance extends AbstractActivityInstance {
@@ -43,8 +48,8 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 			return;
 		}
 		WebTarget target = buildTarget();
-		log.info("Target for web service call constructed: " + target.toString());
 		Response response = executeWebserviceRequest(target);
+		log.debug("Called: " + target + ", response: " + response.getStatus());
 		if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
 			String webServiceResponseJson = response.readEntity(String.class);
 			setWebServiceResponse(webServiceResponseJson);
@@ -61,7 +66,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 	 */
 	private WebTarget buildTarget() {
 		String link = getControlNode().getWebServiceUrl();
-		String replacedLink = replaceVariableExpressions(link);
+		String replacedLink = this.replaceVariableExpressions(link);
 
 		return parseWebTarget(replacedLink);
 	}
@@ -97,8 +102,10 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 	 * @return
 	 */
 	private Response executeWebserviceRequest(WebTarget webResource) {
-		Invocation.Builder invocationBuilder = webResource.request(MediaType.APPLICATION_JSON);
+		MultivaluedMap<String, Object> header = this.buildHeader();
+		Invocation.Builder invocationBuilder = webResource.request(MediaType.APPLICATION_JSON).headers(header);
 		String webServiceMethod = getControlNode().getWebServiceMethod().toUpperCase();
+
 		switch (webServiceMethod) {
 		case "GET":
 			return invocationBuilder.get();
@@ -113,8 +120,29 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 			}
 		default:
 			throw new IllegalArgumentException(webServiceMethod + " is not implemented yet");
-			// return invocationBuilder.method(webServiceMethod);
 		}
+	}
+
+	/**
+	 * Parses the header given from model as JSON to key-value map.
+	 * @return
+	 */
+	private MultivaluedMap<String, Object> buildHeader() {
+		JSONObject headerObject;
+		MultivaluedHashMap<String, Object> headerMap = new MultivaluedHashMap<>();
+		String header = this.replaceVariableExpressions(getControlNode().getWebServiceHeader());
+		try {
+			headerObject = new JSONObject(header);
+		} catch (JSONException e) {
+			log.warn(e.getMessage());
+			return headerMap;
+		}
+		for (Object attribute : headerObject.keySet()) {
+			String key = (String) attribute;
+			Object value = headerObject.get(key);
+			headerMap.add(key, value);
+		}
+		return headerMap;
 	}
 
 	@Override

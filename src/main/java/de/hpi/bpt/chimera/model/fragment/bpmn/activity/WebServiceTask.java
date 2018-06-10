@@ -7,6 +7,7 @@ public class WebServiceTask extends AbstractActivity {
 	private String webServiceUrl;
 	private String webServiceMethod;
 	private String webServiceBody;
+	private String webServiceHeader;
 
 	/**
 	 * Email Activities are executed automatically.
@@ -33,5 +34,11 @@ public class WebServiceTask extends AbstractActivity {
 	}
 	public void setWebServiceBody(String webServiceBody) {
 		this.webServiceBody = webServiceBody;
+	}
+	public String getWebServiceHeader() {
+		return webServiceHeader;
+	}
+	public void setWebServiceHeader(String webServiceHeader) {
+		this.webServiceHeader = webServiceHeader;
 	}
 }
