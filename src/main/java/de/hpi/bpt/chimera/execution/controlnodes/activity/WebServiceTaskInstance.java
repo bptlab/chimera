@@ -1,6 +1,5 @@
 package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
-import java.util.Iterator;
 import java.util.Map;
 import javax.persistence.Entity;
 import javax.ws.rs.client.Client;
@@ -102,10 +101,14 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 	 * @return
 	 */
 	private Response executeWebserviceRequest(WebTarget webResource) {
+		Invocation.Builder invocationBuilder;
 		MultivaluedMap<String, Object> header = this.buildHeader();
-		Invocation.Builder invocationBuilder = webResource.request(MediaType.APPLICATION_JSON).headers(header);
+		if (header.size() > 0) {
+			invocationBuilder = webResource.request(MediaType.APPLICATION_JSON).headers(header);
+		} else {
+			invocationBuilder = webResource.request(MediaType.APPLICATION_JSON);
+		}
 		String webServiceMethod = getControlNode().getWebServiceMethod().toUpperCase();
-
 		switch (webServiceMethod) {
 		case "GET":
 			return invocationBuilder.get();
@@ -131,16 +134,18 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		JSONObject headerObject;
 		MultivaluedHashMap<String, Object> headerMap = new MultivaluedHashMap<>();
 		String header = this.replaceVariableExpressions(getControlNode().getWebServiceHeader());
-		try {
-			headerObject = new JSONObject(header);
-		} catch (JSONException e) {
-			log.warn(e.getMessage());
-			return headerMap;
-		}
-		for (Object attribute : headerObject.keySet()) {
-			String key = (String) attribute;
-			Object value = headerObject.get(key);
-			headerMap.add(key, value);
+		if (header.length() > 0) {
+			try {
+				headerObject = new JSONObject(header);
+			} catch (JSONException e) {
+				log.warn(e.getMessage());
+				return headerMap;
+			}
+			for (Object attribute : headerObject.keySet()) {
+				String key = (String) attribute;
+				Object value = headerObject.get(key);
+				headerMap.add(key, value);
+			}
 		}
 		return headerMap;
 	}
