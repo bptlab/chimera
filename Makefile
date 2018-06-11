@@ -1,6 +1,6 @@
 DB_USER_NAME="root"
 DB_PASSWORD="root"
-SCHEMA_NAME="eap_development"
+SCHEMA_NAME="chimera_db"
 PROJECT="chimera"
 IMAGE_TAG="latest"
 PORT=8080
