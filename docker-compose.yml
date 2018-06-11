@@ -11,8 +11,7 @@ services:
             - CHIMERA_DB_PORT=3306
             - CHIMERA_DB_USERNAME=root
             - CHIMERA_DB_PASSWORD=root
-            - CHIMERA_DB_NAME=eap_development
-            - CHIMERA_DB_TEST_NAME=eap_testing
+            - CHIMERA_DB_NAME=chimera_db
         env_file:
             - host.env
 
