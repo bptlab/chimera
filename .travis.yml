@@ -17,7 +17,6 @@ before_script:
   - mysql -e "create database IF NOT EXISTS JEngineV2;" -uroot
 
 script:
-  - mysql JEngineV2 < src/main/resources/chimera_db_schema.sql -uroot
   - mvn test
 
 after_success:
