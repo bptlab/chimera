@@ -1,17 +1,17 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
-import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.ManualTask;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.UserTask;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
+import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BpmnManualTask;
+import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BpmnUserTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.SendTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.Task;
@@ -42,6 +42,14 @@ public class ActivityParser {
 		List<AbstractActivity> webServiceTasks = new ArrayList<>();
 		webServiceTasks.addAll(getWebServiceTasksFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.addActivities(webServiceTasks);
+
+		List<AbstractActivity> userTasks = new ArrayList<>();
+		userTasks.addAll(getUserTasksFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.addActivities(userTasks);
+
+		List<AbstractActivity> manualTasks = new ArrayList<>();
+		manualTasks.addAll(getManualTasksFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.addActivities(manualTasks);
 	}
 
 	public static List<HumanTask> getHumanActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
@@ -79,5 +87,27 @@ public class ActivityParser {
 			webServiceTasks.add(webServiceTask);
 		}
 		return webServiceTasks;
+	}
+
+	private static List<UserTask> getUserTasksFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+		List<UserTask> activityList = new ArrayList<>();
+
+		for (BpmnUserTask xmlTask : fragXmlWrap.getUserTasks()) {
+			UserTask userTask = new UserTask();
+			ControlNodeParserHelper.parseDataControlNode(userTask, xmlTask, sfResolver, dfResolver);
+			activityList.add(userTask);
+		}
+		return activityList;
+	}
+
+	private static List<ManualTask> getManualTasksFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+		List<ManualTask> activityList = new ArrayList<>();
+
+		for (BpmnManualTask xmlTask : fragXmlWrap.getManualTasks()) {
+			ManualTask manualTask = new ManualTask();
+			ControlNodeParserHelper.parseDataControlNode(manualTask, xmlTask, sfResolver, dfResolver);
+			activityList.add(manualTask);
+		}
+		return activityList;
 	}
 }

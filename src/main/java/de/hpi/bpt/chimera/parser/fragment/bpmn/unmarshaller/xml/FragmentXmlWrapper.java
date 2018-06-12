@@ -78,6 +78,14 @@ public class FragmentXmlWrapper {
 		return this.bpmnProcessXml.getSendTasks();
 	}
 
+	public List<BpmnUserTask> getUserTasks() {
+		return this.bpmnProcessXml.getUserTasks();
+	}
+
+	public List<BpmnManualTask> getManualTasks() {
+		return this.bpmnProcessXml.getManualTasks();
+	}
+
 	public List<AbstractDataControlNode> getAllActivities() {
 		List<? super AbstractDataControlNode> allActivities = new ArrayList<>();
 		allActivities.addAll(this.bpmnProcessXml.getTasks());

@@ -40,6 +40,12 @@ public class BpmnProcessXml {
 	@XmlElement(name = "bpmn:sendTask")
 	private List<SendTask> sendTasks = new ArrayList<>();
 
+	@XmlElement(name = "bpmn:manualTask")
+	private List<BpmnManualTask> manualTasks = new ArrayList<>();
+
+	@XmlElement(name = "bpmn:userTask")
+	private List<BpmnUserTask> userTasks = new ArrayList<>();
+
 	@XmlElement(name = "bpmn:dataObjectReference")
 	private List<BpmnDataNode> dataNodes = new ArrayList<>();
 
@@ -157,5 +163,21 @@ public class BpmnProcessXml {
 
 	public List<IntermediateThrowEvent> getIntermediateThrowEvents() {
 		return intermediateThrowEvents;
+	}
+
+	public List<BpmnManualTask> getManualTasks() {
+		return manualTasks;
+	}
+
+	public void setManualTasks(List<BpmnManualTask> manualTasks) {
+		this.manualTasks = manualTasks;
+	}
+
+	public List<BpmnUserTask> getUserTasks() {
+		return userTasks;
+	}
+
+	public void setUserTasks(List<BpmnUserTask> userTasks) {
+		this.userTasks = userTasks;
 	}
 }
