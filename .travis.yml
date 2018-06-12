@@ -4,8 +4,14 @@ jdk:
   - oraclejdk7
   - openjdk7
 
+cache:
+  directories:
+  - $HOME/.m2
+
 before_install:
   - mvn clean
+  - source host.env
+  - envsubst < config.properties.tpl > config.properties
 
 before_script:
   - mysql -e "create database IF NOT EXISTS JEngineV2;" -uroot
@@ -13,9 +19,9 @@ before_script:
 script:
   - mysql JEngineV2 < src/main/resources/chimera_db_schema.sql -uroot
   - mvn test
- 
+
 after_success:
   - mvn clean generate-sources cobertura:cobertura coveralls:report
-  
+
 notifications:
   hipchat: 062eec142640c35ba3c3a3cac1052b@1093154
