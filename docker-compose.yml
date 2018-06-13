@@ -1,0 +1,26 @@
+version: '3'
+services:
+    chimera:
+        image: bptlab/chimera:latest
+        ports:
+            - 8080:8080
+        volumes:
+            - ./server-config.xml:/usr/local/tomcat/conf/server-template.xml
+        environment:
+            - CHIMERA_DB_HOST=database
+            - CHIMERA_DB_PORT=3306
+            - CHIMERA_DB_USERNAME=root
+            - CHIMERA_DB_PASSWORD=root
+            - CHIMERA_DB_NAME=chimera_db
+        env_file:
+            - host.env
+
+    database:
+        image: mysql:5.7
+        volumes:
+            - mysql-data:/var/lib/mysql
+            - ./mysql-init:/docker-entrypoint-initdb.d
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+volumes:
+    mysql-data:

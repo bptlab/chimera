@@ -1,0 +1,6 @@
+*
+!host.env
+!target/Chimera.war
+!config.properties.tpl
+!src/main/resources/META-INF/persistence.xml.tpl
+!docker_deploy.sh
