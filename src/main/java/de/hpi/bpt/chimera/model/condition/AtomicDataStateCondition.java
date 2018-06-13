@@ -22,7 +22,7 @@ public class AtomicDataStateCondition {
 	@OneToOne(cascade = CascadeType.ALL)
 	protected DataClass dataClass;
 	@OneToOne(cascade = CascadeType.ALL)
-	protected ObjectLifecycleState state;
+	protected volatile ObjectLifecycleState state;
 
 	public AtomicDataStateCondition() {
 		this.dataClass = null;
