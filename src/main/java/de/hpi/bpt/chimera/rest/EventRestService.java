@@ -137,8 +137,8 @@ public class EventRestService extends AbstractRestService {
 			String id = ((CaseStartTrigger) cst).getId();
 			String plan = ((CaseStartTrigger) cst).getQueryExecutionPlan();
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.append("id", id);
-			jsonObject.append("plan", plan);
+			jsonObject.put("id", id);
+			jsonObject.put("plan", plan);
 			jsonArray.put(jsonObject);
 		}
 		return Response.ok(jsonArray.toString(), MediaType.APPLICATION_JSON).build();
