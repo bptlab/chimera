@@ -25,7 +25,7 @@ unicorn.path.query.queue=/webapi/REST/EventQuery/Queue
 #chimera.url=http://172.16.64.113:8080
 #chimera.path.deploy=${maven.tomcat.path}
 chimera.url=$CHIMERA_URL
-chimera.path.deploy=$CHIMERA_DEPLOY_NAME
+chimera.path.deploy=$CHIMERA_DEPLOY_PATH
 # this file is used to create the database initially
 database.schema.file=chimera_db_schema.sql
 webapp.version=1.0-SNAPSHOT
