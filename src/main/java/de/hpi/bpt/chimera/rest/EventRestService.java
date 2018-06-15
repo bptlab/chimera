@@ -123,7 +123,7 @@ public class EventRestService extends AbstractRestService {
 	 * Get the case start triggers of a case model.
 	 * 
 	 * @param cmId - the id of the case model
-	 * @return the request key and event query of a case start trigger
+	 * @return {@link CaseStartTrigger} ids and the respective event queries.
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
