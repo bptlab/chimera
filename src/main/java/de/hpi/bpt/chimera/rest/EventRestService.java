@@ -146,8 +146,6 @@ public class EventRestService extends AbstractRestService {
 			log.error("Could not get case model from query", e);
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
 		}
-
-
 	}
 
 	
