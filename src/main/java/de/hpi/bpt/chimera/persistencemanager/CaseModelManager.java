@@ -131,4 +131,11 @@ public class CaseModelManager {
 		}
 	}
 
+	public static void setCaseModels(Map<String, CaseModel> caseModels) {
+		CaseModelManager.caseModels = caseModels;
+	}
+
+	public static Map<String, CaseModel> getCaseModelsMap() {
+		return caseModels;
+	}
 }

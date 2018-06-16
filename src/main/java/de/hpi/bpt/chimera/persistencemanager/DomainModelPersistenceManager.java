@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.persistencemanager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 
 import javax.persistence.EntityManager;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
 
 public class DomainModelPersistenceManager {
@@ -93,11 +95,13 @@ public class DomainModelPersistenceManager {
 
 		try {
 			em.getTransaction().begin();
-			CaseModel alreadyExistingCaseModel = em.find(CaseModel.class, caseModel.getId());
-			if (alreadyExistingCaseModel != null) {
-				em.remove(alreadyExistingCaseModel);
-			}
-			em.flush();
+
+			// CaseModel alreadyExistingCaseModel = em.find(CaseModel.class,
+			// caseModel.getId());
+			// if (alreadyExistingCaseModel != null) {
+			// em.remove(alreadyExistingCaseModel);
+			// }
+			// em.flush();
 			mergedCaseModel = em.merge(caseModel);
 			em.getTransaction().commit();
 		} catch (Exception e) {
@@ -132,6 +136,31 @@ public class DomainModelPersistenceManager {
 		em.close();
 
 		return  mergedCase;
+	}
+
+	public static void saveAllCaseModelsWithCases() {
+		EntityManager em = getEntityManager();
+		em.getTransaction().begin();
+		log.debug("Started persisting all case-models.");
+
+		for (Map.Entry<String, CaseExecutioner> entry : ExecutionService.getCasesMap().entrySet()) {
+			try {
+				entry.setValue(em.merge(entry.getValue().getCase()).getCaseExecutioner());
+			} catch (Exception e) {
+				log.error("Error during persisting in regular persisting task", e);
+			}
+		}
+
+		for (Map.Entry<String, CaseModel> entry : CaseModelManager.getCaseModelsMap().entrySet()) {
+			try {
+				entry.setValue(em.merge(entry.getValue()));
+			} catch (Exception e) {
+				log.error("Error during persisting in regular persisting task", e);
+			}
+		}
+
+		em.getTransaction().commit();
+		log.debug("Finished persisting all case-modals.");
 	}
 
 	public static Case loadCase(String caseId) {
