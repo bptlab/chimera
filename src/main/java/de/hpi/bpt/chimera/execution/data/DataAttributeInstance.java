@@ -76,7 +76,7 @@ public class DataAttributeInstance {
 	 */
 	public void setValue(Object value) {
 		if (isValueAllowed(value.toString())) {
-			log.info("DataObject: Attribute value set.");
+			log.debug("DataObject: Attribute value set: " + value);
 			getCaseExecutioner().logDataAttributeTransition(this, value);
 			this.value = value.toString();
 		} else {

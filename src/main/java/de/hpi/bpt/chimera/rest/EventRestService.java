@@ -84,7 +84,7 @@ public class EventRestService extends AbstractRestService {
 	 * 
 	 * @param cmId
 	 *            The id of a case model.
-	 * @param requestId
+	 * @param requestKey
 	 *            - the id of the {@link CaseStartTrigger} receiving the event
 	 * @param eventJson
 	 *            - the json content for writing at the first data objects of
@@ -123,25 +123,29 @@ public class EventRestService extends AbstractRestService {
 	 * Get the case start triggers of a case model.
 	 * 
 	 * @param cmId - the id of the case model
-	 * @return the request key and event query of a case start trigger
+	 * @return {@link CaseStartTrigger} ids and the respective event queries.
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/casestart")
 	public Response getCaseStartTriggers(@PathParam("scenarioId") String cmId) {
-
-		CaseModel cm = CaseModelManager.getCaseModel(cmId);
-		Object[] caseStartTriggers = cm.getStartCaseTrigger().toArray();
-		JSONArray jsonArray = new JSONArray();
-		for (Object cst : caseStartTriggers) {
-			String id = ((CaseStartTrigger) cst).getId();
-			String plan = ((CaseStartTrigger) cst).getQueryExecutionPlan();
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.append("id", id);
-			jsonObject.append("plan", plan);
-			jsonArray.put(jsonObject);
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
+			Object[] caseStartTriggers = cm.getStartCaseTrigger().toArray();
+			JSONArray responseBody = new JSONArray();
+			for (Object cst : caseStartTriggers) {
+				String id = ((CaseStartTrigger) cst).getId();
+				String plan = ((CaseStartTrigger) cst).getQueryExecutionPlan();
+				JSONObject trigger = new JSONObject();
+				trigger.put("id", id);
+				trigger.put("plan", plan);
+				responseBody.put(trigger);
+			}
+			return Response.ok(responseBody.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (IllegalCaseModelIdException e) {
+			log.error("Could not get case model from query", e);
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
 		}
-		return Response.ok(jsonArray.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
 	

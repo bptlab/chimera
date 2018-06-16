@@ -21,8 +21,13 @@ public class AtomicDataStateCondition {
 	private int dbId;
 	@OneToOne // (cascade = CascadeType.ALL)
 	protected DataClass dataClass;
+<<<<<<< HEAD
 	@OneToOne
+	protected ObjectLifecycleState state;
+=======
+	@OneToOne(cascade = CascadeType.ALL)
 	protected volatile ObjectLifecycleState state;
+>>>>>>> 6672f5593fe341fc8f73e712337ea8b534f59ed6
 
 	public AtomicDataStateCondition() {
 		this.dataClass = null;

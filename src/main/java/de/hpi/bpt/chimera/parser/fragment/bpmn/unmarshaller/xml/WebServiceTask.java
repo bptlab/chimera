@@ -1,7 +1,5 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -28,6 +26,9 @@ public class WebServiceTask extends AbstractDataControlNode {
 	@XmlAttribute(name = "griffin:webservicebody")
 	String webServiceBody = "";
 
+	@XmlAttribute(name = "griffin:webserviceheader")
+	String getWebServiceHeader = "";
+
 
 	public String getWebServiceUrl() {
 		return webServiceUrl;
@@ -39,5 +40,9 @@ public class WebServiceTask extends AbstractDataControlNode {
 
 	public String getWebServiceBody() {
 		return webServiceBody;
+	}
+
+	public String getWebServiceHeader() {
+		return getWebServiceHeader;
 	}
 }

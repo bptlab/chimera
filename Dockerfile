@@ -8,4 +8,3 @@ COPY src/main/resources/META-INF/persistence.xml.tpl /Chimera/
 COPY docker_deploy.sh /Chimera/
 
 CMD /Chimera/docker_deploy.sh
-

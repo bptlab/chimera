@@ -15,7 +15,7 @@
 	<build>
 		<finalName>Chimera</finalName>
 		<filters>
-      		<filter>${basedir}/config.properties</filter>
+      		  <filter>${basedir}/config.properties</filter>
    	 	</filters>
 		<resources>
 			<resource>
@@ -196,9 +196,7 @@
 
 	<properties>
 
-		<!-- The value of the schema.version property has to be increased when 
-			the schema changes! -->
-		<schema.version>26</schema.version>
+		<!-- default properties-->
 		<db.schema>chimeradb</db.schema>
 		<db.test.schema>chimeradb_test</db.test.schema>
 		<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
@@ -466,6 +464,10 @@
 				<db.user>chimera</db.user>
 				<db.password>bp2016</db.password>
 				<db.schema>chimeradb</db.schema>
+				<unicorn.url>localhost:8080</unicorn.url>
+				<unicorn.deploy.path>unicorn</unicorn.deploy.path>
+				<chimera.url>localhost:8080</chimera.url>
+				<chimera.deploy.path>chimera</chimera.deploy.path>
 			</properties>
 			<build>
 				<plugins>
