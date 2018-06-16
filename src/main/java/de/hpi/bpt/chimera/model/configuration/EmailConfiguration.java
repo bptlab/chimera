@@ -25,8 +25,6 @@ public class EmailConfiguration {
 
 	private String message = "";
 
-	private String sendEmailAddress = "";
-
 	public String getReceiverEmailAddress() {
 		return receiverEmailAddress;
 	}
@@ -50,14 +48,4 @@ public class EmailConfiguration {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	public String getSendEmailAddress() {
-		return sendEmailAddress;
-	}
-
-	public void setSendEmailAddress(String sendEmailAddress) {
-		this.sendEmailAddress = sendEmailAddress;
-	}
-
-
 }

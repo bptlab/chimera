@@ -56,46 +56,22 @@ public class EmailActivityInstance extends AbstractActivityInstance {
 	 * EmailConfigurations and the Properties.
 	 */
 	private void setValues() {
-		hostName = PropertyLoader.getProperty("mailtask.hostname");
-		port = Integer.valueOf(PropertyLoader.getProperty("mailtask.port"));
-		sendMail = PropertyLoader.getProperty("mailtask.mail.username");
-		password = PropertyLoader.getProperty("mailtask.mail.password");
+		this.hostName = PropertyLoader.getProperty("mailtask.hostname");
+		this.port = Integer.valueOf(PropertyLoader.getProperty("mailtask.port"));
+		this.sendMail = PropertyLoader.getProperty("mailtask.mail.username");
+		this.password = PropertyLoader.getProperty("mailtask.mail.password");
 
-		// TODO
-		receiverMail = this.getControlNode().getEmailConfiguration().getReceiverEmailAddress();
-		subject = this.getControlNode().getEmailConfiguration().getSubject();
-		message = this.getControlNode().getEmailConfiguration().getMessage();
+		this.receiverMail = this.getControlNode().getEmailConfiguration().getReceiverEmailAddress();
+		this.subject = this.getControlNode().getEmailConfiguration().getSubject();
+		this.message = this.getControlNode().getEmailConfiguration().getMessage();
 		this.setDataAttributes();
 	}
 
 
 	private void setDataAttributes() {
-		// TODO
-		message = replaceVariableExpressions(message);
-		subject = replaceVariableExpressions(subject);
-		receiverMail = replaceVariableExpressions(receiverMail);
-
-		// DataManager dataManager = this.getCaseExecutioner().getDataManager();
-		// for (DataAttributeInstance dataAttributeInstance :
-		// dataManager.getDataAttributeInstances()) {
-		// message = message.replace("#" +
-		// (dataAttributeInstance.getDataObject()).getName() + "." +
-		// dataAttributeInstance.getName(),
-		// dataAttributeInstance.getValue().toString());
-		// subject = subject.replace("#" +
-		// (dataAttributeInstance.getDataObject()).getName() + "." +
-		// dataAttributeInstance.getName(),
-		// dataAttributeInstance.getValue().toString());
-		// receiverMail = receiverMail.replace("#" +
-		// (dataAttributeInstance.getDataObject()).getName() + "." +
-		// dataAttributeInstance.getName(),
-		// dataAttributeInstance.getValue().toString());
-		// }
-		// DbState dbState = new DbState();
-		// for (DataObject dataObject : dataManager.getDataObjects()) {
-		// message = message.replace("$" + dataObject.getName(),
-		// dbState.getStateName(dataObject.getStateId()));
-		// }
+		this.message = replaceVariableExpressions(this.message);
+		this.subject = replaceVariableExpressions(this.subject);
+		this.receiverMail = replaceVariableExpressions(this.receiverMail);
 	}
 
 	/**
@@ -109,15 +85,15 @@ public class EmailActivityInstance extends AbstractActivityInstance {
 		log.info("sending a Mail");
 		// TODO
 		Email email = new SimpleEmail();
-		email.setHostName(hostName);
-		email.setSmtpPort(port);
-		email.setAuthenticator(new DefaultAuthenticator(sendMail, password));
+		email.setHostName(this.hostName);
+		email.setSmtpPort(this.port);
+		email.setAuthenticator(new DefaultAuthenticator(this.sendMail, this.password));
 		email.setSSLOnConnect(true);
 		try {
-			email.setFrom(sendMail);
-			email.setSubject(subject);
-			email.setMsg(message);
-			email.addTo(receiverMail);
+			email.setFrom(this.sendMail);
+			email.setSubject(this.subject);
+			email.setMsg(this.message);
+			email.addTo(this.receiverMail);
 			email.send();
 		} catch (EmailException e) {
 			log.error("Error by sending e-Mail - wrong e-Mail properties or wrong config.properties or an antivirus software blocking the outgoing mails:", e);
