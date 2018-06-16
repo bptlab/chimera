@@ -11,8 +11,8 @@ mysql.test.url=jdbc:mysql://$CHIMERA_DB_HOST:$CHIMERA_DB_PORT/$CHIMERA_DB_TEST_N
 # connection parameter for the email task
 mailtask.hostname=smtp.googlemail.com
 mailtask.port=465
-mailtask.mail.username=
-mailtask.mail.password=
+mailtask.mail.username=$CHIMERA_GMAIL_USER
+mailtask.mail.password=$CHIMERA_GMAIL_PASSWORD
 
 # connection to event processing platform Unicorn
 unicorn.url=$UNICORN_URL

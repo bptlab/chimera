@@ -10,6 +10,8 @@ services:
             - CHIMERA_DB_USERNAME=root
             - CHIMERA_DB_PASSWORD=root
             - CHIMERA_DB_NAME=chimera_db
+            - CHIMERA_GMAIL_USER=chimera.bptlab@gmail.com
+            - CHIMERA_GMAIL_PASSWORD=chimera123
         env_file:
             - host.env
 
