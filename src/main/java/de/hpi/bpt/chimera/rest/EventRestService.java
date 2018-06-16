@@ -132,16 +132,16 @@ public class EventRestService extends AbstractRestService {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 			Object[] caseStartTriggers = cm.getStartCaseTrigger().toArray();
-			JSONArray jsonArray = new JSONArray();
+			JSONArray responseBody = new JSONArray();
 			for (Object cst : caseStartTriggers) {
 				String id = ((CaseStartTrigger) cst).getId();
 				String plan = ((CaseStartTrigger) cst).getQueryExecutionPlan();
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("id", id);
-				jsonObject.put("plan", plan);
-				jsonArray.put(jsonObject);
+				JSONObject trigger = new JSONObject();
+				trigger.put("id", id);
+				trigger.put("plan", plan);
+				responseBody.put(trigger);
 			}
-			return Response.ok(jsonArray.toString(), MediaType.APPLICATION_JSON).build();
+			return Response.ok(responseBody.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalCaseModelIdException e) {
 			log.error("Could not get case model from query", e);
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
