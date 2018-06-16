@@ -6,6 +6,5 @@ COPY target/Chimera.war /Chimera/
 COPY config.properties.tpl /Chimera/
 COPY src/main/resources/META-INF/persistence.xml.tpl /Chimera/
 COPY docker_deploy.sh /Chimera/
-COPY web.xml.tpl /usr/local/tomcat/conf/web.xml
 
 CMD /Chimera/docker_deploy.sh
