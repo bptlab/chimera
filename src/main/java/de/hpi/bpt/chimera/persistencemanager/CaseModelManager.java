@@ -119,11 +119,12 @@ public class CaseModelManager {
 		if (caseModels.containsKey(cmId)) {
 			try {
 				EventDispatcher.deregisterEvents(caseModels.get(cmId));
-				ExecutionService.deleteCaseModel(cmId);
+				ExecutionService.deleteAllCasesOfCaseModel(cmId);
 				DomainModelPersistenceManager.deleteCaseModel(cmId);
 				caseModels.remove(cmId);
+				log.info("Deleted a CaseModel.");
 			} catch (Exception e) {
-				throw e;
+				log.error("Error while deleting a CaseModel!", e);
 			}
 		} else {
 			throw new IllegalArgumentException(String.format("CaseModel id: %s is not assigned", cmId));

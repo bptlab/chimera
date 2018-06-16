@@ -24,7 +24,7 @@ public class DataAttributeInstance {
 
 	@Id
 	private String id;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne // (cascade = CascadeType.ALL)
 	private DataAttribute dataAttribute;
 	// ToDo find a Way to persist this Object, now it leads to Errors
 	private Serializable value;

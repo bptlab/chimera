@@ -19,9 +19,9 @@ public class AtomicDataStateCondition {
 	@Id
 	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne // (cascade = CascadeType.ALL)
 	protected DataClass dataClass;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	protected ObjectLifecycleState state;
 
 	public AtomicDataStateCondition() {

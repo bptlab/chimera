@@ -202,15 +202,15 @@ public final class ExecutionService {
 	 * 
 	 * @param cmId
 	 */
-	public static void deleteCaseModel(String cmId) {
+	public static void deleteAllCasesOfCaseModel(String cmId) {
 		if (caseExecutions.containsKey(cmId)) {
 			List<CaseExecutioner> executions = caseExecutions.get(cmId);
 			for (CaseExecutioner caseExecutioner : executions) {
-				// TODO: add deletion of case?
 				DomainModelPersistenceManager.deleteCase(caseExecutioner.getCase());
 				cases.remove(caseExecutioner.getCase().getId(), caseExecutioner);
 			}
 			caseExecutions.remove(cmId);
+			log.info("Deleted all Cases of a CaseModel.");
 		} else {
 			log.info(String.format("CaseModel with id: %s is not assigned or hadn't any cases", cmId));
 		}
