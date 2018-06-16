@@ -467,7 +467,7 @@
 				<unicorn.url>localhost:8080</unicorn.url>
 				<unicorn.deploy.path>unicorn</unicorn.deploy.path>
 				<chimera.url>localhost:8080</chimera.url>
-				<chimera.deploy.path>
+				<chimera.deploy.path>chimera</chimera.deploy.path>
 			</properties>
 			<build>
 				<plugins>

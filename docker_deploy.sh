@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#export CHIMERA_DEPLOY_NAME=chimera
-
 DEPLOY_PATH=/usr/local/tomcat/webapps/$CHIMERA_DEPLOY_NAME
 rm -rf $DEPLOY_PATH
 mkdir -p $DEPLOY_PATH
