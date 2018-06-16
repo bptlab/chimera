@@ -4,3 +4,4 @@
 !config.properties.tpl
 !src/main/resources/META-INF/persistence.xml.tpl
 !docker_deploy.sh
+!web.xml.tpl

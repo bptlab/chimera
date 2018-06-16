@@ -4,8 +4,6 @@ services:
         image: bptlab/chimera:latest
         ports:
             - 8080:8080
-        volumes:
-            - ./server-config.xml:/usr/local/tomcat/conf/server-template.xml
         environment:
             - CHIMERA_DB_HOST=database
             - CHIMERA_DB_PORT=3306
