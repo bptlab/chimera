@@ -57,7 +57,7 @@ public class CasePersistenceTask extends TimerTask {
 		try {
 			DomainModelPersistenceManager.saveAllCaseModelsWithCases();
 		} catch (Exception e) {
-			log.error("Error while persisting all CaseModels and Cases");
+			log.error("Error while persisting all CaseModels and Cases", e);
 		}
 		log.debug("Finished persisting all case-modals.");
 	}

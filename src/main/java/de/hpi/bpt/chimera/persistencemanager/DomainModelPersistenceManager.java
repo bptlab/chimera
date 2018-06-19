@@ -272,12 +272,16 @@ public class DomainModelPersistenceManager {
 
 	public static void deleteCaseModel(String cmId) {
 		EntityManager em = getEntityManager();
-		CaseModel cmToRemove = em.find(CaseModel.class, cmId);
-		if (cmToRemove == null)
-			throw new IllegalArgumentException(String.format("CaseModel id : %s is not assigned.", cmId));
-		em.getTransaction().begin();
-		em.remove(cmToRemove);
-		em.getTransaction().commit();
-		em.close();
+		try {
+			em.getTransaction().begin();
+			CaseModel cmToRemove = em.find(CaseModel.class, cmId);
+			if (cmToRemove == null)
+				throw new IllegalArgumentException(String.format("CaseModel id : %s is not assigned.", cmId));
+			em.remove(cmToRemove);
+			em.getTransaction().commit();
+			em.close();
+		} catch (Exception e) {
+			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
+		}
 	}
 }
