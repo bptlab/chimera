@@ -41,6 +41,26 @@ public final class PropertyLoader {
 		}
 		return props.getProperty(key);
 	}
+	
+	/**
+	 * Reads a property that should contain an Integer value. 
+	 * If the value is empty or cannot be parsed, this is logged and 0 is returned. 
+	 * @param key
+	 * @return the int value of the property
+	 */
+	public static int getIntProperty(String key) {
+		String propertyValue = getProperty(key);
+		if (! propertyValue.isEmpty()) {
+			try {
+				return Integer.parseInt(propertyValue);
+			} catch (NumberFormatException e) {
+				log.error(String.format("Parsing property value of property %s failed (was %s).", key, propertyValue), e);
+				return 0;
+			}
+		}
+		log.warn(String.format("Value of property %s is not set, treating it as 0", key));
+		return 0;
+	}
 
 	/**
 	 * Changing Properties for tests, e.g. the unicorn server url.
