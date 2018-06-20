@@ -273,6 +273,7 @@ public class DomainModelPersistenceManager {
 	public static void deleteCaseModel(String cmId) {
 		EntityManager em = getEntityManager();
 		try {
+			log.info("Trying do delete, a casemodel with id:" + cmId);
 			em.getTransaction().begin();
 			CaseModel cmToRemove = em.find(CaseModel.class, cmId);
 			if (cmToRemove == null)

@@ -120,8 +120,8 @@ public class CaseModelManager {
 			try {
 				EventDispatcher.deregisterEvents(caseModels.get(cmId));
 				ExecutionService.deleteAllCasesOfCaseModel(cmId);
-				DomainModelPersistenceManager.deleteCaseModel(cmId);
 				caseModels.remove(cmId);
+				DomainModelPersistenceManager.deleteCaseModel(cmId);
 				log.info("Deleted a CaseModel.");
 			} catch (Exception e) {
 				log.error("Error while deleting a CaseModel!", e);
