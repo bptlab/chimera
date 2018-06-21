@@ -2,22 +2,32 @@ package de.hpi.bpt.chimera.validation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
 import de.hpi.bpt.chimera.model.Nameable;
 
 public class NameValidation {
+	private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9](?![a-zA-Z0-9 _]*?[ _]{2}.*)[a-zA-Z0-9 _]*?[a-zA-Z0-9]$");
+	
 	private NameValidation() {
 	}
 
 	/**
-	 * Check if name contains only unicode letters, numbers or spaces (' ').
+	 * Check if name is valid. 
+	 * Valid names start and end with an alpha-numeric character and can contain alpha-numeric characters, spaces and
+	 * underscores. However, no two spaces or underscores can follow each other.
+	 * Examples:
+	 * "a_b_c" valid
+	 * "a__z" invalid
+	 * "äµ€" invalid (no unicode support)
 	 * 
 	 * @param name
 	 */
 	public static void validateName(String name) {
-		if (!StringUtils.isAlphanumericSpace(name)) {
+		if (! NAME_PATTERN.matcher(name).matches() ) {
 			throw new IllegalArgumentException(String.format("%s is not a valid name", name));
 		}
 	}
