@@ -27,7 +27,10 @@ public class WebServiceTask extends AbstractDataControlNode {
 	String webServiceBody = "";
 
 	@XmlAttribute(name = "griffin:webserviceheader")
-	String getWebServiceHeader = "";
+	String webServiceHeader = "";
+
+	@XmlAttribute(name = "griffin:contenttype")
+	String contentType = "";
 
 
 	public String getWebServiceUrl() {
@@ -43,6 +46,10 @@ public class WebServiceTask extends AbstractDataControlNode {
 	}
 
 	public String getWebServiceHeader() {
-		return getWebServiceHeader;
+		return webServiceHeader;
+	}
+
+	public String getContentType() {
+		return contentType;
 	}
 }

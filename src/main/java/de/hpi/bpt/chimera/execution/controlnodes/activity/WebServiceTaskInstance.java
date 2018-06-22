@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
 import java.util.Map;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 public class WebServiceTaskInstance extends AbstractActivityInstance {
 	private static final Logger log = Logger.getLogger(WebServiceTaskInstance.class);
 
+	@Column(length=5000)
 	private String webServiceJson;
 
 	/**
@@ -49,6 +51,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 		WebTarget target = buildTarget();
 		Response response = executeWebserviceRequest(target);
 		log.debug("Called: " + target + ", response: " + response.getStatus());
+
 		if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
 			String webServiceResponseJson = response.readEntity(String.class);
 			setWebServiceResponse(webServiceResponseJson);
@@ -118,9 +121,9 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 			String postBody = getControlNode().getWebServiceBody();
 			String replacedPostBody = this.replaceVariableExpressions(postBody);
 			if ("POST".equals(webServiceMethod)) {
-				return invocationBuilder.post(javax.ws.rs.client.Entity.json(replacedPostBody));
+				return invocationBuilder.post(javax.ws.rs.client.Entity.entity(replacedPostBody, getControlNode().getContentType()));
 			} else {
-				return invocationBuilder.put(javax.ws.rs.client.Entity.json(replacedPostBody));
+				return invocationBuilder.post(javax.ws.rs.client.Entity.entity(replacedPostBody, getControlNode().getContentType()));
 			}
 		default:
 			throw new IllegalArgumentException(webServiceMethod + " is not implemented yet");
@@ -148,6 +151,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 				headerMap.add(key, value);
 			}
 		}
+		headerMap.add("Content-Type", getControlNode().getContentType());
 		return headerMap;
 	}
 
