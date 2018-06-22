@@ -27,7 +27,7 @@ import org.json.JSONObject;
 public class WebServiceTaskInstance extends AbstractActivityInstance {
 	private static final Logger log = Logger.getLogger(WebServiceTaskInstance.class);
 
-	@Column(length=5000)
+	@Column(length=Integer.MAX_VALUE)
 	private String webServiceJson;
 
 	/**
@@ -123,7 +123,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 			if ("POST".equals(webServiceMethod)) {
 				return invocationBuilder.post(javax.ws.rs.client.Entity.entity(replacedPostBody, getControlNode().getContentType()));
 			} else {
-				return invocationBuilder.post(javax.ws.rs.client.Entity.entity(replacedPostBody, getControlNode().getContentType()));
+				return invocationBuilder.put(javax.ws.rs.client.Entity.entity(replacedPostBody, getControlNode().getContentType()));
 			}
 		default:
 			throw new IllegalArgumentException(webServiceMethod + " is not implemented yet");
