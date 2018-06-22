@@ -23,6 +23,8 @@ public class EventRegistrant {
 
 	private final static String REGISTRATION_URL = PropertyLoader.getProperty("unicorn.url") + PropertyLoader.getProperty("unicorn.path.deploy") + PropertyLoader.getProperty("unicorn.path.eventtype");
 
+	public static final String STATE_ATTRIBUTE_NAME = "DO_state";
+
 	/**
 	 * Register the EventType in the Unicorn event processing platform. Used to
 	 * register Events after parsing a CaseModel
@@ -89,6 +91,10 @@ public class EventRegistrant {
 			buffer.append(attr.getType());
 			buffer.append("\"\nminOccurs=\"1\" maxOccurs=\"1\" />\n");
 		}
+		// now the DO state attribute
+		buffer.append("<xs:element name=\"");
+		buffer.append(STATE_ATTRIBUTE_NAME);
+		buffer.append("\" type=\"xs:String\" \n minOccurs=\"1\" maxOccurs=\"1\" />\n");
 		buffer.append("</xs:sequence>\n");
 		buffer.append("</xs:complexType>\n");
 		buffer.append("</xs:element>\n");

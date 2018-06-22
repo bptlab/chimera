@@ -108,6 +108,7 @@ public class EventSpawner {
 
 	private static Document buildEventFromDataObject(DataObject inputObject) {
 		List<DataAttributeInstance> attributes = inputObject.getDataAttributeInstances();
+		String state = inputObject.getObjectLifecycleState().getName();
 		String eventName = inputObject.getDataClass().getName();
 
 		try {
@@ -118,6 +119,11 @@ public class EventSpawner {
 			Element rootElement = createRootElement(doc, eventName);
 			doc.appendChild(rootElement);
 			appendAttributes(doc, rootElement, attributes);
+			
+			// append DO state as attribute
+			Element stateElement = doc.createElement(EventRegistrant.STATE_ATTRIBUTE_NAME);
+			stateElement.appendChild(doc.createTextNode(state));
+			rootElement.appendChild(stateElement);
 
 			// appendTimestamp
 			String timestamp = new Timestamp(System.currentTimeMillis()).toString();
