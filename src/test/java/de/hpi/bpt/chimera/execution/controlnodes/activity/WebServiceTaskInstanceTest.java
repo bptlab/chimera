@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
@@ -22,6 +24,7 @@ public class WebServiceTaskInstanceTest {
 	private final String filepath = "src/test/resources/execution/WebServiceTaskInstanceTest.json";
 	private CaseModel cm;
 	private CaseExecutioner caseExecutioner;
+	private FragmentInstance fragmentInstance;
 	private AbstractActivityInstance webserviceTaskInstance;
 
 	@Before
@@ -30,10 +33,16 @@ public class WebServiceTaskInstanceTest {
 		caseExecutioner = new CaseExecutioner(cm, cm.getName());
 		caseExecutioner.startCase();
 
-		AbstractActivityInstance precedingTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "First Activity");
+		fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "First Fragment");
+		AbstractActivityInstance precedingTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, "First Activity");
+
 		precedingTaskInstance.begin();
 		precedingTaskInstance.terminate();
-		webserviceTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Get ReiseWarnung");
+
+		// List<FragmentInstance> f = new
+		// ArrayList<>(caseExecutioner.getCase().getFragmentInstances().values());
+		// assertEquals(2, f.get(0).getActivityInstances().size());
+		webserviceTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, "Get ReiseWarnung");
 		testInitialization();
 	}
 
@@ -66,7 +75,7 @@ public class WebServiceTaskInstanceTest {
 
 	@Test
 	public void testFollowingControlNodeInstantion() {
-		AbstractActivityInstance followingTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Look at ReiseWarnung");
+		AbstractActivityInstance followingTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, "Look at ReiseWarnung");
 		assertNotNull(followingTaskInstance);
 		assertEquals("State of ActivityInstance is not READY", State.READY, followingTaskInstance.getState());
 	}

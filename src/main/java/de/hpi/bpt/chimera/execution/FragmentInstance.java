@@ -27,6 +27,7 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.FragmentPreCondition;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 
 @Entity
@@ -317,6 +318,20 @@ public class FragmentInstance {
 		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
 		getControlNodeInstances().stream()
 			.filter(x -> x instanceof AbstractActivityInstance && !x.getState().equals(State.TERMINATED))
+			.map(AbstractActivityInstance.class::cast)
+			.forEachOrdered(activityInstances::add);
+		return activityInstances;
+	}
+	
+	/**
+	 * 
+	 * @return all ActivityInstances from the FragmentInstance that are not
+	 *         terminated.
+	 */
+	public List<AbstractActivityInstance> getActivityInstances() {
+		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
+		getControlNodeInstances().stream()
+			.filter(x -> x instanceof AbstractActivityInstance)
 			.map(AbstractActivityInstance.class::cast)
 			.forEachOrdered(activityInstances::add);
 		return activityInstances;

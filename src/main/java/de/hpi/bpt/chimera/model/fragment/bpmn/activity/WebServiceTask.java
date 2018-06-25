@@ -57,7 +57,7 @@ public class WebServiceTask extends AbstractActivity {
 	}
 
 	private boolean validateContentType(String contentType) {
-		List<String> allowedContentTypes = Arrays.asList("application/json","application/x-www-form-urlencoded",
+		List<String> allowedContentTypes = Arrays.asList("", "application/json", "application/x-www-form-urlencoded",
 				"application/atom+xml", "application/octet-stream", "application/svg+xml", "application/xhtml+xml",
 				"application/xml", "multipart/form-data", "text/html", "text/plain", "text/xml");
 		return allowedContentTypes.contains(contentType);

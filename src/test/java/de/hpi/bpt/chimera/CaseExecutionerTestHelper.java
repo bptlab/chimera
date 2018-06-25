@@ -44,9 +44,12 @@ public class CaseExecutionerTestHelper {
 	}
 
 	public static AbstractActivityInstance getActivityInstanceByName(FragmentInstance fragmentInstance, String name) {
-		List<AbstractActivityInstance> possibleActivityInstances = fragmentInstance.getActivActivityInstances().stream()
+		List<AbstractActivityInstance> possibleActivityInstances = fragmentInstance.getActivityInstances().stream()
 				.filter(a -> a.getControlNode().getName().equals(name))
 																		.collect(Collectors.toList());
+		if (possibleActivityInstances.size() == 0) {
+			throw new IllegalArgumentException(String.format("The name %s does not exist in the fragment", name));
+		}
 		// TODO: think about how to handle concurrency
 		if (possibleActivityInstances.size() == 1) {
 			return possibleActivityInstances.get(0);
