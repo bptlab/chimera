@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import de.hpi.bpt.chimera.model.Nameable;
 
 public class NameValidation {
-	private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9](?![a-zA-Z0-9 _]*?[ _]{2}.*)[a-zA-Z0-9 _]*?[a-zA-Z0-9]$");
+	private static final Pattern NAME_PATTERN = Pattern.compile("^([a-zA-Z0-9]|[a-zA-Z0-9](?![a-zA-Z0-9 _]*?[ _]{2}.*)[a-zA-Z0-9 _]*?[a-zA-Z0-9])$");
 	
 	private NameValidation() {
 	}
