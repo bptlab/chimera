@@ -49,7 +49,7 @@ public class FragmentPreConditionExecutionTest {
 	public void testAutoExecution() {
 		// human task in other fragment that creates data object and enables
 		// precondition of first fragment
-		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "Create DataObject");
+		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "Create Dataobject");
 		List<DataObject> dataObjects = CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, fragmentInstance, "Create Dataobject").getOutputDataObjects();
 		assertEquals("Incorrect number of created dataobjects", 1, dataObjects.size());
 		DataObject firstDataObject = dataObjects.get(0);

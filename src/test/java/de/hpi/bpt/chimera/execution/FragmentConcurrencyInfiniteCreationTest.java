@@ -30,6 +30,8 @@ public class FragmentConcurrencyInfiniteCreationTest extends Unicorn {
 		caseExecutioner.startCase();
 	}
 
+	// TODO: There seems to be some problem with threading because the test
+	// fails with Jersey because of an not assigned casemodel id
 	@Test
 	public void testInfiniteFragmentInstanceCreation() {
 		int creations = 200;
@@ -39,6 +41,7 @@ public class FragmentConcurrencyInfiniteCreationTest extends Unicorn {
 				AbstractEventInstance eventInstance = receiveBehavior.get().getEventInstance();
 				try {
 					CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), "");
+					Thread.sleep(10);
 				} catch (Exception e) {
 					throw new IllegalArgumentException(i + " " + e.getMessage());
 				}

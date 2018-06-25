@@ -33,7 +33,7 @@ public class CaseModelManagerTest {
 		// You should not use this methods for parsing and saving a CaseModel,
 		// use CaseModelManager.parseCaseModel(JsonString) instead
 		CaseModel cm2;
-		cm2 = CaseModelParser.parseCaseModel(JsonString);
+		cm2 = CaseModelManager.parseCaseModel(JsonString);
 		cm2.saveCaseModelToDB();
 
 		// Use the CaseModelManager to load a Model which isn't in RAM

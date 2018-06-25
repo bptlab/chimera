@@ -36,8 +36,13 @@ public class FragmentConcurrencyFiniteCreationTest extends Unicorn {
 		for (int i = 0; i < creations; i++) {
 			Optional<MessageReceiveEventBehavior> receiveBehavior = caseExecutioner.getRegisteredEventBehaviors().stream().findFirst();
 			if (receiveBehavior.isPresent()) {
-				AbstractEventInstance eventInstance = receiveBehavior.get().getEventInstance();
-				CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), "");
+				try {
+					AbstractEventInstance eventInstance = receiveBehavior.get().getEventInstance();
+					CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), "");
+					Thread.sleep(10);
+				} catch (Exception e) {
+					throw new IllegalArgumentException(i + " " + e.getMessage());
+				}
 			}
 		}
 

@@ -53,7 +53,11 @@ public class MessageReceiveBehaviorTest extends Unicorn {
 		assertTrue(MessageReceiveEventBehavior.class.isInstance(eventInstance.getBehavior()));
 
 		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
-		assertEquals("Notification Rule Id was not set", "1", receiveBehavior.getNotificationRule());
+
+		assertNotNull("Notification Rule Id was not set", receiveBehavior.getNotificationRule());
+		assertFalse("Notification Rule Id was not set properly", receiveBehavior.getNotificationRule().isEmpty());
+		assertNotEquals("Notification Rule Id was not set properly", "-1", receiveBehavior.getNotificationRule());
+
 		assertEquals("ReceiveEvent in incorrect state", State.REGISTERED, eventInstance.getState());
 
 		assertFalse("No registered events", caseExecutioner.getRegisteredEventBehaviors().isEmpty());
@@ -87,7 +91,11 @@ public class MessageReceiveBehaviorTest extends Unicorn {
 		assertTrue(BoundaryEventInstance.class.isInstance(eventInstance));
 		assertTrue(MessageReceiveEventBehavior.class.isInstance(eventInstance.getBehavior()));
 		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
-		assertEquals("Notification Rule Id was not set", "1", receiveBehavior.getNotificationRule());
+
+		assertNotNull("Notification Rule Id was not set", receiveBehavior.getNotificationRule());
+		assertFalse("Notification Rule Id was not set properly", receiveBehavior.getNotificationRule().isEmpty());
+		assertNotEquals("Notification Rule Id was not set properly", "-1", receiveBehavior.getNotificationRule());
+
 		assertEquals("ReceiveEvent registered properly", eventInstance.getState(), State.REGISTERED);
 
 		CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), eventJson);
