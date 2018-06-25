@@ -45,7 +45,7 @@ public class CaseExecutionerTestHelper {
 
 	public static AbstractActivityInstance getActivityInstanceByName(FragmentInstance fragmentInstance, String name) {
 		List<AbstractActivityInstance> possibleActivityInstances = fragmentInstance.getActivityInstances().stream()
-				.filter(a -> a.getControlNode().getName().equals(name))
+																		.filter(a -> a.getControlNode().getName().equals(name))
 																		.collect(Collectors.toList());
 		if (possibleActivityInstances.size() == 0) {
 			throw new IllegalArgumentException(String.format("The name %s does not exist in the fragment", name));
@@ -84,8 +84,8 @@ public class CaseExecutionerTestHelper {
 		throw new IllegalArgumentException(String.format("The name %s is not a unique fragment name in the case", name));
 	}
 	
-	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, String name) {
-		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, name);
+	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, FragmentInstance fragmentInstance, String name) {
+		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, name);
 		assertNotNull(humanTaskInstance);
 
 		DataStateCondition postCondition = humanTaskInstance.getControlNode().getPostCondition();
@@ -96,8 +96,8 @@ public class CaseExecutionerTestHelper {
 		return humanTaskInstance;
 	}
 
-	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, String name, ArrayList<DataObject> inputDataObjects) {
-		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, name);
+	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, FragmentInstance fragmentInstance, String name, ArrayList<DataObject> inputDataObjects) {
+		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, name);
 		assertNotNull(humanTaskInstance);
 
 		DataStateCondition postCondition = humanTaskInstance.getControlNode().getPostCondition();
@@ -108,8 +108,8 @@ public class CaseExecutionerTestHelper {
 		return humanTaskInstance;
 	}
 
-	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, String name, List<DataObject> inputDataObjects, Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition) {
-		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, name);
+	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, FragmentInstance fragmentInstance, String name, List<DataObject> inputDataObjects, Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition) {
+		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, name);
 		assertNotNull(humanTaskInstance);
 
 		caseExecutioner.beginDataControlNodeInstance(humanTaskInstance, inputDataObjects);

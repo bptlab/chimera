@@ -32,20 +32,22 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
  * 'dataclass[State 2]' -> 'task 3').
  */
 public class SimpleBeginHumanTaskTest {
-	private final String filepath = "src/test/resources/execution/SimpleCaseModelWithOneControlFlowAndDataObjects";
+	private final String filepath = "src/test/resources/execution/SimpleCaseModelWithOneControlFlowAndDataObjects.json";
 	private CaseModel cm;
 	private CaseExecutioner caseExecutioner;
+	private FragmentInstance fi;
 
 	@Before
 	public void setup() {
 		cm = CaseModelTestHelper.parseCaseModel(filepath);
 		caseExecutioner = new CaseExecutioner(cm, cm.getName());
 		caseExecutioner.startCase();
+		fi = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "First Fragment");
 	}
 
 	@Test
 	public void testBeginWithoutDataObjects() {
-		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task 0");
+		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(fi, "task 0");
 		assertNotNull(task0);
 
 		assertEquals("State of ActivityInstance is not READY", State.READY, task0.getState());
@@ -56,7 +58,7 @@ public class SimpleBeginHumanTaskTest {
 
 	@Test
 	public void testBeginWithDataObjects() {
-		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task 0");
+		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(fi, "task 0");
 		AbstractControlNode task1ControlNode = task0.getControlNode().getOutgoingControlNodes().get(0);
 		assertEquals("Following ControlNode is not a HumanTask", task1ControlNode.getClass(), HumanTask.class);
 
@@ -70,7 +72,7 @@ public class SimpleBeginHumanTaskTest {
 		fragmentInstance.createFollowing(task1.getControlNode());
 		assertEquals(3, fragmentInstance.getControlNodeInstanceIdToInstance().size());
 
-		AbstractActivityInstance task2 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task 2");
+		AbstractActivityInstance task2 = CaseExecutionerTestHelper.getActivityInstanceByName(fi, "task 2");
 		assertNotNull(task2);
 		assertEquals("State of ActivityInstance is not CONTROLFLOW_ENABLED", State.CONTROLFLOW_ENABLED, task2.getState());
 
@@ -78,7 +80,7 @@ public class SimpleBeginHumanTaskTest {
 		assertNotNull(condition);
 		DataObject dataObject = new DataObject(condition, caseExecutioner.getDataManager());
 		// TODO: this shouldn't be necessary
-		dataObject.unlock();
+		// dataObject.unlock();
 
 		caseExecutioner.getDataManager().getDataObjectIdToDataObject().put(dataObject.getId(), dataObject);
 		assertEquals(1, caseExecutioner.getDataManager().getDataObjectIdToDataObject().size());

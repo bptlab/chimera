@@ -49,16 +49,17 @@ public class FragmentPreConditionExecutionTest {
 	public void testAutoExecution() {
 		// human task in other fragment that creates data object and enables
 		// precondition of first fragment
-		List<DataObject> dataObjects = CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, "Create Dataobject").getOutputDataObjects();
+		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "Create DataObject");
+		List<DataObject> dataObjects = CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, fragmentInstance, "Create Dataobject").getOutputDataObjects();
 		assertEquals("Incorrect number of created dataobjects", 1, dataObjects.size());
 		DataObject firstDataObject = dataObjects.get(0);
 		testEnabling();
 		// task also can not begin manually because of the unfulfilled
 		// precondition
-		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, "Change Dataobject State", new ArrayList<>(Arrays.asList(firstDataObject)));
+		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, fragmentInstance, "Change Dataobject State", new ArrayList<>(Arrays.asList(firstDataObject)));
 		testDisabling();
 
-		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, "Create new Dataobject");
+		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, fragmentInstance, "Create new Dataobject");
 		testReenabling();
 
 		testExecution();
@@ -68,7 +69,8 @@ public class FragmentPreConditionExecutionTest {
 		assertEquals("Fragment with enabled precondition is in wrong state", FragmentState.ENABLED, fragmentInstance.getState());
 
 		// automatic task in one fragment
-		automaticTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "Automatic Task");
+		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "Fragment with Precondition");
+		automaticTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, "Automatic Task");
 		assertNotNull(automaticTaskInstance);
 		assertTrue(automaticTaskInstance.getControlNode().isAutomatic());
 		assertTrue("is automatic task was not initialized correctly", automaticTaskInstance.hasAutomaticBegin());

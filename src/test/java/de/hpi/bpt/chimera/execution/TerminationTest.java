@@ -24,7 +24,7 @@ import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 public class TerminationTest {
 	final String path = "execution/ExclusiveGatewayInstanceControlFlowTest";
-	private final String filepath = "src/test/resources/execution/SimpleTerminationCondition";
+	private final String filepath = "src/test/resources/execution/SimpleTerminationCondition.json";
 	private CaseModel cm;
 	// private CaseExecutioner caseExecutioner;
 
@@ -44,15 +44,16 @@ public class TerminationTest {
 		caseExecutioner.startCase();
 
 		// Some controlflow to get the TerminationCondition fulfilled.
-		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, "activity1");
-		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, "activity2");
+		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "First Fragment");
+		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, fragmentInstance, "activity1");
+		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, fragmentInstance, "activity2");
 
-		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity3");
+		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, "activity3");
 		assertTrue("Activity3 should be enabled before terminating the case.", activityInst.getState() == State.READY);
 
 		caseExecutioner.terminate();
 
-		activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity3");
+		activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, "activity3");
 		assertTrue("Activity3 should be skipped after terminating the case.", activityInst.getState() == State.SKIPPED);
 	}
 }

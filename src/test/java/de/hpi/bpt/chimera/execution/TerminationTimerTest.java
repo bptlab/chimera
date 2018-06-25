@@ -50,7 +50,8 @@ public class TerminationTimerTest {
 		FragmentInstance fragInst = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "First Fragment");
 
 		// Some controlflow to get the TerminationCondition fulfilled.
-		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, "activity1");
+		FragmentInstance fragmentInstance = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "First Fragment");
+		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, fragmentInstance, "activity1");
 
 		AbstractEventInstance eventInstance = CaseExecutionerTestHelper.getEventInstanceByName(fragInst, "timerevent1");
 		assertTrue("Activity3 should be enabled before terminating the case.", eventInstance.getState() == State.REGISTERED);

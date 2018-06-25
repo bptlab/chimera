@@ -11,25 +11,27 @@ import org.junit.Test;
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 
 public class SimpleTerminateHumanTaskTest {
-	private final String filepath = "src/test/resources/execution/SimpleCaseModelWithOneControlFlowAndDataObjects";
+	private final String filepath = "src/test/resources/execution/SimpleCaseModelWithOneControlFlowAndDataObjects.json";
 	private CaseModel cm;
 	private CaseExecutioner caseExecutioner;
-
+	private FragmentInstance fi;
 	@Before
 	public void setup() {
 		cm = CaseModelTestHelper.parseCaseModel(filepath);
 		caseExecutioner = new CaseExecutioner(cm, cm.getName());
 		caseExecutioner.startCase();
+		fi = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "First Fragment");
 	}
 
 	@Test
 	public void testTerminateWithoutDataObjects() {
-		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task 0");
+		AbstractActivityInstance task0 = CaseExecutionerTestHelper.getActivityInstanceByName(fi, "task 0");
 		assertNotNull(task0);
 
 		task0.setState(State.RUNNING);
