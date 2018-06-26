@@ -12,7 +12,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
@@ -88,10 +87,8 @@ public class CaseExecutionerTestHelper {
 		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, name);
 		assertNotNull(humanTaskInstance);
 
-		DataStateCondition postCondition = humanTaskInstance.getControlNode().getPostCondition();
-		Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = postCondition.getConditionSets().get(0).getDataClassToObjectLifecycleState();
 		caseExecutioner.beginDataControlNodeInstance(humanTaskInstance, new ArrayList<>());
-		caseExecutioner.terminateDataControlNodeInstance(humanTaskInstance, dataObjectToObjectLifecycleTransition);
+		caseExecutioner.terminateDataControlNodeInstance(humanTaskInstance);
 		assertEquals("State of human task instance is not TERMINATED", State.TERMINATED, humanTaskInstance.getState());
 		return humanTaskInstance;
 	}

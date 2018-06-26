@@ -324,6 +324,18 @@ public class FragmentInstance {
 	}
 	
 	/**
+	 * Get all ActivityInstances in all Fragment Instances that are in a
+	 * specific State.
+	 * 
+	 * @param state
+	 * @return Collection of ActivityInstances
+	 */
+	public List<AbstractActivityInstance> getActivityInstancesWithState(State state) {
+		return getActivityInstances().stream()
+					.filter(a -> a.getState().equals(state))
+					.collect(Collectors.toList());
+	}
+	/**
 	 * 
 	 * @return all ActivityInstances from the FragmentInstance that are not
 	 *         terminated.
