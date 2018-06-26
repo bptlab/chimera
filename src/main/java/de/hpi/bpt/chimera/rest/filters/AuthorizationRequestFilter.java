@@ -1,13 +1,18 @@
 package de.hpi.bpt.chimera.rest.filters;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.log4j.Logger;
+
+import de.hpi.bpt.chimera.usermanagment.User;
+import de.hpi.bpt.chimera.usermanagment.UserManager;
 
 import java.io.IOException;
 
@@ -24,8 +29,49 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		// TODO comment the following line in, or refactor this complete filter,
 		// so that the reminder isn't necessary anymore.
-		// log.info("I was in Provider");
+		log.info("I was in Provider");
 		this.requestContext = requestContext;
+		String method = requestContext.getMethod();
+		log.info(requestContext.getUriInfo().getPath());
+		log.info(requestContext.getUriInfo().getAbsolutePath());
+		String path = requestContext.getUriInfo().getPath();
+		if (method.equals("POST") && path.equals("interface/v2/register")) {
+			return;
+		}
+		// Get the authentification passed in HTTP headers parameters
+		String auth = requestContext.getHeaderString("authorization");
+
+		// If the user does not have the right (does not provide any HTTP Basic
+		// Auth)
+		if (auth == null) {
+			throw new WebApplicationException(Status.UNAUTHORIZED);
+		}
+
+		// lap : loginAndPassword
+		String[] lap = BasicAuth.decode(auth);
+
+		// If login or password fail
+		if (lap == null || lap.length != 2) {
+			throw new WebApplicationException(Status.UNAUTHORIZED);
+		}
+
+		try {
+			User authentificationResult = UserManager.authenticateUser(lap[0], lap[1]);
+			log.info(authentificationResult.getName());
+		} catch (Exception e) {
+
+		}
+
+		// Our system refuse login and password
+		// if(authentificationResult == null) {
+		// throw new WebApplicationException(Status.UNAUTHORIZED);
+		// }
+
+		// We configure your Security Context here
+		// String scheme = request.getUriInfo().getRequestUri().getScheme();
+		// request.setSecurityContext(new MyApplicationSecurityContext(user,
+		// scheme);
+
 		// if (!isValidScenario()) {
 		// abortIllegalScenario(requestContext.getMethod());
 		// } else if (!isValidInstance()) {

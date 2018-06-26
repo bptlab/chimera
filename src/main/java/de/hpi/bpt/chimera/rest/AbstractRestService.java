@@ -1,18 +1,31 @@
 package de.hpi.bpt.chimera.rest;
 
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
+import de.hpi.bpt.chimera.rest.filters.BasicAuth;
+import de.hpi.bpt.chimera.usermanagment.User;
+import de.hpi.bpt.chimera.usermanagment.UserManager;
 
 /**
  *
  */
 public class AbstractRestService {
+	protected final User retrieveUser(ContainerRequestContext requestContext) {
+		String auth = requestContext.getHeaderString("authorization");
+		// If the user does not have the right (does not provide any HTTP Basic
+		// Auth)
+		// lap : loginAndPassword
+		String[] lap = BasicAuth.decode(auth);
+		return UserManager.authenticateUser(lap[0], lap[1]);
+	}
+
+
 	protected final Response casemodelNotFoundResponse(String cmId) {
 		String responseText = String.format("Casemodel id: %s is not assigned", cmId);
 		return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(responseText).build();

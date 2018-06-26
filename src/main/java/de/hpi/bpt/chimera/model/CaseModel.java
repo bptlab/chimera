@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 
@@ -24,6 +25,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
+import de.hpi.bpt.chimera.usermanagment.Organization;
 
 @Entity
 @NamedQuery(name = "CaseModels.getAll", query = "SELECT c FROM CaseModel c")
@@ -45,6 +47,8 @@ public class CaseModel {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Fragment> fragments;
 
+	@Transient
+	private Organization organization;
 
 	public CaseModel() {
 		setId(UUID.randomUUID().toString().replace("-", ""));
@@ -165,5 +169,13 @@ public class CaseModel {
 
 	public void setDeployment(Date deployment) {
 		this.deployment = deployment;
+	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
 	}
 }
