@@ -5,11 +5,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import de.hpi.bpt.chimera.usermanagment.User;
 
 @XmlRootElement
-public class MemberOverviewJaxBean {
+public class UserOverviewJaxBean {
 	private String id;
 	private String name;
 
-	public MemberOverviewJaxBean(User user) {
+	public UserOverviewJaxBean(User user) {
 		setId(user.getId());
 		setName(user.getName());
 	}

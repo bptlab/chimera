@@ -20,6 +20,10 @@ public class User {
 		this.organizations = new HashSet<>();
 	}
 
+	public boolean isAdmin() {
+		return systemRoles.contains(SystemRole.ADMIN);
+	}
+
 	public String getId() {
 		return id;
 	}

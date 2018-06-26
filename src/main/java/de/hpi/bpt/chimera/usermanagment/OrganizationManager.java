@@ -40,20 +40,23 @@ public class OrganizationManager {
 	}
 
 	/**
-	 * Delete an organization with a specific id.
+	 * Delete an organization. It is not possible to delete the default
+	 * organization.
 	 * 
-	 * @param id
-	 *            of the organization that will be deleted
-	 * @throws IllegalArgumentException
-	 *             if the id is not assigned
+	 * @param org
+	 *            the organization that will be deleted
 	 */
-	public static void deleteOrganization(String id) {
-		if (organizations.containsKey(id)) {
-			String name = organizations.get(id).getName();
-			organizations.remove(id);
-			log.info(String.format("Deleted organization with id %s and name %s", id, name));
-		} else {
-			throw new IllegalArgumentException(String.format("Organization with id %s does not exist.", id));
+	public static void deleteOrganization(Organization org) {
+		if (org == defaultOrganization) {
+			throw new IllegalArgumentException("The default organization cannot be deleted.");
+		}
+		try {
+			for (User member : org.getMembers().values()) {
+				member.getOrganizations().remove(org);
+			}
+			organizations.remove(org.getId());
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 
@@ -88,6 +91,18 @@ public class OrganizationManager {
 
 		members.put(user.getId(), user);
 		user.getOrganizations().add(organization);
+	}
+
+	public static void deleteUser(Organization org, User user) {
+		// TODO: think about how to the deletion if the user is the owner of the
+		// organization
+		String userId = user.getId();
+		if (org.getMembers().containsKey(userId)) {
+			org.getMembers().remove(userId);
+		} else {
+			String message = String.format("User with id %s is not a member of organiazion with id %s", userId, org.getId());
+			throw new IllegalArgumentException(message);
+		}
 	}
 
 	public static Organization getDefaultOrganization() {

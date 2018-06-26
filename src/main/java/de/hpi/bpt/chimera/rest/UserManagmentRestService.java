@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.hpi.bpt.chimera.rest.beans.usermanagement.MemberOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationOverviewJaxBean;
 import de.hpi.bpt.chimera.usermanagment.Organization;
@@ -64,8 +65,8 @@ public class UserManagmentRestService extends AbstractRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers(@Context ContainerRequestContext requestContext) {
 		try {
-			List<MemberOverviewJaxBean> resBeans = UserManager.getUsers().stream()
-													.map(MemberOverviewJaxBean::new)
+			List<UserOverviewJaxBean> resBeans = UserManager.getUsers().stream()
+													.map(UserOverviewJaxBean::new)
 													.collect(Collectors.toList());
 			JSONArray result = new JSONArray(resBeans);
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
@@ -74,6 +75,24 @@ public class UserManagmentRestService extends AbstractRestService {
 		}
 	}
 	
+	@DELETE
+	@Path("users/{userId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteUser(@Context ContainerRequestContext requestContext, @PathParam("userId") String userId) {
+		try {
+			User user = retrieveUser(requestContext);
+			if (user.getId() != userId && !user.isAdmin()) {
+				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to delete the user.")).build();
+			}
+
+			User userToDelete = UserManager.getUserById(userId);
+			UserManager.deleteUser(userToDelete);
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully deleted user.\"}").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
 	@POST
 	@Path("organizations")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -123,6 +142,25 @@ public class UserManagmentRestService extends AbstractRestService {
 
 			OrganizationDetailsJaxBean result = new OrganizationDetailsJaxBean(organization);
 			return Response.ok(new JSONObject(result).toString(), MediaType.APPLICATION_JSON).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	@DELETE
+	@Path("organizations/{organizationId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteOrganization(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId) {
+		try {
+			User user = retrieveUser(requestContext);
+			Organization org = OrganizationManager.getOrganizationById(orgId);
+
+			if (user != org.getOwner() && !user.isAdmin()) {
+				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to delete the organization.")).build();
+			}
+
+			OrganizationManager.deleteOrganization(org);
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully deleted organization.\"}").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}

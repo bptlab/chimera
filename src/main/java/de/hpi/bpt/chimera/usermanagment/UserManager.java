@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.usermanagment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,8 @@ public class UserManager {
 	 */
 	public static User authenticateUser(String email, String password) {
 		if (users.isEmpty()) {
-			createUser("admin", "admin", "admin");
+			User admin = createUser("admin", "admin", "admin");
+			admin.getSystemRoles().add(SystemRole.ADMIN);
 		}
 
 		for (User user : users.values()) {
@@ -46,7 +48,7 @@ public class UserManager {
 	 * @param username
 	 * @param password
 	 */
-	public static void createUser(String email, String password, String username) {
+	public static User createUser(String email, String password, String username) {
 		User user = new User();
 		user.setEmail(email);
 		user.setPassword(password);
@@ -55,20 +57,33 @@ public class UserManager {
 		users.put(id, user);
 		OrganizationManager.assignMember(user, OrganizationManager.getDefaultOrganization());
 		log.info(String.format("Created user with id %s and name %s", id, user.getName()));
+		return user;
+	}
+
+	public static User getUserById(String userId) {
+		if (users.containsKey(userId)) {
+			return users.get(userId);
+		}
+		String mess = String.format("The user with id %s does not exist", userId);
+		throw new IllegalArgumentException(mess);
 	}
 
 	/**
 	 * Delete a user by its id.
 	 * 
-	 * @param id
+	 * @param user
 	 */
-	public static void deleteUser(String id) {
-		if (users.containsKey(id)) {
-			String name = users.get(id).getName();
-			users.remove(id);
-			log.info(String.format("Deleted user with id %s and name %s", id, name));
-		} else {
-			throw new IllegalArgumentException(String.format("User with id %s does not exist.", id));
+	public static void deleteUser(User user) {
+		try {
+			String name = users.get(user).getName();
+			for (Organization org : user.getOrganizations()) {
+				OrganizationManager.deleteUser(org, user);
+			}
+
+			users.remove(user);
+			log.info(String.format("Deleted user with id %s and name %s", user, name));
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 
