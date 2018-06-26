@@ -2,70 +2,44 @@ package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
 import static org.junit.Assert.*;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
+import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.activity.EmailActivityInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.activity.HumanTaskInstance;
-import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
-import de.hpi.bpt.chimera.parser.CaseModelParser;
 
 public class EmailActivityInstanceTest {
-	String jsonString = "";
-	final String path = "execution/EmailActivityInstanceTest";
-	CaseModel cm;
+	private final String filepath = "src/test/resources/execution/EmailActivityInstanceTest.json";
+	private CaseModel cm;
+	private CaseExecutioner caseExecutioner;
+	private FragmentInstance fi;
 
 	@Before
-	public void getJsonString() {
-		try {
-			FileInputStream inputStream = new FileInputStream(this.getClass().getClassLoader().getResource(path).getFile());
-			jsonString = IOUtils.toString(inputStream);
-			inputStream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		cm = CaseModelParser.parseCaseModel(jsonString);
+	public void setup() {
+		cm = CaseModelTestHelper.parseCaseModel(filepath);
+		caseExecutioner = new CaseExecutioner(cm, cm.getName());
+		caseExecutioner.startCase();
+		fi = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "First Fragment");
 	}
 
-	/*
+	/**
 	 * Only checks whether an EmailActivity is terminated automatically. Testing
 	 * the mailing function has to be done manually.
 	 */
 	@Test
-	public void parseExclusiveGatewayTest() {
-
-		ControlFlowTest(cm);
-	}
-
-	private void ControlFlowTest(CaseModel cm) {
-		CaseExecutioner caseExecutioner = new CaseExecutioner(cm, "TestCase");
-		caseExecutioner.startCase();
-
-		HumanTaskInstance activityInst = (HumanTaskInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity1");
-		caseExecutioner.beginDataControlNodeInstance(activityInst, new ArrayList<DataObject>());
-		caseExecutioner.terminateDataControlNodeInstance(activityInst, new HashMap<DataClass, ObjectLifecycleState>());
-
-		EmailActivityInstance emailActivityInst = (EmailActivityInstance) CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "activity2");
+	public void testAutomaticEmailExecution() {
+		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, fi, "activity1");
 		
-		// TODO: check why this is here because the instance is already
-		// terminated
-		// caseExecutioner.beginDataControlNodeInstance(emailActivityInst, new ArrayList<DataObject>());
-
-		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getActivitiesWithState(State.READY);
+		Collection<AbstractActivityInstance> activityInstances = fi.getActivityInstancesWithState(State.READY);
 		Collection<String> readyActivities = new ArrayList<String>();
 		readyActivities.addAll(activityInstances.stream().map(activity -> activity.getControlNode().getName()).collect(Collectors.toList()));
 

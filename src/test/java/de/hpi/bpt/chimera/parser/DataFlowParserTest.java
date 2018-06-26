@@ -21,9 +21,6 @@ public class DataFlowParserTest {
 
 	private List<String> expectedPrecondition = new ArrayList<>(Arrays.asList("A1 B1 C1", "A1 B1 C1", "A1 B2 C1", "A2 B1 C1", "A2 B1 C1", "A2 B2 C1"));
 	private List<String> expectedPostcondition = new ArrayList<>(Arrays.asList("A3 B3 C2", "A3 B4 C2", "A3 B5 C2", "A4 B3 C2", "A4 B4 C2", "A4 B5 C2"));
-
-	// TODO: make this independent from positions in list
-
 	private AbstractActivity task;
 
 	@Before

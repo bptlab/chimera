@@ -23,25 +23,6 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 public class CaseExecutionerTestHelper {
-	/**
-	 * Better use {@link #getActivityInstanceByName(FragmentInstance, String)}.
-	 * Get the AbstractActivityInstance that is currently hold in a
-	 * CaseExecutioner by its name. If the name does not occur return null.
-	 * 
-	 * @param caseExecutioner
-	 * @param activityInstanceName
-	 * @return AbstractActivityInstance or {@code null} if the name does not
-	 *         occur.
-	 */
-	@Deprecated
-	public static AbstractActivityInstance getActivityInstanceByName(CaseExecutioner caseExecutioner, String name) {
-		List<AbstractActivityInstance> possibleActivityInstances = caseExecutioner.getCase().getFragmentInstances().values().stream()
-																		.map(f -> getActivityInstanceByName(f, name))
-																		.collect(Collectors.toList());
-		assertEquals(String.format("The name %s is not unique in the case", name), possibleActivityInstances.size(), 1);
-		return possibleActivityInstances.get(0);
-	}
-
 	public static AbstractActivityInstance getActivityInstanceByName(FragmentInstance fragmentInstance, String name) {
 		List<AbstractActivityInstance> possibleActivityInstances = fragmentInstance.getActivityInstances().stream()
 																		.filter(a -> a.getControlNode().getName().equals(name))
