@@ -14,9 +14,10 @@
 
 	<build>
 		<finalName>Chimera</finalName>
+<!-- 	not working when config.properties is missing, like in initial build!	
 		<filters>
-      		  <filter>${basedir}/config.properties</filter>
-   	 	</filters>
+			<filter>${basedir}/config.properties</filter>
+    	</filters> -->
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
@@ -111,7 +112,7 @@
 				<version>1.0.0</version>
 				<executions>
 					<execution>
-						<phase>initialize</phase>
+						<phase>initalize</phase>
 						<goals>
 							<goal>read-project-properties</goal>
 						</goals>
@@ -483,12 +484,6 @@
 								</goals>
 								<configuration>
 									<outputDirectory>${basedir}</outputDirectory>
-									<testResources>
-							            <testResource>
-							                <directory>src/test/resources</directory>
-							                <filtering>true</filtering>
-							            </testResource>
-							        </testResources>
 									<resources>
 										<resource>
 											<directory>${basedir}/src/main/resources</directory>
@@ -504,7 +499,7 @@
 					<plugin>
 						<!-- rename template file to 'config.properties' -->
 						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.7</version>
+						<version>1.8</version>
 						<executions>
 							<execution>
 								<phase>validate</phase>
