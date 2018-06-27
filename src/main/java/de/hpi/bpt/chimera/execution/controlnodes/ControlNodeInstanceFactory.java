@@ -1,12 +1,10 @@
 package de.hpi.bpt.chimera.execution.controlnodes;
 
+import de.hpi.bpt.chimera.execution.controlnodes.activity.*;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.*;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.activity.EmailActivityInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.activity.HumanTaskInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.activity.WebServiceTaskInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.BoundaryEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.EndEventInstance;
@@ -22,10 +20,6 @@ import de.hpi.bpt.chimera.execution.controlnodes.gateway.EventBasedGatewayInstan
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.ExclusiveGatewayInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.ParallelGatewayInstance;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
@@ -80,6 +74,8 @@ public class ControlNodeInstanceFactory {
 			return new EmailActivityInstance((EmailActivity) activity, fragmentInstance);
 		} else if (activity instanceof WebServiceTask) {
 			return new WebServiceTaskInstance((WebServiceTask) activity, fragmentInstance);
+		} else if (activity instanceof EmptyActivity) {
+			return new EmptyActivityInstance((EmptyActivity) activity, fragmentInstance);
 		} else {
 			throw new IllegalArgumentException(String.format("Unsupported type of Activity: %s", activity.getClass().getName()));
 		}

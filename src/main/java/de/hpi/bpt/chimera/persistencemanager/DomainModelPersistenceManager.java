@@ -147,7 +147,7 @@ public class DomainModelPersistenceManager {
 			try {
 				entry.setValue(em.merge(entry.getValue().getCase()).getCaseExecutioner());
 			} catch (Exception e) {
-				log.error("Error during persisting in regular persisting task", e);
+				log.error("Error during persisting in case persisting task", e);
 			}
 		}
 
@@ -155,7 +155,7 @@ public class DomainModelPersistenceManager {
 			try {
 				entry.setValue(em.merge(entry.getValue()));
 			} catch (Exception e) {
-				log.error("Error during persisting in regular persisting task", e);
+				log.error("Error during persisting in case model persisting task", e);
 			}
 		}
 
