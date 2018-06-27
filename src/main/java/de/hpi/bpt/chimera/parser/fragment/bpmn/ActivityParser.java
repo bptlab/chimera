@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.ManualTask;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.UserTask;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.*;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BpmnManualTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BpmnUserTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
@@ -50,6 +45,10 @@ public class ActivityParser {
 		List<AbstractActivity> manualTasks = new ArrayList<>();
 		manualTasks.addAll(getManualTasksFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.addActivities(manualTasks);
+
+		List<AbstractActivity> emptyActivities = new ArrayList<>();
+		emptyActivities.addAll(getEmptyActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.addActivities(emptyActivities);
 	}
 
 	public static List<HumanTask> getHumanActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
@@ -109,6 +108,17 @@ public class ActivityParser {
 			ManualTask manualTask = new ManualTask();
 			ControlNodeParserHelper.parseDataControlNode(manualTask, xmlTask, sfResolver, dfResolver);
 			activityList.add(manualTask);
+		}
+		return activityList;
+	}
+
+	private static List<EmptyActivity> getEmptyActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+		List<EmptyActivity> activityList = new ArrayList<>();
+
+		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.EmptyActivity xmlTask : fragXmlWrap.getEmptyActivities()) {
+			EmptyActivity emptyActivity = new EmptyActivity();
+			ControlNodeParserHelper.parseDataControlNode(emptyActivity, xmlTask, sfResolver, dfResolver);
+			activityList.add(emptyActivity);
 		}
 		return activityList;
 	}

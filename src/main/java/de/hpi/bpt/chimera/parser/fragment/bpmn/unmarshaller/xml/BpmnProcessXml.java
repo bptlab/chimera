@@ -46,6 +46,9 @@ public class BpmnProcessXml {
 	@XmlElement(name = "bpmn:userTask")
 	private List<BpmnUserTask> userTasks = new ArrayList<>();
 
+	@XmlElement(name = "bpmn:callActivity")
+	private List<EmptyActivity> emptyActivities = new ArrayList<>();
+
 	@XmlElement(name = "bpmn:dataObjectReference")
 	private List<BpmnDataNode> dataNodes = new ArrayList<>();
 
@@ -179,5 +182,13 @@ public class BpmnProcessXml {
 
 	public void setUserTasks(List<BpmnUserTask> userTasks) {
 		this.userTasks = userTasks;
+	}
+
+	public void setEmptyActivities(List<EmptyActivity> emptyActivities) {
+		this.emptyActivities = emptyActivities;
+	}
+
+	public List<EmptyActivity> getEmptyActivities() {
+		return emptyActivities;
 	}
 }

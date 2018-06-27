@@ -1,6 +1,5 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml;
 
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -86,11 +85,16 @@ public class FragmentXmlWrapper {
 		return this.bpmnProcessXml.getManualTasks();
 	}
 
+	public List<EmptyActivity> getEmptyActivities() {
+		return this.bpmnProcessXml.getEmptyActivities();
+	}
+
 	public List<AbstractDataControlNode> getAllActivities() {
 		List<? super AbstractDataControlNode> allActivities = new ArrayList<>();
 		allActivities.addAll(this.bpmnProcessXml.getTasks());
 		allActivities.addAll(this.bpmnProcessXml.getWebServiceTasks());
 		allActivities.addAll(this.bpmnProcessXml.getSendTasks());
+		allActivities.addAll(this.bpmnProcessXml.getEmptyActivities());
 		return (List<AbstractDataControlNode>) allActivities;
 	}
 

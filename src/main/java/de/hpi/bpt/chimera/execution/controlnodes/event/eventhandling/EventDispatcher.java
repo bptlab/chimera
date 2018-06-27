@@ -118,7 +118,7 @@ public class EventDispatcher {
 	 */
 	public static void registerReceiveEvent(MessageReceiveEventBehavior receiveBehavior) {
 		log.info("trying to register an Event at unicorn");
-		AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
+		/*AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
 		final String requestId = eventInstance.getId();
 		String query = insertAttributesIntoQueryString(receiveBehavior);
 
@@ -133,7 +133,7 @@ public class EventDispatcher {
 		if (!notificationRuleId.equals(NOTIFICATION_ERROR_ID)) {
 			caseExecutioner.addRegisteredEventBehavior(receiveBehavior);
 			log.info(String.format("Registered event with id %s and eventQuery %s at unicorn with the requestId %s, getting back %s as NotificationRule", eventInstance.getId(), query, requestId, notificationRuleId));
-		}
+		} */
 	}
 
 	/**
@@ -145,7 +145,9 @@ public class EventDispatcher {
 	 */
 	private static String insertAttributesIntoQueryString(MessageReceiveEventBehavior receiveBehavior) {
 		MessageReceiveDefinition messageDefinition = receiveBehavior.getMessageDefinition();
+
 		String queryString = messageDefinition.getEventQuerry();
+		log.debug(queryString);
 		return receiveBehavior.getEventInstance().replaceVariableExpressions(queryString);
 	}
 
