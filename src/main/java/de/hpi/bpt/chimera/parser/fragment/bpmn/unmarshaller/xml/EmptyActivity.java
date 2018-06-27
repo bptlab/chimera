@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Class used to read in a Service Task from BPMN standard.
+ * Class used to read in an Empty Activity. We are using the CallActivity to model this in Gryphon.
  * Example String
  *  <bpmn:callActivity id="Task_0wyhfye" name="EmptyActivity">
  *      <bpmn:incoming>SequenceFlow_0vy2x8y</bpmn:incoming>
