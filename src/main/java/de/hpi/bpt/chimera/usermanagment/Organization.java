@@ -1,6 +1,8 @@
 package de.hpi.bpt.chimera.usermanagment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -11,17 +13,24 @@ public class Organization {
 	private String id;
 	private String name;
 	private String description;
-	private User owner;
+	private Map<String, User> owners;
 	private Map<String, User> members;
 	private Map<String, CaseModel> caseModels;
+	private List<String> roles;
 
 	public Organization(User owner, String name) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.name = name;
-		this.owner = owner;
+		this.owners = new HashMap<>();
+		owners.put(owner.getId(), owner);
 		this.members = new HashMap<>();
 		this.members.put(owner.getId(), owner);
 		this.caseModels = new HashMap<>();
+		this.roles = new ArrayList<>();
+	}
+
+	public boolean isOwner(User user) {
+		return owners.containsKey(user.getId());
 	}
 
 	public String getId() {
@@ -48,12 +57,12 @@ public class Organization {
 		this.description = description;
 	}
 
-	public User getOwner() {
-		return owner;
+	public Map<String, User> getOwners() {
+		return owners;
 	}
 
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setOwners(Map<String, User> owners) {
+		this.owners = owners;
 	}
 
 	public Map<String, User> getMembers() {
@@ -74,5 +83,13 @@ public class Organization {
 
 	public boolean isMember(User user) {
 		return members.containsKey(user.getId());
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 }

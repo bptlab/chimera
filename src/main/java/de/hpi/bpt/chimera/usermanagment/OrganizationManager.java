@@ -116,6 +116,22 @@ public class OrganizationManager {
 		return defaultOrganization;
 	}
 
+	public static void addRole(Organization org, String name) {
+		if (org.getRoles().contains(name)) {
+			throw new IllegalArgumentException(String.format("The role name %s already exists.", name));
+		}
+		
+		org.getRoles().add(name);
+	}
+	
+	public static void addOwner(Organization organization, User newOwner) {
+		if (organization.getOwners().containsKey(newOwner.getId())) {
+			throw new IllegalArgumentException(String.format("The user %s is already an owner of the organization", newOwner.getName()));
+		}
+
+		organization.getOwners().put(newOwner.getId(), newOwner);
+	}
+
 	public static void setDefaultOrganization(Organization defaultOrganization) {
 		OrganizationManager.defaultOrganization = defaultOrganization;
 	}

@@ -12,11 +12,16 @@ import de.hpi.bpt.chimera.usermanagment.Organization;
 public class OrganizationDetailsJaxBean extends OrganizationOverviewJaxBean {
 	private UserOverviewJaxBean[] members;
 	private CaseModelOverviewJaxBean[] casemodels;
-	private UserOverviewJaxBean owner;
+	private UserOverviewJaxBean[] owners;
 
 	public OrganizationDetailsJaxBean(Organization organization) {
 		super(organization);
-		setOwner(new UserOverviewJaxBean(organization.getOwner()));
+		List<UserOverviewJaxBean> ownersList = organization.getMembers().values().stream()
+													.map(UserOverviewJaxBean::new)
+													.collect(Collectors.toList());
+		UserOverviewJaxBean[] ownersArray = ownersList.toArray(new UserOverviewJaxBean[ownersList.size()]);
+		setOwners(ownersArray);
+
 		List<UserOverviewJaxBean> membersList = organization.getMembers().values().stream()
 														.map(UserOverviewJaxBean::new)
 														.collect(Collectors.toList());
@@ -34,7 +39,7 @@ public class OrganizationDetailsJaxBean extends OrganizationOverviewJaxBean {
 		return members;
 	}
 
-	public void setMembers(UserOverviewJaxBean members[]) {
+	public void setMembers(UserOverviewJaxBean[] members) {
 		this.members = members;
 	}
 
@@ -42,15 +47,15 @@ public class OrganizationDetailsJaxBean extends OrganizationOverviewJaxBean {
 		return casemodels;
 	}
 
-	public void setCasemodels(CaseModelOverviewJaxBean casemodels[]) {
+	public void setCasemodels(CaseModelOverviewJaxBean[] casemodels) {
 		this.casemodels = casemodels;
 	}
 
-	public UserOverviewJaxBean getOwner() {
-		return owner;
+	public UserOverviewJaxBean[] getOwners() {
+		return owners;
 	}
 
-	public void setOwner(UserOverviewJaxBean owner) {
-		this.owner = owner;
+	public void setOwners(UserOverviewJaxBean[] owners) {
+		this.owners = owners;
 	}
 }
