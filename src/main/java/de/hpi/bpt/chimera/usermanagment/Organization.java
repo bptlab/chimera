@@ -10,6 +10,7 @@ public class Organization {
 
 	private String id;
 	private String name;
+	private String description;
 	private User owner;
 	private Map<String, User> members;
 	private Map<String, CaseModel> caseModels;
@@ -37,6 +38,14 @@ public class Organization {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public User getOwner() {

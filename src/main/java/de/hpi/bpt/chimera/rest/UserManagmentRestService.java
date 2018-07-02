@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.json.OrganizationJSONObject;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationOverviewJaxBean;
 import de.hpi.bpt.chimera.usermanagment.Organization;
@@ -137,11 +138,11 @@ public class UserManagmentRestService extends AbstractRestService {
 
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isMember(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to see this organization.")).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not a member of this organization, and cannot view organizational details.")).build();
 			}
 
-			OrganizationDetailsJaxBean result = new OrganizationDetailsJaxBean(organization);
-			return Response.ok(new JSONObject(result).toString(), MediaType.APPLICATION_JSON).build();
+			OrganizationJSONObject res = new OrganizationJSONObject(organization, requestContext.getUriInfo());
+			return Response.ok(res.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
