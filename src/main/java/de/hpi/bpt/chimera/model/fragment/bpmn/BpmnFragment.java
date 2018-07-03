@@ -178,4 +178,11 @@ public class BpmnFragment {
 		allEvents.addAll(boundaryEvents);
 		return allEvents;
 	}
+
+	public List<AbstractDataControlNode> getDataControlNodes() {
+		List<AbstractDataControlNode> dataControlNodes = new ArrayList<>();
+		dataControlNodes.addAll(getActivities());
+		dataControlNodes.addAll(getEvents());
+		return dataControlNodes;
+	}
 }
