@@ -49,6 +49,7 @@ public class ScenarioRestService extends AbstractRestService {
 
 		List<CaseModel> caseModels = CaseModelManager.getCaseModels();
 
+		log.info("getScenarios");
 		if (!filterString.isEmpty()) {
 			caseModels = caseModels.stream().filter(cm -> cm.getName().contains(filterString)).collect(Collectors.toList());
 		}

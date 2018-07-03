@@ -29,6 +29,12 @@ public class InitAndDestroy implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		log.info("shutdown process...");
+		try {
+			DomainModelPersistenceManager.saveAllCaseModelsWithCases();
+		} catch (Exception e) {
+			log.error("Error while persisting all CaseModels and Cases", e);
+		}
+		log.debug("Finished persisting all case-modals.");
 		DomainModelPersistenceManager.stopPermanentCasePersistence();
 		DomainModelPersistenceManager.closeEntityManager();
 	}

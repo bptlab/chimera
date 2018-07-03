@@ -13,8 +13,10 @@ import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 
-public class CasePersistenceTask extends TimerTask {
-	final static Logger log = Logger.getLogger(CasePersistenceTask.class);
+public class CasePersistenceTask extends Thread {
+	static final Logger log = Logger.getLogger(CasePersistenceTask.class);
+
+	private volatile boolean shouldEnd = false;
 
 	@Override
 	public void run() {
@@ -54,12 +56,25 @@ public class CasePersistenceTask extends TimerTask {
 		 * log.error("Error during persisting in regular persisting task", e); }
 		 * } }
 		 */
-		try {
-			DomainModelPersistenceManager.saveAllCaseModelsWithCases();
-		} catch (Exception e) {
-			log.error("Error while persisting all CaseModels and Cases", e);
+		while (!shouldEnd) {
+			log.info("CasePersistenceTask is running.");
+			try {
+				DomainModelPersistenceManager.saveAllCaseModelsWithCases();
+			} catch (Exception e) {
+				log.error("Error while persisting all CaseModels and Cases", e);
+			}
+			try {
+				sleep(20000);
+			} catch (InterruptedException e) {
+				log.error("Error while waiting for the next saveAllCaseModelsWithCases iteration.");
+			}
 		}
-		log.debug("Finished persisting all case-modals.");
+		log.info("End permanent Case persistence.");
+	}
+
+
+	public void endNextTimePossible() {
+		shouldEnd = true;
 	}
 
 }

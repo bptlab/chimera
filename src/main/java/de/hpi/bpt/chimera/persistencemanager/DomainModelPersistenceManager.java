@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -24,6 +25,8 @@ public class DomainModelPersistenceManager {
 	// Otherwise the dababase will be reset every time.
 	private static final Logger log = Logger.getLogger(DomainModelPersistenceManager.class);
 
+	private static ReentrantLock allDataLock = new ReentrantLock();
+
 	private static final int PERSISTENCE_INTERVAL = 10000;
 
 	private static final String PERSISTENCE_UNIT_NAME = "CaseModel";
@@ -32,6 +35,7 @@ public class DomainModelPersistenceManager {
 	private static boolean isEntityManagerFactoryInitialized = false;
 
 	private static Timer timer;
+	private static CasePersistenceTask permanentPersistingThread;
 
 	private DomainModelPersistenceManager() {
 	}
@@ -139,6 +143,12 @@ public class DomainModelPersistenceManager {
 	}
 
 	public static void saveAllCaseModelsWithCases() {
+		log.debug("Lock queue length:" + getAllDataLock().getQueueLength());
+		if (getAllDataLock().getQueueLength() > 0) {
+			return;
+		}
+		getAllDataLock().lock();
+
 		EntityManager em = getEntityManager();
 		em.getTransaction().begin();
 		log.debug("Started persisting all case-models.");
@@ -148,6 +158,7 @@ public class DomainModelPersistenceManager {
 				entry.setValue(em.merge(entry.getValue().getCase()).getCaseExecutioner());
 			} catch (Exception e) {
 				log.error("Error during persisting in regular persisting task", e);
+				break;
 			}
 		}
 
@@ -156,11 +167,15 @@ public class DomainModelPersistenceManager {
 				entry.setValue(em.merge(entry.getValue()));
 			} catch (Exception e) {
 				log.error("Error during persisting in regular persisting task", e);
+				break;
 			}
 		}
 
 		em.getTransaction().commit();
+		em.close();
 		log.debug("Finished persisting all case-modals.");
+
+		DomainModelPersistenceManager.getAllDataLock().unlock();
 	}
 
 	public static Case loadCase(String caseId) {
@@ -183,6 +198,7 @@ public class DomainModelPersistenceManager {
 			Case caseToRemove = em.find(Case.class, caze.getId());
 			em.remove(caseToRemove);
 			em.getTransaction().commit();
+			log.info("removed Case with id:" + caze.getId() + "was removed from the database.");
 		} catch (Exception e) {
 			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
 		}
@@ -224,10 +240,15 @@ public class DomainModelPersistenceManager {
 	 * existing cases to DB.
 	 */
 	public static void startPermanentCasePersistence() {
-		if (timer == null) {
+		/*if (timer == null) {
 			log.info("Starting a new permanent repeating CasePersistenceTask");
 			timer = new Timer();
 			timer.scheduleAtFixedRate(new CasePersistenceTask(), 0, PERSISTENCE_INTERVAL);
+		}*/
+		if (permanentPersistingThread == null) {
+			log.info("Starting a new permanent repeating CasePersistenceTask");
+			permanentPersistingThread = new CasePersistenceTask();
+			permanentPersistingThread.start();
 		}
 	}
 
@@ -235,9 +256,10 @@ public class DomainModelPersistenceManager {
 	 * Stops the permanent persisting of all cases.
 	 */
 	public static void stopPermanentCasePersistence() {
-		if (timer != null) {
+		/*if (timer != null) {
 			timer.cancel();
-		}
+		}*/
+		permanentPersistingThread.stop();
 	}
 
 
@@ -284,5 +306,9 @@ public class DomainModelPersistenceManager {
 		} catch (Exception e) {
 			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
 		}
+	}
+
+	public static ReentrantLock getAllDataLock() {
+		return allDataLock;
 	}
 }

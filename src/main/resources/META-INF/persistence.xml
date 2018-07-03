@@ -4,11 +4,12 @@
   <persistence-unit name="CaseModel" transaction-type="RESOURCE_LOCAL">
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
+      <property name="eclipselink.logging.level" value="FINE"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
       <property name="javax.persistence.jdbc.url"    value="${mysql.url}" />
       <property name="javax.persistence.jdbc.user" value="${mysql.username}" />
       <property name="javax.persistence.jdbc.password" value="${mysql.password}" />
-      <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+      <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
       <property name="eclipselink.ddl-generation.output-mode" value="database" />
       <property name="eclipselink.logging.parameters" value="true"/>
     </properties>

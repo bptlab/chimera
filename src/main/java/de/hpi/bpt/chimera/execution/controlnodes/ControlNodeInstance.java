@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -16,7 +17,6 @@ import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 
 @Entity
-@MappedSuperclass
 public abstract class ControlNodeInstance implements Behaving {
 	// TODO: think about how to implement the Id
 	@Id

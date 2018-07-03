@@ -206,8 +206,8 @@ public final class ExecutionService {
 		if (caseExecutions.containsKey(cmId)) {
 			List<CaseExecutioner> executions = caseExecutions.get(cmId);
 			for (CaseExecutioner caseExecutioner : executions) {
-				DomainModelPersistenceManager.deleteCase(caseExecutioner.getCase());
 				cases.remove(caseExecutioner.getCase().getId(), caseExecutioner);
+				DomainModelPersistenceManager.deleteCase(caseExecutioner.getCase());
 			}
 			caseExecutions.remove(cmId);
 			log.info("Deleted all Cases of a CaseModel.");

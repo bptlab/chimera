@@ -9,6 +9,8 @@ import javax.ws.rs.ext.Provider;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
+
 import java.io.IOException;
 
 /**
@@ -25,6 +27,8 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		// TODO comment the following line in, or refactor this complete filter,
 		// so that the reminder isn't necessary anymore.
 		// log.info("I was in Provider");
+		DomainModelPersistenceManager.getAllDataLock().lock();
+		log.info("REQUEST");
 		this.requestContext = requestContext;
 		// if (!isValidScenario()) {
 		// abortIllegalScenario(requestContext.getMethod());
