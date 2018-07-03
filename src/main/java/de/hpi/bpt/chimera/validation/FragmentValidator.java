@@ -23,8 +23,8 @@ public class FragmentValidator {
 	private final List<SpecialBehavior> allowedStartEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.NONE, SpecialBehavior.MESSAGE_RECEIVE));
 	private final List<SpecialBehavior> allowedEndEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.NONE, SpecialBehavior.MESSAGE_SEND));
 	private final List<SpecialBehavior> allowedThrowEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_SEND));
-	private final List<SpecialBehavior> allowedCatchEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_SEND, SpecialBehavior.TIMER));
-	private final List<SpecialBehavior> allowedBoundaryEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_SEND, SpecialBehavior.TIMER));
+	private final List<SpecialBehavior> allowedCatchEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_RECEIVE, SpecialBehavior.TIMER));
+	private final List<SpecialBehavior> allowedBoundaryEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_RECEIVE, SpecialBehavior.TIMER));
 
 	public FragmentValidator(Fragment fragment) {
 		this.fragment = fragment;
