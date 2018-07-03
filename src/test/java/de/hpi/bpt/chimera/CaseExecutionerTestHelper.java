@@ -42,7 +42,9 @@ public class CaseExecutionerTestHelper {
 																.filter(c -> c instanceof AbstractEventInstance && c.getControlNode().getName().equals(name))
 																.map(AbstractEventInstance.class::cast)
 																.collect(Collectors.toList());
-
+		if (possibleEventInstances.size() == 0) {
+			throw new IllegalArgumentException(String.format("The name %s does not exist in the fragment", name));
+		}
 		if (possibleEventInstances.size() == 1) {
 			return possibleEventInstances.get(0);
 		}
