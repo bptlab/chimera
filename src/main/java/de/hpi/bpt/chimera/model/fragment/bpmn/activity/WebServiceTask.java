@@ -3,6 +3,8 @@ package de.hpi.bpt.chimera.model.fragment.bpmn.activity;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
 public class WebServiceTask extends AbstractActivity {
 	private String webServiceUrl;
 	private String webServiceMethod;
+	@Lob
 	private String webServiceBody;
 	private String webServiceHeader;
 	private String contentType;
