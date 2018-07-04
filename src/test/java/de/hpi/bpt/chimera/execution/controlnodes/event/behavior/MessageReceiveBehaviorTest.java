@@ -19,7 +19,7 @@ import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
 public class MessageReceiveBehaviorTest extends Unicorn {
-	private final String filepath = "src/test/resources/execution/event/ReceiveEventBehaviorTest.json";
+	private final String filepath = "src/test/resources/execution/event/CatchEventBehaviorTest.json";
 
 	private CaseExecutioner caseExecutioner;
 	private String eventJson = "{" +
