@@ -33,39 +33,45 @@
 		</resources>
 			<plugins>
 				<plugin>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<version>1.8</version>
+					<groupId>com.coderplus.maven.plugins</groupId>
+					<artifactId>copy-rename-maven-plugin</artifactId>
+					<version>1.0</version>
 					<executions>
 						<!-- using a different persistence.xml for testing so we can specify and use a second test database -->
 						<!-- the copying is necessary because JPA does not use the persistence.xml stored under test/resources -->
 						<execution>
-					      <id>copy-test-persistence</id>
-					      <phase>test-compile</phase>
-					      <configuration>
-					        <tasks>
-					          <!--backup the "proper" persistence.xml-->
-					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml.proper"/>
-					          <!--replace the "proper" persistence.xml with the "test" version-->
-					          <copy file="${project.build.outputDirectory}/META-INF/persistenceTest.xml" tofile="${project.build.outputDirectory}/META-INF/persistence.xml"/>
-					        </tasks>
+							<id>copy-test-persistence</id>
+							<phase>test-compile</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<fileSets>
+									<!--backup the "proper" persistence.xml-->
+									<fileSet>
+										<sourceFile>${project.build.outputDirectory}/META-INF/persistence.xml</sourceFile>
+										<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml.proper</destinationFile>
+									</fileSet>
+									<!--replace the "proper" persistence.xml with the "test" version-->
+									<fileSet>
+										<sourceFile>${project.build.outputDirectory}/META-INF/persistenceTest.xml</sourceFile>
+										<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml</destinationFile>
+									</fileSet>
+								</fileSets>
+							</configuration>
+						</execution>
+						<execution>
+					        <!--restore the "proper" persistence.xml-->
+							<id>restore-persistence</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>rename</goal>
+							</goals>
+							<configuration>
+								<sourceFile>${project.build.outputDirectory}/META-INF/persistence.xml.proper</sourceFile>
+								<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml</destinationFile>
 					      </configuration>
-					      <goals>
-					        <goal>run</goal>
-					      </goals>
-					    </execution>
-					    <execution>
-					      <id>restore-persistence</id>
-					      <phase>prepare-package</phase>
-					      <configuration>
-					        <tasks>
-					          <!--restore the "proper" persistence.xml-->
-					          <copy file="${project.build.outputDirectory}/META-INF/persistence.xml.proper" tofile="${project.build.outputDirectory}/META-INF/persistence.xml" overwrite="true"/>
-					        </tasks>
-					      </configuration>
-					      <goals>
-					        <goal>run</goal>
-					      </goals>
-					    </execution>
+						</execution>
 					</executions>
 				</plugin>
 				<plugin>
