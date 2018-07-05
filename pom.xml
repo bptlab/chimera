@@ -101,7 +101,7 @@
 					
 					<!--  for faster local testing -->
 					 <configuration>
-					 	<path>/Chimera</path>
+						<path>/${project.name}</path>
           				<url>http://localhost:8080/manager/text</url>
         			</configuration>
 			</plugin>
@@ -195,13 +195,18 @@
 	</build>
 
 	<properties>
-
 		<!-- default properties-->
 		<db.schema>chimeradb</db.schema>
 		<db.test.schema>chimeradb_test</db.test.schema>
 		<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
   		<db.url>${db.url.root}${db.schema}</db.url>
 		<db.test.url>${db.url.root}${db.test.schema}</db.test.url>
+		<db.user>chimera</db.user>
+		<db.password>chimera</db.password>
+		<unicorn.url>localhost:8080</unicorn.url>
+		<unicorn.deploy.path>unicorn</unicorn.deploy.path>
+		<chimera.url>localhost:8080</chimera.url>
+		<chimera.deploy.path>/${project.name}</chimera.deploy.path>
 		<powermock.version>1.6.1</powermock.version>
 		<jersey.version>2.17</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -218,7 +223,6 @@
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
-
 	</dependencyManagement>
 
 	<dependencies>
@@ -423,56 +427,16 @@
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>remote</id>
-			<properties>
-				<db.schema>JEngineV2</db.schema>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.7</version>
-						<executions>
-							<execution>
-								<phase>generate-test-resources</phase>
-								<configuration>
-									<target>
-										<move
-											file="${project.build.outputDirectory}/config_template.properties"
-											tofile="${project.build.outputDirectory}/config.properties" />
-									</target>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<!-- creates config file with default values if not existing -->
-			<id>local</id>
+			<id>initial-build</id>
 			<activation>
 				<file>
 					<missing>${basedir}/config.properties</missing>
 				</file>
 			</activation>
-			<properties>
-				<!-- default values -->
-				<db.user>chimera</db.user>
-				<db.password>bp2016</db.password>
-				<db.schema>chimeradb</db.schema>
-				<unicorn.url>localhost:8080</unicorn.url>
-				<unicorn.deploy.path>unicorn</unicorn.deploy.path>
-				<chimera.url>localhost:8080</chimera.url>
-				<chimera.deploy.path>chimera</chimera.deploy.path>
-			</properties>
 			<build>
 				<plugins>
 					<plugin>
-						<!-- copy and filter config template to basedir -->
+					<!-- copy and filter config template to basedir -->
 						<artifactId>maven-resources-plugin</artifactId>
 						<version>2.6</version>
 						<executions>
@@ -497,20 +461,20 @@
 					</plugin>
 					<plugin>
 						<!-- rename template file to 'config.properties' -->
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.8</version>
+						<groupId>com.coderplus.maven.plugins</groupId>
+						<artifactId>copy-rename-maven-plugin</artifactId>
+						<version>1.0</version>
 						<executions>
 							<execution>
+								<id>rename-config-template-file</id>
 								<phase>validate</phase>
-								<configuration>
-									<target>
-										<move file="${basedir}/config_template.properties"
-											tofile="${basedir}/config.properties" />
-									</target>
-								</configuration>
 								<goals>
-									<goal>run</goal>
+									<goal>rename</goal>
 								</goals>
+								<configuration>
+									<sourceFile>${basedir}/config_template.properties</sourceFile>
+									<destinationFile>${basedir}/config.properties</destinationFile>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
@@ -518,5 +482,4 @@
 			</build>
 		</profile>
 	</profiles>
-
 </project>
