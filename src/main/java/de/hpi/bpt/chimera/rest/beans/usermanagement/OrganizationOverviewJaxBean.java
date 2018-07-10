@@ -2,8 +2,6 @@ package de.hpi.bpt.chimera.rest.beans.usermanagement;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.json.JSONObject;
-
 import de.hpi.bpt.chimera.usermanagment.Organization;
 
 @XmlRootElement

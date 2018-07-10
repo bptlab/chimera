@@ -15,13 +15,10 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.hpi.bpt.chimera.rest.beans.usermanagement.UpdateOrganizationJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UpdateUserJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
 import de.hpi.bpt.chimera.usermanagment.User;

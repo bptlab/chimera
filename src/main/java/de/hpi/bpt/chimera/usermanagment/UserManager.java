@@ -2,7 +2,6 @@ package de.hpi.bpt.chimera.usermanagment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +54,7 @@ public class UserManager {
 		user.setName(username);
 		String id = user.getId();
 		users.put(id, user);
-		OrganizationManager.assignMember(user, OrganizationManager.getDefaultOrganization());
+		OrganizationManager.assignMember(OrganizationManager.getDefaultOrganization(), user);
 		log.info(String.format("Created user with id %s and name %s", id, user.getName()));
 		return user;
 	}
@@ -85,6 +84,14 @@ public class UserManager {
 		} catch (Exception e) {
 			throw e;
 		}
+	}
+
+	public static void deleteRole(User user, Organization org, MemberRole role) {
+		if (!org.isMember(user)) {
+			throw new IllegalArgumentException("The specified user is not a member of the organization");
+		}
+		List<MemberRole> roles = org.getUserIdToRole().get(user.getId());
+		roles.remove(role);
 	}
 
 	public static List<User> getUsers() {

@@ -8,11 +8,7 @@ import java.util.UUID;
 
 import de.hpi.bpt.chimera.model.CaseModel;
 
-/**
- * The owners are only listed in {@code owners} but not in {@code members}.
- */
 public class Organization {
-
 	private String id;
 	private String name;
 	private String description;
@@ -25,9 +21,13 @@ public class Organization {
 	public Organization(User owner, String name) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.name = name;
+
 		this.owners = new HashMap<>();
 		owners.put(owner.getId(), owner);
+
 		this.members = new HashMap<>();
+		members.put(owner.getId(), owner);
+
 		this.caseModels = new HashMap<>();
 		this.roles = new ArrayList<>();
 		this.userIdToRole = new HashMap<>();
@@ -86,7 +86,7 @@ public class Organization {
 	}
 
 	public boolean isMember(User user) {
-		return members.containsKey(user.getId()) || owners.containsKey(user.getId());
+		return members.containsKey(user.getId());
 	}
 
 	public List<MemberRole> getRoles() {

@@ -17,12 +17,13 @@ public class OrganizationManager {
 	}
 
 	/**
-	 * Create an organization with a specific name.
+	 * Create an organization with a specific name. The {@code user} will be the
+	 * owner of the organization.
 	 * 
 	 * @param user
-	 *            - User that will own the organization
+	 *            - User who creates the organization
 	 * @param name
-	 *            - for organization that will be created
+	 *            - for the organization that will be created
 	 */
 	public static Organization createOrganization(User user, String name) {
 		Organization organization = new Organization(user, name);
@@ -33,6 +34,15 @@ public class OrganizationManager {
 		return organization;
 	}
 
+	/**
+	 * Receive an {@link Organization} by its id.
+	 * 
+	 * @param orgId
+	 *            - id of the organization
+	 * @return the organization if the id is assigned.
+	 * @throws IllegalArgumentException
+	 *             if the id is not assigned.
+	 */
 	public static Organization getOrganizationById(String orgId) {
 		if (organizations.containsKey(orgId)) {
 			return organizations.get(orgId);
@@ -42,23 +52,22 @@ public class OrganizationManager {
 
 	/**
 	 * Delete an organization. It is not possible to delete the default
-	 * organization.
+	 * organization. All members are unassigned from this organization.
 	 * 
 	 * @param org
-	 *            the organization that will be deleted
+	 *            - the organization that will be deleted
+	 * @throws IllegalArgumentException
+	 *             if the organization that should be deleted is the
+	 *             {@code defaultOrganization}.
 	 */
 	public static void deleteOrganization(Organization org) {
 		if (org == defaultOrganization) {
 			throw new IllegalArgumentException("The default organization cannot be deleted.");
 		}
-		try {
-			for (User member : org.getMembers().values()) {
-				member.getOrganizations().remove(org);
-			}
-			organizations.remove(org.getId());
-		} catch (Exception e) {
-			throw e;
+		for (User member : org.getMembers().values()) {
+			member.getOrganizations().remove(org);
 		}
+		organizations.remove(org.getId());
 	}
 
 	/**
@@ -84,7 +93,7 @@ public class OrganizationManager {
 	 * 
 	 * @param org
 	 * @param user
-	 * @return
+	 * @return List of casemodels that the {@code user} is allowed to access
 	 */
 	public static List<CaseModel> getCaseModels(Organization org, User user) {
 		List<MemberRole> memberRoles = org.getUserIdToRole().get(user.getId());
@@ -104,12 +113,13 @@ public class OrganizationManager {
 
 	/**
 	 * Assign a specific user to an organization.
-	 * 
+	 *
+	 * @param organization
 	 * @param user
 	 *            who will be member of the organization
-	 * @param organization
+	 *
 	 */
-	public static void assignMember(User user, Organization organization) {
+	public static void assignMember(Organization organization, User user) {
 		Map<String, User> members = organization.getMembers();
 		String userId = user.getId();
 		if (members.containsKey(userId)) {
@@ -121,17 +131,30 @@ public class OrganizationManager {
 		user.getOrganizations().add(organization);
 	}
 
+	/**
+	 * Remove a member from an organization. Therefore, it will be verified if
+	 * the specified user is a member of the organization. If the member is the
+	 * last owner of the organization the membership cannot be deleted.
+	 * 
+	 * @param org
+	 *            - Organization where the membership of the user will be
+	 *            removed
+	 * @param user
+	 *            - User whose membership will be removed
+	 * @throws IllegalArgumentException
+	 *             if the {@code user} is the last owner or if the {@code user}
+	 *             is not a member of the organization.
+	 */
 	public static void removeMember(Organization org, User user) {
-		// TODO: think about how to the deletion if the user is the owner of the
-		// organization
 		String userId = user.getId();
 		if (org.getOwners().size() == 1 && org.getOwners().containsKey(userId)) {
 			String message = String.format("The user with id %s is the last owner of the organiazion with id %s and can thus not be deleted", userId, org.getId());
 			throw new IllegalArgumentException(message);
 		}
-		if (org.getMembers().containsKey(userId)) {
+
+		if (org.isMember(user)) {
 			org.getMembers().remove(userId);
-		} else if (org.getOwners().containsKey(userId)) {
+		} else if (org.isOwner(user)) {
 			org.getOwners().remove(userId);
 		} else {
 			String message = String.format("User with id %s is not a member of organiazion with id %s", userId, org.getId());
@@ -150,6 +173,17 @@ public class OrganizationManager {
 		return defaultOrganization;
 	}
 
+	/**
+	 * Create a new organizational role for an organization. The name for
+	 * organizational roles must be unique.
+	 * 
+	 * @param org
+	 *            - organization that receives a new role
+	 * @param name
+	 *            - for the new organizational role
+	 * @throws IllegalArgumentException
+	 *             if the role name already exists.
+	 */
 	public static void addRole(Organization org, String name) {
 		for (MemberRole role : org.getRoles()) {
 			if (role.getName().equals(name)) {
@@ -160,6 +194,17 @@ public class OrganizationManager {
 		org.getRoles().add(new MemberRole(name, org));
 	}
 	
+	public static void deleteRole(Organization org, MemberRole role) {
+		if (!role.getOrganization().equals(org)) {
+			throw new IllegalArgumentException("The role does not belong to the organization");
+		}
+
+		for (String userId : org.getUserIdToRole().keySet()) {
+			User user = UserManager.getUserById(userId);
+			UserManager.deleteRole(user, org, role);
+		}
+	}
+
 	public static void assignRole(Organization organization, User user, MemberRole role) {
 		if (!organization.isMember(user)) {
 			throw new IllegalArgumentException("The user is not a member of the organization");
@@ -173,10 +218,12 @@ public class OrganizationManager {
 	}
 
 	public static void addOwner(Organization organization, User newOwner) {
-		if (organization.getOwners().containsKey(newOwner.getId())) {
+		if (organization.isOwner(newOwner)) {
 			throw new IllegalArgumentException(String.format("The user %s is already an owner of the organization", newOwner.getName()));
 		}
-
+		if (!organization.isMember(newOwner)) {
+			assignMember(organization, newOwner);
+		}
 		organization.getOwners().put(newOwner.getId(), newOwner);
 	}
 
