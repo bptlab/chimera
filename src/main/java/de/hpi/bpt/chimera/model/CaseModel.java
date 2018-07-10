@@ -25,6 +25,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
+import de.hpi.bpt.chimera.usermanagment.MemberRole;
 import de.hpi.bpt.chimera.usermanagment.Organization;
 
 @Entity
@@ -49,6 +50,8 @@ public class CaseModel {
 
 	@Transient
 	private Organization organization;
+	@Transient
+	private List<MemberRole> allowedRoles;
 
 	public CaseModel() {
 		setId(UUID.randomUUID().toString().replace("-", ""));
@@ -177,5 +180,13 @@ public class CaseModel {
 
 	public void setOrganization(Organization organization) {
 		this.organization = organization;
+	}
+
+	public List<MemberRole> getAllowedRoles() {
+		return allowedRoles;
+	}
+
+	public void setAllowRoles(List<MemberRole> allowedRoles) {
+		this.allowedRoles = allowedRoles;
 	}
 }

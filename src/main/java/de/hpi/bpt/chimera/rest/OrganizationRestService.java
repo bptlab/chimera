@@ -23,14 +23,20 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.miscellaneous.NamedJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.AssignMemberJaxBean;
+import de.hpi.bpt.chimera.rest.beans.usermanagement.MemberRoleJaxBean;
+import de.hpi.bpt.chimera.rest.beans.usermanagement.MemberRolesJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UpdateOrganizationJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
+import de.hpi.bpt.chimera.usermanagment.MemberRole;
 import de.hpi.bpt.chimera.usermanagment.Organization;
 import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
 import de.hpi.bpt.chimera.usermanagment.User;
@@ -185,7 +191,8 @@ public class OrganizationRestService extends AbstractRestService {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not a member of this organization, and cannot view organizational details.")).build();
 			}
 
-			List<CaseModel> caseModels = new ArrayList<>(organization.getCaseModels().values());
+			List<CaseModel> caseModels = OrganizationManager.getCaseModels(organization, user);
+
 			if (!filterString.isEmpty()) {
 				caseModels = caseModels.stream().filter(cm -> cm.getName().contains(filterString)).collect(Collectors.toList());
 			}
@@ -309,4 +316,111 @@ public class OrganizationRestService extends AbstractRestService {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
+
+	@GET
+	@Path("{organizationId}/members/{userId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response receiveMember(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId) {
+		try {
+			// TODO
+			String result = "";
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	@DELETE
+	@Path("{organizationId}/members/{userId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response removeMember(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId) {
+		try {
+			Organization organization = OrganizationManager.getOrganizationById(orgId);
+			User user = retrieveUser(requestContext);
+			if (user.getId() != userId && !user.isAdmin() && !organization.isOwner(user)) {
+				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to remove the user from the organization.")).build();
+			}
+
+			User userToDelete = UserManager.getUserById(userId);
+			OrganizationManager.removeMember(organization, userToDelete);
+
+			UserManager.deleteUser(userToDelete);
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully deleted user.\"}").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	@GET
+	@Path("{organizationId}/members/{userId}/roles")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response receiveMemberRoles(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId) {
+		try {
+			User user = retrieveUser(requestContext);
+			Organization organization = OrganizationManager.getOrganizationById(orgId);
+			if (!user.isAdmin() && !organization.isOwner(user)) {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to view the details of this member.")).build();
+			}
+
+			List<MemberRole> roles = organization.getUserIdToRole().get(user.getId());
+			MemberRolesJaxBean bean = new MemberRolesJaxBean(roles);
+			JSONObject result = new JSONObject(bean);
+
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	@POST
+	@Path("{organizationId}/members/{userId}/roles")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response assignMemberRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId, String body) {
+		try {
+			User user = retrieveUser(requestContext);
+			Organization organization = OrganizationManager.getOrganizationById(orgId);
+			if (!user.isAdmin() && !organization.isOwner(user)) {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to view the details of this member.")).build();
+			}
+
+			MemberRoleJaxBean roleBean = new MemberRoleJaxBean(body);
+			MemberRole role = organization.getRole(roleBean.getName());
+			OrganizationManager.assignRole(organization, user, role);
+
+			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Role successfully assigned.\"}").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	@GET
+	@Path("{organizationId}/members/{userId}/cases")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response receiveCases(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId) {
+		try {
+			User user = retrieveUser(requestContext);
+			Organization org = OrganizationManager.getOrganizationById(orgId);
+			if (!user.isAdmin() && !org.isOwner(user)) {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to view the details of this member.")).build();
+			}
+
+			List<CaseModel> caseModels = OrganizationManager.getCaseModels(org, user);
+			List<CaseExecutioner> caseExecutioners = caseModels.stream()
+														.map(cm -> ExecutionService.getAllCasesOfCaseModel(cm.getId()))
+														.flatMap(List::stream)
+														.collect(Collectors.toList());
+
+			List<CaseOverviewJaxBean> beanArray = caseExecutioners.stream()
+													.map(CaseOverviewJaxBean::new)
+													.collect(Collectors.toList());
+
+			JSONObject result = new JSONObject();
+			result.put("cases", new JSONArray(beanArray));
+
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
 }

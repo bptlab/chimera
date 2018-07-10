@@ -9,13 +9,11 @@ public class User {
 	private String name;
 	private String email;
 	private String password;
-	private Set<Role> roles;
 	private Set<SystemRole> systemRoles;
 	private Set<Organization> organizations;
 
 	public User() {
 		this.id = UUID.randomUUID().toString().replace("-", "");
-		this.roles = new HashSet<>();
 		this.systemRoles = new HashSet<>();
 		this.organizations = new HashSet<>();
 	}
@@ -54,14 +52,6 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
 	}
 
 	public Set<SystemRole> getSystemRoles() {

@@ -1,8 +1,9 @@
 package de.hpi.bpt.chimera.usermanagment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.model.CaseModel;
@@ -77,6 +78,31 @@ public class OrganizationManager {
 	}
 
 	/**
+	 * Return only the {@link CaseModel casemodels} of the {@link Organization
+	 * organization} that the user is allowed to see according to his
+	 * {@link MemberRole member roles}.
+	 * 
+	 * @param org
+	 * @param user
+	 * @return
+	 */
+	public static List<CaseModel> getCaseModels(Organization org, User user) {
+		List<MemberRole> memberRoles = org.getUserIdToRole().get(user.getId());
+		List<CaseModel> caseModels = new ArrayList<>();
+		
+		for (CaseModel cm : org.getCaseModels().values()) {
+			for (MemberRole role : memberRoles) {
+				if (cm.getAllowedRoles().contains(role)) {
+					caseModels.add(cm);
+					break;
+				}
+			}
+		}
+
+		return caseModels;
+	}
+
+	/**
 	 * Assign a specific user to an organization.
 	 * 
 	 * @param user
@@ -85,20 +111,28 @@ public class OrganizationManager {
 	 */
 	public static void assignMember(User user, Organization organization) {
 		Map<String, User> members = organization.getMembers();
-		if (members.containsKey(user.getId())) {
-			throw new IllegalArgumentException(String.format("User with id %s and name %s is already a assigned to the organization with id %s and name %s", user.getId(), user.getName(), organization.getId(), organization.getName()));
+		String userId = user.getId();
+		if (members.containsKey(userId)) {
+			throw new IllegalArgumentException(String.format("User with id %s and name %s is already a assigned to the organization with id %s and name %s", userId, user.getName(), organization.getId(), organization.getName()));
 		}
 
-		members.put(user.getId(), user);
+		members.put(userId, user);
+		organization.getUserIdToRole().put(userId, new ArrayList<>());
 		user.getOrganizations().add(organization);
 	}
 
-	public static void deleteUser(Organization org, User user) {
+	public static void removeMember(Organization org, User user) {
 		// TODO: think about how to the deletion if the user is the owner of the
 		// organization
 		String userId = user.getId();
+		if (org.getOwners().size() == 1 && org.getOwners().containsKey(userId)) {
+			String message = String.format("The user with id %s is the last owner of the organiazion with id %s and can thus not be deleted", userId, org.getId());
+			throw new IllegalArgumentException(message);
+		}
 		if (org.getMembers().containsKey(userId)) {
 			org.getMembers().remove(userId);
+		} else if (org.getOwners().containsKey(userId)) {
+			org.getOwners().remove(userId);
 		} else {
 			String message = String.format("User with id %s is not a member of organiazion with id %s", userId, org.getId());
 			throw new IllegalArgumentException(message);
@@ -117,13 +151,27 @@ public class OrganizationManager {
 	}
 
 	public static void addRole(Organization org, String name) {
-		if (org.getRoles().contains(name)) {
-			throw new IllegalArgumentException(String.format("The role name %s already exists.", name));
+		for (MemberRole role : org.getRoles()) {
+			if (role.getName().equals(name)) {
+				throw new IllegalArgumentException(String.format("The role name %s already exists.", name));
+			}
 		}
 		
-		org.getRoles().add(name);
+		org.getRoles().add(new MemberRole(name, org));
 	}
 	
+	public static void assignRole(Organization organization, User user, MemberRole role) {
+		if (!organization.isMember(user)) {
+			throw new IllegalArgumentException("The user is not a member of the organization");
+		}
+
+		List<MemberRole> assignedRoles = organization.getUserIdToRole().get(user.getId());
+		if (assignedRoles.contains(role)) {
+			throw new IllegalArgumentException(String.format("The user already has the role %s", role.getName()));
+		}
+		assignedRoles.add(role);
+	}
+
 	public static void addOwner(Organization organization, User newOwner) {
 		if (organization.getOwners().containsKey(newOwner.getId())) {
 			throw new IllegalArgumentException(String.format("The user %s is already an owner of the organization", newOwner.getName()));

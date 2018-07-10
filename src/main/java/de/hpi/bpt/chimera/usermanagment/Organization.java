@@ -8,6 +8,9 @@ import java.util.UUID;
 
 import de.hpi.bpt.chimera.model.CaseModel;
 
+/**
+ * The owners are only listed in {@code owners} but not in {@code members}.
+ */
 public class Organization {
 
 	private String id;
@@ -16,7 +19,8 @@ public class Organization {
 	private Map<String, User> owners;
 	private Map<String, User> members;
 	private Map<String, CaseModel> caseModels;
-	private List<String> roles;
+	private List<MemberRole> roles;
+	private Map<String, List<MemberRole>> userIdToRole;
 
 	public Organization(User owner, String name) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
@@ -24,9 +28,9 @@ public class Organization {
 		this.owners = new HashMap<>();
 		owners.put(owner.getId(), owner);
 		this.members = new HashMap<>();
-		this.members.put(owner.getId(), owner);
 		this.caseModels = new HashMap<>();
 		this.roles = new ArrayList<>();
+		this.userIdToRole = new HashMap<>();
 	}
 
 	public boolean isOwner(User user) {
@@ -82,14 +86,37 @@ public class Organization {
 	}
 
 	public boolean isMember(User user) {
-		return members.containsKey(user.getId());
+		return members.containsKey(user.getId()) || owners.containsKey(user.getId());
 	}
 
-	public List<String> getRoles() {
+	public List<MemberRole> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<String> roles) {
+	public void setRoles(List<MemberRole> roles) {
 		this.roles = roles;
+	}
+
+	public MemberRole getRole(String roleName) {
+		MemberRole role = null;
+		for (MemberRole orgRole : getRoles()) {
+			if (orgRole.getName().equals(roleName)) {
+				role = orgRole;
+				break;
+			}
+		}
+		if (role == null) {
+			throw new IllegalArgumentException(String.format("The organization does not have a role with name %s", roleName));
+		}
+
+		return role;
+	}
+
+	public Map<String, List<MemberRole>> getUserIdToRole() {
+		return userIdToRole;
+	}
+
+	public void setUserIdToRole(Map<String, List<MemberRole>> userIdToRole) {
+		this.userIdToRole = userIdToRole;
 	}
 }

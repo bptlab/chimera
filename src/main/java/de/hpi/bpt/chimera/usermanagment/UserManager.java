@@ -77,7 +77,7 @@ public class UserManager {
 		try {
 			String name = users.get(user).getName();
 			for (Organization org : user.getOrganizations()) {
-				OrganizationManager.deleteUser(org, user);
+				OrganizationManager.removeMember(org, user);
 			}
 
 			users.remove(user);
