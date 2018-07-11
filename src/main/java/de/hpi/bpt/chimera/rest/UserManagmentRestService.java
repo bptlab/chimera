@@ -28,6 +28,14 @@ import de.hpi.bpt.chimera.usermanagment.UserManager;
 public class UserManagmentRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(UserManagmentRestService.class);
 
+	/**
+	 * Register a new user.
+	 * 
+	 * @param body
+	 * @return the Response of POST. The response code will be 201 if the
+	 *         request was successful and contains a JSONObject of
+	 *         {@link UserOverviewJaxBean}.
+	 */
 	@POST
 	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -37,13 +45,23 @@ public class UserManagmentRestService extends AbstractRestService {
 			String email = json.getString("email");
 			String password = json.getString("password");
 			String username = json.getString("username");
-			UserManager.createUser(email, password, username);
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully registered user.\"}").build();
+			User user = UserManager.createUser(email, password, username);
+			JSONObject result = new JSONObject(new UserOverviewJaxBean(user));
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
+			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
+	/**
+	 * Try to login a user.
+	 * 
+	 * @param requestContext
+	 *            - information about the request.
+	 * @return the response of POST. The response code will be 200 if the
+	 *         request was successful or 403 if the login failed.
+	 */
 	@POST
 	@Path("login")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -52,10 +70,20 @@ public class UserManagmentRestService extends AbstractRestService {
 			retrieveUser(requestContext);
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully logged in.\"}").build();
 		} catch (Exception e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+			log.error(e);
+			return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
+	/**
+	 * Receive all users that exist.
+	 * 
+	 * @param requestContext
+	 *            - information about the request.
+	 * @return the response of GET. The response code will be 200 if the request
+	 *         was successful and contains a JSONObject with a JSONArray of
+	 *         {@link UserOverviewJaxBean} at key {@code users}.
+	 */
 	@GET
 	@Path("")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -64,27 +92,60 @@ public class UserManagmentRestService extends AbstractRestService {
 			List<UserOverviewJaxBean> resBeans = UserManager.getUsers().stream()
 													.map(UserOverviewJaxBean::new)
 													.collect(Collectors.toList());
-			JSONArray result = new JSONArray(resBeans);
-			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+
+			JSONObject result = new JSONObject();
+			result.put("users", new JSONArray(resBeans));
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
+			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 	
+	/**
+	 * Receive information about a specific user.
+	 * 
+	 * @param requestContext
+	 *            - information about the request.
+	 * @param userId
+	 *            - id of the user.
+	 * @return the response of GET. The response code will be 200 if the request
+	 *         was successful and contains a JSONObject with
+	 *         {@link UserOverviewJaxBean}. The response will be 400 if the
+	 *         {@code userId} is not assigned.
+	 */
 	@GET
 	@Path("{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(@Context ContainerRequestContext requestContext, @PathParam("userId") String userId) {
 		try {
-			User user = retrieveUser(requestContext);
+			User user = UserManager.getUserById(userId);
 
-			JSONObject res = new JSONObject(new UserOverviewJaxBean(user));
-			return Response.ok(res.toString(), MediaType.APPLICATION_JSON).build();
+			JSONObject result = new JSONObject(new UserOverviewJaxBean(user));
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
+			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
+	/**
+	 * Update information about a specific user. Therefore, the user must match
+	 * the user who requests the update.
+	 * 
+	 * @param requestContext
+	 *            - information about the request.
+	 * @param userId
+	 *            - id of the user.
+	 * @param body
+	 *            - {@link UpdateUserJaxBean} used for the update
+	 * @return the response of GET. The response code will be 200 if the request
+	 *         was successful and contains a JSONObject with
+	 *         {@link UserOverviewJaxBean}. The response will be 400 if the
+	 *         {@code userId} is not assigned. The response code will be 403 if
+	 *         the user who send the request is not allowed to update this
+	 *         information.
+	 */
 	@PUT
 	@Path("{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -93,19 +154,33 @@ public class UserManagmentRestService extends AbstractRestService {
 			User user = retrieveUser(requestContext);
 
 			if (user.getId() != userId || user.isAdmin()) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to update the user's details.")).build();
+				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to update the user's details.")).build();
 			}
 
 			UpdateUserJaxBean update = new UpdateUserJaxBean(body);
 			user.setEmail(update.getEmail());
 			user.setPassword(update.getPassword());
-			JSONObject res = new JSONObject(new UserOverviewJaxBean(user));
-			return Response.ok(res.toString(), MediaType.APPLICATION_JSON).build();
+			JSONObject result = new JSONObject(new UserOverviewJaxBean(user));
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
+			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
+	/**
+	 * Delete a specific user. Therefore, the user specified by the url must
+	 * match the user who requests the update.
+	 * 
+	 * @param requestContext
+	 *            - information about the request.
+	 * @param userId
+	 *            - id of the user.
+	 * @return the response of DELETE. The response code will be 200 if the
+	 *         request was successful. The response will be 400 if the
+	 *         {@code userId} is not assigned. The response code will be 403 if
+	 *         the user who send the request is not allowed to delete the user.
+	 */
 	@DELETE
 	@Path("{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -120,6 +195,7 @@ public class UserManagmentRestService extends AbstractRestService {
 			UserManager.deleteUser(userToDelete);
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully deleted user.\"}").build();
 		} catch (Exception e) {
+			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}

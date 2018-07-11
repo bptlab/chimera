@@ -162,6 +162,12 @@ public class OrganizationManager {
 		}
 	}
 
+	/**
+	 * Receive the default organization. If it does not exist, it will be
+	 * created.
+	 * 
+	 * @return {@link Organization}
+	 */
 	public static Organization getDefaultOrganization() {
 		if (defaultOrganization == null) {
 			User chimera = new User();
@@ -194,6 +200,17 @@ public class OrganizationManager {
 		org.getRoles().add(new MemberRole(name, org));
 	}
 	
+	/**
+	 * Delete a role of an organization. The role will be removed from all
+	 * members of the organization who have this role.
+	 * 
+	 * @param org
+	 *            - {@link Organization} of which the role will be deleted
+	 * @param role
+	 *            - that will be deleted
+	 * @throws IllegalArgumentException
+	 *             if the role does not belong to the organization.
+	 */
 	public static void deleteRole(Organization org, MemberRole role) {
 		if (!role.getOrganization().equals(org)) {
 			throw new IllegalArgumentException("The role does not belong to the organization");
@@ -205,6 +222,20 @@ public class OrganizationManager {
 		}
 	}
 
+	/**
+	 * Assign a role of an organization to a member of the organization.
+	 * 
+	 * @param organization
+	 *            - in which the user is member in and where the organizational
+	 *            role belongs to
+	 * @param user
+	 *            - who will receive the role
+	 * @param role
+	 *            - that will be assigned
+	 * @throws IllegalArgumentException
+	 *             if the user is not a member of the organization or the user
+	 *             already has this role.
+	 */
 	public static void assignRole(Organization organization, User user, MemberRole role) {
 		if (!organization.isMember(user)) {
 			throw new IllegalArgumentException("The user is not a member of the organization");
@@ -217,6 +248,17 @@ public class OrganizationManager {
 		assignedRoles.add(role);
 	}
 
+	/**
+	 * Add a new owner for an organization. The owner will be also assigned as a
+	 * member of the organization.
+	 * 
+	 * @param organization
+	 *            - that will receive a new owner
+	 * @param newOwner
+	 *            - for the organization
+	 * @throws IllegalArgumentException
+	 *             if the user is already an owner of the organization.
+	 */
 	public static void addOwner(Organization organization, User newOwner) {
 		if (organization.isOwner(newOwner)) {
 			throw new IllegalArgumentException(String.format("The user %s is already an owner of the organization", newOwner.getName()));

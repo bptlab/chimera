@@ -18,8 +18,12 @@ public class UserManager {
 	 * Authenticate a user with a given email and a password.
 	 * 
 	 * @param email
+	 *            - of the user
 	 * @param password
-	 * @return
+	 *            - of the user
+	 * @return the authenticated user
+	 * @throws IllegalArgumentException
+	 *             if the email is not assigned or the password is wrong.
 	 */
 	public static User authenticateUser(String email, String password) {
 		if (users.isEmpty()) {
@@ -59,6 +63,14 @@ public class UserManager {
 		return user;
 	}
 
+	/**
+	 * Get a {@link User} by its id.
+	 * 
+	 * @param userId
+	 * @return User
+	 * @throws IllegalArgumentException
+	 *             if the user is not assigned.
+	 */
 	public static User getUserById(String userId) {
 		if (users.containsKey(userId)) {
 			return users.get(userId);
@@ -68,7 +80,7 @@ public class UserManager {
 	}
 
 	/**
-	 * Delete a user by its id.
+	 * Delete a user. Therefore, delete the memberships in the organizations.
 	 * 
 	 * @param user
 	 */
@@ -86,6 +98,16 @@ public class UserManager {
 		}
 	}
 
+	/**
+	 * Remove a specific {@link MemberRole} of a user in an organization.
+	 * 
+	 * @param user
+	 *            - whose role will me removed
+	 * @param org
+	 *            - organization where the users role will be removed
+	 * @param role
+	 *            - to be removed
+	 */
 	public static void deleteRole(User user, Organization org, MemberRole role) {
 		if (!org.isMember(user)) {
 			throw new IllegalArgumentException("The specified user is not a member of the organization");

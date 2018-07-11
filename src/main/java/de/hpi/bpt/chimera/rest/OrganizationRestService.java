@@ -26,6 +26,7 @@ import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
+import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.miscellaneous.NamedJaxBean;
@@ -50,6 +51,7 @@ public class OrganizationRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(OrganizationRestService.class);
 	private static final String UNAUTHORIZED_MEMBER_MESSAGE = "You are not a member of this organization, and cannot view organizational details.";
 	private static final String UNAUTHORIZED_MEMBER_VIEW_MESSAGE = "You are not allowed to view the details of this member.";
+	private static final String NOT_A_MEMBER_MESSAGE = "The requested user is not a member of the organization.";
 
 	/**
 	 * Create a new organization with a specified name. Every logged in user can
@@ -311,6 +313,22 @@ public class OrganizationRestService extends AbstractRestService {
 		}
 	}
 
+	/**
+	 * Delete a organizational role of an organization. Only the owner is
+	 * allowed to do so.
+	 * 
+	 * @param requestContext
+	 *            - information about the request.
+	 * @param orgId
+	 *            - id of the organization.
+	 * @param roleName
+	 *            - name of the role
+	 * @return the Response of DELETE. The response code will be 200 if the
+	 *         request was successful. The response will be 400 if the
+	 *         {@code orgId} is not assigned. The response code will be 403 if
+	 *         the user who send the request is not allowed to view this
+	 *         information.
+	 */
 	@DELETE
 	@Path("{organizationId}/roles/{roleName}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -332,6 +350,23 @@ public class OrganizationRestService extends AbstractRestService {
 		}
 	}
 
+	/**
+	 * Receive all casemodels that a member of an organization is allowed to see
+	 * according to its {@link MemberRole}.
+	 * 
+	 * @param requestContext
+	 *            - information about the request.
+	 * @param orgId
+	 *            - id of the organization.
+	 * @param filterString
+	 *            - for filtering the casemodels by their names
+	 * @return the Response of GET. The response code will be 200 if the request
+	 *         was successful and contains a JSONObject with a JSONArray of
+	 *         {@link CaseModelOverviewJaxBean} at key {@code casemodels}. The
+	 *         response will be 400 if the {@code orgId} is not assigned. The
+	 *         response code will be 403 if the user who send the request is not
+	 *         allowed to view this information.
+	 */
 	@GET
 	@Path("{organizationId}/casemodels")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -351,18 +386,36 @@ public class OrganizationRestService extends AbstractRestService {
 
 			caseModels.sort((c1, c2) -> c1.getDeployment().compareTo(c2.getDeployment()));
 
-			JSONArray result = new JSONArray();
-			for (CaseModel cm : caseModels) {
-				result.put(new JSONObject(new CaseModelOverviewJaxBean(cm)));
-			}
-
-			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+			List<CaseModelOverviewJaxBean> beans = caseModels.stream()
+													.map(CaseModelOverviewJaxBean::new)
+													.collect(Collectors.toList());
+		
+			JSONObject result = new JSONObject();
+			result.put("casemodels", new JSONArray(beans));
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
+	/**
+	 * Deploy a new casemodel in an organization as a member of the
+	 * organization.
+	 * 
+	 * @param requestContext
+	 *            - information about the request.
+	 * @param orgId
+	 *            - id of the organization.
+	 * @param jsonString
+	 *            - the json with information about the casemodel
+	 * @return the Response of POST. The response code will be 201 if the
+	 *         request was successful and contains a
+	 *         {@link CaseModelOverviewJaxBean}. The response will be 400 if the
+	 *         {@code orgId} is not assigned or an error occured during the
+	 *         parsing. The response code will be 403 if the user who send the
+	 *         request is not a member of the organization.
+	 */
 	@POST
 	@Path("{organizationId}/casemodels")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -378,7 +431,8 @@ public class OrganizationRestService extends AbstractRestService {
 			cm.setOrganization(organization);
 			organization.getCaseModels().put(cm.getId(), cm);
 			log.info("Successfully parsed a CaseModel");
-			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"case model deployed.\"}").build();
+			JSONObject result = new JSONObject(new CaseModelDetailsJaxBean(cm));
+			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error("Chimera failed to parse the CaseModel!", e);
 			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -581,7 +635,7 @@ public class OrganizationRestService extends AbstractRestService {
 
 			User userToView = UserManager.getUserById(userId);
 			if (!organization.isMember(userToView)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("The requested user is not a member of the organization.")).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(NOT_A_MEMBER_MESSAGE)).build();
 			}
 
 			JSONObject result = new JSONObject(new UserDetailsJaxBean(organization, userToView));
@@ -663,7 +717,7 @@ public class OrganizationRestService extends AbstractRestService {
 
 			User userToView = UserManager.getUserById(userId);
 			if (!organization.isMember(userToView)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("The requested user is not a member of the organization.")).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(NOT_A_MEMBER_MESSAGE)).build();
 			}
 
 			List<MemberRole> roles = organization.getUserIdToRole().get(userToView.getId());
@@ -708,14 +762,68 @@ public class OrganizationRestService extends AbstractRestService {
 
 			User userToAssign = UserManager.getUserById(userId);
 			if (!organization.isMember(userToAssign)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("The requested user is not a member of the organization.")).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(NOT_A_MEMBER_MESSAGE)).build();
 			}
 
 			MemberRoleJaxBean roleBean = new MemberRoleJaxBean(body);
 			MemberRole role = organization.getRole(roleBean.getName());
 			OrganizationManager.assignRole(organization, userToAssign, role);
 
-			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Role successfully assigned.\"}").build();
+			List<MemberRole> roles = organization.getUserIdToRole().get(userToAssign.getId());
+			MemberRolesJaxBean bean = new MemberRolesJaxBean(roles);
+			JSONObject result = new JSONObject(bean);
+
+			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (Exception e) {
+			log.error(e);
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	/**
+	 * Delete a specific organizational role of a member in an organization.
+	 * Only an owner of the organization is allowed to do so.
+	 * 
+	 * @param requestContext
+	 *            - information about the request.
+	 * @param orgId
+	 *            - id of the organization.
+	 * @param userId
+	 *            - id of the user
+	 * @param roleName
+	 *            - name of the organizational role.
+	 * @return the Response of DELETE. The response code will be 200 if the
+	 *         request was successful and contains a JSONObject of an
+	 *         {@link MemberRolesJaxBean}. The response code will be 400 if the
+	 *         {@code orgId} or {@code userId} is not assigned, if the user is
+	 *         not a member of the organization or the role name is not
+	 *         assigned. The response code will be 403 if the user who send the
+	 *         request is not allowed to change these information.
+	 */
+	@DELETE
+	@Path("{organizationId}/members/{userId}/roles/{roleName}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteMemberRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId, @PathParam("userId") String roleName) {
+		try {
+			User user = retrieveUser(requestContext);
+			Organization organization = OrganizationManager.getOrganizationById(orgId);
+			if (!user.isAdmin() && !organization.isOwner(user)) {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_VIEW_MESSAGE)).build();
+			}
+
+			User requestedUser = UserManager.getUserById(userId);
+			if (!organization.isMember(requestedUser)) {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(NOT_A_MEMBER_MESSAGE)).build();
+			}
+
+			MemberRole role = organization.getRole(roleName);
+			UserManager.deleteRole(requestedUser, organization, role);
+
+			List<MemberRole> roles = organization.getUserIdToRole().get(requestedUser.getId());
+			MemberRolesJaxBean bean = new MemberRolesJaxBean(roles);
+			JSONObject result = new JSONObject(bean);
+
+			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -754,7 +862,7 @@ public class OrganizationRestService extends AbstractRestService {
 			}
 
 			if (!org.isMember(userToView)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("The requested user is not a member of the organization.")).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(NOT_A_MEMBER_MESSAGE)).build();
 			}
 
 			List<CaseModel> caseModels = OrganizationManager.getCaseModels(org, userToView);
