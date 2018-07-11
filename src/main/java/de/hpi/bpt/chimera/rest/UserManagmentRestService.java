@@ -152,15 +152,15 @@ public class UserManagmentRestService extends AbstractRestService {
 	public Response updateUser(@Context ContainerRequestContext requestContext, @PathParam("userId") String userId, String body) {
 		try {
 			User user = retrieveUser(requestContext);
-
-			if (user.getId() != userId || user.isAdmin()) {
+			User userToUpdate = UserManager.getUserById(userId);
+			if (!user.equals(userToUpdate) && !user.isAdmin()) {
 				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to update the user's details.")).build();
 			}
 
 			UpdateUserJaxBean update = new UpdateUserJaxBean(body);
 			user.setEmail(update.getEmail());
 			user.setPassword(update.getPassword());
-			JSONObject result = new JSONObject(new UserOverviewJaxBean(user));
+			JSONObject result = new JSONObject(new UserOverviewJaxBean(userToUpdate));
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -187,11 +187,11 @@ public class UserManagmentRestService extends AbstractRestService {
 	public Response deleteUser(@Context ContainerRequestContext requestContext, @PathParam("userId") String userId) {
 		try {
 			User user = retrieveUser(requestContext);
-			if (user.getId() != userId && !user.isAdmin()) {
+			User userToDelete = UserManager.getUserById(userId);
+			if (!user.equals(userToDelete) && !user.isAdmin()) {
 				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to delete the user.")).build();
 			}
 
-			User userToDelete = UserManager.getUserById(userId);
 			UserManager.deleteUser(userToDelete);
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully deleted user.\"}").build();
 		} catch (Exception e) {

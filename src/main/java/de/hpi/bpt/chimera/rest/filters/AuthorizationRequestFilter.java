@@ -59,7 +59,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			User authentificationResult = UserManager.authenticateUser(lap[0], lap[1]);
 			log.info(authentificationResult.getName());
 		} catch (Exception e) {
-
+			throw e;
 		}
 
 		// Our system refuse login and password

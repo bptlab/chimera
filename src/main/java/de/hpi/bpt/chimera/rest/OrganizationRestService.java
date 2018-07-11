@@ -140,7 +140,7 @@ public class OrganizationRestService extends AbstractRestService {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isMember(user) || !user.isAdmin()) {
+			if (!organization.isMember(user) && !user.isAdmin()) {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
@@ -178,7 +178,7 @@ public class OrganizationRestService extends AbstractRestService {
 			User user = retrieveUser(requestContext);
 
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isOwner(user) || !user.isAdmin()) {
+			if (!organization.isOwner(user) && !user.isAdmin()) {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not an owner of this organization, and cannot update organizational details.")).build();
 			}
 
@@ -216,7 +216,7 @@ public class OrganizationRestService extends AbstractRestService {
 			User user = retrieveUser(requestContext);
 			Organization org = OrganizationManager.getOrganizationById(orgId);
 
-			if (!org.isOwner(user) || !user.isAdmin()) {
+			if (!org.isOwner(user) && !user.isAdmin()) {
 				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to delete the organization.")).build();
 			}
 
@@ -251,7 +251,7 @@ public class OrganizationRestService extends AbstractRestService {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isMember(user) || !user.isAdmin()) {
+			if (!organization.isMember(user) && !user.isAdmin()) {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
@@ -293,7 +293,7 @@ public class OrganizationRestService extends AbstractRestService {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isOwner(user) || !user.isAdmin()) {
+			if (!organization.isOwner(user) && !user.isAdmin()) {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to add new roles.")).build();
 			}
 
@@ -461,7 +461,7 @@ public class OrganizationRestService extends AbstractRestService {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isMember(user) || !user.isAdmin()) {
+			if (!organization.isMember(user) && !user.isAdmin()) {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
@@ -504,7 +504,7 @@ public class OrganizationRestService extends AbstractRestService {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isOwner(user) || !user.isAdmin()) {
+			if (!organization.isOwner(user) && !user.isAdmin()) {
 				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to add new owners to the organization.")).build();
 			}
 
@@ -540,7 +540,7 @@ public class OrganizationRestService extends AbstractRestService {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isMember(user) || !user.isAdmin()) {
+			if (!organization.isMember(user) && !user.isAdmin()) {
 				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
@@ -629,7 +629,7 @@ public class OrganizationRestService extends AbstractRestService {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isMember(user) || !user.isAdmin()) {
+			if (!organization.isMember(user) && !user.isAdmin()) {
 				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 

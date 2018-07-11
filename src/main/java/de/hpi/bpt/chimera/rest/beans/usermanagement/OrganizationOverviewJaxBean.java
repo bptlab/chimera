@@ -8,10 +8,12 @@ import de.hpi.bpt.chimera.usermanagment.Organization;
 public class OrganizationOverviewJaxBean {
 	private String id;
 	private String name;
+	private String description;
 
 	public OrganizationOverviewJaxBean(Organization organization) {
 		setId(organization.getId());
 		setName(organization.getName());
+		setDescription(organization.getDescription());
 	}
 
 	public String getId() {
@@ -28,5 +30,13 @@ public class OrganizationOverviewJaxBean {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
