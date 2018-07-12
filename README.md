@@ -7,8 +7,6 @@ Chimera supports:
 * Integration to external events via the Complex Event Processing engine [Unicorn](https://bpt.hpi.uni-potsdam.de/UNICORN)
 * Usage of external APIs via webservice tasks
 
-It is provided under the MIT free and open source software license (see LICENSE.md).
-
 For further reference please visit our [website](https://bpt.hpi.uni-potsdam.de/Chimera/WebHome) and check the [wiki](https://github.com/bptlab/chimera/wiki).
 
 ## Getting started
@@ -61,3 +59,11 @@ To simplify the local development workflow, you can make use of the `Makefile`.
 * Maven build: `make build`
 * Local tomcat release: `make release_local` (requires Tomcat and Unix)
 * Docker build + deploy: `make docker` (update docker tag in `docker-compose.yml` beforehand!)
+
+## Contributing
+You want to help us? Great :+1:
+
+Please check out [Contributing.md](Contributing.md) for information how you can contribute to the Chimera project, including templates for bug reports, feature suggestions, and pull requests.
+
+## License 
+The Chimera case engine is provided under the MIT free and open source software license - see [LICENSE.md](LICENSE.md) for details.
