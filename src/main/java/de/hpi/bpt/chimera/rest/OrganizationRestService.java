@@ -50,7 +50,8 @@ import de.hpi.bpt.chimera.validation.NameValidation;
 public class OrganizationRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(OrganizationRestService.class);
 	private static final String UNAUTHORIZED_MEMBER_MESSAGE = "You are not a member of this organization, and cannot view organizational details.";
-	private static final String UNAUTHORIZED_MEMBER_VIEW_MESSAGE = "You are not allowed to view the details of this member.";
+	private static final String UNAUTHORIZED_VIEW_MESSAGE = "You are not allowed to view this information.";
+	private static final String UNAUTHORIZED_CHANGE_MESSAGE = "You are not allowed to alter this information.";
 	private static final String NOT_A_MEMBER_MESSAGE = "The requested user is not a member of the organization.";
 
 	/**
@@ -81,7 +82,7 @@ public class OrganizationRestService extends AbstractRestService {
 			Organization organization = OrganizationManager.createOrganization(user, name);
 			organization.setDescription(bean.getDescription());
 
-			JSONObject result = new JSONObject(new OrganizationDetailsJaxBean(organization));
+			JSONObject result = new JSONObject(new OrganizationDetailsJaxBean(organization, user));
 			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -144,7 +145,7 @@ public class OrganizationRestService extends AbstractRestService {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
-			JSONObject result = new JSONObject(new OrganizationDetailsJaxBean(organization));
+			JSONObject result = new JSONObject(new OrganizationDetailsJaxBean(organization, user));
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -186,7 +187,7 @@ public class OrganizationRestService extends AbstractRestService {
 			organization.setName(update.getName());
 			organization.setDescription(update.getDescription());
 
-			JSONObject result = new JSONObject(new OrganizationDetailsJaxBean(organization));
+			JSONObject result = new JSONObject(new OrganizationDetailsJaxBean(organization, user));
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -337,7 +338,7 @@ public class OrganizationRestService extends AbstractRestService {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!user.isAdmin() && !organization.isOwner(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_VIEW_MESSAGE)).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_CHANGE_MESSAGE)).build();
 			}
 
 			MemberRole role = organization.getRole(roleName);
@@ -377,19 +378,16 @@ public class OrganizationRestService extends AbstractRestService {
 			if (!organization.isMember(user)) {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
-
 			List<CaseModel> caseModels = OrganizationManager.getCaseModels(organization, user);
 
 			if (!filterString.isEmpty()) {
 				caseModels = caseModels.stream().filter(cm -> cm.getName().contains(filterString)).collect(Collectors.toList());
 			}
 
-			caseModels.sort((c1, c2) -> c1.getDeployment().compareTo(c2.getDeployment()));
-
 			List<CaseModelOverviewJaxBean> beans = caseModels.stream()
 													.map(CaseModelOverviewJaxBean::new)
 													.collect(Collectors.toList());
-		
+
 			JSONObject result = new JSONObject();
 			result.put("casemodels", new JSONArray(beans));
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
@@ -671,14 +669,15 @@ public class OrganizationRestService extends AbstractRestService {
 		try {
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			User user = retrieveUser(requestContext);
-			if (user.getId() != userId && !user.isAdmin() && !organization.isOwner(user)) {
+			User userToDelete = UserManager.getUserById(userId);
+
+			if (!user.equals(userToDelete) && !user.isAdmin() && !organization.isOwner(user)) {
 				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to remove the user from the organization.")).build();
 			}
 
-			User userToDelete = UserManager.getUserById(userId);
 			OrganizationManager.removeMember(organization, userToDelete);
 
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully deleted user.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully removed member.\"}").build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -712,7 +711,7 @@ public class OrganizationRestService extends AbstractRestService {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!user.isAdmin() && !organization.isMember(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_VIEW_MESSAGE)).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
 			User userToView = UserManager.getUserById(userId);
@@ -720,7 +719,7 @@ public class OrganizationRestService extends AbstractRestService {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(NOT_A_MEMBER_MESSAGE)).build();
 			}
 
-			List<MemberRole> roles = organization.getUserIdToRole().get(userToView.getId());
+			List<MemberRole> roles = organization.getUserIdToRoles().get(userToView.getId());
 			MemberRolesJaxBean bean = new MemberRolesJaxBean(roles);
 			JSONObject result = new JSONObject(bean);
 
@@ -757,7 +756,7 @@ public class OrganizationRestService extends AbstractRestService {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!user.isAdmin() && !organization.isOwner(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_VIEW_MESSAGE)).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_CHANGE_MESSAGE)).build();
 			}
 
 			User userToAssign = UserManager.getUserById(userId);
@@ -769,7 +768,7 @@ public class OrganizationRestService extends AbstractRestService {
 			MemberRole role = organization.getRole(roleBean.getName());
 			OrganizationManager.assignRole(organization, userToAssign, role);
 
-			List<MemberRole> roles = organization.getUserIdToRole().get(userToAssign.getId());
+			List<MemberRole> roles = organization.getUserIdToRoles().get(userToAssign.getId());
 			MemberRolesJaxBean bean = new MemberRolesJaxBean(roles);
 			JSONObject result = new JSONObject(bean);
 
@@ -803,12 +802,12 @@ public class OrganizationRestService extends AbstractRestService {
 	@DELETE
 	@Path("{organizationId}/members/{userId}/roles/{roleName}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteMemberRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId, @PathParam("userId") String roleName) {
+	public Response deleteMemberRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId, @PathParam("roleName") String roleName) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!user.isAdmin() && !organization.isOwner(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_VIEW_MESSAGE)).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_CHANGE_MESSAGE)).build();
 			}
 
 			User requestedUser = UserManager.getUserById(userId);
@@ -819,7 +818,7 @@ public class OrganizationRestService extends AbstractRestService {
 			MemberRole role = organization.getRole(roleName);
 			UserManager.deleteRole(requestedUser, organization, role);
 
-			List<MemberRole> roles = organization.getUserIdToRole().get(requestedUser.getId());
+			List<MemberRole> roles = organization.getUserIdToRoles().get(requestedUser.getId());
 			MemberRolesJaxBean bean = new MemberRolesJaxBean(roles);
 			JSONObject result = new JSONObject(bean);
 
@@ -858,7 +857,7 @@ public class OrganizationRestService extends AbstractRestService {
 			Organization org = OrganizationManager.getOrganizationById(orgId);
 			User userToView = UserManager.getUserById(userId);
 			if (!user.isAdmin() && !org.isOwner(user) && !user.equals(userToView)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_VIEW_MESSAGE)).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_VIEW_MESSAGE)).build();
 			}
 
 			if (!org.isMember(userToView)) {
@@ -870,11 +869,11 @@ public class OrganizationRestService extends AbstractRestService {
 														.map(cm -> ExecutionService.getAllCasesOfCaseModel(cm.getId()))
 														.flatMap(List::stream)
 														.collect(Collectors.toList());
-
+			
 			List<CaseOverviewJaxBean> beanArray = caseExecutioners.stream()
 													.map(CaseOverviewJaxBean::new)
 													.collect(Collectors.toList());
-
+			
 			JSONObject result = new JSONObject();
 			result.put("cases", new JSONArray(beanArray));
 

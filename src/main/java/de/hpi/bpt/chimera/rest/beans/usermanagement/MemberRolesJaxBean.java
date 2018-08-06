@@ -11,7 +11,9 @@ public class MemberRolesJaxBean {
 	private String[] roles;
 
 	public MemberRolesJaxBean(List<MemberRole> memberRoles) {
-		roles = (String[]) memberRoles.stream().map(MemberRole::getName).toArray();
+		roles = memberRoles.stream()
+					.map(MemberRole::getName)
+					.toArray(String[]::new);
 	}
 
 	public String[] getRoles() {

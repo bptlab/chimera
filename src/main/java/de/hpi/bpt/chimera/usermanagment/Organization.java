@@ -16,11 +16,12 @@ public class Organization {
 	private Map<String, User> members;
 	private Map<String, CaseModel> caseModels;
 	private List<MemberRole> roles;
-	private Map<String, List<MemberRole>> userIdToRole;
+	private Map<String, List<MemberRole>> userIdToRoles;
 
 	public Organization(User owner, String name) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.name = name;
+		this.description = "";
 
 		this.owners = new HashMap<>();
 		owners.put(owner.getId(), owner);
@@ -30,7 +31,7 @@ public class Organization {
 
 		this.caseModels = new HashMap<>();
 		this.roles = new ArrayList<>();
-		this.userIdToRole = new HashMap<>();
+		this.userIdToRoles = new HashMap<>();
 	}
 
 	public boolean isOwner(User user) {
@@ -59,6 +60,10 @@ public class Organization {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public boolean isSoleOwner(User user) {
+		return owners.size() == 1 && owners.containsKey(user.getId());
 	}
 
 	public Map<String, User> getOwners() {
@@ -112,11 +117,11 @@ public class Organization {
 		return role;
 	}
 
-	public Map<String, List<MemberRole>> getUserIdToRole() {
-		return userIdToRole;
+	public Map<String, List<MemberRole>> getUserIdToRoles() {
+		return userIdToRoles;
 	}
 
-	public void setUserIdToRole(Map<String, List<MemberRole>> userIdToRole) {
-		this.userIdToRole = userIdToRole;
+	public void setUserIdToRoles(Map<String, List<MemberRole>> userIdToRoles) {
+		this.userIdToRoles = userIdToRoles;
 	}
 }

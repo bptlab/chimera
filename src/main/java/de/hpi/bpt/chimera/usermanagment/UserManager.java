@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
@@ -30,10 +31,11 @@ public class UserManager {
 			User admin = createUser("admin", "admin", "admin");
 			admin.getSystemRoles().add(SystemRole.ADMIN);
 		}
-
+		// TODO: think about salt for the hashing
+		String hashedPassword = String.valueOf(Objects.hashCode(password));
 		for (User user : users.values()) {
 			if (user.getEmail().equals(email)) {
-				if (user.getPassword().equals(password)) {
+				if (user.getPassword().equals(hashedPassword)) {
 					return user;
 				} else {
 					throw new IllegalArgumentException("Wrong password");
@@ -52,9 +54,11 @@ public class UserManager {
 	 * @param password
 	 */
 	public static User createUser(String email, String password, String username) {
+		// TODO: validate email, password, username
 		User user = new User();
 		user.setEmail(email);
-		user.setPassword(password);
+		String hashedPassword = String.valueOf(Objects.hashCode(password));
+		user.setPassword(hashedPassword);
 		user.setName(username);
 		String id = user.getId();
 		users.put(id, user);
@@ -80,18 +84,29 @@ public class UserManager {
 	}
 
 	/**
-	 * Delete a user. Therefore, delete the memberships in the organizations.
+	 * Delete an user. Therefore, delete the memberships in the organizations.
+	 * An user can only be deleted if it the only owner of one organization.
 	 * 
 	 * @param user
+	 *            - the user to be deleted
 	 */
 	public static void deleteUser(User user) {
 		try {
-			String name = users.get(user).getName();
+			String userId = user.getId();
+			String name = user.getName();
+
+			for (Organization org : user.getOrganizations()) {
+				if (org.isSoleOwner(user)) {
+					String message = String.format("The user with id %s is the last owner of the organiazion with id %s and can thus not be deleted", userId, org.getId());
+					throw new IllegalArgumentException(message);
+				}
+			}
+
 			for (Organization org : user.getOrganizations()) {
 				OrganizationManager.removeMember(org, user);
 			}
 
-			users.remove(user);
+			users.remove(user.getId());
 			log.info(String.format("Deleted user with id %s and name %s", user, name));
 		} catch (Exception e) {
 			throw e;
@@ -112,7 +127,7 @@ public class UserManager {
 		if (!org.isMember(user)) {
 			throw new IllegalArgumentException("The specified user is not a member of the organization");
 		}
-		List<MemberRole> roles = org.getUserIdToRole().get(user.getId());
+		List<MemberRole> roles = org.getUserIdToRoles().get(user.getId());
 		roles.remove(role);
 	}
 

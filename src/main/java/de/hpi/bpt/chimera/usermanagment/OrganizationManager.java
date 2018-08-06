@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.usermanagment;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,25 +90,36 @@ public class OrganizationManager {
 	/**
 	 * Return only the {@link CaseModel casemodels} of the {@link Organization
 	 * organization} that the user is allowed to see according to his
-	 * {@link MemberRole member roles}.
+	 * {@link MemberRole member roles}. If a casemodels has no allowed roles
+	 * specified every member is allowed to see it. The owners of an
+	 * organizazion are allowed to see all casemodels. The casemodels will be
+	 * ordered by the date of deployment.
 	 * 
 	 * @param org
 	 * @param user
 	 * @return List of casemodels that the {@code user} is allowed to access
 	 */
 	public static List<CaseModel> getCaseModels(Organization org, User user) {
-		List<MemberRole> memberRoles = org.getUserIdToRole().get(user.getId());
+		List<MemberRole> memberRoles = org.getUserIdToRoles().get(user.getId());
 		List<CaseModel> caseModels = new ArrayList<>();
-		
+
+		if (org.isOwner(user)) {
+			return new ArrayList<>(org.getCaseModels().values());
+		}
+
 		for (CaseModel cm : org.getCaseModels().values()) {
+			if (cm.getAllowedRoles().isEmpty()) {
+				caseModels.add(cm);
+				continue;
+			}
 			for (MemberRole role : memberRoles) {
 				if (cm.getAllowedRoles().contains(role)) {
 					caseModels.add(cm);
-					break;
 				}
 			}
 		}
 
+		caseModels.sort(Comparator.comparing(CaseModel::getDeployment));
 		return caseModels;
 	}
 
@@ -127,7 +139,7 @@ public class OrganizationManager {
 		}
 
 		members.put(userId, user);
-		organization.getUserIdToRole().put(userId, new ArrayList<>());
+		organization.getUserIdToRoles().put(userId, new ArrayList<>());
 		user.getOrganizations().add(organization);
 	}
 
@@ -147,7 +159,7 @@ public class OrganizationManager {
 	 */
 	public static void removeMember(Organization org, User user) {
 		String userId = user.getId();
-		if (org.getOwners().size() == 1 && org.getOwners().containsKey(userId)) {
+		if (org.isSoleOwner(user)) {
 			String message = String.format("The user with id %s is the last owner of the organiazion with id %s and can thus not be deleted", userId, org.getId());
 			throw new IllegalArgumentException(message);
 		}
@@ -216,10 +228,12 @@ public class OrganizationManager {
 			throw new IllegalArgumentException("The role does not belong to the organization");
 		}
 
-		for (String userId : org.getUserIdToRole().keySet()) {
+		for (String userId : org.getUserIdToRoles().keySet()) {
 			User user = UserManager.getUserById(userId);
 			UserManager.deleteRole(user, org, role);
 		}
+
+		org.getRoles().remove(role);
 	}
 
 	/**
@@ -241,7 +255,7 @@ public class OrganizationManager {
 			throw new IllegalArgumentException("The user is not a member of the organization");
 		}
 
-		List<MemberRole> assignedRoles = organization.getUserIdToRole().get(user.getId());
+		List<MemberRole> assignedRoles = organization.getUserIdToRoles().get(user.getId());
 		if (assignedRoles.contains(role)) {
 			throw new IllegalArgumentException(String.format("The user already has the role %s", role.getName()));
 		}

@@ -1,12 +1,11 @@
 package de.hpi.bpt.chimera.rest.beans.usermanagement;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
 import de.hpi.bpt.chimera.usermanagment.Organization;
+import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagment.User;
 
 @XmlRootElement
 public class OrganizationDetailsJaxBean extends OrganizationOverviewJaxBean {
@@ -14,25 +13,17 @@ public class OrganizationDetailsJaxBean extends OrganizationOverviewJaxBean {
 	private CaseModelOverviewJaxBean[] casemodels;
 	private UserOverviewJaxBean[] owners;
 
-	public OrganizationDetailsJaxBean(Organization organization) {
-		super(organization);
-		List<UserOverviewJaxBean> ownersList = organization.getMembers().values().stream()
-													.map(UserOverviewJaxBean::new)
-													.collect(Collectors.toList());
-		UserOverviewJaxBean[] ownersArray = ownersList.toArray(new UserOverviewJaxBean[ownersList.size()]);
-		setOwners(ownersArray);
-
-		List<UserOverviewJaxBean> membersList = organization.getMembers().values().stream()
-														.map(UserOverviewJaxBean::new)
-														.collect(Collectors.toList());
-		UserOverviewJaxBean[] membersArray = membersList.toArray(new UserOverviewJaxBean[membersList.size()]);
-		setMembers(membersArray);
-		
-		List<CaseModelOverviewJaxBean> cmList = organization.getCaseModels().values().stream()
-													.map(CaseModelOverviewJaxBean::new)
-													.collect(Collectors.toList());
-		CaseModelOverviewJaxBean[] cmArray = cmList.toArray(new CaseModelOverviewJaxBean[cmList.size()]);
-		setCasemodels(cmArray);
+	public OrganizationDetailsJaxBean(Organization org, User requester) {
+		super(org);
+		owners = org.getOwners().values().stream()
+					.map(UserOverviewJaxBean::new)
+					.toArray(UserOverviewJaxBean[]::new);
+		members = org.getMembers().values().stream()
+					.map(UserOverviewJaxBean::new)
+					.toArray(UserOverviewJaxBean[]::new);
+		casemodels = OrganizationManager.getCaseModels(org, requester).stream()
+						.map(CaseModelOverviewJaxBean::new)
+						.toArray(CaseModelOverviewJaxBean[]::new);
 	}
 
 	public UserOverviewJaxBean[] getMembers() {

@@ -51,7 +51,7 @@ public class CaseModel {
 	@Transient
 	private Organization organization;
 	@Transient
-	private List<MemberRole> allowedRoles;
+	private List<MemberRole> allowedRoles = new ArrayList<>();
 
 	public CaseModel() {
 		setId(UUID.randomUUID().toString().replace("-", ""));
