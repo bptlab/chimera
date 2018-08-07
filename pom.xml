@@ -210,7 +210,7 @@
 		<db.user>chimera</db.user>
 		<db.password>chimera</db.password>
 		<unicorn.url>localhost:8080</unicorn.url>
-		<unicorn.deploy.path>unicorn</unicorn.deploy.path>
+		<unicorn.deploy.path>Unicorn-unicorn_BP15_dev</unicorn.deploy.path>
 		<chimera.url>localhost:8080</chimera.url>
 		<chimera.deploy.path>/${project.name}</chimera.deploy.path>
 		<powermock.version>1.6.1</powermock.version>
