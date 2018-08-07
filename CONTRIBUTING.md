@@ -13,9 +13,23 @@ We try to follow established open source principles to teach them to our student
 
 :notebook: You can read more about our vision [in the wiki](https://github.com/bptlab/chimera/wiki/ProductVision)
 
-## Code of Conduct
-
 ## Reporting Bugs
+This section explains how you can submit a good bug report, which is *understandable* and *reproducible*.
+
+#### Before submitting a bug report
+- make sure that the bug occurs in the latest version of Chimera. Try whether it can be reproduced on https://bpt-lab.org/chimera-dev, which reflects the `HEAD` of the dev branch. Ideally, you also checkout the dev branch and build it locally (if you have not setup a development environment you can skip this step).
+- if the bug only occurs in your local installation and not in the deployed version, it is most likely related to your configuration. Check the [troubleshooting section in the wiki]() for common sources of errors and how to solve them. If this does not help, go ahead and submit a bug report.
+- please check whether the bug has already been reported. You can see all open bugs [here](https://github.com/bptlab/chimera/labels/bug).
+
+#### How do I submit a good bug report?
+Bugs are tracked a github issues with the label "bug". Create a new issue in the repository, add the label "bug", copy [the template](ISSUE_TEMPLATE.md) and fill out the information.
+
+- **Provide a clear and descriptive title** for the issue to identify the problem.
+- **Describe the problem**. What behavior did you observe? What behavior did you expect? 
+- **Provide the exact steps which reproduce the problem** in as many details as possible. Can the problem be reliably be reproduced? How often does it occur, in which circumstances?
+- **Include examples**, e.g. the case model which caused the problem.
+- **Include screenshots** when possible.
+- **Include details about your configuration and environment**, which OS are you on? Which version of Java and MySQL server do you use? Which version of Tomcat do you use, are you using a different application server? Did you change the `config.properties`, how?
 
 ## Suggesting Features
 
