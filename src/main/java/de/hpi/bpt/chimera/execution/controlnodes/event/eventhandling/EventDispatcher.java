@@ -175,8 +175,8 @@ public class EventDispatcher {
 		client.property(ClientProperties.READ_TIMEOUT, 1000);
 		WebTarget target = client.target(getRestDeployUrl()).path(REST_PATH);
 
-		log.info("The target URL is: " + target.getUri());
-		log.info("The queryRequest is: \"" + queryRequest + "\"");
+		log.warn("The target URL is: " + target.getUri());
+		log.warn("The queryRequest is: \"" + queryRequest + "\"");
 		try {
 			Response response = target.request().post(Entity.json(gson.toJson(queryRequest)));
 			if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
