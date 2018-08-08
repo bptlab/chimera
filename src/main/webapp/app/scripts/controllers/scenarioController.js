@@ -132,8 +132,7 @@ angular.module('jfrontend')
                     });
                     // otherwise use the post with default name
                 } else {
-                    $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/",
-                    		{ headers: {'Content-Type': 'application/json'}}).success(function (data) {
+                    $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/", "").success(function (data) {
                         $location.path("/scenario/" + id + "/instance/" + data['id']);
                     }).error(function () {
                         console.log('request failed');
