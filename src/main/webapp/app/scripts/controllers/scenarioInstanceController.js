@@ -253,7 +253,8 @@ angular.module('jfrontend')
 
             // terminate the scenario instance
             this.terminateInstance = function () {
-                $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/terminate").success(function () {
+                $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/terminate",
+                		{ headers: {'Content-Type': 'application/json'}}).success(function () {
                     console.log('[DBG] request successful');
                 }).error(function () {
                     console.log('request failed');

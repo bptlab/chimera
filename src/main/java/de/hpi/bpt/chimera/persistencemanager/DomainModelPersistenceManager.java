@@ -143,12 +143,18 @@ public class DomainModelPersistenceManager {
 		em.getTransaction().begin();
 		log.debug("Started persisting all case-models.");
 
-		for (Map.Entry<String, CaseExecutioner> entry : ExecutionService.getCasesMap().entrySet()) {
-			try {
-				entry.setValue(em.merge(entry.getValue().getCase()).getCaseExecutioner());
-			} catch (Exception e) {
-				log.error("Error during persisting in case persisting task", e);
+		for (Map.Entry<String, List<CaseExecutioner>> entry : ExecutionService.getCaseModelIdToCaseExecutions().entrySet()) {
+			List<CaseExecutioner> newCaseExecutions = new ArrayList<>();
+			for (CaseExecutioner caseExecutioner : entry.getValue()) {
+				try {
+					CaseExecutioner newCaseExecutioner = em.merge(caseExecutioner);
+					ExecutionService.getCasesMap().put(newCaseExecutioner.getCase().getId(), newCaseExecutioner);
+					newCaseExecutions.add(newCaseExecutioner);
+				} catch (Exception e) {
+					log.error("Error during persisting in case persisting task", e);
+				}
 			}
+			entry.setValue(newCaseExecutions);
 		}
 
 		for (Map.Entry<String, CaseModel> entry : CaseModelManager.getCaseModelsMap().entrySet()) {
