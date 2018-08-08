@@ -124,6 +124,7 @@ public class ScenarioRestService extends AbstractRestService {
 	 */
 	@DELETE
 	@Path("scenario/{scenarioId}/")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteScenario(@PathParam("scenarioId") String cmId) {
 		try {
 			CaseModelManager.deleteCaseModel(cmId);

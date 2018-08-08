@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -84,6 +82,7 @@ public class CaseExecutioner {
 		this.dataManager = new DataManager(caseModel.getDataModel(), this);
 
 		this.registeredEventInstanceIdToReceiveBehavior = new HashMap<>();
+		this.terminated = false;
 	}
 
 	/**
@@ -316,11 +315,15 @@ public class CaseExecutioner {
 
 	/**
 	 * Checks whether the Case can be terminated by testing if the
-	 * TerminationCondition is fulfilled.
+	 * TerminationCondition is fulfilled. In addition a Case can only be
+	 * terminated once.
 	 * 
 	 * @return true if the Case can be terminated.
 	 */
 	public boolean canTerminate() {
+		if (isTerminated()) {
+			return false;
+		}
 		TerminationCondition terminationCondition = getCaseModel().getTerminationCondition();
 		return terminationCondition.isFulfilled(dataManager.getDataStateConditions());
 	}
@@ -336,8 +339,10 @@ public class CaseExecutioner {
 		if (canTerminate()) {
 			// set all ControlNodeInstances to state Skipped, so no further
 			// controlflow is possible.
-			List<ControlNodeInstance> controlNodeInstances = this.getCase().getFragmentInstances().values().stream().map(FragmentInstance::getControlNodeInstances).flatMap(List::stream).collect(Collectors.toList());
-			controlNodeInstances.forEach(each -> each.skip());
+			getCase().getFragmentInstances().values().stream()
+				.map(FragmentInstance::getControlNodeInstances)
+				.flatMap(List::stream)
+				.forEach(ControlNodeInstance::skip);
 			log.info("Terminating the Case" + this.getCase().getName() + ". All ControlNodeInstances are skipped.");
 
 			EventDispatcher.deregisterReceiveEventsOfCase(this.getCase());
