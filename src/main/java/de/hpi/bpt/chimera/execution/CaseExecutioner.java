@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.execution;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -531,5 +532,9 @@ public class CaseExecutioner {
 
 	public Map<String, MessageReceiveEventBehavior> getRegisteredEventInstanceIdToReceiveBehavior() {
 		return registeredEventInstanceIdToReceiveBehavior;
+	}
+
+	public Date getInstantiation() {
+		return getCase().getInstantiation();
 	}
 }
