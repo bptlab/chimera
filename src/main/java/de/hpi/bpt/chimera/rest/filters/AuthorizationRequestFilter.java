@@ -31,7 +31,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 
 		try {
 			// TODO activate when frontend sends authorization request filter
-			// validateUser();
+			validateUser();
 		} catch (Exception e) {
 			throw e;
 		}
@@ -144,7 +144,10 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	private void validateUser() {
 		String method = requestContext.getMethod();
 		String path = requestContext.getUriInfo().getPath();
-		if (method.equals("POST") && path.equals("interface/v2/register")) {
+		if (method.equals("POST") && path.matches("(v3/users)(/)?")) {
+			return;
+		}
+		if (!path.startsWith("v3/users") && !path.startsWith("v3/organizations")) {
 			return;
 		}
 		// Get the authentification passed in HTTP headers parameters

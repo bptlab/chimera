@@ -46,7 +46,7 @@ import de.hpi.bpt.chimera.usermanagment.User;
 import de.hpi.bpt.chimera.usermanagment.UserManager;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
-@Path("interface/v2/organizations")
+@Path("v3/organizations")
 public class OrganizationRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(OrganizationRestService.class);
 	private static final String UNAUTHORIZED_MEMBER_MESSAGE = "You are not a member of this organization, and cannot view organizational details.";
@@ -883,5 +883,4 @@ public class OrganizationRestService extends AbstractRestService {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
-
 }

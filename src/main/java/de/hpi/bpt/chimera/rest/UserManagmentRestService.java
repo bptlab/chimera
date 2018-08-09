@@ -24,7 +24,7 @@ import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
 import de.hpi.bpt.chimera.usermanagment.User;
 import de.hpi.bpt.chimera.usermanagment.UserManager;
 
-@Path("interface/v2/users")
+@Path("v3")
 public class UserManagmentRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(UserManagmentRestService.class);
 
@@ -37,7 +37,7 @@ public class UserManagmentRestService extends AbstractRestService {
 	 *         {@link UserOverviewJaxBean}.
 	 */
 	@POST
-	@Path("")
+	@Path("users")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response register(String body) {
 		try {
@@ -85,7 +85,7 @@ public class UserManagmentRestService extends AbstractRestService {
 	 *         {@link UserOverviewJaxBean} at key {@code users}.
 	 */
 	@GET
-	@Path("")
+	@Path("users")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers(@Context ContainerRequestContext requestContext) {
 		try {
@@ -115,7 +115,7 @@ public class UserManagmentRestService extends AbstractRestService {
 	 *         {@code userId} is not assigned.
 	 */
 	@GET
-	@Path("{userId}")
+	@Path("users/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(@Context ContainerRequestContext requestContext, @PathParam("userId") String userId) {
 		try {
@@ -147,7 +147,7 @@ public class UserManagmentRestService extends AbstractRestService {
 	 *         information.
 	 */
 	@PUT
-	@Path("{userId}")
+	@Path("users/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateUser(@Context ContainerRequestContext requestContext, @PathParam("userId") String userId, String body) {
 		try {
@@ -182,7 +182,7 @@ public class UserManagmentRestService extends AbstractRestService {
 	 *         the user who send the request is not allowed to delete the user.
 	 */
 	@DELETE
-	@Path("{userId}")
+	@Path("users/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUser(@Context ContainerRequestContext requestContext, @PathParam("userId") String userId) {
 		try {
