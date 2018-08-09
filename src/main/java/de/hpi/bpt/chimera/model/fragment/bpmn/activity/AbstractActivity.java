@@ -14,6 +14,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 public abstract class AbstractActivity extends AbstractDataControlNode {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<BoundaryEvent> attachedBoundaryEvents = new ArrayList<>();
+	private String role;
 
 	public List<BoundaryEvent> getAttachedBoundaryEvents() {
 		return attachedBoundaryEvents;
@@ -25,5 +26,13 @@ public abstract class AbstractActivity extends AbstractDataControlNode {
 
 	public void addAttachedBoundaryEvent(BoundaryEvent attachedBoundaryEvent) {
 		this.attachedBoundaryEvents.add(attachedBoundaryEvent);
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 }

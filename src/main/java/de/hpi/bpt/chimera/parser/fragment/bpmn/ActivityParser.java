@@ -3,13 +3,10 @@ package de.hpi.bpt.chimera.parser.fragment.bpmn;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.EmailActivity;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.ManualTask;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.UserTask;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.*;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BpmnManualTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BpmnUserTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
@@ -17,6 +14,7 @@ import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.SendTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.Task;
 
 public class ActivityParser {
+	private static final Logger log = Logger.getLogger(ActivityParser.class);
 
 	private ActivityParser() {
 	}
@@ -50,6 +48,10 @@ public class ActivityParser {
 		List<AbstractActivity> manualTasks = new ArrayList<>();
 		manualTasks.addAll(getManualTasksFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.addActivities(manualTasks);
+
+		List<AbstractActivity> emptyActivities = new ArrayList<>();
+		emptyActivities.addAll(getEmptyActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.addActivities(emptyActivities);
 	}
 
 	public static List<HumanTask> getHumanActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
@@ -58,6 +60,7 @@ public class ActivityParser {
 		for (Task xmlTask : fragXmlWrap.getTasks()) {
 			HumanTask activity = new HumanTask();
 			ControlNodeParserHelper.parseDataControlNode(activity, xmlTask, sfResolver, dfResolver);
+			activity.setRole(xmlTask.getRole());
 			activityList.add(activity);
 		}
 		return activityList;
@@ -97,6 +100,7 @@ public class ActivityParser {
 		for (BpmnUserTask xmlTask : fragXmlWrap.getUserTasks()) {
 			UserTask userTask = new UserTask();
 			ControlNodeParserHelper.parseDataControlNode(userTask, xmlTask, sfResolver, dfResolver);
+			userTask.setRole(xmlTask.getRole());
 			activityList.add(userTask);
 		}
 		return activityList;
@@ -108,7 +112,19 @@ public class ActivityParser {
 		for (BpmnManualTask xmlTask : fragXmlWrap.getManualTasks()) {
 			ManualTask manualTask = new ManualTask();
 			ControlNodeParserHelper.parseDataControlNode(manualTask, xmlTask, sfResolver, dfResolver);
+			manualTask.setRole(xmlTask.getRole());
 			activityList.add(manualTask);
+		}
+		return activityList;
+	}
+
+	private static List<EmptyActivity> getEmptyActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+		List<EmptyActivity> activityList = new ArrayList<>();
+
+		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.EmptyActivity xmlTask : fragXmlWrap.getEmptyActivities()) {
+			EmptyActivity emptyActivity = new EmptyActivity();
+			ControlNodeParserHelper.parseDataControlNode(emptyActivity, xmlTask, sfResolver, dfResolver);
+			activityList.add(emptyActivity);
 		}
 		return activityList;
 	}

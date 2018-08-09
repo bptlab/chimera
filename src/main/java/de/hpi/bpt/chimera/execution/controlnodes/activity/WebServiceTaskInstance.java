@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.execution.controlnodes.activity;
 import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 public class WebServiceTaskInstance extends AbstractActivityInstance {
 	private static final Logger log = Logger.getLogger(WebServiceTaskInstance.class);
 
+	@Lob
 	@Column(length=Integer.MAX_VALUE)
 	private String webServiceJson;
 

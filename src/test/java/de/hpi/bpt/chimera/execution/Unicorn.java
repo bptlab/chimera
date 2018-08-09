@@ -16,12 +16,13 @@ import org.mockserver.model.HttpResponse;
 
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.rest.EventRestService;
+import de.hpi.bpt.chimera.util.PropertyLoader;
 
 public class Unicorn extends JerseyTest {
 
 	private WebTarget base;
 	private final int port = 8081;
-	private final String registerCatchEventDeployPath = "/Unicorn-unicorn_BP15_dev/webapi/REST/EventQuery/REST";
+	private final String registerCatchEventDeployPath = String.format("%s%s", PropertyLoader.getProperty("unicorn.path.deploy"), PropertyLoader.getProperty("unicorn.path.query.rest"));
 	// TODO: set up a response for throw events
 	private final String throwEventDeploy = "/Unicorn-unicorn_BP15_dev/webapi/REST/Event";
 	@Rule
@@ -38,7 +39,6 @@ public class Unicorn extends JerseyTest {
 	public void setUpTest() {
 		base = target("eventdispatcher");
 		String host = "localhost";
-
 		unicorn = new MockServerClient(host, port).reset();
 		EventDispatcher.setUrl(String.format("http://%s:%d", host, port));
 		setRegisterCatchEventResponse();
