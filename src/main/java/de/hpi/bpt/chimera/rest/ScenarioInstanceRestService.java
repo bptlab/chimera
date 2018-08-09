@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,7 +84,6 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	 */
 	@POST
 	@Path("scenario/{scenarioId}/instance")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startNewInstance(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
 		try {
@@ -257,11 +257,14 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	 */
 	@POST
 	@Path("scenario/{scenarioId}/instance/{instanceId}/terminate")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response terminateScenarioInstance(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
-		// TODO: think about the consequences
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+			if (caseExecutioner.isTerminated()) {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("Case is already terminated.")).build();
+			}
+
 			if (caseExecutioner.canTerminate()) {
 				caseExecutioner.terminate();
 				return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"case terminated.\"}").build();
