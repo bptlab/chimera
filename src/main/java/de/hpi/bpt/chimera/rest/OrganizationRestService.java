@@ -46,6 +46,12 @@ import de.hpi.bpt.chimera.usermanagment.User;
 import de.hpi.bpt.chimera.usermanagment.UserManager;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Path("v3/organizations")
 public class OrganizationRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(OrganizationRestService.class);
@@ -72,9 +78,18 @@ public class OrganizationRestService extends AbstractRestService {
 	@POST
 	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createOrganization(@Context ContainerRequestContext requestContext, String body) {
+	@Operation(summary = "Create a new organization",
+			tags = {"organizations"},
+			responses = {
+					@ApiResponse(
+						content = @Content(
+							schema = @Schema(implementation = OrganizationDetailsJaxBean.class))),
+			
+			})
+	public Response createOrganization(@Context ContainerRequestContext requestContext,
+			@Parameter(description = "Information about new organization", required = true) CreateOrganizationJaxBean bean) {
 		try {
-			CreateOrganizationJaxBean bean = new CreateOrganizationJaxBean(body);
+			// CreateOrganizationJaxBean bean = new CreateOrganizationJaxBean(body);
 			String name = bean.getName();
 			NameValidation.validateName(name);
 

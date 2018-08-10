@@ -18,6 +18,10 @@ public class UpdateOrganizationJaxBean {
 			throw e;
 		}
 	}
+
+	public UpdateOrganizationJaxBean() {
+	}
+
 	public String getName() {
 		return name;
 	}

@@ -5,6 +5,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class CreateOrganizationJaxBean extends UpdateOrganizationJaxBean {
 
+	public CreateOrganizationJaxBean() {
+		super();
+	}
+
 	public CreateOrganizationJaxBean(String body) {
 		super(body);
 	}

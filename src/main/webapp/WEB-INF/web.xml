@@ -24,7 +24,7 @@
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>
 				io.swagger.v3.jaxrs2.integration.resources,
-                de.hpi.bpt.chimera.rest
+                de.hpi.bpt.chimera
             </param-value>
         </init-param>
 		<init-param>
