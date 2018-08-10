@@ -23,6 +23,10 @@ import de.hpi.bpt.chimera.rest.beans.usermanagement.UpdateUserJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
 import de.hpi.bpt.chimera.usermanagment.User;
 import de.hpi.bpt.chimera.usermanagment.UserManager;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @Path("v3")
 public class UserManagmentRestService extends AbstractRestService {
@@ -87,6 +91,14 @@ public class UserManagmentRestService extends AbstractRestService {
 	@GET
 	@Path("users")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Operation(
+			summary = "Get all users",
+			tags = {"users"},
+			responses = {
+					@ApiResponse(
+							content = @Content(mediaType = "application/json",
+									schema = @Schema(implementation = UserOverviewJaxBean.class)))
+			})
 	public Response getUsers(@Context ContainerRequestContext requestContext) {
 		try {
 			List<UserOverviewJaxBean> resBeans = UserManager.getUsers().stream()
