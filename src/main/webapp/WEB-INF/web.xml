@@ -23,9 +23,14 @@
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>
-                de.hpi.bpt.chimera
+				io.swagger.v3.jaxrs2.integration.resources,
+                de.hpi.bpt.chimera.rest.*
             </param-value>
         </init-param>
+		<init-param>
+		  <param-name>openApi.configuration.location</param-name>
+		  <param-value>openapi-configuration.json</param-value>
+		</init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
