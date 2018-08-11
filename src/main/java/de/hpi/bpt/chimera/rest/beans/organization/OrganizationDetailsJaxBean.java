@@ -1,5 +1,8 @@
 package de.hpi.bpt.chimera.rest.beans.organization;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
@@ -10,44 +13,44 @@ import de.hpi.bpt.chimera.usermanagment.User;
 
 @XmlRootElement
 public class OrganizationDetailsJaxBean extends OrganizationOverviewJaxBean {
-	private UserOverviewJaxBean[] members;
-	private CaseModelOverviewJaxBean[] casemodels;
-	private UserOverviewJaxBean[] owners;
+	private List<UserOverviewJaxBean> members;
+	private List<CaseModelOverviewJaxBean> casemodels;
+	private List<UserOverviewJaxBean> owners;
 
 	public OrganizationDetailsJaxBean(Organization org, User requester) {
 		super(org);
-		owners = org.getOwners().values().stream()
+		setOwners(org.getOwners().values().stream()
 					.map(UserOverviewJaxBean::new)
-					.toArray(UserOverviewJaxBean[]::new);
-		members = org.getMembers().values().stream()
+					.collect(Collectors.toList()));
+		setMembers(org.getMembers().values().stream()
 					.map(UserOverviewJaxBean::new)
-					.toArray(UserOverviewJaxBean[]::new);
-		casemodels = OrganizationManager.getCaseModels(org, requester).stream()
+					.collect(Collectors.toList()));
+		setCasemodels(OrganizationManager.getCaseModels(org, requester).stream()
 						.map(CaseModelOverviewJaxBean::new)
-						.toArray(CaseModelOverviewJaxBean[]::new);
+						.collect(Collectors.toList()));
 	}
 
-	public UserOverviewJaxBean[] getMembers() {
+	public List<UserOverviewJaxBean> getMembers() {
 		return members;
 	}
 
-	public void setMembers(UserOverviewJaxBean[] members) {
+	public void setMembers(List<UserOverviewJaxBean> members) {
 		this.members = members;
 	}
 
-	public CaseModelOverviewJaxBean[] getCasemodels() {
+	public List<CaseModelOverviewJaxBean> getCasemodels() {
 		return casemodels;
 	}
 
-	public void setCasemodels(CaseModelOverviewJaxBean[] casemodels) {
+	public void setCasemodels(List<CaseModelOverviewJaxBean> casemodels) {
 		this.casemodels = casemodels;
 	}
 
-	public UserOverviewJaxBean[] getOwners() {
+	public List<UserOverviewJaxBean> getOwners() {
 		return owners;
 	}
 
-	public void setOwners(UserOverviewJaxBean[] owners) {
+	public void setOwners(List<UserOverviewJaxBean> owners) {
 		this.owners = owners;
 	}
 }

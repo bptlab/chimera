@@ -27,12 +27,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 		content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class)))
 public class AbstractRestService {
 	protected final User retrieveUser(ContainerRequestContext requestContext) {
-		String auth = requestContext.getHeaderString("authorization");
-		// If the user does not have the right (does not provide any HTTP Basic
-		// Auth)
-		// lap : loginAndPassword
-		String[] lap = BasicAuth.decode(auth);
-		return UserManager.authenticateUser(lap[0], lap[1]);
+		try {
+			String auth = requestContext.getHeaderString("authorization");
+			// If the user does not have the right (does not provide any HTTP
+			// Basic
+			// Auth)
+			// lap : loginAndPassword
+			String[] lap = BasicAuth.decode(auth);
+			return UserManager.authenticateUser(lap[0], lap[1]);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 

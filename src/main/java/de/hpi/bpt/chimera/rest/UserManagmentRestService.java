@@ -228,8 +228,7 @@ public class UserManagmentRestService extends AbstractRestService {
 
 			// TODO: make it so that email and password can be adapted without
 			// the other
-			user.setEmail(bean.getEmail());
-			user.setPassword(bean.getPassword());
+			UserManager.updateUser(userToUpdate, bean.getEmail(), bean.getPassword());
 			JSONObject result = new JSONObject(new UserOverviewJaxBean(userToUpdate));
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalUserIdException e) {

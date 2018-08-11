@@ -1,6 +1,8 @@
 package de.hpi.bpt.chimera.rest.beans.usermanagement;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.hpi.bpt.chimera.usermanagment.MemberRole;
@@ -8,16 +10,18 @@ import de.hpi.bpt.chimera.usermanagment.Organization;
 import de.hpi.bpt.chimera.usermanagment.User;
 
 @XmlRootElement
-public class UserDetailsJaxBean {
+public class MemberDetailsJaxBean {
 	private String name;
 	private String id;
-	private String[] roles;
+	private List<String> roles;
 
-	public UserDetailsJaxBean(Organization org, User user) {
+	public MemberDetailsJaxBean(Organization org, User user) {
 		setName(user.getName());
 		setId(user.getId());
-		List<MemberRole> memberRoles = org.getUserIdToRoles().get(user.getId());
-		setRoles(memberRoles.stream().map(MemberRole::getName).toArray(String[]::new));
+		List<String> memberRoles = org.getUserIdToRoles().get(user.getId()).stream()
+									.map(MemberRole::getName)
+									.collect(Collectors.toList());
+		setRoles(memberRoles);
 	}
 
 	public String getName() {
@@ -36,11 +40,11 @@ public class UserDetailsJaxBean {
 		this.id = id;
 	}
 
-	public String[] getRoles() {
+	public List<String> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(String[] roles) {
+	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
 }
