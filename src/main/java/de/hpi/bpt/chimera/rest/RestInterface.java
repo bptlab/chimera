@@ -24,9 +24,9 @@ import javax.ws.rs.core.Response;
  * to access the database directly.
  */
 @OpenAPIDefinition(
-tags = {
-	@Tag(name = "", description = "")
-})
+		tags = {
+			@Tag(name = "organizations", description = "Requests concerning organizations."),
+			@Tag(name = "users", description = "Requests concerning users.")})
 @SecurityScheme(
 		name = "BasicAuth",
 		type = SecuritySchemeType.HTTP,

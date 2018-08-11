@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.rest.beans.usermanagement;
+package de.hpi.bpt.chimera.rest.beans.organization;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

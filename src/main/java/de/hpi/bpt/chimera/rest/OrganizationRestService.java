@@ -31,16 +31,16 @@ import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
 import de.hpi.bpt.chimera.rest.beans.miscellaneous.NamedJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.CreateOrganizationJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.MultipleOrganizationsOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.OrganizationDetailsJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.OrganizationOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.UpdateOrganizationJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.AssignMemberJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.CreateOrganizationJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.MemberRoleJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.MemberRolesJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationDetailsJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationOverviewJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.UpdateOrganizationJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
-import de.hpi.bpt.chimera.rest.filters.BasicAuth;
 import de.hpi.bpt.chimera.usermanagment.MemberRole;
 import de.hpi.bpt.chimera.usermanagment.Organization;
 import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
@@ -51,10 +51,21 @@ import de.hpi.bpt.chimera.validation.NameValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Tag(name = "organizations")
+@ApiResponses(value = {
+		@ApiResponse(
+				responseCode = "400", description = "A problem during parsing occured.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class))),
+		@ApiResponse(
+				responseCode = "401", description = "Authentication problem",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class)))})
+@SecurityRequirement(name = "BasicAuth")
 @Path("v3/organizations")
 public class OrganizationRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(OrganizationRestService.class);
@@ -81,24 +92,15 @@ public class OrganizationRestService extends AbstractRestService {
 	@POST
 	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@SecurityRequirement(name = "BasicAuth")
 	@Operation(summary = "Create a new organization",
-			tags = {"organizations"},
 			responses = {
 					@ApiResponse(
 						responseCode = "201", description = "Details about the newly created organiazion.",
-						content = @Content(schema = @Schema(implementation = OrganizationDetailsJaxBean.class))),
-					@ApiResponse(
-						responseCode = "400", description = "A problem during parsing occured.",
-						content = @Content(schema = @Schema(implementation = DangerExceptionJaxBean.class))),
-					@ApiResponse(
-						responseCode = "403", description = "Authentication problem",
-						content = @Content(schema = @Schema(implementation = DangerExceptionJaxBean.class)))
+						content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDetailsJaxBean.class))),
 			})
 	public Response createOrganization(@Context ContainerRequestContext requestContext,
-			@Parameter(description = "Information about new the organization", required = true) CreateOrganizationJaxBean bean) {
+			@Parameter(description = "Information about the new organization", required = true) CreateOrganizationJaxBean bean) {
 		try {
-			// CreateOrganizationJaxBean bean = new CreateOrganizationJaxBean(body);
 			String name = bean.getName();
 			NameValidation.validateName(name);
 
@@ -133,9 +135,9 @@ public class OrganizationRestService extends AbstractRestService {
 			List<OrganizationOverviewJaxBean> resBeans = user.getOrganizations().stream()
 															.map(OrganizationOverviewJaxBean::new)
 															.collect(Collectors.toList());
-
-			JSONObject result = new JSONObject();
-			result.put("organizations", new JSONArray(resBeans));
+			MultipleOrganizationsOverviewJaxBean resBean = new MultipleOrganizationsOverviewJaxBean();
+			resBean.setOrganizations(resBeans);
+			JSONObject result = new JSONObject(resBean);
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);

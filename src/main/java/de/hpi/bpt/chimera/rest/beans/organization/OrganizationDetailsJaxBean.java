@@ -1,8 +1,9 @@
-package de.hpi.bpt.chimera.rest.beans.usermanagement;
+package de.hpi.bpt.chimera.rest.beans.organization;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
 import de.hpi.bpt.chimera.usermanagment.Organization;
 import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
 import de.hpi.bpt.chimera.usermanagment.User;

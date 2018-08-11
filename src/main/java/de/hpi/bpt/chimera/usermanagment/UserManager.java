@@ -8,6 +8,8 @@ import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.exception.IllegalUserIdException;
+
 public class UserManager {
 	private static Logger log = Logger.getLogger(UserManager.class);
 	private static Map<String, User> users = new HashMap<>();
@@ -79,8 +81,8 @@ public class UserManager {
 		if (users.containsKey(userId)) {
 			return users.get(userId);
 		}
-		String mess = String.format("The user with id %s does not exist", userId);
-		throw new IllegalArgumentException(mess);
+
+		throw new IllegalUserIdException(userId);
 	}
 
 	/**

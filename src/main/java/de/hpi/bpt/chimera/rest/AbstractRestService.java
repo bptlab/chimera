@@ -8,13 +8,23 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
+import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
 import de.hpi.bpt.chimera.rest.filters.BasicAuth;
 import de.hpi.bpt.chimera.usermanagment.User;
 import de.hpi.bpt.chimera.usermanagment.UserManager;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 /**
  *
  */
+@ApiResponse(
+		responseCode = "400", description = "Test",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class)))
+@ApiResponse(
+		responseCode = "402", description = "Test",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class)))
 public class AbstractRestService {
 	protected final User retrieveUser(ContainerRequestContext requestContext) {
 		String auth = requestContext.getHeaderString("authorization");
