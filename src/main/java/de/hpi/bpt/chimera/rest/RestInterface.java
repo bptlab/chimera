@@ -1,6 +1,10 @@
 package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.util.PropertyLoader;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,6 +23,14 @@ import javax.ws.rs.core.Response;
  * This class will use {@link ConnectionWrapper}
  * to access the database directly.
  */
+@OpenAPIDefinition(
+tags = {
+	@Tag(name = "", description = "")
+})
+@SecurityScheme(
+		name = "BasicAuth",
+		type = SecuritySchemeType.HTTP,
+		scheme = "basic")
 @Path("interface/v2")
 public class RestInterface {
 	/**

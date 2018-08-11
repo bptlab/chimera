@@ -29,6 +29,7 @@ import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
 import de.hpi.bpt.chimera.rest.beans.miscellaneous.NamedJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.AssignMemberJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.CreateOrganizationJaxBean;
@@ -39,6 +40,7 @@ import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UpdateOrganizationJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.filters.BasicAuth;
 import de.hpi.bpt.chimera.usermanagment.MemberRole;
 import de.hpi.bpt.chimera.usermanagment.Organization;
 import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
@@ -49,6 +51,7 @@ import de.hpi.bpt.chimera.validation.NameValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -78,16 +81,22 @@ public class OrganizationRestService extends AbstractRestService {
 	@POST
 	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@SecurityRequirement(name = "BasicAuth")
 	@Operation(summary = "Create a new organization",
 			tags = {"organizations"},
 			responses = {
 					@ApiResponse(
-						content = @Content(
-							schema = @Schema(implementation = OrganizationDetailsJaxBean.class))),
-			
+						responseCode = "201", description = "Details about the newly created organiazion.",
+						content = @Content(schema = @Schema(implementation = OrganizationDetailsJaxBean.class))),
+					@ApiResponse(
+						responseCode = "400", description = "A problem during parsing occured.",
+						content = @Content(schema = @Schema(implementation = DangerExceptionJaxBean.class))),
+					@ApiResponse(
+						responseCode = "403", description = "Authentication problem",
+						content = @Content(schema = @Schema(implementation = DangerExceptionJaxBean.class)))
 			})
 	public Response createOrganization(@Context ContainerRequestContext requestContext,
-			@Parameter(description = "Information about new organization", required = true) CreateOrganizationJaxBean bean) {
+			@Parameter(description = "Information about new the organization", required = true) CreateOrganizationJaxBean bean) {
 		try {
 			// CreateOrganizationJaxBean bean = new CreateOrganizationJaxBean(body);
 			String name = bean.getName();
@@ -152,7 +161,7 @@ public class OrganizationRestService extends AbstractRestService {
 	@GET
 	@Path("{organizationId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getOrganization(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId) {
+	public Response getOrganization(@Context ContainerRequestContext requestContext, @Parameter(description = "The id of the organization", required = true) @PathParam("organizationId") String orgId) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);

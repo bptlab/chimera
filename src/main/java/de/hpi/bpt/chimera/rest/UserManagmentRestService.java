@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @Path("v3")
 public class UserManagmentRestService extends AbstractRestService {
@@ -91,6 +92,7 @@ public class UserManagmentRestService extends AbstractRestService {
 	@GET
 	@Path("users")
 	@Produces(MediaType.APPLICATION_JSON)
+	@SecurityRequirement(name = "BasicAuth")
 	@Operation(
 			summary = "Get all users",
 			tags = {"users"},
