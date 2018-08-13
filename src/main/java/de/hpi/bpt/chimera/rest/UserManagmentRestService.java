@@ -86,14 +86,14 @@ public class UserManagmentRestService extends AbstractRestService {
 	 *         request was successful or 403 if the login failed.
 	 */
 	@POST
-	@Path("login")
+	@Path("authenticate")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@SecurityRequirement(name = "BasicAuth")
 	@Operation(
-		summary = "Login a user",
+		summary = "Authenticate a user",
 		responses = {
 			@ApiResponse(
-				responseCode = "200", description = "Successfully logged in.",
+				responseCode = "200", description = "Successfully authenticated the user.",
 				content = @Content(mediaType = "application/json",	schema = @Schema(implementation = MessageJaxBean.class))),
 			@ApiResponse(
 				responseCode = "401", description = "A problem occured during the authentication.",
@@ -101,7 +101,7 @@ public class UserManagmentRestService extends AbstractRestService {
 	public Response login(@Context ContainerRequestContext requestContext) {
 		try {
 			retrieveUser(requestContext);
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully logged in.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully authenticated.\"}").build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
