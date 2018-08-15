@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.execution.controlnodes.activity;
+package de.hpi.bpt.chimera.execution;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,9 +20,10 @@ import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 
 public class VariableReplacementTest {
-	private final String filepath = "src/test/resources/execution/VariableReplacementTest";
+	private final String filepath = "src/test/resources/execution/VariableReplacementTest.json";
 	private CaseModel cm;
 	private CaseExecutioner ex;
+	private FragmentInstance fi;
 	private DataManager dm;
 	private Method method;
 	private AbstractDataControlNodeInstance taskInstance;
@@ -33,6 +34,7 @@ public class VariableReplacementTest {
 		ex = new CaseExecutioner(cm, cm.getName());
 		dm = ex.getDataManager();
 		ex.startCase();
+		fi = CaseExecutionerTestHelper.getFragmentInstanceByName(ex, "First Fragment");
 		List<DataObject> selectedDataObjects = new ArrayList<>();
 		AtomicDataStateCondition DC2 = CaseModelTestHelper.createDataStateCondition(cm, "D4t4Class2", "final");
 		DataObject DO2 = dm.createDataObject(DC2);
@@ -66,7 +68,7 @@ public class VariableReplacementTest {
 		}
 		selectedDataObjects.add(DO1);
 		
-		taskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(ex, "call web service");
+		taskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fi, "call web service");
 		taskInstance.setSelectedDataObjects(selectedDataObjects);
 		method = AbstractDataControlNodeInstance.class.getDeclaredMethod("replaceVariableExpressions", String.class);
 		method.setAccessible(true);

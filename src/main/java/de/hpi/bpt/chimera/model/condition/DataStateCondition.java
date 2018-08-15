@@ -28,7 +28,7 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 @Entity
 public class DataStateCondition {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 	@OneToMany(cascade = CascadeType.ALL)
 	List<ConditionSet> conditionSets;

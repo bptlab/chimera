@@ -8,6 +8,6 @@ import javax.persistence.Id;
 @Entity
 public abstract class SpecialEventDefinition {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 }

@@ -1,34 +1,35 @@
 package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
 import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.Lob;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.State;
-import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstanceWriter;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.WebServiceTask;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @Entity
 public class WebServiceTaskInstance extends AbstractActivityInstance {
 	private static final Logger log = Logger.getLogger(WebServiceTaskInstance.class);
 
+	@Lob
+	@Column(length=Integer.MAX_VALUE)
 	private String webServiceJson;
 
 	/**
@@ -46,9 +47,13 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 
 	@Override
 	public void execute() {
+		if (getControlNode().getWebServiceUrl().isEmpty()) {
+			return;
+		}
 		WebTarget target = buildTarget();
-		log.info("Target for web service call constructed: " + target.toString());
 		Response response = executeWebserviceRequest(target);
+		log.debug("Called: " + target + ", response: " + response.getStatus());
+
 		if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
 			String webServiceResponseJson = response.readEntity(String.class);
 			setWebServiceResponse(webServiceResponseJson);
@@ -65,7 +70,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 	 */
 	private WebTarget buildTarget() {
 		String link = getControlNode().getWebServiceUrl();
-		String replacedLink = replaceVariableExpressions(link);
+		String replacedLink = this.replaceVariableExpressions(link);
 
 		return parseWebTarget(replacedLink);
 	}
@@ -101,8 +106,15 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 	 * @return
 	 */
 	private Response executeWebserviceRequest(WebTarget webResource) {
-		Invocation.Builder invocationBuilder = webResource.request(MediaType.APPLICATION_JSON);
+		Invocation.Builder invocationBuilder;
+		MultivaluedMap<String, Object> header = this.buildHeader();
+		if (header.size() > 0) {
+			invocationBuilder = webResource.request(MediaType.APPLICATION_JSON).headers(header);
+		} else {
+			invocationBuilder = webResource.request(MediaType.APPLICATION_JSON);
+		}
 		String webServiceMethod = getControlNode().getWebServiceMethod().toUpperCase();
+
 		switch (webServiceMethod) {
 		case "GET":
 			return invocationBuilder.get();
@@ -111,36 +123,59 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 			String postBody = getControlNode().getWebServiceBody();
 			String replacedPostBody = this.replaceVariableExpressions(postBody);
 			if ("POST".equals(webServiceMethod)) {
-				return invocationBuilder.post(javax.ws.rs.client.Entity.json(replacedPostBody));
+				return invocationBuilder.post(javax.ws.rs.client.Entity.entity(replacedPostBody, getControlNode().getContentType()));
 			} else {
-				return invocationBuilder.put(javax.ws.rs.client.Entity.json(replacedPostBody));
+				return invocationBuilder.put(javax.ws.rs.client.Entity.entity(replacedPostBody, getControlNode().getContentType()));
 			}
 		default:
 			throw new IllegalArgumentException(webServiceMethod + " is not implemented yet");
-			// return invocationBuilder.method(webServiceMethod);
 		}
+	}
+
+	/**
+	 * Parses the header given from model as JSON to key-value map.
+	 * @return
+	 */
+	private MultivaluedMap<String, Object> buildHeader() {
+		JSONObject headerObject;
+		MultivaluedHashMap<String, Object> headerMap = new MultivaluedHashMap<>();
+		String header = this.replaceVariableExpressions(getControlNode().getWebServiceHeader());
+		if (header.length() > 0) {
+			try {
+				headerObject = new JSONObject(header);
+			} catch (JSONException e) {
+				log.warn(e.getMessage());
+				return headerMap;
+			}
+			for (Object attribute : headerObject.keySet()) {
+				String key = (String) attribute;
+				Object value = headerObject.get(key);
+				headerMap.add(key, value);
+			}
+		}
+		headerMap.add("Content-Type", getControlNode().getContentType());
+		return headerMap;
 	}
 
 	@Override
 	public void terminate() {
-		if (!getState().equals(State.RUNNING)) {
+		if (!canTerminate()) {
 			log.info(String.format("%s not terminated, because the activity isn't in state RUNNING", this.getControlNode().getName()));
 			return;
 		}
+
 		if (!getControlNode().hasPostCondition()) {
 			log.info("Web service task has no output set, received data can not be stored.");
-			return;
 		}
 		if (webServiceJson == null) {
 			log.info("No response found, received data can not be stored.");
-	        return;
+		} else {
+			for (DataObject dataObject : getOutputDataObjects()) {
+				AtomicDataStateCondition condition = dataObject.getCondition();
+				Map<DataAttribute, String> dataAttributeToJsonPath = getControlNode().getJsonPathMapping().get(condition);
+				DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, webServiceJson);
+			}
 	    }
-
-		for (DataObject dataObject : getOutputDataObjects()) {
-			AtomicDataStateCondition condition = dataObject.getCondition();
-			Map<DataAttribute, String> dataAttributeToJsonPath = getControlNode().getJsonPathMapping().get(condition);
-			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, webServiceJson);
-		}
 
 		super.terminate();
 	}

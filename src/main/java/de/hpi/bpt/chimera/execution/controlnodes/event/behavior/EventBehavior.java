@@ -14,7 +14,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 public class EventBehavior implements Behaving {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "behavior")
@@ -59,6 +59,16 @@ public class EventBehavior implements Behaving {
 	@Override
 	public void skip() {
 		// no special behavior
+	}
+
+	/**
+	 * By default all events can terminate to prevent deadlocks because once
+	 * begun there is no possibility for the user to terminate them manually.
+	 * 
+	 * @return true
+	 */
+	public boolean canTerminate() {
+		return true;
 	}
 
 	public AbstractEventInstance getEventInstance() {

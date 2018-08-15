@@ -26,7 +26,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 @Entity
 public class BpmnFragment {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 
 
@@ -177,5 +177,12 @@ public class BpmnFragment {
 		allEvents.addAll(intermediateThrowEvents);
 		allEvents.addAll(boundaryEvents);
 		return allEvents;
+	}
+
+	public List<AbstractDataControlNode> getDataControlNodes() {
+		List<AbstractDataControlNode> dataControlNodes = new ArrayList<>();
+		dataControlNodes.addAll(getActivities());
+		dataControlNodes.addAll(getEvents());
+		return dataControlNodes;
 	}
 }

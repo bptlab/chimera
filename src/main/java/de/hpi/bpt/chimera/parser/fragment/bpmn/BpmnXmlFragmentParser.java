@@ -54,7 +54,7 @@ public final class BpmnXmlFragmentParser {
 			// be an activity with the id that the BoundaryEvents are attached
 			// to
 			ActivityParser.parseActivities(fragment, fragXmlWrap, sfResolver, dfResolver);
-			EventParser.parseEvents(fragment, fragXmlWrap, sfResolver, dfResolver);
+			EventParser.parseEvents(fragment, fragXmlWrap, sfResolver, dfResolver, parserHelper);
 			GatewayParser.parseGateways(fragment, fragXmlWrap, sfResolver);
 
 			fragment.setSequenceFlowAssociations(sfResolver.getResolvedSequenceFlowAssociations());

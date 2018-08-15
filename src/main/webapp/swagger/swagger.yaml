@@ -156,6 +156,48 @@ paths:
             $ref: '#/definitions/Error'
       tags:
         - scenario
+  /scenario/{scenarioId}/casestart/{requestKey}:
+    post:
+      description: Creates a new instance of a specified scenario by a case start event.
+      operationId: Create_startNewInstanceByCaseStartTrigger_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioId
+        in: path
+        required: true
+        x-is-map: false
+        type: string
+        description: >-
+          This id specifies the scenario.
+      - name: requestKey
+        in: path
+        required: true
+        x-is-map: false
+        type: string
+        description: >-
+          This id specifies the case start trigger.
+      - name: eventJson
+        in: body
+        required: true
+        x-is-map: false
+        description: >-
+          the json content for writing at the first data objects of 
+          the new case.
+        schema:
+          $ref: '#/definitions/AttributeUpdate'
+      responses:
+        '201':
+          description: The event was received.
+          schema:
+            $ref: '#/definitions/Message'
+        '404':
+          description: the scenario can't be found
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+        - scenario
+        - event
   /scenario/{scenarioId}/emailtask:
     get:
       description: >-
@@ -311,11 +353,11 @@ paths:
         description: The id of the scenario.
       - name: name
         in: body
+        schema: 
+          type: string
         required: true
         x-is-map: false
         description: The name, which will be used for the new instance.
-        schema:
-          $ref: '#/definitions/NamedJaxBean'
       responses:
         '201':
           description: Successfully created the instance.
@@ -380,38 +422,84 @@ paths:
             $ref: '#/definitions/Error'
       tags:
         - scenario instance
-  /scenario/{scenarioID}/instance/{instanceID}/events:
+  /scenario/{scenarioId}/instance/{instanceId}/events:
     get:
-      description: NOT IMPLEMENTED YET. This method provides a list of registered events for the instance.
+      description: This method provides a list of registered events for the instance.
       operationId: getEvents_
       produces:
       - application/json
       parameters:
-      - name: scenarioID
+      - name: scenarioId
         in: path
         required: true
         x-is-map: false
-        type: integer
-        format: int64
-        description: The ID of the scenario.
-      - name: instanceID
+        type: string
+        description: The Id of the scenario.
+      - name: instanceId
         in: path
         required: true
         x-is-map: false
-        type: integer
-        format: int64
-        description: The ID of the instance.
+        type: string
+        description: The Id of the instance.
       responses:
         '200':
-          description: List of events for the scenario instance.
+          description: List of registered events for the scenario instance.
           schema:
-            $ref: '#/definitions/EventList'
+            $ref: '#/definitions/RegisteredEventsList'
         '404':
           description: The scenario or instance wasn't found.
           schema:
             $ref: '#/definitions/Error'
       tags:
         - scenario instance
+        - event
+  /scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}:
+    post:
+      description: Receive an event for a specific request key.
+      operationId: receiveEvent_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioId
+        in: path
+        required: true
+        x-is-map: false
+        type: string
+        description: >-
+          This id specifies the scenario.
+      - name: instanceId
+        in: path
+        required: true
+        x-is-map: false
+        type: string
+        description: The Id of the instance.
+      - name: requestKey
+        in: path
+        required: true
+        x-is-map: false
+        type: string
+        description: >-
+          This id specifies the receive event instance.
+      - name: eventJson
+        in: body
+        required: true
+        x-is-map: false
+        description: >-
+          the json content for updating the data object the event instance.
+        schema:
+          $ref: '#/definitions/AttributeUpdate'
+      responses:
+        '201':
+          description: The event was received.
+          schema:
+            $ref: '#/definitions/Message'
+        '404':
+          description: the scenario / instance can't be found
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+        - scenario
+        - event
   /scenario/{scenarioId}/instance/{instanceId}/canTerminate:
     get:
       description: This determines whether a given scenario instance can terminate.
@@ -585,18 +673,18 @@ paths:
         required: true
         x-is-map: false
         type: string
-        description: the id of an scenario instance.
+        description: The id of an scenario instance.
       - name: activityInstanceId
         in: path
         required: true
         x-is-map: false
         type: string
-        description: the control node id of the activity which working items will be updated.
+        description: The control node id of the activity which working items will be updated.
       - name: input
         in: body
         required: true
         x-is-map: false
-        description: data input.
+        description: The json content for updating the data object the event instance
         schema:
           $ref: '#/definitions/AttributeUpdate'
       responses:
@@ -1046,15 +1134,13 @@ definitions:
           $ref: '#/definitions/TerminationCondition'
         description: 'The termination conditions that are used.'  
       domain_model:
-        type: number
-        format: integer
-        description: 'The ID of the associated domain model.'
+        type: string
+        description: 'The Id of the associated domain model.'
       fragments:
         type: array
         items:
-          type: number
-          format: integer
-        description: 'The IDs of associated fragments.'
+          type: string
+        description: 'The Ids of associated fragments.'
       revision:
         type: number
         format: integer
@@ -1154,11 +1240,24 @@ definitions:
               (NewDataAttributeValue):
                 type: string
                 description: 'The new value for the data attribute instance.'
-  EventList:
+  RegisteredEventsList:
     type: array
     description: 'List of events.'
     items:
-      type: string  
+      $ref: '#/definitions/ReceiveEventJaxBean'
+  ReceiveEventJaxBean:
+    type: object
+    description: 'Information about a receive event.'
+    properties:
+      name:
+        type: string
+        description: 'Name of the respective event for the event instance.'
+      requestKey:
+        type: string
+        description: 'Key for receiving an event for the event instance.'
+      query:
+        type: string
+        description: 'Query used by Unicorn.'
   DataSetList:
     type: array
     description: 'All data objects found.'

@@ -28,4 +28,13 @@ public class IntermediateCatchEventInstance extends AbstractEventInstance {
 	public IntermediateCatchEventInstance(IntermediateCatchEvent event, FragmentInstance fragmentInstance) {
 		super(event, fragmentInstance);
 	}
+
+	/**
+	 * @return true if the IntermediateCatchEventInstance is in the correct
+	 *         state and is allowed to begin automatically.
+	 */
+	@Override
+	public boolean canBeginAutomatically() {
+		return canBegin() && hasAutomaticBegin();
+	}
 }

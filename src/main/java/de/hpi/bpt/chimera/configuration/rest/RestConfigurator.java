@@ -61,7 +61,7 @@ public class RestConfigurator extends AbstractRestService {
 		
 		if (!CaseModelManager.isExistingCaseModel(caseModelId)) {
 			IllegalCaseModelIdException e = new IllegalCaseModelIdException(caseModelId);
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 		try {
 			AbstractActivity emailActivity = CaseModelManager.getCaseModel(caseModelId).getActivityById(emailTaskId);
@@ -81,7 +81,7 @@ public class RestConfigurator extends AbstractRestService {
 			emailConfig.setMessage(message);
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"email task updated.\"}").build();
 		} catch (JSONException | IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 
 	}

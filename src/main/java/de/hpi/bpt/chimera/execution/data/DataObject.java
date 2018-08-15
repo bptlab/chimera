@@ -95,13 +95,13 @@ public class DataObject {
 	 * 
 	 * @param newObjectLifecycleState
 	 */
-	public void makeObjectLifecycleTransition(ObjectLifecycleState newObjectLifecycleState) {
+	public synchronized void makeObjectLifecycleTransition(ObjectLifecycleState newObjectLifecycleState) {
 		ObjectLifecycleState oldObjectLifecycleState = condition.getObjectLifecycleState();
 		if (!newObjectLifecycleState.isSuccessorOf(oldObjectLifecycleState)) {
 			throw new IllegalObjectLifecycleStateSuccessorException(condition.getDataClass(), oldObjectLifecycleState, newObjectLifecycleState);
 		}
-		getCaseExecutioner().logDataObjectTransition(this, newObjectLifecycleState);
 		this.condition.setObjectLifecycleState(newObjectLifecycleState);
+		getCaseExecutioner().logDataObjectTransition(this, oldObjectLifecycleState, newObjectLifecycleState);
 	}
 
 	// GETTER & SETTER
@@ -122,7 +122,7 @@ public class DataObject {
 		return condition.getDataClass();
 	}
 
-	public ObjectLifecycleState getObjectLifecycleState() {
+	public synchronized ObjectLifecycleState getObjectLifecycleState() {
 		return condition.getObjectLifecycleState();
 	}
 

@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,8 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			if (!filterString.isEmpty())
 				caseExecutions = caseExecutions.stream().filter(instance -> instance.getCase().getName().contains(filterString)).collect(Collectors.toList());
 
+			caseExecutions.sort((e1, e2) -> e1.getCase().getInstantiation().compareTo(e2.getCase().getInstantiation()));
+
 			JSONArray result = new JSONArray();
 			for (CaseExecutioner caseExecutioner : caseExecutions) {
 				result.put(new JSONObject(new CaseOverviewJaxBean(caseExecutioner)));
@@ -60,7 +63,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalCaseModelIdException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -81,13 +84,12 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	 */
 	@POST
 	@Path("scenario/{scenarioId}/instance")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startNewInstance(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
 		try {
 			return initializeNewInstance(uri, cmId);
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -123,7 +125,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 				return initializeNewInstance(uriInfo, cmId);
 			}
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 
 	}
@@ -141,7 +143,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 		try {
 			return initializeNewInstance(uriInfo, cmId, "");
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -161,7 +163,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
 			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -193,7 +195,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -238,7 +240,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			result.put("canTerminate", caseExecutioner.canTerminate());
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -255,19 +257,22 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	 */
 	@POST
 	@Path("scenario/{scenarioId}/instance/{instanceId}/terminate")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response terminateScenarioInstance(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
-		// TODO: think about the consequences
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+			if (caseExecutioner.isTerminated()) {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("Case is already terminated.")).build();
+			}
+
 			if (caseExecutioner.canTerminate()) {
 				caseExecutioner.terminate();
 				return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"case terminated.\"}").build();
 			} else {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException("termination condition is not fulfilled.")).build();
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("termination condition is not fulfilled.")).build();
 			}
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 }

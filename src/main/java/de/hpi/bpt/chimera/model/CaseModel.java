@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -24,15 +26,16 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity
-@NamedQuery(name = "CaseModel.getAll", query = "SELECT c FROM CaseModel c")
+@NamedQuery(name = "CaseModels.getAll", query = "SELECT c FROM CaseModel c")
 public class CaseModel {
 	public static final Logger log = Logger.getLogger(CaseModel.class);
 	@Id
 	private String cmId;
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 	private String name;
 	private int versionNumber;
+	private Date deployment;
 	@OneToOne(cascade = CascadeType.ALL)
 	private DataModel dataModel;
 	@OneToMany(cascade = CascadeType.ALL)
@@ -45,8 +48,13 @@ public class CaseModel {
 
 	public CaseModel() {
 		setId(UUID.randomUUID().toString().replace("-", ""));
+		Date date = new Date();
+		setDeployment(new java.sql.Timestamp(date.getTime()));
 	}
 
+	public void deployed() {
+
+	}
 	/**
 	 * Persists a the CaseModel to the database using the Java Persistence API
 	 * "EclipseLink".
@@ -149,5 +157,13 @@ public class CaseModel {
 			contentXmlStrings.add(fragment.getContentXML());
 		}
 		return contentXmlStrings;
+	}
+
+	public Date getDeployment() {
+		return deployment;
+	}
+
+	public void setDeployment(Date deployment) {
+		this.deployment = deployment;
 	}
 }

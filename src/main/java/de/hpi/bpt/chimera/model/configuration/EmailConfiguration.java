@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class EmailConfiguration {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 
 	private String receiverEmailAddress = "";
@@ -24,8 +24,6 @@ public class EmailConfiguration {
 	private String subject = "";
 
 	private String message = "";
-
-	private String sendEmailAddress = "";
 
 	public String getReceiverEmailAddress() {
 		return receiverEmailAddress;
@@ -50,14 +48,4 @@ public class EmailConfiguration {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	public String getSendEmailAddress() {
-		return sendEmailAddress;
-	}
-
-	public void setSendEmailAddress(String sendEmailAddress) {
-		this.sendEmailAddress = sendEmailAddress;
-	}
-
-
 }

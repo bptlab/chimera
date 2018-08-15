@@ -31,6 +31,13 @@ The following software is necessary to build and run Chimera:
 
 For further information visit https://bpt.hpi.uni-potsdam.de/Chimera
 
+### Developing & Deploying with Docker/Compose
+To simplify the local development workflow, you can make use of the Makefile.
+
+* Maven build: `make build`
+* Local tomcat release: `make release_local` (requires Tomcat and Unix)
+* Docker build + deploy: `make docker` (update docker tag in `docker-compose.yml` beforehand!)
+
 ## Modeling Case Models
 
 For this you need the [Gryphon Case Modeler](https://github.com/bptlab/gryphon) which allows to create case models and deploy them into the Chimera engine.

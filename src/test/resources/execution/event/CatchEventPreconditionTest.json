@@ -1,0 +1,57 @@
+{
+	"terminationconditions": [],
+	"fragments": [{
+		"preconditions": [],
+		"_id": "5b0c22d205bad5002e586be0",
+		"name": "First Fragment",
+		"content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:griffin=\"http://wat\" id=\"Definitions_1\" targetNamespace=\"http://bpmn.io/schema/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:outgoing>SequenceFlow_1v31vgz</bpmn:outgoing>\n    </bpmn:startEvent>\n    <bpmn:dataObjectReference id=\"DataObjectReference_1cqt22y\" name=\"eventclass[State 1]\" dataObjectRef=\"DataObject_0lodus1\" griffin:state=\"State 1\" griffin:dataclass=\"eventclass\" />\n    <bpmn:dataObject id=\"DataObject_0lodus1\" />\n    <bpmn:task id=\"Task_1hb0w51\" name=\"Create Dataobject\">\n      <bpmn:incoming>SequenceFlow_1v31vgz</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_12fola5</bpmn:outgoing>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_0ty44jw\">\n        <bpmn:targetRef>DataObjectReference_1cqt22y</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1v31vgz\" sourceRef=\"StartEvent_1\" targetRef=\"Task_1hb0w51\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_04aocee\" name=\"eventclass[State 2]\" dataObjectRef=\"DataObject_07119un\" griffin:state=\"State 2\" griffin:dataclass=\"eventclass\" />\n    <bpmn:dataObject id=\"DataObject_07119un\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_12fola5\" sourceRef=\"Task_1hb0w51\" targetRef=\"IntermediateThrowEvent_1913nne\" />\n    <bpmn:intermediateCatchEvent id=\"IntermediateThrowEvent_1913nne\" name=\"CatchEvent\" griffin:eventquery=\"Select * from eventclass\">\n      <bpmn:incoming>SequenceFlow_12fola5</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_18vcgt0</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_1ry4j1r\">\n        <bpmn:sourceRef>DataObjectReference_1cqt22y</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_1ry4j1q\">\n        <bpmn:targetRef>DataObjectReference_04aocee</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n      <bpmn:messageEventDefinition />\n    </bpmn:intermediateCatchEvent>\n    <bpmn:endEvent id=\"EndEvent_14ltd1r\">\n      <bpmn:incoming>SequenceFlow_18vcgt0</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_18vcgt0\" sourceRef=\"IntermediateThrowEvent_1913nne\" targetRef=\"EndEvent_14ltd1r\" />\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"183\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"156\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"DataObjectReference_1cqt22y_di\" bpmnElement=\"DataObjectReference_1cqt22y\">\n        <dc:Bounds x=\"437\" y=\"47\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"411\" y=\"101\" width=\"88\" height=\"12\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_1hb0w51_di\" bpmnElement=\"Task_1hb0w51\">\n        <dc:Bounds x=\"303\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1v31vgz_di\" bpmnElement=\"SequenceFlow_1v31vgz\">\n        <di:waypoint x=\"219\" y=\"191\" />\n        <di:waypoint x=\"303\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"261\" y=\"170\" width=\"0\" height=\"12\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_0ty44jw_di\" bpmnElement=\"DataOutputAssociation_0ty44jw\">\n        <di:waypoint x=\"393\" y=\"151\" />\n        <di:waypoint x=\"446\" y=\"97\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_04aocee_di\" bpmnElement=\"DataObjectReference_04aocee\">\n        <dc:Bounds x=\"629\" y=\"47\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"603\" y=\"101\" width=\"88\" height=\"12\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_12fola5_di\" bpmnElement=\"SequenceFlow_12fola5\">\n        <di:waypoint x=\"403\" y=\"191\" />\n        <di:waypoint x=\"514\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"413.5\" y=\"170\" width=\"90\" height=\"12\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"IntermediateCatchEvent_1e9r2g8_di\" bpmnElement=\"IntermediateThrowEvent_1913nne\">\n        <dc:Bounds x=\"514\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"503\" y=\"213\" width=\"58\" height=\"12\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_1ry4j1q_di\" bpmnElement=\"DataOutputAssociation_1ry4j1q\">\n        <di:waypoint x=\"544\" y=\"178\" />\n        <di:waypoint x=\"629\" y=\"91\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_14ltd1r_di\" bpmnElement=\"EndEvent_14ltd1r\">\n        <dc:Bounds x=\"677\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"695\" y=\"213\" width=\"0\" height=\"12\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_18vcgt0_di\" bpmnElement=\"SequenceFlow_18vcgt0\">\n        <di:waypoint x=\"550\" y=\"191\" />\n        <di:waypoint x=\"677\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"613.5\" y=\"170\" width=\"0\" height=\"12\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n",
+		"revision": 11,
+		"__v": 0
+	}],
+	"_id": "5b0c22d205bad5002e586bde",
+	"name": "CatchEventPreconditionTest",
+	"revision": 1,
+	"startconditions": [],
+	"domainmodel": {
+		"_id": "5b0c22d205bad5002e586bdf",
+		"dataclasses": [{
+			"attributes": [{
+				"_id": "5b0c278b05bad5002e586be3",
+				"name": "attribute",
+				"datatype": "String"
+			}],
+			"_id": "5b0c273d05bad5002e586be1",
+			"name": "eventclass",
+			"is_event": true,
+			"olc": {
+				"intermediateThrowEvent": [{
+					"id": "State_11u8x6w",
+					"name": "State 1",
+					"outgoing": ["SequenceFlow_1d9kpvm"]
+				}, {
+					"id": "State_0x8fy3i",
+					"name": "State 2",
+					"incoming": ["SequenceFlow_1d9kpvm"]
+				}],
+				"sequenceFlow": [{
+					"id": "SequenceFlow_1d9kpvm",
+					"sourceRef": "State_11u8x6w",
+					"targetRef": "State_0x8fy3i"
+				}],
+				"state": [{
+					"id": "State_11u8x6w",
+					"name": "State 1",
+					"outgoing": ["SequenceFlow_1d9kpvm"]
+				}, {
+					"id": "State_0x8fy3i",
+					"name": "State 2",
+					"incoming": ["SequenceFlow_1d9kpvm"]
+				}]
+			}
+		}],
+		"revision": 4,
+		"name": "CatchEventPreconditionTest",
+		"__v": 3
+	},
+	"__v": 0
+}

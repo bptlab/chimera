@@ -16,7 +16,7 @@ public class EmailActivity extends AbstractActivity {
 	 * Email Activities are executed automatically.
 	 */
 	@Override
-	public boolean isAutomaticTask() {
+	public boolean isAutomatic() {
 		return true;
 	}
 

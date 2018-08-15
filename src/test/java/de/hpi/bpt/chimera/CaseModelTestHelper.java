@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -19,6 +20,7 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
 public class CaseModelTestHelper {
 	/**
@@ -46,9 +48,20 @@ public class CaseModelTestHelper {
 	 */
 	public static CaseModel parseCaseModel(String filepath) {
 		String jsonString = getJsonString(filepath);
-		return CaseModelParser.parseCaseModel(jsonString);
+		try {
+			return CaseModelParser.parseCaseModel(jsonString);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
 	}
 
+	public static Fragment getFragmentByName(CaseModel cm, String name) {
+		Optional<Fragment> fragment = cm.getFragments().stream().filter(f -> f.getName().equals(name)).findFirst();
+		if (fragment.isPresent()) {
+			return fragment.get();
+		}
+		return null;
+	}
 	/**
 	 * Create a DataStateCondition by a given name of a DataClass and a given
 	 * name of a ObjectLifecycleState by getting the concrete Objects in the

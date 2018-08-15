@@ -9,27 +9,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
-import de.hpi.bpt.chimera.model.CaseModel;
 
 @Entity
 public class CaseStartTrigger {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
-	@OneToOne(cascade = CascadeType.ALL)
-	private CaseModel parentCaseModel;
 	private String id = UUID.randomUUID().toString().replaceAll("\\-", "");
 	private String queryExecutionPlan;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<CaseStartTriggerConsequence> triggerConsequences;
 
 	// Not in the Gryphon JSON data.
-	// Will be set during parsing from the EventDipetcher which gets the data
-	// from unicorn while registering the event.
-	private String eventKeyId; // The id under which the event is registered at
-								// unicorn.
 	private String notificationRuleId;
 
 	public String getQueryExecutionPlan() {
@@ -38,14 +29,6 @@ public class CaseStartTrigger {
 
 	public void setQueryExecutionPlan(String queryExecutionPlan) {
 		this.queryExecutionPlan = queryExecutionPlan;
-	}
-
-	public String getEventKeyId() {
-		return eventKeyId;
-	}
-
-	public void setEventKeyId(String eventKeyId) {
-		this.eventKeyId = eventKeyId;
 	}
 
 	public String getNotificationRuleId() {
@@ -58,14 +41,6 @@ public class CaseStartTrigger {
 
 	public String getId() {
 		return id;
-	}
-
-	public CaseModel getParentCaseModel() {
-		return parentCaseModel;
-	}
-
-	public void setParentCaseModel(CaseModel parentCaseModel) {
-		this.parentCaseModel = parentCaseModel;
 	}
 
 	public List<CaseStartTriggerConsequence> getTriggerConsequences() {

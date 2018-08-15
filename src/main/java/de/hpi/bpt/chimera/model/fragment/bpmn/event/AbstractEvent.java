@@ -33,4 +33,12 @@ public abstract class AbstractEvent extends AbstractDataControlNode {
 	public void setSpecialEventDefinition(SpecialEventDefinition specialEventDefinition) {
 		this.specialEventDefinition = specialEventDefinition;
 	}
+
+	/**
+	 * Events are always executed automatically.
+	 */
+	@Override
+	public boolean isAutomatic() {
+		return true;
+	}
 }

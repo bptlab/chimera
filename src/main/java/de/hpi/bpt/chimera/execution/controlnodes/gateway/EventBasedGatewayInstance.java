@@ -24,7 +24,7 @@ public class EventBasedGatewayInstance extends AbstractGatewayInstance {
 	private static final Logger logger = Logger.getLogger(EventBasedGatewayInstance.class);
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<AbstractEventInstance> eventsToSkip = new ArrayList();
+	private List<AbstractEventInstance> followingEventInstances = new ArrayList<>();
 
 
 	/**
@@ -49,27 +49,25 @@ public class EventBasedGatewayInstance extends AbstractGatewayInstance {
 
 	@Override
 	public void begin() {
-		// TODO Auto-generated method stub
 		this.setState(State.EXECUTING);
 		this.terminate();
 	}
 
 	@Override
 	public void terminate() {
-		eventsToSkip = this.getFragmentInstance().createFollowing(this.getControlNode()).stream().map(x -> (AbstractEventInstance) x).collect(Collectors.toList());
-		eventsToSkip.stream().forEach(x -> x.setPreviousEventBasedGatewayInstance(this));
+		followingEventInstances = this.getFragmentInstance().createFollowing(this.getControlNode()).stream().map(x -> (AbstractEventInstance) x).collect(Collectors.toList());
+		followingEventInstances.stream().forEach(x -> x.setPreviousEventBasedGatewayInstance(this));
 		this.setState(State.TERMINATED);
 	}
 
 	@Override
 	public void skip() {
-		// TODO Auto-generated method stub
 		this.setState(State.SKIPPED);
 	}
 
 	public void skipAlternativeGateways(AbstractEventInstance triggeredEvent) {
 		logger.info("EventbasedGateway is skipping Events");
-		for (AbstractEventInstance eventToSkip : eventsToSkip) {
+		for (AbstractEventInstance eventToSkip : followingEventInstances) {
 			if (!eventToSkip.equals(triggeredEvent)) {
 				eventToSkip.skip();
 			}
