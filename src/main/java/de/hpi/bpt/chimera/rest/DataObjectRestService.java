@@ -77,7 +77,7 @@ public class DataObjectRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the dataobject.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = DataObjectJaxBean.class)))})
-	public Response getDataObject(@PathParam("instanceId") String caseId, @PathParam("dataObjectId") String dataObjectId) {
+	public Response getDataObject(@PathParam("caseId") String caseId, @PathParam("dataObjectId") String dataObjectId) {
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(caseId);
 

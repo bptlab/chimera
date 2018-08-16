@@ -31,6 +31,9 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.rest.beans.activity.UpdateActivityInstanceJaxBean;
+import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataAttributeJaxBean;
+import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
 
 /**
  * I manage the data objects of a case.
@@ -310,7 +313,7 @@ public class DataManager {
 	 * @param dataAttributeValues
 	 * @param usedDataObjects
 	 */
-	public void setDataAttributeValuesByNames(Map<String, Map<String, Object>> dataAttributeValues, List<DataObject> usedDataObjects) {
+	public void setDataAttributeValuesByNamesOld(Map<String, Map<String, Object>> dataAttributeValues, List<DataObject> usedDataObjects) {
 		for (Map.Entry<String, Map<String, Object>> dataclassNameToDataAttributeValues : dataAttributeValues.entrySet()) {
 			String dataclassName = dataclassNameToDataAttributeValues.getKey();
 			DataObject usedDataObject = null;
@@ -328,6 +331,29 @@ public class DataManager {
 				DataAttributeInstance dataAttributeInstance = usedDataObject.getDataAttributeInstanceByName(dataAttributeName);
 				if (dataAttributeInstance != null) {
 					dataAttributeInstance.setValue(dataAttributeNameToValue.getValue());
+				}
+			}
+		}
+	}
+
+	public void setDataAttributeValuesByNames(List<UpdateDataObjectJaxBean> update, List<DataObject> usedDataObjects) {
+		for (UpdateDataObjectJaxBean dataObjectUpdate : update) {
+			String dataclassName = dataObjectUpdate.getDataclass();
+			DataObject usedDataObject = null;
+			for (DataObject dataObject : usedDataObjects) {
+				if (dataObject.getDataClass().getName().equals(dataclassName)) {
+					usedDataObject = dataObject;
+					break;
+				}
+			}
+			if (usedDataObject == null) {
+				continue;
+			}
+			for (UpdateDataAttributeJaxBean dataAttributeUpdate : dataObjectUpdate.getAttributeUpdate()) {
+				String dataAttributeName = dataAttributeUpdate.getAttribute();
+				DataAttributeInstance dataAttributeInstance = usedDataObject.getDataAttributeInstanceByName(dataAttributeName);
+				if (dataAttributeInstance != null) {
+					dataAttributeInstance.setValue(dataAttributeUpdate.getValue());
 				}
 			}
 		}
