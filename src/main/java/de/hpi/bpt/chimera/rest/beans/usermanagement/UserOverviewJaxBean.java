@@ -8,10 +8,12 @@ import de.hpi.bpt.chimera.usermanagment.User;
 public class UserOverviewJaxBean {
 	private String id;
 	private String name;
+	private String email;
 
 	public UserOverviewJaxBean(User user) {
 		setId(user.getId());
 		setName(user.getName());
+		setEmail(user.getEmail());
 	}
 
 	public String getId() {
@@ -28,5 +30,13 @@ public class UserOverviewJaxBean {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

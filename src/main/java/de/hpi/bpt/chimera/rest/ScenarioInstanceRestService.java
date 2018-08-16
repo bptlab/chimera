@@ -4,6 +4,7 @@ import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.miscellaneous.NamedJaxBean;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -115,15 +116,17 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response startNewNamedInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @DefaultValue("") final String name) {
+	public Response startNewNamedInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, NamedJaxBean bean) {
 		try {
-			JSONObject nameJson = new JSONObject(name);
-
-			if (nameJson.has("name")) {
-				return initializeNewInstance(uriInfo, cmId, nameJson.getString("name"));
-			} else {
-				return initializeNewInstance(uriInfo, cmId);
-			}
+			// JSONObject nameJson = new JSONObject(name);
+			//
+			// if (nameJson.has("name")) {
+			// return initializeNewInstance(uriInfo, cmId,
+			// nameJson.getString("name"));
+			// } else {
+			// return initializeNewInstance(uriInfo, cmId);
+			// }
+			return initializeNewInstance(uriInfo, cmId, bean.getName());
 		} catch (IllegalArgumentException e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}

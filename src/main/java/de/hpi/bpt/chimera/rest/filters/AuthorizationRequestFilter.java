@@ -4,14 +4,14 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
-import de.hpi.bpt.chimera.usermanagment.User;
+import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
 import de.hpi.bpt.chimera.usermanagment.UserManager;
 
 import java.io.IOException;
@@ -30,10 +30,14 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		this.requestContext = requestContext;
 
 		try {
-			// TODO activate when frontend sends authorization request filter
 			validateUser();
-		} catch (Exception e) {
+		} catch (WebApplicationException e) {
 			throw e;
+		} catch (Exception e) {
+			log.error(e);
+			JSONObject message = new JSONObject(new DangerExceptionJaxBean(e.getMessage()));
+			Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(message.toString()).build();
+			this.requestContext.abortWith(unauthorized);
 		}
 
 		// if (!isValidScenario()) {
@@ -142,12 +146,13 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	*/
 
 	private void validateUser() {
+		// TODO: think about costum response message for WebApplicationException
 		String method = requestContext.getMethod();
 		String path = requestContext.getUriInfo().getPath();
-		if (method.equals("POST") && path.matches("(v3/users)(/)?")) {
+		if ("POST".equals(method) && path.matches("(v3/users)(/)?")) {
 			return;
 		}
-		if (!path.startsWith("v3/users") && !path.startsWith("v3/organizations")) {
+		if (!path.startsWith("v3/users") && !path.startsWith("v3/organizations") && !path.startsWith("v3/authenticate")) {
 			return;
 		}
 		// Get the authentification passed in HTTP headers parameters

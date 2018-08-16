@@ -8,6 +8,8 @@ import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.exception.IllegalUserIdException;
+
 public class UserManager {
 	private static Logger log = Logger.getLogger(UserManager.class);
 	private static Map<String, User> users = new HashMap<>();
@@ -31,8 +33,8 @@ public class UserManager {
 			User admin = createUser("admin", "admin", "admin");
 			admin.getSystemRoles().add(SystemRole.ADMIN);
 		}
-		// TODO: think about salt for the hashing
-		String hashedPassword = String.valueOf(Objects.hashCode(password));
+		
+		String hashedPassword = hashPassword(password);
 		for (User user : users.values()) {
 			if (user.getEmail().equals(email)) {
 				if (user.getPassword().equals(hashedPassword)) {
@@ -57,7 +59,7 @@ public class UserManager {
 		// TODO: validate email, password, username
 		User user = new User();
 		user.setEmail(email);
-		String hashedPassword = String.valueOf(Objects.hashCode(password));
+		String hashedPassword = hashPassword(password);
 		user.setPassword(hashedPassword);
 		user.setName(username);
 		String id = user.getId();
@@ -65,6 +67,24 @@ public class UserManager {
 		OrganizationManager.assignMember(OrganizationManager.getDefaultOrganization(), user);
 		log.info(String.format("Created user with id %s and name %s", id, user.getName()));
 		return user;
+	}
+
+	/**
+	 * Assign a new email and a new password to a a user.
+	 * 
+	 * @param user
+	 * @param newEmail
+	 * @param newPassword
+	 */
+	public static void updateUser(User user, String newEmail, String newPassword) {
+		// TODO: validate email, password
+		user.setEmail(newEmail);
+		user.setPassword(hashPassword(newPassword));
+	}
+
+	private static String hashPassword(String password) {
+		// TODO: think about salt for the hashing
+		return String.valueOf(Objects.hashCode(password));
 	}
 
 	/**
@@ -79,8 +99,8 @@ public class UserManager {
 		if (users.containsKey(userId)) {
 			return users.get(userId);
 		}
-		String mess = String.format("The user with id %s does not exist", userId);
-		throw new IllegalArgumentException(mess);
+
+		throw new IllegalUserIdException(userId);
 	}
 
 	/**

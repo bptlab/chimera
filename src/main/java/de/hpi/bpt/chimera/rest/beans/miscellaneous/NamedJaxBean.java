@@ -15,6 +15,9 @@ public class NamedJaxBean {
 	 */
 	private String name;
 
+	public NamedJaxBean() {
+	}
+
 	public NamedJaxBean(String body) {
 		try {
 			setName(new JSONObject(body).getString("name"));

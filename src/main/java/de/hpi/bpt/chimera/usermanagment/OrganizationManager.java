@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.exception.IllegalOrganizationIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 
 public class OrganizationManager {
@@ -48,7 +49,7 @@ public class OrganizationManager {
 		if (organizations.containsKey(orgId)) {
 			return organizations.get(orgId);
 		}
-		throw new IllegalArgumentException(String.format("Organization id %s is not assigned.", orgId));
+		throw new IllegalOrganizationIdException(orgId);
 	}
 
 	/**
