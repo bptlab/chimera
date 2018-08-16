@@ -1,7 +1,6 @@
 package de.hpi.bpt.chimera.rest;
 
 import de.hpi.bpt.chimera.util.PropertyLoader;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;

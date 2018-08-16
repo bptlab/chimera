@@ -19,7 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
@@ -28,16 +27,22 @@ import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.casemodel.MultipleCaseModelsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.caze.MultipleCasesJaxBean;
+import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
+import de.hpi.bpt.chimera.rest.beans.miscellaneous.MessageJaxBean;
 import de.hpi.bpt.chimera.rest.beans.miscellaneous.NamedJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.AssignMemberJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.CreateOrganizationJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.MemberRoleJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.MemberRolesJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationDetailsJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.OrganizationOverviewJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.UpdateOrganizationJaxBean;
-import de.hpi.bpt.chimera.rest.beans.usermanagement.UserDetailsJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.CreateOrganizationJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.MultipleMemberJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.MultipleOrganizationsOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.MultipleOwnersJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.MultipleRolesJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.OrganizationDetailsJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.OrganizationOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.organization.UpdateOrganizationJaxBean;
+import de.hpi.bpt.chimera.rest.beans.usermanagement.AssignUserJaxBean;
+import de.hpi.bpt.chimera.rest.beans.usermanagement.MemberDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
 import de.hpi.bpt.chimera.usermanagment.MemberRole;
 import de.hpi.bpt.chimera.usermanagment.Organization;
@@ -46,6 +51,27 @@ import de.hpi.bpt.chimera.usermanagment.User;
 import de.hpi.bpt.chimera.usermanagment.UserManager;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Tag(name = "organizations")
+@ApiResponses(value = {
+		@ApiResponse(
+				responseCode = "400", description = "A problem occured during the processing.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class))),
+		@ApiResponse(
+				responseCode = "401", description = "A problem occured during the authentication.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class))),
+		@ApiResponse(
+				responseCode = "404", description = "An unassigned identifier was used.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class))) })
+@SecurityRequirement(name = "BasicAuth")
 @Path("v3/organizations")
 public class OrganizationRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(OrganizationRestService.class);
@@ -72,9 +98,15 @@ public class OrganizationRestService extends AbstractRestService {
 	@POST
 	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createOrganization(@Context ContainerRequestContext requestContext, String body) {
+	@Operation(summary = "Create a new organization",
+			responses = {
+					@ApiResponse(
+							responseCode = "201", description = "Successfully created a new organization.",
+						content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDetailsJaxBean.class))),
+			})
+	public Response createOrganization(@Context ContainerRequestContext requestContext,
+			@Parameter(description = "Information about the new organization", required = true) CreateOrganizationJaxBean bean) {
 		try {
-			CreateOrganizationJaxBean bean = new CreateOrganizationJaxBean(body);
 			String name = bean.getName();
 			NameValidation.validateName(name);
 
@@ -103,15 +135,20 @@ public class OrganizationRestService extends AbstractRestService {
 	@GET
 	@Path("")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Receive all organizations",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested all organizations.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleOrganizationsOverviewJaxBean.class)))})
 	public Response getOrganizations(@Context ContainerRequestContext requestContext) {
 		try {
 			User user = retrieveUser(requestContext);
 			List<OrganizationOverviewJaxBean> resBeans = user.getOrganizations().stream()
 															.map(OrganizationOverviewJaxBean::new)
 															.collect(Collectors.toList());
-
-			JSONObject result = new JSONObject();
-			result.put("organizations", new JSONArray(resBeans));
+			MultipleOrganizationsOverviewJaxBean resBean = new MultipleOrganizationsOverviewJaxBean(resBeans);
+			JSONObject result = new JSONObject(resBean);
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -130,19 +167,25 @@ public class OrganizationRestService extends AbstractRestService {
 	 * @return the response of GET. The response will be an
 	 *         {@link OrganizationDetailsJaxBean} with response code 200 if the
 	 *         request was successful. The response will be 400 if the
-	 *         {@code orgId} is not assigned. The response code will be 403 if
+	 *         {@code orgId} is not assigned. The response code will be 401 if
 	 *         the user who send the request is not allowed to view this
 	 *         information.
 	 */
 	@GET
 	@Path("{organizationId}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Receive a specific organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested the organization.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDetailsJaxBean.class)))})
 	public Response getOrganization(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isMember(user) && !user.isAdmin()) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
 			JSONObject result = new JSONObject(new OrganizationDetailsJaxBean(organization, user));
@@ -167,23 +210,29 @@ public class OrganizationRestService extends AbstractRestService {
 	 * @return the response of PUT. The response will be an
 	 *         {@link OrganizationDetailsJaxBean} with response code 200 if the
 	 *         request was successful. The response will be 400 if the
-	 *         {@code orgId} is not assigned. The response code will be 403 if
+	 *         {@code orgId} is not assigned. The response code will be 401 if
 	 *         the user who send the request is not allowed to update those
 	 *         information.
 	 */
 	@PUT
 	@Path("{organizationId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateOrganization(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, String body) {
+	@Operation(
+		summary = "Update a specific organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully updated the organization and receive its information.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDetailsJaxBean.class)))})
+	public Response updateOrganization(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId,
+			@Parameter(description = "", required = true) UpdateOrganizationJaxBean update) {
 		try {
 			User user = retrieveUser(requestContext);
-
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
+			
 			if (!organization.isOwner(user) && !user.isAdmin()) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not an owner of this organization, and cannot update organizational details.")).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError("You are not an owner of this organization, and cannot update organizational details.")).build();
 			}
-
-			UpdateOrganizationJaxBean update = new UpdateOrganizationJaxBean(body);
+			// TODO: let the user update one without the other
 			organization.setName(update.getName());
 			organization.setDescription(update.getDescription());
 
@@ -205,20 +254,26 @@ public class OrganizationRestService extends AbstractRestService {
 	 *            - id of the organization.
 	 * @return the Response of DELETE. The response code will be 200 if the
 	 *         request was successful. The response will be 400 if the
-	 *         {@code orgId} is not assigned. The response code will be 403 if
+	 *         {@code orgId} is not assigned. The response code will be 401 if
 	 *         the user who send the request is not allowed to view this
 	 *         information.
 	 */
 	@DELETE
 	@Path("{organizationId}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Delete a specific organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully deleted the organization.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
 	public Response deleteOrganization(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization org = OrganizationManager.getOrganizationById(orgId);
 
 			if (!org.isOwner(user) && !user.isAdmin()) {
-				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to delete the organization.")).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to delete the organization.")).build();
 			}
 
 			OrganizationManager.deleteOrganization(org);
@@ -241,27 +296,28 @@ public class OrganizationRestService extends AbstractRestService {
 	 * @return the Response of GET. The response code will be 200 if the request
 	 *         was successful and contains a JSONObject with a JSONArray of
 	 *         Strings at key {@code roles}. The response will be 400 if the
-	 *         {@code orgId} is not assigned. The response code will be 403 if
+	 *         {@code orgId} is not assigned. The response code will be 401 if
 	 *         the user who send the request is not allowed to view this
 	 *         information.
 	 */
 	@GET
 	@Path("{organizationId}/roles")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Receive all roles of a specific organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested the roles of an organization.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleRolesJaxBean.class)))})
 	public Response receiveRoles(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isMember(user) && !user.isAdmin()) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
-			List<String> roleNames = organization.getRoles().stream()
-										.map(MemberRole::getName)
-										.collect(Collectors.toList());
-
-			JSONObject result = new JSONObject();
-			result.put("roles", new JSONArray(roleNames));
+			JSONObject result = new JSONObject(new MultipleRolesJaxBean(organization.getRoles()));
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -283,30 +339,30 @@ public class OrganizationRestService extends AbstractRestService {
 	 * @return the Response of POST. The response code will be 201 if the
 	 *         request was successful and contains a JSONObject with a JSONArray
 	 *         of Strings at key {@code roles}. The response will be 400 if the
-	 *         {@code orgId} is not assigned. The response code will be 403 if
+	 *         {@code orgId} is not assigned. The response code will be 401 if
 	 *         the user who send the request is not allowed to view this
 	 *         information.
 	 */
 	@POST
 	@Path("{organizationId}/roles")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, String body) {
+	@Operation(
+		summary = "Create a new role",
+		responses = {
+			@ApiResponse(
+				responseCode = "201", description = "Successfully created a new role for an organization.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleRolesJaxBean.class)))})
+	public Response addRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId,
+			@Parameter(description = "The name for the new role.", required = true) NamedJaxBean bean) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isOwner(user) && !user.isAdmin()) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to add new roles.")).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to add new roles.")).build();
 			}
-
-			NamedJaxBean bean = new NamedJaxBean(body);
 			OrganizationManager.addRole(organization, bean.getName());
-			
-			List<String> roleNames = organization.getRoles().stream()
-										.map(MemberRole::getName)
-										.collect(Collectors.toList());
 
-			JSONObject result = new JSONObject();
-			result.put("roles", new JSONArray(roleNames));
+			JSONObject result = new JSONObject(new MultipleRolesJaxBean(organization.getRoles()));
 			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -326,25 +382,31 @@ public class OrganizationRestService extends AbstractRestService {
 	 *            - name of the role
 	 * @return the Response of DELETE. The response code will be 200 if the
 	 *         request was successful. The response will be 400 if the
-	 *         {@code orgId} is not assigned. The response code will be 403 if
+	 *         {@code orgId} is not assigned. The response code will be 401 if
 	 *         the user who send the request is not allowed to view this
 	 *         information.
 	 */
 	@DELETE
 	@Path("{organizationId}/roles/{roleName}")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Delete a specific role of an organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully deleted the role of an organization.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
 	public Response deleteRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("roleName") String roleName) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!user.isAdmin() && !organization.isOwner(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_CHANGE_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_CHANGE_MESSAGE)).build();
 			}
 
 			MemberRole role = organization.getRole(roleName);
 			OrganizationManager.deleteRole(organization, role);
 
-			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Role successfully deleted.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Role successfully deleted.\"}").build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -365,18 +427,24 @@ public class OrganizationRestService extends AbstractRestService {
 	 *         was successful and contains a JSONObject with a JSONArray of
 	 *         {@link CaseModelOverviewJaxBean} at key {@code casemodels}. The
 	 *         response will be 400 if the {@code orgId} is not assigned. The
-	 *         response code will be 403 if the user who send the request is not
+	 *         response code will be 401 if the user who send the request is not
 	 *         allowed to view this information.
 	 */
 	@GET
 	@Path("{organizationId}/casemodels")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Receive all casemodels of an organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested all casemodels of an organization.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleCaseModelsJaxBean.class)))})
 	public Response receiveCaseModels(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @DefaultValue("") @QueryParam("filter") String filterString) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isMember(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 			List<CaseModel> caseModels = OrganizationManager.getCaseModels(organization, user);
 
@@ -388,8 +456,7 @@ public class OrganizationRestService extends AbstractRestService {
 													.map(CaseModelOverviewJaxBean::new)
 													.collect(Collectors.toList());
 
-			JSONObject result = new JSONObject();
-			result.put("casemodels", new JSONArray(beans));
+			JSONObject result = new JSONObject(new MultipleCaseModelsJaxBean(beans));
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -411,18 +478,25 @@ public class OrganizationRestService extends AbstractRestService {
 	 *         request was successful and contains a
 	 *         {@link CaseModelOverviewJaxBean}. The response will be 400 if the
 	 *         {@code orgId} is not assigned or an error occured during the
-	 *         parsing. The response code will be 403 if the user who send the
+	 *         parsing. The response code will be 401 if the user who send the
 	 *         request is not a member of the organization.
 	 */
 	@POST
 	@Path("{organizationId}/casemodels")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Deploy a new casemodel for an organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "201", description = "Successfully deployed a the casemodel.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CaseModelDetailsJaxBean.class)))})
 	public Response deployCaseModel(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, String jsonString) {
+		// TODO: make a jax bean for the casemodel
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isMember(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
 			CaseModel cm = CaseModelManager.parseCaseModel(jsonString);
@@ -449,26 +523,31 @@ public class OrganizationRestService extends AbstractRestService {
 	 *         was successful and contains a JSONObject with a JSONArray of
 	 *         {@link UserOverviewJaxBean} at key {@code owners}. The response
 	 *         will be 400 if the {@code orgId} is not assigned. The response
-	 *         code will be 403 if the user who send the request is not allowed
+	 *         code will be 401 if the user who send the request is not allowed
 	 *         to view this information.
 	 */
 	@GET
 	@Path("{organizationId}/owners")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Receive all owners of an organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested all owners of an organization.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleOwnersJaxBean.class)))})
 	public Response receiveOwners(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isMember(user) && !user.isAdmin()) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
 			List<UserOverviewJaxBean> resBeans = organization.getOwners().values().stream()
 													.map(UserOverviewJaxBean::new)
 													.collect(Collectors.toList());
 
-			JSONObject result = new JSONObject();
-			result.put("owners", new JSONArray(resBeans));
+			JSONObject result = new JSONObject(new MultipleOwnersJaxBean(resBeans));
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -486,30 +565,36 @@ public class OrganizationRestService extends AbstractRestService {
 	 * @param orgId
 	 *            - id of the organization.
 	 * @param body
-	 *            - {@link AssignMemberJaxBean}, the id of the user who will be
+	 *            - {@link AssignUserJaxBean}, the id of the user who will be
 	 *            assigned as an owner
 	 * @return the Response of POST. The response code will be 200 if the
 	 *         creation was successful, 400 if the {@code orgId} or
 	 *         {@code userId} is not assigned or if the specified user is
 	 *         already an owner of the organization. The response code will be
-	 *         403 if the user who send the request is not allowed to create a
+	 *         401 if the user who send the request is not allowed to create a
 	 *         new owner.
 	 */
 	@POST
 	@Path("{organizationId}/owners")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addOwner(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, String body) {
+	@Operation(
+		summary = "Make a user a new owner of an organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully made a user a new owner of an organization.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
+	public Response addOwner(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId,
+							@Parameter(description = "The id of the user to be assigned.", required = true) AssignUserJaxBean assign) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isOwner(user) && !user.isAdmin()) {
-				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to add new owners to the organization.")).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to add new owners to the organization.")).build();
 			}
 
-			AssignMemberJaxBean assign = new AssignMemberJaxBean(body);
 			User newOwner = UserManager.getUserById(assign.getId());
 			OrganizationManager.addOwner(organization, newOwner);
-			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Member successfully assigned.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"User successfully assigned.\"}").build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -528,26 +613,31 @@ public class OrganizationRestService extends AbstractRestService {
 	 *         was successful and contains a JSONObject with a JSONArray of
 	 *         {@link UserOverviewJaxBean} at key {@code members}. The response
 	 *         will be 400 if the {@code orgId} is not assigned. The response
-	 *         code will be 403 if the user who send the request is not allowed
+	 *         code will be 401 if the user who send the request is not allowed
 	 *         to view this information.
 	 */
 	@GET
 	@Path("{organizationId}/members")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Receive all members of a specific organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested all members.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleMemberJaxBean.class))) })
 	public Response receiveMembers(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isMember(user) && !user.isAdmin()) {
-				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
 			List<UserOverviewJaxBean> resBeans = organization.getMembers().values().stream()
 													.map(UserOverviewJaxBean::new)
 													.collect(Collectors.toList());
 
-			JSONObject result = new JSONObject();
-			result.put("members", new JSONArray(resBeans));
+			JSONObject result = new JSONObject(new MultipleMemberJaxBean(resBeans));
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -564,28 +654,34 @@ public class OrganizationRestService extends AbstractRestService {
 	 * @param orgId
 	 *            - id of the organization.
 	 * @param body
-	 *            - {@link AssignMemberJaxBean}, the id of the user who will be
+	 *            - {@link AssignUserJaxBean}, the id of the user who will be
 	 *            assigned as a member
 	 * @return the Response of POST. The response code will be 201 if the
 	 *         request was successful and contains a JSONObject with a JSONArray
 	 *         of {@link UserOverviewJaxBean} at key {@code members}. The
 	 *         response will be 400 if the {@code orgId} is not assigned. The
-	 *         response code will be 403 if the user who send the request is not
+	 *         response code will be 401 if the user who send the request is not
 	 *         allowed to change this information.
 	 */
 	@POST
 	@Path("{organizationId}/members")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response assignMember(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, String body) {
+	@Operation(
+		summary = "Assign an user as a new member of a specific organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully made an user a new member.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleMemberJaxBean.class))) })
+	public Response assignMember(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId,
+			@Parameter(description = "The id of the user.", required = true) AssignUserJaxBean assign) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 
 			if (!organization.isOwner(user)) {
-				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to assign members to the organization.")).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to assign members to the organization.")).build();
 			}
 
-			AssignMemberJaxBean assign = new AssignMemberJaxBean(body);
 			User userToAssign = UserManager.getUserById(assign.getId());
 			OrganizationManager.assignMember(organization, userToAssign);
 
@@ -593,8 +689,7 @@ public class OrganizationRestService extends AbstractRestService {
 													.map(UserOverviewJaxBean::new)
 													.collect(Collectors.toList());
 
-			JSONObject result = new JSONObject();
-			result.put("members", new JSONArray(resBeans));
+			JSONObject result = new JSONObject(new MultipleMemberJaxBean(resBeans));
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -614,21 +709,27 @@ public class OrganizationRestService extends AbstractRestService {
 	 *            - id of the user
 	 * @return the Response of GET. The response code will be 200 if the request
 	 *         was successful and contains a JSONObject of an
-	 *         {@link UserDetailsJaxBean}. The response code will be 400 if the
-	 *         {@code orgId} or {@code userId} is not assigned or if the user is
-	 *         not a member of the organization. The response code will be 403
-	 *         if the user who send the request is not allowed to view these
-	 *         information.
+	 *         {@link MemberDetailsJaxBean}. The response code will be 400 if
+	 *         the {@code orgId} or {@code userId} is not assigned or if the
+	 *         user is not a member of the organization. The response code will
+	 *         be 401 if the user who send the request is not allowed to view
+	 *         these information.
 	 */
 	@GET
 	@Path("{organizationId}/members/{userId}")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Receive information about a specific member",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested a member.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MemberDetailsJaxBean.class))) })
 	public Response receiveMember(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!organization.isMember(user) && !user.isAdmin()) {
-				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
 			User userToView = UserManager.getUserById(userId);
@@ -636,7 +737,7 @@ public class OrganizationRestService extends AbstractRestService {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(NOT_A_MEMBER_MESSAGE)).build();
 			}
 
-			JSONObject result = new JSONObject(new UserDetailsJaxBean(organization, userToView));
+			JSONObject result = new JSONObject(new MemberDetailsJaxBean(organization, userToView));
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -659,12 +760,18 @@ public class OrganizationRestService extends AbstractRestService {
 	 *         deletion was successful, 400 if the {@code orgId} or
 	 *         {@code userId} is not assigned, if the user the not a member of
 	 *         the organization or is the last owner. The response code will be
-	 *         403 if the user who send the request is not allowed to delete the
+	 *         401 if the user who send the request is not allowed to delete the
 	 *         membership.
 	 */
 	@DELETE
 	@Path("{organizationId}/members/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Remove a member from an organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully removed the member from the organization.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class))) })
 	public Response removeMember(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId) {
 		try {
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
@@ -672,7 +779,7 @@ public class OrganizationRestService extends AbstractRestService {
 			User userToDelete = UserManager.getUserById(userId);
 
 			if (!user.equals(userToDelete) && !user.isAdmin() && !organization.isOwner(user)) {
-				return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to remove the user from the organization.")).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError("You are not allowed to remove the user from the organization.")).build();
 			}
 
 			OrganizationManager.removeMember(organization, userToDelete);
@@ -699,19 +806,25 @@ public class OrganizationRestService extends AbstractRestService {
 	 *         was successful and contains a JSONObject of an
 	 *         {@link MemberRolesJaxBean}. The response code will be 400 if the
 	 *         {@code orgId} or {@code userId} is not assigned or if the user is
-	 *         not a member of the organization. The response code will be 403
+	 *         not a member of the organization. The response code will be 401
 	 *         if the user who send the request is not allowed to view these
 	 *         information.
 	 */
 	@GET
 	@Path("{organizationId}/members/{userId}/roles")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Get all roles from a member in an organization",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested the roles.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleRolesJaxBean.class))) })
 	public Response receiveMemberRoles(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!user.isAdmin() && !organization.isMember(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
 			}
 
 			User userToView = UserManager.getUserById(userId);
@@ -720,8 +833,7 @@ public class OrganizationRestService extends AbstractRestService {
 			}
 
 			List<MemberRole> roles = organization.getUserIdToRoles().get(userToView.getId());
-			MemberRolesJaxBean bean = new MemberRolesJaxBean(roles);
-			JSONObject result = new JSONObject(bean);
+			JSONObject result = new JSONObject(new MultipleRolesJaxBean(roles));
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
@@ -745,18 +857,25 @@ public class OrganizationRestService extends AbstractRestService {
 	 *         {@link MemberRolesJaxBean}. The response code will be 400 if the
 	 *         {@code orgId} or {@code userId} is not assigned, if the user is
 	 *         not a member of the organization or the role name is not
-	 *         assigned. The response code will be 403 if the user who send the
+	 *         assigned. The response code will be 401 if the user who send the
 	 *         request is not allowed to change these information.
 	 */
 	@POST
 	@Path("{organizationId}/members/{userId}/roles")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response assignMemberRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId, String body) {
+	@Operation(
+		summary = "Assign a role to a member",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully assigned a new role.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleRolesJaxBean.class))) })
+	public Response assignMemberRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId,
+			@Parameter(description = "The name for the new role.", required = true) NamedJaxBean bean) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!user.isAdmin() && !organization.isOwner(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_CHANGE_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_CHANGE_MESSAGE)).build();
 			}
 
 			User userToAssign = UserManager.getUserById(userId);
@@ -764,15 +883,13 @@ public class OrganizationRestService extends AbstractRestService {
 				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(NOT_A_MEMBER_MESSAGE)).build();
 			}
 
-			MemberRoleJaxBean roleBean = new MemberRoleJaxBean(body);
-			MemberRole role = organization.getRole(roleBean.getName());
+			MemberRole role = organization.getRole(bean.getName());
 			OrganizationManager.assignRole(organization, userToAssign, role);
 
 			List<MemberRole> roles = organization.getUserIdToRoles().get(userToAssign.getId());
-			MemberRolesJaxBean bean = new MemberRolesJaxBean(roles);
-			JSONObject result = new JSONObject(bean);
+			JSONObject result = new JSONObject(new MultipleRolesJaxBean(roles));
 
-			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -796,18 +913,24 @@ public class OrganizationRestService extends AbstractRestService {
 	 *         {@link MemberRolesJaxBean}. The response code will be 400 if the
 	 *         {@code orgId} or {@code userId} is not assigned, if the user is
 	 *         not a member of the organization or the role name is not
-	 *         assigned. The response code will be 403 if the user who send the
+	 *         assigned. The response code will be 401 if the user who send the
 	 *         request is not allowed to change these information.
 	 */
 	@DELETE
 	@Path("{organizationId}/members/{userId}/roles/{roleName}")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Remove a specific role from a member",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully removed the role.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleRolesJaxBean.class))) })
 	public Response deleteMemberRole(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId, @PathParam("roleName") String roleName) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization organization = OrganizationManager.getOrganizationById(orgId);
 			if (!user.isAdmin() && !organization.isOwner(user)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_CHANGE_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_CHANGE_MESSAGE)).build();
 			}
 
 			User requestedUser = UserManager.getUserById(userId);
@@ -819,10 +942,9 @@ public class OrganizationRestService extends AbstractRestService {
 			UserManager.deleteRole(requestedUser, organization, role);
 
 			List<MemberRole> roles = organization.getUserIdToRoles().get(requestedUser.getId());
-			MemberRolesJaxBean bean = new MemberRolesJaxBean(roles);
-			JSONObject result = new JSONObject(bean);
+			JSONObject result = new JSONObject(new MultipleRolesJaxBean(roles));
 
-			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -845,19 +967,25 @@ public class OrganizationRestService extends AbstractRestService {
 	 *         {@link CaseOverviewJaxBean} at key {@code cases}. The response
 	 *         code will be 400 if the {@code orgId} or {@code userId} is not
 	 *         assigned or if the user is not a member of the organization. The
-	 *         response code will be 403 if the user who send the request is not
+	 *         response code will be 401 if the user who send the request is not
 	 *         allowed to view these information.
 	 */
 	@GET
 	@Path("{organizationId}/members/{userId}/cases")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(
+		summary = "Get all cases a member has access to",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested all cases.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleRolesJaxBean.class))) })
 	public Response receiveCases(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("userId") String userId) {
 		try {
 			User user = retrieveUser(requestContext);
 			Organization org = OrganizationManager.getOrganizationById(orgId);
 			User userToView = UserManager.getUserById(userId);
 			if (!user.isAdmin() && !org.isOwner(user) && !user.equals(userToView)) {
-				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_VIEW_MESSAGE)).build();
+				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_VIEW_MESSAGE)).build();
 			}
 
 			if (!org.isMember(userToView)) {
@@ -874,8 +1002,7 @@ public class OrganizationRestService extends AbstractRestService {
 													.map(CaseOverviewJaxBean::new)
 													.collect(Collectors.toList());
 			
-			JSONObject result = new JSONObject();
-			result.put("cases", new JSONArray(beanArray));
+			JSONObject result = new JSONObject(new MultipleCasesJaxBean(beanArray));
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
