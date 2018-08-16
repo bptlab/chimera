@@ -12,6 +12,7 @@ import javax.ws.rs.ext.Provider;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalIdentifierException;
 import de.hpi.bpt.chimera.execution.exception.IllegalOrganizationIdException;
@@ -48,6 +49,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			validateUser();
 			validateOrganization();
 			validateCaseModels();
+			validateCase();
 		} catch (WebApplicationException e) {
 			throw e;
 		} catch (IllegalIdentifierException e) {
@@ -250,5 +252,21 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		}
 
 		throw new IllegalArgumentException(UNAUTHORIZED_VIEW_MESSAGE);
+	}
+
+	private void validateCase() {
+		MultivaluedMap<String, String> parameters = requestContext.getUriInfo().getPathParameters();
+		if (!parameters.containsKey("caseId")) {
+			return;
+		}
+
+		String cmId = parameters.getFirst("casemodelId");
+		String caseId = parameters.getFirst("caseId");
+
+		try {
+			ExecutionService.getCaseExecutioner(cmId, caseId);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 }

@@ -10,7 +10,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
@@ -19,7 +18,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.CaseModel;
@@ -159,7 +157,7 @@ public class CaseModelRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the casemodel.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CaseModelDetailsJaxBean.class)))})
-	public Response getScenario(@Context UriInfo uri, @PathParam("casemodelId") String cmId) {
+	public Response receiveCaseModel(@Context UriInfo uri, @PathParam("casemodelId") String cmId) {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
@@ -180,7 +178,7 @@ public class CaseModelRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully deleted the casemodel.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
-	public Response deleteScenario(@PathParam("casemodelId") String cmId) {
+	public Response deleteCaseModel(@PathParam("casemodelId") String cmId) {
 		// TODO: think about who should be allowed to delete a casemodel. Maybe
 		// the owner and the deployer or everyone who is allowed to view it.
 		try {

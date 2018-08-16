@@ -894,11 +894,7 @@ public class OrganizationRestService extends AbstractRestService {
 														.flatMap(List::stream)
 														.collect(Collectors.toList());
 			
-			List<CaseOverviewJaxBean> beanArray = caseExecutioners.stream()
-													.map(CaseOverviewJaxBean::new)
-													.collect(Collectors.toList());
-			
-			JSONObject result = new JSONObject(new MultipleCasesJaxBean(beanArray));
+			JSONObject result = new JSONObject(new MultipleCasesJaxBean(caseExecutioners));
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
