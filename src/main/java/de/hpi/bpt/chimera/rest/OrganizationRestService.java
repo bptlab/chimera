@@ -5,14 +5,12 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -24,10 +22,6 @@ import org.json.JSONObject;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
-import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelDetailsJaxBean;
-import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
-import de.hpi.bpt.chimera.rest.beans.casemodel.MultipleCaseModelsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.caze.CaseOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.caze.MultipleCasesJaxBean;
 import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
@@ -410,104 +404,6 @@ public class OrganizationRestService extends AbstractRestService {
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
-		}
-	}
-
-	/**
-	 * Receive all casemodels that a member of an organization is allowed to see
-	 * according to its {@link MemberRole}.
-	 * 
-	 * @param requestContext
-	 *            - information about the request.
-	 * @param orgId
-	 *            - id of the organization.
-	 * @param filterString
-	 *            - for filtering the casemodels by their names
-	 * @return the Response of GET. The response code will be 200 if the request
-	 *         was successful and contains a JSONObject with a JSONArray of
-	 *         {@link CaseModelOverviewJaxBean} at key {@code casemodels}. The
-	 *         response will be 400 if the {@code orgId} is not assigned. The
-	 *         response code will be 401 if the user who send the request is not
-	 *         allowed to view this information.
-	 */
-	@GET
-	@Path("{organizationId}/casemodels")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Operation(
-		summary = "Receive all casemodels of an organization",
-		responses = {
-			@ApiResponse(
-				responseCode = "200", description = "Successfully requested all casemodels of an organization.",
-				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleCaseModelsJaxBean.class)))})
-	public Response receiveCaseModels(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @DefaultValue("") @QueryParam("filter") String filterString) {
-		try {
-			User user = retrieveUser(requestContext);
-			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isMember(user)) {
-				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
-			}
-			List<CaseModel> caseModels = OrganizationManager.getCaseModels(organization, user);
-
-			if (!filterString.isEmpty()) {
-				caseModels = caseModels.stream().filter(cm -> cm.getName().contains(filterString)).collect(Collectors.toList());
-			}
-
-			List<CaseModelOverviewJaxBean> beans = caseModels.stream()
-													.map(CaseModelOverviewJaxBean::new)
-													.collect(Collectors.toList());
-
-			JSONObject result = new JSONObject(new MultipleCaseModelsJaxBean(beans));
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-		} catch (Exception e) {
-			log.error(e);
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
-		}
-	}
-
-	/**
-	 * Deploy a new casemodel in an organization as a member of the
-	 * organization.
-	 * 
-	 * @param requestContext
-	 *            - information about the request.
-	 * @param orgId
-	 *            - id of the organization.
-	 * @param jsonString
-	 *            - the json with information about the casemodel
-	 * @return the Response of POST. The response code will be 201 if the
-	 *         request was successful and contains a
-	 *         {@link CaseModelOverviewJaxBean}. The response will be 400 if the
-	 *         {@code orgId} is not assigned or an error occured during the
-	 *         parsing. The response code will be 401 if the user who send the
-	 *         request is not a member of the organization.
-	 */
-	@POST
-	@Path("{organizationId}/casemodels")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Operation(
-		summary = "Deploy a new casemodel for an organization",
-		responses = {
-			@ApiResponse(
-				responseCode = "201", description = "Successfully deployed a the casemodel.",
-				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CaseModelDetailsJaxBean.class)))})
-	public Response deployCaseModel(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, String jsonString) {
-		// TODO: make a jax bean for the casemodel
-		try {
-			User user = retrieveUser(requestContext);
-			Organization organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isMember(user)) {
-				return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(UNAUTHORIZED_MEMBER_MESSAGE)).build();
-			}
-
-			CaseModel cm = CaseModelManager.parseCaseModel(jsonString);
-			cm.setOrganization(organization);
-			organization.getCaseModels().put(cm.getId(), cm);
-			log.info("Successfully parsed a CaseModel");
-			JSONObject result = new JSONObject(new CaseModelDetailsJaxBean(cm));
-			return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-		} catch (Exception e) {
-			log.error("Chimera failed to parse the CaseModel!", e);
-			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 

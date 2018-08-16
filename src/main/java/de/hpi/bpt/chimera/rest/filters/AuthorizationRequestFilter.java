@@ -4,6 +4,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
@@ -11,10 +12,19 @@ import javax.ws.rs.ext.Provider;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
+import de.hpi.bpt.chimera.execution.exception.IllegalIdentifierException;
+import de.hpi.bpt.chimera.execution.exception.IllegalOrganizationIdException;
+import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
+import de.hpi.bpt.chimera.usermanagment.MemberRole;
+import de.hpi.bpt.chimera.usermanagment.Organization;
+import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagment.User;
 import de.hpi.bpt.chimera.usermanagment.UserManager;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -23,7 +33,12 @@ import java.io.IOException;
 public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	private static Logger log = Logger.getLogger(AuthorizationRequestFilter.class);
 	String errorMsg = "{\"error\":\"There is no %s with id %d\"}";
+	private static final String UNAUTHORIZED_MEMBER_MESSAGE = "You are not a member of this organization, and cannot view organizational details.";
+	private static final String UNAUTHORIZED_VIEW_MESSAGE = "You are not allowed to view this information.";
+
 	private ContainerRequestContext requestContext;
+	private User requester;
+	private Organization organization;
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -31,8 +46,15 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 
 		try {
 			validateUser();
+			validateOrganization();
+			validateCaseModels();
 		} catch (WebApplicationException e) {
 			throw e;
+		} catch (IllegalIdentifierException e) {
+			log.error(e);
+			JSONObject message = new JSONObject(new DangerExceptionJaxBean(e.getMessage()));
+			Response notFound = Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(message.toString()).build();
+			this.requestContext.abortWith(notFound);
 		} catch (Exception e) {
 			log.error(e);
 			JSONObject message = new JSONObject(new DangerExceptionJaxBean(e.getMessage()));
@@ -50,6 +72,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		// abortIllegalActivityInstance(requestContext.getMethod());
 		// }
 	}
+
 	/*
 	private void abortIllegalActivity(String method) {
 		int activityId = Integer.parseInt(requestContext.getUriInfo().getPathParameters().getFirst("activityId"));
@@ -173,19 +196,59 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		}
 
 		try {
-			UserManager.authenticateUser(lap[0], lap[1]);
+			this.requester = UserManager.authenticateUser(lap[0], lap[1]);
 		} catch (Exception e) {
 			throw e;
 		}
-
-		// Our system refuse login and password
-		// if(authentificationResult == null) {
-		// throw new WebApplicationException(Status.UNAUTHORIZED);
-		// }
 
 		// We configure your Security Context here
 		// String scheme = request.getUriInfo().getRequestUri().getScheme();
 		// request.setSecurityContext(new MyApplicationSecurityContext(user,
 		// scheme);
+	}
+
+	private void validateOrganization() {
+		MultivaluedMap<String, String> parameters = requestContext.getUriInfo().getPathParameters();
+		if (!parameters.containsKey("organizationId")) {
+			return;
+		}
+
+		String orgId = parameters.getFirst("organizationId");
+		try {
+			organization = OrganizationManager.getOrganizationById(orgId);
+			if (!organization.isMember(requester)) {
+				throw new IllegalArgumentException(UNAUTHORIZED_MEMBER_MESSAGE);
+			}
+		} catch (IllegalOrganizationIdException e) {
+			throw e;
+		}
+	}
+
+	private void validateCaseModels() {
+		MultivaluedMap<String, String> parameters = requestContext.getUriInfo().getPathParameters();
+		if (!parameters.containsKey("casemodelId")) {
+			return;
+		}
+
+		String cmId = parameters.getFirst("casemodelId");
+
+		if (!organization.getCaseModels().containsKey(cmId)) {
+			throw new IllegalCaseModelIdException(cmId);
+		}
+
+		CaseModel cm = organization.getCaseModels().get(cmId);
+
+		if (cm.getAllowedRoles().isEmpty() || organization.isOwner(requester)) {
+			return;
+		}
+
+		List<MemberRole> memberRoles = organization.getUserIdToRoles().get(requester.getId());
+		for (MemberRole role : memberRoles) {
+			if (cm.getAllowedRoles().contains(role)) {
+				return;
+			}
+		}
+
+		throw new IllegalArgumentException(UNAUTHORIZED_VIEW_MESSAGE);
 	}
 }
