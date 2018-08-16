@@ -1,10 +1,9 @@
 package de.hpi.bpt.chimera.rest.beans.datamodel;
 
-import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -37,7 +36,7 @@ public class DataObjectJaxBean {
 	 * An array of all dataAttributes belonging to this dataObject.
 	 * Each attribute has an id, name, type and value.
 	 */
-	private DataAttributeJaxBean[] attributeConfiguration;
+	private List<DataAttributeJaxBean> attributes;
 
 	public DataObjectJaxBean(DataObject dataObject) {
 		setId(dataObject.getId());
@@ -45,14 +44,10 @@ public class DataObjectJaxBean {
 		setState(dataObject.getObjectLifecycleState().getName());
 		setLocked(dataObject.isLocked());
 
-		List<DataAttributeJaxBean> attributes = new ArrayList<>(dataObject.getDataAttributeInstanceIdToInstance().size());
-		for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstanceIdToInstance().values()) {
-			DataAttributeJaxBean attributeInstance = new DataAttributeJaxBean(dataAttributeInstance);
-			attributes.add(attributeInstance);
-		}
-
-		DataAttributeJaxBean[] attributesArray = attributes.toArray(new DataAttributeJaxBean[dataObject.getDataAttributeInstanceIdToInstance().size()]);
-		setAttributeConfiguration(attributesArray);
+		List<DataAttributeJaxBean> attributeBeans = dataObject.getDataAttributeInstanceIdToInstance().values().stream()
+													.map(DataAttributeJaxBean::new)
+													.collect(Collectors.toList());
+		setAttributes(attributeBeans);
 	}
 
 	public String getId() {
@@ -79,12 +74,12 @@ public class DataObjectJaxBean {
 		this.state = state;
 	}
 
-	public DataAttributeJaxBean[] getAttributeConfiguration() {
-		return attributeConfiguration;
+	public List<DataAttributeJaxBean> getAttributes() {
+		return attributes;
 	}
 
-	public void setAttributeConfiguration(DataAttributeJaxBean[] attributeConfiguration) {
-		this.attributeConfiguration = attributeConfiguration;
+	public void setAttributes(List<DataAttributeJaxBean> attributeConfiguration) {
+		this.attributes = attributeConfiguration;
 	}
 
 	public boolean isLocked() {

@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * This class implements the REST interface for data based elements.
  * It allows to generate and retrieve information about inputs/outputs.
- * Note that direct interaction with data objects is handled by {@link DataObjectRestService}
+ * Note that direct interaction with data objects is handled by {@link DataObjectRestServiceOld}
  */
 @Path("interface/v2")
 public class DataDependencyRestService extends AbstractRestService {
