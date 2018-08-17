@@ -1,13 +1,13 @@
 package de.hpi.bpt.chimera.configuration.rest;
 
-import de.hpi.bpt.chimera.configuration.rest.beans.EmailActivityJaxBean;
-import de.hpi.bpt.chimera.configuration.rest.beans.EmailConfigJaxBean;
 import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
+import de.hpi.bpt.chimera.rest.beans.email.EmailActivityJaxBean;
+import de.hpi.bpt.chimera.rest.beans.email.EmailConfigJaxBean;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.configuration.EmailConfiguration;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;

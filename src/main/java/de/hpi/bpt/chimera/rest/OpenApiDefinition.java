@@ -21,7 +21,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 		@Tag(name = "cases", description = "Requests concerning cases."),
 		@Tag(name = "data", description = "Requests concerning dataobjects and dataclasses."),
 		@Tag(name = "activities", description = "Requests concerning activities."),
-		@Tag(name = "events", description = "Requests concerning events.")},
+		@Tag(name = "events", description = "Requests concerning events."),
+		@Tag(name = "emails", description = "Requests concerning email tasks.")},
 	servers = {
 		@Server(url = "https://bpt-lab.org/chimera-dev/api"),
 		@Server(url = "http://localhost:8080/Chimera/api")
