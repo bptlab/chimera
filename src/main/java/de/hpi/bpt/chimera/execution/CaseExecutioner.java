@@ -30,16 +30,16 @@ import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.execution.data.ObjectLifecycleTransition;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceTypeException;
-import de.hpi.bpt.chimera.history.transportationbeans.ActivityLog;
-import de.hpi.bpt.chimera.history.transportationbeans.DataAttributeLog;
-import de.hpi.bpt.chimera.history.transportationbeans.DataObjectLog;
-import de.hpi.bpt.chimera.history.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
+import de.hpi.bpt.chimera.rest.beans.history.ActivityLog;
+import de.hpi.bpt.chimera.rest.beans.history.DataAttributeLog;
+import de.hpi.bpt.chimera.rest.beans.history.DataObjectLog;
+import de.hpi.bpt.chimera.rest.beans.history.LogEntry;
 
 @Entity
 public class CaseExecutioner {
