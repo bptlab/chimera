@@ -41,11 +41,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 		responseCode = "404", description = "An unassigned identifier was used.",
 		content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class))) })
 @SecurityRequirement(name = "BasicAuth")
-@Path("v3/organizations/{organizationId}/casemodels/{casemodelId}/cases/{caseId}/activities/{activityInstanceId}")
+@Path("v3/organizations/{organizationId}/casemodels/{casemodelId}/cases/{caseId}/activities")
 public class DataDependencyRestService extends AbstractRestService {
 
 	@GET
-	@Path("availableInput")
+	@Path("{activityInstanceId}/availableInput")
 	@Operation(
 		summary = "Receive the available dataobjects for a ready activity instance",
 		responses = {
@@ -69,7 +69,7 @@ public class DataDependencyRestService extends AbstractRestService {
 	}
 
 	@GET
-	@Path("workingItems")
+	@Path("{activityInstanceId}/workingItems")
 	@Operation(
 		summary = "Receive the selected dataobjects of a running activity instance",
 		responses = {
@@ -89,7 +89,7 @@ public class DataDependencyRestService extends AbstractRestService {
 	}
 
 	@GET
-	@Path("availableOutput")
+	@Path("{activityInstanceId}/availableOutput")
 	@Operation(
 		summary = "Receive the available ouput dataclasses and dataobjects for a running activity instance",
 		responses = {
