@@ -365,7 +365,7 @@ public class ActivityRestServiceOld extends AbstractRestService {
 			String attributePost = postJson.getString("values");
 			
 			Map<String, String> dataClassToStateTransitionStrings = parseDataClassToStateTransitionStrings(dataObjectPost);
-			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(dataClassToStateTransitionStrings);
+			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransitionOld(dataClassToStateTransitionStrings);
 			Map<String, Map<String, Object>> rawDataAttributeValues = parseDataAttribueValues(attributePost);
 
 			caseExecutioner.terminateDataControlNodeInstance(activityInstance, dataClassToStateTransitions, rawDataAttributeValues);

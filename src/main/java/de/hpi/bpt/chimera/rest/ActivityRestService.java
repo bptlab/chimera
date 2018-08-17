@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -21,12 +23,16 @@ import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.execution.data.ObjectLifecycleTransition;
 import de.hpi.bpt.chimera.rest.beans.activity.ActivityJaxBean;
 import de.hpi.bpt.chimera.rest.beans.activity.MultipleActivitiesJaxBean;
+import de.hpi.bpt.chimera.rest.beans.activity.TerminateActivityJaxBean;
 import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
+import de.hpi.bpt.chimera.rest.beans.datamodel.MultipleDataObjectsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
 import de.hpi.bpt.chimera.rest.beans.miscellaneous.MessageJaxBean;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -122,7 +128,9 @@ public class ActivityRestService extends AbstractRestService {
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-
+			if (!activityInstance.getState().equals(State.RUNNING)) {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("Activity Instance needs to be running.")).build();
+			}
 			List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
 			if (workingItems.isEmpty()) {
 				return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity instance has no dataobject that could be updated.\"}").build();
@@ -132,6 +140,78 @@ public class ActivityRestService extends AbstractRestService {
 			dataManager.setDataAttributeValuesByNames(update, workingItems);
 
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"data attribute instance values updated.\"}").build();
+		} catch (IllegalArgumentException e) {
+			log.error(e);
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	@GET
+	@Path("{activityInstanceId}/workingItems")
+	@Operation(
+		summary = "Receive the selected dataobjects of an activity instance",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested the dataobjects.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleDataObjectsJaxBean.class)))})
+	public Response getWorkingItems(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
+		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+		if (!activityInstance.getState().equals(State.RUNNING)) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("Activity Instance needs to be running.")).build();
+		}
+
+		List<DataObject> selectedDataObjects = activityInstance.getSelectedDataObjects();
+		JSONObject result = new JSONObject(new MultipleDataObjectsJaxBean(selectedDataObjects));
+		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("{activityInstanceId}/begin")
+	@Operation(
+			summary = "Begin a specific activity instance",
+			responses = {
+				@ApiResponse(
+					responseCode = "200", description = "Successfully begun the activity instance.",
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
+	public Response beginActivityInstance(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId,
+											@PathParam("activityInstanceId") String activityInstanceId, @Parameter(description = "The ids of the selected data objects") List<String> selectedDataObjectIds) {
+		try {
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+
+			List<DataObject> selectedDataObjects = caseExecutioner.getDataManager().getDataObjectsById(selectedDataObjectIds);
+
+			caseExecutioner.beginDataControlNodeInstance(activityInstance, selectedDataObjects);
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
+		} catch (Exception e) {
+			log.error(e);
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	// TODO: think about whether ids should be used instead of names
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("{activityInstanceId}/terminate")
+	@Operation(
+		summary = "Terminate a specific activity instance",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully terminated the activity instance.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
+	public Response terminateActivityInstance(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, TerminateActivityJaxBean post) {
+		try {
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+
+			List<ObjectLifecycleTransition> objectLifecycleTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(post.getTransitions());
+			List<UpdateDataObjectJaxBean> rawDataAttributeValues = post.getAttributeUpdates();
+
+			caseExecutioner.terminateDataControlNodeInstance(activityInstance, objectLifecycleTransitions, rawDataAttributeValues);
+
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
 		} catch (IllegalArgumentException e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();

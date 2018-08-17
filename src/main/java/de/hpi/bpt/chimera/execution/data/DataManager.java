@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
@@ -31,7 +32,7 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
-import de.hpi.bpt.chimera.rest.beans.activity.UpdateActivityInstanceJaxBean;
+import de.hpi.bpt.chimera.rest.beans.activity.ObjectLifecycleTransitionJaxBean;
 import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataAttributeJaxBean;
 import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
 
@@ -86,7 +87,8 @@ public class DataManager {
 	 * @param dataClassToStateTransitionStrings
 	 * @return Map from DataClass to ObjectLifecycleState
 	 */
-	public Map<DataClass, ObjectLifecycleState> resolveDataClassToStateTransition(Map<String, String> dataClassToStateTransitionStrings) {
+	@Deprecated
+	public Map<DataClass, ObjectLifecycleState> resolveDataClassToStateTransitionOld(Map<String, String> dataClassToStateTransitionStrings) {
 		Map<DataClass, ObjectLifecycleState> dataClassToStateTransition = new HashMap<>();
 		Map<String, DataClass> dataClassNameToDataClass = dataModel.getNameToDataClass();
 		for (Entry<String, String> dataClassNameToStateName : dataClassToStateTransitionStrings.entrySet()) {
@@ -111,6 +113,37 @@ public class DataManager {
 	}
 
 	/**
+	 * Resolve a Map of DataClass name and ObjectLifecycle name to the
+	 * corresponding DataClass and ObjectLifecycleState.
+	 * 
+	 * @param dataClassToStateTransitionStrings
+	 * @return Map from DataClass to ObjectLifecycleState
+	 */
+	public List<ObjectLifecycleTransition> resolveDataClassToStateTransition(List<ObjectLifecycleTransitionJaxBean> rawObjectLifecycleTransitions) {
+		List<ObjectLifecycleTransition> objectLifecycleTransitions = new ArrayList<>();
+		Map<String, DataClass> dataClassNameToDataClass = dataModel.getNameToDataClass();
+		for (ObjectLifecycleTransitionJaxBean rawObjectLifecycleTransition : rawObjectLifecycleTransitions) {
+			String dataClassName = rawObjectLifecycleTransition.getDataclass();
+			if (!dataClassNameToDataClass.containsKey(dataClassName)) {
+				IllegalDataClassNameException e = new IllegalDataClassNameException(dataClassName);
+				log.error(e.getMessage());
+				throw e;
+			}
+			DataClass dataClass = dataClassNameToDataClass.get(dataClassName);
+			String objectLifecycleStateName = rawObjectLifecycleTransition.getObjectlifecyclestate();
+			Map<String, ObjectLifecycleState> olcStateNameToOlcState = dataClass.getNameToObjectLifecycleState();
+			if (!olcStateNameToOlcState.containsKey(objectLifecycleStateName)) {
+				IllegalObjectLifecycleStateNameException e = new IllegalObjectLifecycleStateNameException(dataClass, dataClassName);
+				log.error(e.getMessage());
+				throw e;
+			}
+			ObjectLifecycleState olcState = olcStateNameToOlcState.get(objectLifecycleStateName);
+			objectLifecycleTransitions.add(new ObjectLifecycleTransition(dataClass, olcState));
+		}
+		return objectLifecycleTransitions;
+	}
+
+	/**
 	 * Handle the transitions and new creations of DataObject that shell make a
 	 * transition specified in {@code dataClassToStateTransitions}. Therefore
 	 * validate if the DataClasses of these DataObjects exist in
@@ -127,6 +160,7 @@ public class DataManager {
 	 * @return the List of DataObject that had a transition and were newly
 	 *         created
 	 */
+	@Deprecated
 	public List<DataObject> handleDataObjectTransitions(List<DataObject> boundDataObjects, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		// validation
 		List<DataObject> transitionedDataObjects = new ArrayList<>();
@@ -162,6 +196,62 @@ public class DataManager {
 		return transitionedDataObjects;
 	}
 
+	/**
+	 * Handle the transitions and new creations of DataObject that shell make a
+	 * transition specified in {@code dataClassToStateTransitions}. Therefore
+	 * validate if the DataClasses of these DataObjects exist in
+	 * {@code objectLifecycleTransitions} and if the the referred
+	 * {@link ObjectLifecycle} is a valid successor of the current
+	 * ObjectLifecycle of the DataObject. The ObjectLifecycleStates of the
+	 * {@code objectLifecycleTransitions} make the designated transition and the
+	 * DataClasses that are in objectLifecycleTransitions but not a DataClass
+	 * of one {@code objectLifecycleTransitions} lead to a new DataObject with the
+	 * referred ObjectLifecycleState.
+	 * 
+	 * @param boundDataObjects
+	 * @param objectLifecycleTransitions
+	 * @return the List of DataObject that had a transition and were newly
+	 *         created
+	 */
+	public List<DataObject> handleDataObjectTransitions(List<DataObject> boundDataObjects, List<ObjectLifecycleTransition> objectLifecycleTransitions) {
+		// validation
+		List<DataObject> resultingDataObjects = new ArrayList<>();
+		for (DataObject dataObject : boundDataObjects) {
+			DataClass dataClass = dataObject.getDataClass();
+			
+			Optional<ObjectLifecycleTransition> optionalTransition = objectLifecycleTransitions.stream()
+																.filter(t -> t.getDataclass().equals(dataClass))
+																.findFirst();
+			if (!optionalTransition.isPresent()) {
+				continue;
+			}
+			ObjectLifecycleTransition objectLifecycleTransition = optionalTransition.get();
+			// check whether OLC allows transition
+			ObjectLifecycleState oldOlcState = dataObject.getObjectLifecycleState();
+			ObjectLifecycleState newOlcState = objectLifecycleTransition.getOlcState();
+			if (!newOlcState.isSuccessorOf(oldOlcState)) { // invalid transition -> throw exception
+				IllegalObjectLifecycleStateSuccessorException e = new IllegalObjectLifecycleStateSuccessorException(dataClass, oldOlcState, newOlcState);
+				log.error(e.getMessage());
+				throw e;
+			}
+			// make transition
+			dataObject.makeObjectLifecycleTransition(newOlcState);
+			resultingDataObjects.add(dataObject);
+			// transition made, remove the data class from the unhandled list
+			objectLifecycleTransitions.remove(objectLifecycleTransition);
+		}
+
+		// create new DataObjects for the yet unhandled data classes
+		for (ObjectLifecycleTransition objectLifecycleTransition : objectLifecycleTransitions) {
+			DataClass dataClass = objectLifecycleTransition.getDataclass();
+			ObjectLifecycleState olcState = objectLifecycleTransition.getOlcState();
+			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
+			DataObject dataObject = createDataObject(condition);
+			resultingDataObjects.add(dataObject);
+		}
+		return resultingDataObjects;
+	}
+	
 	/**
 	 * Lock those {@link DataObject}{@code s} that are referred by the
 	 * dataObjectIds and returns these DataObjects. If a DataObject shall be

@@ -12,8 +12,10 @@ import javax.ws.rs.ext.Provider;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
+import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceTypeException;
 import de.hpi.bpt.chimera.execution.exception.IllegalIdentifierException;
 import de.hpi.bpt.chimera.execution.exception.IllegalOrganizationIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
@@ -40,6 +42,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	private ContainerRequestContext requestContext;
 	private User requester;
 	private Organization organization;
+	private CaseExecutioner caseExecutioner;
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -50,6 +53,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			validateOrganization();
 			validateCaseModels();
 			validateCase();
+			validateActivityInstance();
 		} catch (WebApplicationException e) {
 			throw e;
 		} catch (IllegalIdentifierException e) {
@@ -57,6 +61,11 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			JSONObject message = new JSONObject(new DangerExceptionJaxBean(e.getMessage()));
 			Response notFound = Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(message.toString()).build();
 			this.requestContext.abortWith(notFound);
+		} catch (IllegalControlNodeInstanceTypeException e) {
+			log.error(e);
+			JSONObject message = new JSONObject(new DangerExceptionJaxBean(e.getMessage()));
+			Response badRequest = Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(message.toString()).build();
+			this.requestContext.abortWith(badRequest);
 		} catch (Exception e) {
 			log.error(e);
 			JSONObject message = new JSONObject(new DangerExceptionJaxBean(e.getMessage()));
@@ -264,7 +273,23 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		String caseId = parameters.getFirst("caseId");
 
 		try {
-			ExecutionService.getCaseExecutioner(cmId, caseId);
+			caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+
+	private void validateActivityInstance() {
+		MultivaluedMap<String, String> parameters = requestContext.getUriInfo().getPathParameters();
+		if (!parameters.containsKey("activityInstanceId")) {
+			return;
+		}
+
+		String activityInstanceId = parameters.getFirst("activityInstanceId");
+
+		try {
+			caseExecutioner.getActivityInstance(activityInstanceId);
 		} catch (Exception e) {
 			throw e;
 		}
