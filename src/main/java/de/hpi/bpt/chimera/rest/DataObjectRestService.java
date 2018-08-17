@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "dataobjects")
+@Tag(name = "data")
 @ApiResponses(value = {
 	@ApiResponse(
 		responseCode = "400", description = "A problem occured during the processing.",

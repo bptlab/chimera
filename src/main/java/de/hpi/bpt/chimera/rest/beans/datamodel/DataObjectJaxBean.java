@@ -36,7 +36,7 @@ public class DataObjectJaxBean {
 	 * An array of all dataAttributes belonging to this dataObject.
 	 * Each attribute has an id, name, type and value.
 	 */
-	private List<DataAttributeJaxBean> attributes;
+	private List<DataAttributeJaxBeanOld> attributes;
 
 	public DataObjectJaxBean(DataObject dataObject) {
 		setId(dataObject.getId());
@@ -44,8 +44,7 @@ public class DataObjectJaxBean {
 		setState(dataObject.getObjectLifecycleState().getName());
 		setLocked(dataObject.isLocked());
 
-		List<DataAttributeJaxBean> attributeBeans = dataObject.getDataAttributeInstanceIdToInstance().values().stream()
-													.map(DataAttributeJaxBean::new)
+		List<DataAttributeJaxBeanOld> attributeBeans = dataObject.getDataAttributeInstanceIdToInstance().values().stream().map(DataAttributeJaxBeanOld::new)
 													.collect(Collectors.toList());
 		setAttributes(attributeBeans);
 	}
@@ -74,11 +73,11 @@ public class DataObjectJaxBean {
 		this.state = state;
 	}
 
-	public List<DataAttributeJaxBean> getAttributes() {
+	public List<DataAttributeJaxBeanOld> getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(List<DataAttributeJaxBean> attributeConfiguration) {
+	public void setAttributes(List<DataAttributeJaxBeanOld> attributeConfiguration) {
 		this.attributes = attributeConfiguration;
 	}
 

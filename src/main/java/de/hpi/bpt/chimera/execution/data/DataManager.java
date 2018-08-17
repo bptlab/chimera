@@ -214,7 +214,7 @@ public class DataManager {
 	 *         created
 	 */
 	public List<DataObject> handleDataObjectTransitions(List<DataObject> boundDataObjects, List<ObjectLifecycleTransition> objectLifecycleTransitions) {
-		// validation
+		// TODO: only when all transitions are valid make the transition
 		List<DataObject> resultingDataObjects = new ArrayList<>();
 		for (DataObject dataObject : boundDataObjects) {
 			DataClass dataClass = dataObject.getDataClass();

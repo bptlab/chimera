@@ -47,7 +47,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		this.requestContext = requestContext;
-
+		log.info("Filter");
 		try {
 			validateUser();
 			validateOrganization();
@@ -72,7 +72,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(message.toString()).build();
 			this.requestContext.abortWith(unauthorized);
 		}
-
+		log.info("Filter End");
 		// if (!isValidScenario()) {
 		// abortIllegalScenario(requestContext.getMethod());
 		// } else if (!isValidInstance()) {
