@@ -1,9 +1,6 @@
 package de.hpi.bpt.chimera.rest;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,51 +11,113 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.CaseStarter;
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.SseNotifier;
-import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
-import de.hpi.bpt.chimera.rest.beans.miscellaneous.ReceiveEventJaxBean;
+import de.hpi.bpt.chimera.rest.beans.event.MultipleCaseStartersJaxBean;
+import de.hpi.bpt.chimera.rest.beans.event.MultipleReceiveEventJaxBean;
+import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
+import de.hpi.bpt.chimera.rest.beans.miscellaneous.MessageJaxBean;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-/**
- * The event dispatcher class is responsible for manage registrations from
- * Events to RestQueries.
- */
-@Path("eventdispatcher/")
+@Tag(name = "events")
+@ApiResponses(value = {
+	@ApiResponse(
+		responseCode = "400", description = "A problem occured during the processing.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class))),
+	@ApiResponse(
+		responseCode = "401", description = "A problem occured during the authentication.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class))),
+	@ApiResponse(
+		responseCode = "404", description = "An unassigned identifier was used.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class))) })
+@SecurityRequirement(name = "BasicAuth")
+@Path("v3/organizations/{organizationId}/casemodels/{casemodelId}")
 public class EventRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(EventRestService.class);
 
-	/**
-	 * This method notifies that a certain event instance received Event was
-	 * received. In addition the event instance will be terminated.
-	 * 
-	 * @param cmId
-	 *            The id of a case model.
-	 * @param caseId
-	 *            - the id of case.
-	 * @param requestId
-	 *            - the id of the event instance receiving the event
-	 * @param eventJson
-	 *            - the json content for updating the data object the event
-	 *            instance
-	 * @return Response 202 because the Event was received by Chimera
-	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("casestarters")
+	@Operation(
+		summary = "Receive all case starters of a casemodels",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested all case starters.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
+	public Response getCaseStartTriggers(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId) {
+		CaseModel cm = CaseModelManager.getCaseModel(cmId);
+
+		JSONObject result = new JSONObject(new MultipleCaseStartersJaxBean(cm.getStartCaseTrigger()));
+		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
-	public Response receiveEvent(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("requestKey") String requestId, String eventJson) {
+	@Path("casestarters/{caseStarterId}")
+	@Operation(
+		summary = "Start a case with a specific casestarter",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully started a new case.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
+	public Response startCase(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseStarterId") String requestKey, @Parameter(description = "Abitrary json string.") String eventJson) {
+		log.info("An Event started a Case via REST-Interface.");
+		CaseModel cm = CaseModelManager.getCaseModel(cmId);
+		Optional<CaseStartTrigger> caseStartTrigger = cm.getStartCaseTrigger().stream()
+														.filter(c -> c.getId().equals(requestKey))
+														.findFirst();
+		if (!caseStartTrigger.isPresent()) {
+			String message = String.format("The case start trigger id: %s is not assigned", requestKey);
+			log.error(message);
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(message)).build();
+		}
 
-		log.info("Receiving an event...");
+		CaseExecutioner caseExecutioner = ExecutionService.createCaseExecutioner(cm, "Automatically Created Case");
+
+		CaseStarter caseStarter = new CaseStarter(caseStartTrigger.get());
+		caseStarter.startCase(eventJson, caseExecutioner);
+		SseNotifier.notifyRefresh();
+		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Event received.\"}").build();
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("cases/{caseId}/events")
+	@Operation(
+		summary = "Receive all registered events of a case",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested all registered events.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleReceiveEventJaxBean.class)))})
+	public Response getRegisteredEvents(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId) {
+		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+		JSONObject result = new JSONObject(new MultipleReceiveEventJaxBean(caseExecutioner.getRegisteredEventBehaviors()));
+		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("cases/{caseId}/events/{eventInstanceId}")
+	public Response receiveEvent(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @PathParam("eventInstanceId") String requestId, @Parameter(description = "Abitrary json string.") String eventJson) {
+		log.info("Receiving an event");
+		// TODO: reset event json or find a better way to terminate the event
+		// instance
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			MessageReceiveEventBehavior receiveBehavior = caseExecutioner.getRegisteredEventBehavior(requestId);
@@ -73,103 +132,8 @@ public class EventRestService extends AbstractRestService {
 			SseNotifier.notifyRefresh();
 		} catch (Exception e) {
 			log.error("Error while processing a received event", e);
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Event received.\"}").build();
-	}
-
-	/**
-	 * Start a new Case of a specific {@link CaseModel} by one of the case
-	 * model's registered CaseStartTriggers.
-	 * 
-	 * @param cmId
-	 *            The id of a case model.
-	 * @param requestKey
-	 *            - the id of the {@link CaseStartTrigger} receiving the event
-	 * @param eventJson
-	 *            - the json content for writing at the first data objects of
-	 *            the new case
-	 * @return Response 200 because the Event was received by Chimera
-	 */
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("scenario/{scenarioId}/casestart/{requestKey}")
-	public Response startCase(@PathParam("scenarioId") String cmId, @PathParam("requestKey") String requestKey, String eventJson) {
-
-		log.info("An Event started a Case via REST-Interface.");
-
-		try {
-			CaseModel cm = CaseModelManager.getCaseModel(cmId);
-			Optional<CaseStartTrigger> caseStartTrigger = cm.getStartCaseTrigger().stream().filter(c -> c.getId().equals(requestKey)).findFirst();
-			if (!caseStartTrigger.isPresent()) {
-				String message = String.format("The case start trigger id: %s is not assigned", requestKey);
-				log.error(message);
-				return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(message)).build();
-			}
-
-			CaseExecutioner caseExecutioner = ExecutionService.createCaseExecutioner(cm, "Automatically Created Case");
-
-			CaseStarter caseStarter = new CaseStarter(caseStartTrigger.get());
-			caseStarter.startCase(eventJson, caseExecutioner);
-			SseNotifier.notifyRefresh();
-		} catch (IllegalCaseModelIdException e) {
-			log.error("Could not start case from query", e);
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
-		}
-		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Event received.\"}").build();
-	}
-
-	/**
-	 * Get the case start triggers of a case model.
-	 * 
-	 * @param cmId - the id of the case model
-	 * @return {@link CaseStartTrigger} ids and the respective event queries.
-	 */
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("scenario/{scenarioId}/casestart")
-	public Response getCaseStartTriggers(@PathParam("scenarioId") String cmId) {
-		try {
-			CaseModel cm = CaseModelManager.getCaseModel(cmId);
-			Object[] caseStartTriggers = cm.getStartCaseTrigger().toArray();
-			JSONArray responseBody = new JSONArray();
-			for (Object cst : caseStartTriggers) {
-				String id = ((CaseStartTrigger) cst).getId();
-				String plan = ((CaseStartTrigger) cst).getQueryExecutionPlan();
-				JSONObject trigger = new JSONObject();
-				trigger.put("id", id);
-				trigger.put("plan", plan);
-				responseBody.put(trigger);
-			}
-			return Response.ok(responseBody.toString(), MediaType.APPLICATION_JSON).build();
-		} catch (IllegalCaseModelIdException e) {
-			log.error("Could not get case model from query", e);
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
-		}
-	}
-
-	
-	/**
-	 * Retrieve all registered events for an specific {@link Case}.
-	 * 
-	 * @param cmId
-	 *            - Id of the CaseModel
-	 * @param caseId
-	 *            - Id of the Case
-	 * @return Response 200 if the request succeeded with a list of the
-	 *         registered events. Response 404 if the case was not found.
-	 */
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
-	public Response getRegisteredEvents(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
-		try {
-			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
-			List<ReceiveEventJaxBean> a = caseExecutioner.getRegisteredEventBehaviors().stream().map(ReceiveEventJaxBean::new).collect(Collectors.toList());
-			JSONArray result = new JSONArray(a);
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
-		}
 	}
 }

@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.rest;
+package de.hpi.bpt.chimera.rest.v2;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
@@ -11,6 +11,7 @@ import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalStateNameException;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.rest.beans.activity.ActivityJaxBean;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataObjectJaxBean;
 
@@ -32,8 +33,8 @@ import java.util.stream.Collectors;
  * This class implements the REST interface for activities.
  */
 @Path("interface/v2")
-public class ActivityRestServiceOld extends AbstractRestService {
-	private static final Logger log = Logger.getLogger(ActivityRestServiceOld.class);
+public class ActivityRestService extends AbstractRestService {
+	private static final Logger log = Logger.getLogger(ActivityRestService.class);
 	
 	/**
 	 * Returns a JSON-Object containing information about all activity instances

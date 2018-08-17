@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.rest;
+package de.hpi.bpt.chimera.rest.v2;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
@@ -9,6 +9,7 @@ import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataAttributeJaxBean;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataAttributeJaxBeanOld;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataObjectJaxBean;
@@ -33,10 +34,10 @@ import java.util.stream.Collectors;
 /**
  * This class implements the REST interface for data based elements.
  * It allows to generate and retrieve information about inputs/outputs.
- * Note that direct interaction with data objects is handled by {@link DataObjectRestServiceOld}
+ * Note that direct interaction with data objects is handled by {@link DataObjectRestService}
  */
 @Path("interface/v2")
-public class DataDependencyRestServiceOld extends AbstractRestService {
+public class DataDependencyRestService extends AbstractRestService {
 	/**
 	 * @param scenarioId
 	 *            The databaseID of the scenario.

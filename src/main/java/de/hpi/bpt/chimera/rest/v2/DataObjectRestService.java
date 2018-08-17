@@ -1,9 +1,11 @@
-package de.hpi.bpt.chimera.rest;
+package de.hpi.bpt.chimera.rest.v2;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.rest.AbstractRestService;
+import de.hpi.bpt.chimera.rest.DataDependencyRestService;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataObjectJaxBean;
 
 import org.json.JSONArray;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
  * Note that interaction with input/output sets is handled by {@link DataDependencyRestService}
  */
 @Path("interface/v2")
-public class DataObjectRestServiceOld extends AbstractRestService {
+public class DataObjectRestService extends AbstractRestService {
 	/**
 	 * Returns a JSON-Object, which contains information about all
 	 * data objects of a specified scenario instance.
