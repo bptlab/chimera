@@ -59,7 +59,7 @@ public class CaseRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested all cases.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleCasesJaxBean.class)))})
-	public Response receiveCases(@Context UriInfo uri, @PathParam("casemodelId") String cmId, @DefaultValue("") @QueryParam("filter") String filterString) {
+	public Response receiveCases(@Context UriInfo uri, @PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @DefaultValue("") @QueryParam("filter") String filterString) {
 		List<CaseExecutioner> caseExecutions = ExecutionService.getAllCasesOfCaseModel(cmId);
 
 		if (!filterString.isEmpty())
@@ -81,9 +81,9 @@ public class CaseRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "201", description = "Successfully started a new case.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CaseOverviewJaxBean.class)))})
-	public Response startNewCase(@Context UriInfo uri, @PathParam("casemodelId") String cmId) {
+	public Response startNewCase(@Context UriInfo uri, @PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId) {
 		try {
-			return initializeNewInstance(cmId, "");
+			return initializeNewCase(cmId, "");
 		} catch (IllegalArgumentException e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -98,9 +98,9 @@ public class CaseRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "201", description = "Successfully started a new case.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CaseOverviewJaxBean.class)))})
-	public Response startNewNamedCase(@Context UriInfo uriInfo, @PathParam("casemodelId") String cmId, NamedJaxBean bean) {
+	public Response startNewNamedCase(@Context UriInfo uriInfo, @PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, NamedJaxBean bean) {
 		try {
-			return initializeNewInstance(cmId, bean.getName());
+			return initializeNewCase(cmId, bean.getName());
 		} catch (IllegalArgumentException e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -116,7 +116,7 @@ public class CaseRestService extends AbstractRestService {
 	 * @param name
 	 * @return Response
 	 */
-	private Response initializeNewInstance(String cmId, String name) {
+	private Response initializeNewCase(String cmId, String name) {
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.createCaseExecutioner(cmId, name);
 			caseExecutioner.startCase();
@@ -137,7 +137,7 @@ public class CaseRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the case.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CaseOverviewJaxBean.class)))})
-	public Response getScenarioInstance(@Context UriInfo uriInfo, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId) {
+	public Response receiveCase(@Context UriInfo uriInfo, @PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId) {
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 
 		JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
@@ -152,7 +152,7 @@ public class CaseRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the information.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CanTerminateJaxBean.class)))})
-	public Response checkTermination(@PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId) {
+	public Response checkTermination(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId) {
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 
 		JSONObject result = new JSONObject(new CanTerminateJaxBean(caseExecutioner));
@@ -167,7 +167,7 @@ public class CaseRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully terminated the case.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
-	public Response terminateScenarioInstance(@PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId) {
+	public Response terminateCase(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId) {
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner.isTerminated()) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("Case is already terminated.")).build();
@@ -175,7 +175,7 @@ public class CaseRestService extends AbstractRestService {
 
 		if (caseExecutioner.canTerminate()) {
 			caseExecutioner.terminate();
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"case terminated.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("case terminated.")).build();
 		} else {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("termination condition is not fulfilled.")).build();
 		}

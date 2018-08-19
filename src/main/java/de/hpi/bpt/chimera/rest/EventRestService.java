@@ -93,14 +93,14 @@ public class EventRestService extends AbstractRestService {
 		CaseStarter caseStarter = new CaseStarter(caseStartTrigger.get());
 		caseStarter.startCase(eventJson, caseExecutioner);
 		SseNotifier.notifyRefresh();
-		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Event received.\"}").build();
+		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("Event received.")).build();
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("cases/{caseId}/events")
 	@Operation(
-		summary = "Receive all registered events of a case",
+		summary = "Receive information about all registered events of a case",
 		responses = {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested all registered events.",
@@ -114,6 +114,12 @@ public class EventRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("cases/{caseId}/events/{eventInstanceId}")
+	@Operation(
+		summary = "Send a specific event",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Event was successfully received.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleReceiveEventJaxBean.class)))})
 	public Response receiveEvent(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @PathParam("eventInstanceId") String requestId, @Parameter(description = "Abitrary json string.") String eventJson) {
 		log.info("Receiving an event");
 		// TODO: reset event json or find a better way to terminate the event
@@ -134,6 +140,6 @@ public class EventRestService extends AbstractRestService {
 			log.error("Error while processing a received event", e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
-		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Event received.\"}").build();
+		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("Event received.")).build();
 	}
 }

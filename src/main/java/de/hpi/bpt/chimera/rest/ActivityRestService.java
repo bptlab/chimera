@@ -120,7 +120,7 @@ public class ActivityRestService extends AbstractRestService {
 			}
 			List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
 			if (workingItems.isEmpty()) {
-				return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity instance has no dataobject that could be updated.\"}").build();
+				return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("activity instance has no dataobject that could be updated.")).build();
 			}
 
 			DataManager dataManager = caseExecutioner.getDataManager();
@@ -150,7 +150,7 @@ public class ActivityRestService extends AbstractRestService {
 			List<DataObject> selectedDataObjects = caseExecutioner.getDataManager().getDataObjectsById(selectedDataObjectIds);
 
 			caseExecutioner.beginDataControlNodeInstance(activityInstance, selectedDataObjects);
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("activity begun.")).build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -176,7 +176,7 @@ public class ActivityRestService extends AbstractRestService {
 
 			caseExecutioner.terminateDataControlNodeInstance(activityInstance, objectLifecycleTransitions, rawDataAttributeValues);
 
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("activity terminated.")).build();
 		} catch (IllegalArgumentException e) {
 			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();

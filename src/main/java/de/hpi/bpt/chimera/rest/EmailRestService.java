@@ -24,6 +24,7 @@ import de.hpi.bpt.chimera.rest.beans.email.EmailActivityJaxBean;
 import de.hpi.bpt.chimera.rest.beans.email.EmailConfigJaxBean;
 import de.hpi.bpt.chimera.rest.beans.email.MultipleEmailActivityJaxBean;
 import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
+import de.hpi.bpt.chimera.rest.beans.miscellaneous.MessageJaxBean;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,7 +34,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "email")
+@Tag(name = "emails")
 @ApiResponses(value = {
 	@ApiResponse(
 		responseCode = "400", description = "A problem occured during the processing.",
@@ -105,6 +106,12 @@ public class EmailRestService extends AbstractRestService {
 
 	@PUT
 	@Path("{activityId}")
+	@Operation(
+		summary = "Update a specefic email configuration",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully updated the email configuration.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
 	public Response updateEmailConfiguration(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("activityId") @Parameter(description = "Id of the email task.") String mailTaskId, EmailConfigJaxBean configuration) {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);

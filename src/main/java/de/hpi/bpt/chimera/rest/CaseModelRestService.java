@@ -157,7 +157,7 @@ public class CaseModelRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the casemodel.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CaseModelDetailsJaxBean.class)))})
-	public Response receiveCaseModel(@Context UriInfo uri, @PathParam("casemodelId") String cmId) {
+	public Response receiveCaseModel(@Context UriInfo uri, @PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId) {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
@@ -178,12 +178,12 @@ public class CaseModelRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully deleted the casemodel.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
-	public Response deleteCaseModel(@PathParam("casemodelId") String cmId) {
+	public Response deleteCaseModel(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId) {
 		// TODO: think about who should be allowed to delete a casemodel. Maybe
 		// the owner and the deployer or everyone who is allowed to view it.
 		try {
 			CaseModelManager.deleteCaseModel(cmId);
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"" + "casemodel deletion successful.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("casemodel deletion successful.")).build();
 		} catch (IllegalArgumentException e) {
 			log.error("deletion failed: " + e);
 			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -198,7 +198,7 @@ public class CaseModelRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the termination condition.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConditionsJaxBean.class)))})
-	public Response getTerminationCondition(@PathParam("casemodelId") String cmId) {
+	public Response getTerminationCondition(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId) {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
@@ -219,7 +219,7 @@ public class CaseModelRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the bpmn representation.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragmentRepresentationJaxBean.class)))})
-	public Response getFragmentXmlStrings(@PathParam("casemodelId") String cmId) {
+	public Response getFragmentXmlStrings(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId) {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
