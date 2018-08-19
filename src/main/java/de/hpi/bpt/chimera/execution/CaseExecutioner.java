@@ -27,17 +27,19 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispat
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.execution.data.ObjectLifecycleTransition;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceTypeException;
-import de.hpi.bpt.chimera.history.transportationbeans.ActivityLog;
-import de.hpi.bpt.chimera.history.transportationbeans.DataAttributeLog;
-import de.hpi.bpt.chimera.history.transportationbeans.DataObjectLog;
-import de.hpi.bpt.chimera.history.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
+import de.hpi.bpt.chimera.rest.beans.history.ActivityLog;
+import de.hpi.bpt.chimera.rest.beans.history.DataAttributeLog;
+import de.hpi.bpt.chimera.rest.beans.history.DataObjectLog;
+import de.hpi.bpt.chimera.rest.beans.history.LogEntry;
 
 @Entity
 public class CaseExecutioner {
@@ -227,6 +229,7 @@ public class CaseExecutioner {
 	 *            - Map from name of DataClass to a Map from DataAttribute name
 	 *            to new DataAttributeInstance value
 	 */
+	@Deprecated
 	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions, Map<String, Map<String, Object>> rawDataAttributeValues) {
 		try {
 			// check whether activity instance can terminate
@@ -241,7 +244,7 @@ public class CaseExecutioner {
 			// modify bound DOs 
 			if (! postCondition.isEmpty()) {
 				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
-				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+				dataManager.setDataAttributeValuesByNamesOld(rawDataAttributeValues, usedDataObjects);
 				controlNodeInstance.setOutputDataObjects(usedDataObjects);
 			}
 			// set bound DOs free
@@ -252,6 +255,48 @@ public class CaseExecutioner {
 		}
 	}
 	
+	/**
+	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
+	 * transitions of the DataObjects specified by
+	 * {@code dataClassToStateTransition}. After the transitions of the
+	 * DataObjects change the values of those DataAttributeInstances specified
+	 * by rawDataAttributeValues.
+	 * 
+	 * @param controlNodeInstance
+	 *            - AbstractDataControlNodeInstance that shall terminate
+	 * @param objectLifecycleTransitions
+	 *            - List of DataClass and ObjectLifecycleState of the DataClass
+	 *            to define the new State for the DataObject with the referred
+	 *            DataClass
+	 * @param rawDataAttributeValues
+	 *            - Map from name of DataClass to a Map from DataAttribute name
+	 *            to new DataAttributeInstance value
+	 */
+	// TODO: think about whether ids should be used instead of names
+	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, List<ObjectLifecycleTransition> objectLifecycleTransitions, List<UpdateDataObjectJaxBean> rawDataAttributeValues) {
+		try {
+			// check whether activity instance can terminate
+			if (!controlNodeInstance.canTerminate()) {
+				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
+				log.error(e.getMessage());
+				throw e;
+			}
+
+			List<DataObject> boundDataObjects = controlNodeInstance.getSelectedDataObjects();
+			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
+			// modify bound DOs
+			if (!postCondition.isEmpty()) {
+				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, objectLifecycleTransitions);
+				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+				controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			}
+			// set bound DOs free
+			dataManager.unlockDataObjects(boundDataObjects);
+			controlNodeInstance.terminate();
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
 
 	/**
 	 * Update DataFlow of all ActivityInstances.

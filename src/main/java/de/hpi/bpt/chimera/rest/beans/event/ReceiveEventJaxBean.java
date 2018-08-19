@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.rest.beans.miscellaneous;
+package de.hpi.bpt.chimera.rest.beans.event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

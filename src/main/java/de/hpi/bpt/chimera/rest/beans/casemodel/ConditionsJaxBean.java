@@ -12,30 +12,27 @@ import de.hpi.bpt.chimera.model.condition.ConditionSet;
 @XmlRootElement
 public class ConditionsJaxBean {
 
-	private DataObjectStateConditionJaxBean[][] conditions;
+	private List<List<DataObjectStateConditionJaxBean>> conditions;
 
 	public ConditionsJaxBean(TerminationCondition terminationCondition) {
 
-		List<DataObjectStateConditionJaxBean[]> terminationConditionJaxBean = new ArrayList<>(terminationCondition.getConditionSets().size());
+		List<List<DataObjectStateConditionJaxBean>> conditionsBean = new ArrayList<>();
 		for (ConditionSet conditionSet : terminationCondition.getConditionSets()) {
-
-			List<DataObjectStateConditionJaxBean> componentJaxBean = new ArrayList<>(conditionSet.getConditions().size());
+			List<DataObjectStateConditionJaxBean> componentBean = new ArrayList<>();
 			for (AtomicDataStateCondition condition : conditionSet.getConditions()) {
 				DataObjectStateConditionJaxBean conditionJaxBean = new DataObjectStateConditionJaxBean(condition);
-				componentJaxBean.add(conditionJaxBean);
+				componentBean.add(conditionJaxBean);
 			}
-			DataObjectStateConditionJaxBean[] componentArray = componentJaxBean.toArray(new DataObjectStateConditionJaxBean[conditionSet.getConditions().size()]);
-			terminationConditionJaxBean.add(componentArray);
+			conditionsBean.add(componentBean);
 		}
-		DataObjectStateConditionJaxBean[][] terminationConditionArray = terminationConditionJaxBean.toArray(new DataObjectStateConditionJaxBean[terminationCondition.getConditionSets().size()][]);
-		setConditions(terminationConditionArray);
+		setConditions(conditionsBean);
 	}
 
-	public DataObjectStateConditionJaxBean[][] getConditions() {
+	public List<List<DataObjectStateConditionJaxBean>> getConditions() {
 		return conditions;
 	}
 
-	public void setConditions(DataObjectStateConditionJaxBean[][] conditions) {
+	public void setConditions(List<List<DataObjectStateConditionJaxBean>> conditions) {
 		this.conditions = conditions;
 	}
 

@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.execution.exception;
 
 @SuppressWarnings("serial")
-public class IllegalCaseModelIdException extends IllegalArgumentException {
+public class IllegalCaseModelIdException extends IllegalIdentifierException {
 
 	private static final String ERROR_MESSAGE = "The casemodel id: %s is not assigned";
 

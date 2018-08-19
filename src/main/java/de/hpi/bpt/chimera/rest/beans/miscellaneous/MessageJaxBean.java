@@ -6,6 +6,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class MessageJaxBean {
 	private String message;
 
+	public MessageJaxBean(String message) {
+		this.message = message;
+	}
+
 	public String getMessage() {
 		return message;
 	}

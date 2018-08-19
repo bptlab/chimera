@@ -61,7 +61,7 @@ public class UserManagmentRestService extends AbstractRestService {
 		responses = {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully registered a new user.",
-				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserOverviewJaxBean.class)))})
 	public Response registerUser(
 		@Parameter(description = "Information about the user to be created.", required = true) NewUserJaxBean bean) {
 		try {
@@ -101,7 +101,7 @@ public class UserManagmentRestService extends AbstractRestService {
 	public Response login(@Context ContainerRequestContext requestContext) {
 		try {
 			retrieveUser(requestContext);
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully authenticated.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("Successfully authenticated.")).build();
 		} catch (Exception e) {
 			log.error(e);
 			return Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
@@ -278,7 +278,7 @@ public class UserManagmentRestService extends AbstractRestService {
 			}
 
 			UserManager.deleteUser(userToDelete);
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Successfully deleted user.\"}").build();
+			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("Successfully deleted user.")).build();
 		} catch (IllegalUserIdException e) {
 			log.error(e);
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
