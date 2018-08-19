@@ -123,7 +123,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		String orgId = parameters.getFirst("organizationId");
 		try {
 			organization = OrganizationManager.getOrganizationById(orgId);
-			if (!organization.isMember(requester) || !requester.isAdmin()) {
+			if (!organization.isMember(requester) && !requester.isAdmin()) {
 				throw new IllegalArgumentException(UNAUTHORIZED_MEMBER_MESSAGE);
 			}
 		} catch (IllegalOrganizationIdException e) {
