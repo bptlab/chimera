@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -20,12 +21,12 @@ public class CaseModelManager {
 	private static Logger log = Logger.getLogger(CaseModelManager.class);
 
 	private static boolean isInstantiated = false;
-	private static Map<String, CaseModel> caseModels = new HashMap<>();
+	private static Map<String, CaseModel> caseModels = new ConcurrentHashMap<>();
 
 	private CaseModelManager() {
 	}
 
-	private static void mayInstantiate() {
+	synchronized private static void mayInstantiate() {
 		if (!isInstantiated) {
 			for (CaseModel cm : DomainModelPersistenceManager.loadAllCaseModels()) {
 				caseModels.put(cm.getId(), cm);
@@ -114,7 +115,7 @@ public class CaseModelManager {
 	 * 
 	 * @param cmId
 	 */
-	public static void deleteCaseModel(String cmId) {
+	synchronized public static void deleteCaseModel(String cmId) {
 		mayInstantiate();
 		if (caseModels.containsKey(cmId)) {
 			try {
@@ -131,7 +132,7 @@ public class CaseModelManager {
 		}
 	}
 
-	public static void setCaseModels(Map<String, CaseModel> caseModels) {
+	synchronized public static void setCaseModels(Map<String, CaseModel> caseModels) {
 		CaseModelManager.caseModels = caseModels;
 	}
 
