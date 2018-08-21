@@ -1,8 +1,10 @@
-package de.hpi.bpt.chimera.rest;
+package de.hpi.bpt.chimera.rest.v2;
 
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
+import de.hpi.bpt.chimera.rest.AbstractRestService;
+import de.hpi.bpt.chimera.rest.RestInterface;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.ConditionsJaxBean;

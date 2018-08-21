@@ -15,7 +15,7 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.rest.EventRestService;
+import de.hpi.bpt.chimera.rest.v2.EventRestService;
 import de.hpi.bpt.chimera.util.PropertyLoader;
 
 public class Unicorn extends JerseyTest {

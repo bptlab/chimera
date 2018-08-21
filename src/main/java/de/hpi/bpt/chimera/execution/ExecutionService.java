@@ -81,7 +81,7 @@ public final class ExecutionService {
 		if (!cases.containsKey(caseId)) {
 			Case caze = DomainModelPersistenceManager.loadCase(caseId);
 			if (caze == null) {
-				IllegalCaseIdException e = new IllegalCaseIdException(cmId);
+				IllegalCaseIdException e = new IllegalCaseIdException(caseId);
 				log.error(e.getMessage());
 				throw e;
 			} else {
@@ -91,6 +91,19 @@ public final class ExecutionService {
 		return cases.get(caseId);
 	}
 
+	public static CaseExecutioner getCaseExecutioner(String caseId) {
+		if (!cases.containsKey(caseId)) {
+			Case caze = DomainModelPersistenceManager.loadCase(caseId);
+			if (caze == null) {
+				IllegalCaseIdException e = new IllegalCaseIdException(caseId);
+				log.error(e.getMessage());
+				throw e;
+			} else {
+				addCase(caze.getCaseExecutioner());
+			}
+		}
+		return cases.get(caseId);
+	}
 	/**
 	 * Creates a new {@link CaseExecutioner} for the case model by the given id.
 	 * The case executioner is added to the list of active cases. The caller

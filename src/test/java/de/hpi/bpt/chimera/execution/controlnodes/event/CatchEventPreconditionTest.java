@@ -28,7 +28,7 @@ import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
-import de.hpi.bpt.chimera.rest.EventRestService;
+import de.hpi.bpt.chimera.rest.v2.EventRestService;
 
 public class CatchEventPreconditionTest extends Unicorn {
 	private final String filepath = "src/test/resources/execution/event/CatchEventPreconditionTest.json";

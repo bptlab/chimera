@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.history.transportationbeans;
+package de.hpi.bpt.chimera.rest.beans.history;
 
 import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlAccessType;

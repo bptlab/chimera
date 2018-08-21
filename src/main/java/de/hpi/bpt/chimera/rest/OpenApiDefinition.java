@@ -12,11 +12,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @OpenAPIDefinition(
 	info = @Info(
 		title = "Chimera",
-		version = "1.5",
+		version = "1.4",
 		description = "Chimera Case Engine"),
 	tags = {
 		@Tag(name = "organizations", description = "Requests concerning organizations."),
-		@Tag(name = "users", description = "Requests concerning users.")},
+		@Tag(name = "users", description = "Requests concerning users."),
+		@Tag(name = "casemodels", description = "Requests concerning casemodels."),
+		@Tag(name = "cases", description = "Requests concerning cases."),
+		@Tag(name = "data", description = "Requests concerning dataobjects and dataclasses."),
+		@Tag(name = "activities", description = "Requests concerning activities."),
+		@Tag(name = "events", description = "Requests concerning events."),
+		@Tag(name = "emails", description = "Requests concerning email tasks."),
+		@Tag(name = "members", description = "Requests concerning members of an organization.")},
 	servers = {
 		@Server(url = "https://bpt-lab.org/chimera-dev/api"),
 		@Server(url = "http://localhost:8080/Chimera/api")
