@@ -42,7 +42,7 @@ public class DomainModelPersistenceManager {
 	 * 
 	 * @return EntityManagerFactory
 	 */
-	public static EntityManagerFactory getEntityManagerFactory() {
+	synchronized public static EntityManagerFactory getEntityManagerFactory() {
 		if (!isEntityManagerFactoryInitialized) {
 			entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 			isEntityManagerFactoryInitialized = true;
@@ -72,7 +72,7 @@ public class DomainModelPersistenceManager {
 	 * application context is destroyed (e.g. server shut down).
 	 * 
 	 */
-	public static void closeEntityManager() {
+	synchronized public static void closeEntityManager() {
 		if (entityManager != null && entityManager.isOpen()) {
 			entityManager.close();
 		}
@@ -93,23 +93,25 @@ public class DomainModelPersistenceManager {
 		EntityManager em = getEntityManager();
 		CaseModel mergedCaseModel = caseModel;
 
-		try {
-			em.getTransaction().begin();
+		synchronized (caseModel) {
+			try {
+				em.getTransaction().begin();
 
-			// CaseModel alreadyExistingCaseModel = em.find(CaseModel.class,
-			// caseModel.getId());
-			// if (alreadyExistingCaseModel != null) {
-			// em.remove(alreadyExistingCaseModel);
-			// }
-			// em.flush();
-			mergedCaseModel = em.merge(caseModel);
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			log.error("Case persistence Exception", e);
+				// CaseModel alreadyExistingCaseModel = em.find(CaseModel.class,
+				// caseModel.getId());
+				// if (alreadyExistingCaseModel != null) {
+				// em.remove(alreadyExistingCaseModel);
+				// }
+				// em.flush();
+				mergedCaseModel = em.merge(caseModel);
+				em.getTransaction().commit();
+			} catch (Exception e) {
+				log.error("Case persistence Exception", e);
+			}
+			em.close();
+
+			return mergedCaseModel;
 		}
-		em.close();
-
-		return mergedCaseModel;
 	}
 
 	// ToDo make a sober implementation of saving cases. Maybe with an own class
@@ -123,9 +125,12 @@ public class DomainModelPersistenceManager {
 		EntityManager em = getEntityManager();
 		Case mergedCase;
 
+
 		try {
 			em.getTransaction().begin();
-			mergedCase = em.merge(caze);
+			synchronized (caze.getCaseExecutioner()) {
+				mergedCase = em.merge(caze);
+			}
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			log.error("Case persistence Exception", e);
@@ -147,7 +152,10 @@ public class DomainModelPersistenceManager {
 			List<CaseExecutioner> newCaseExecutions = new ArrayList<>();
 			for (CaseExecutioner caseExecutioner : entry.getValue()) {
 				try {
-					CaseExecutioner newCaseExecutioner = em.merge(caseExecutioner);
+					CaseExecutioner newCaseExecutioner;
+					synchronized (caseExecutioner) {
+						newCaseExecutioner = em.merge(caseExecutioner);
+					}
 					ExecutionService.getCasesMap().put(newCaseExecutioner.getCase().getId(), newCaseExecutioner);
 					newCaseExecutions.add(newCaseExecutioner);
 				} catch (Exception e) {
@@ -185,10 +193,12 @@ public class DomainModelPersistenceManager {
 	public static void deleteCase(Case caze) {
 		EntityManager em = getEntityManager();
 		try {
-			em.getTransaction().begin();
-			Case caseToRemove = em.find(Case.class, caze.getId());
-			em.remove(caseToRemove);
-			em.getTransaction().commit();
+			synchronized (caze.getCaseExecutioner()) {
+				em.getTransaction().begin();
+				Case caseToRemove = em.find(Case.class, caze.getId());
+				em.remove(caseToRemove);
+				em.getTransaction().commit();
+			}
 		} catch (Exception e) {
 			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
 		}
@@ -229,7 +239,7 @@ public class DomainModelPersistenceManager {
 	 * Starts a Timer that every {@link PERSISTENCE_INTERVAL} seconds saves all
 	 * existing cases to DB.
 	 */
-	public static void startPermanentCasePersistence() {
+	synchronized public static void startPermanentCasePersistence() {
 		if (timer == null) {
 			log.info("Starting a new permanent repeating CasePersistenceTask");
 			timer = new Timer();
@@ -240,7 +250,7 @@ public class DomainModelPersistenceManager {
 	/**
 	 * Stops the permanent persisting of all cases.
 	 */
-	public static void stopPermanentCasePersistence() {
+	synchronized public static void stopPermanentCasePersistence() {
 		if (timer != null) {
 			timer.cancel();
 		}
@@ -282,11 +292,13 @@ public class DomainModelPersistenceManager {
 			log.info("Trying do delete, a casemodel with id:" + cmId);
 			em.getTransaction().begin();
 			CaseModel cmToRemove = em.find(CaseModel.class, cmId);
-			if (cmToRemove == null)
-				throw new IllegalArgumentException(String.format("CaseModel id : %s is not assigned.", cmId));
-			em.remove(cmToRemove);
-			em.getTransaction().commit();
-			em.close();
+			synchronized (cmToRemove) {
+				if (cmToRemove == null)
+					throw new IllegalArgumentException(String.format("CaseModel id : %s is not assigned.", cmId));
+				em.remove(cmToRemove);
+				em.getTransaction().commit();
+				em.close();
+			}
 		} catch (Exception e) {
 			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
 		}

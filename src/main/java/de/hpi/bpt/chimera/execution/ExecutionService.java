@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -24,11 +25,11 @@ public final class ExecutionService {
 	/**
 	 * Map of CaseModelId to a list of {@link CaseExecutioner}s.
 	 */
-	private static Map<String, List<CaseExecutioner>> caseModelIdToCaseExecutions = new HashMap<>();
+	private static Map<String, List<CaseExecutioner>> caseModelIdToCaseExecutions = new ConcurrentHashMap<>();
 	/**
 	 * Map of CaseId to their {@link CaseExecutioner}. These are the active cases stored in memory.
 	 */
-	private static Map<String, CaseExecutioner> cases = new HashMap<>();
+	private static Map<String, CaseExecutioner> cases = new ConcurrentHashMap<>();
 
 	// Do not instantiate 
 	private ExecutionService() {
@@ -155,7 +156,7 @@ public final class ExecutionService {
 		return caseExecutioner;
 	}
 
-	private static void addCase(CaseExecutioner caseExecutioner) {
+	synchronized private static void addCase(CaseExecutioner caseExecutioner) {
 		if (cases.containsKey(caseExecutioner.getCase().getId())) {
 			return;
 		}
@@ -219,7 +220,7 @@ public final class ExecutionService {
 	 * 
 	 * @param cmId
 	 */
-	public static void deleteAllCasesOfCaseModel(String cmId) {
+	synchronized public static void deleteAllCasesOfCaseModel(String cmId) {
 		if (caseModelIdToCaseExecutions.containsKey(cmId)) {
 			List<CaseExecutioner> executions = caseModelIdToCaseExecutions.get(cmId);
 			for (CaseExecutioner caseExecutioner : executions) {
