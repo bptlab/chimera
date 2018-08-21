@@ -231,7 +231,7 @@ public class ActivityRestService extends AbstractRestService {
 			List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
 
 			DataManager dataManager = caseExecutioner.getDataManager();
-			dataManager.setDataAttributeValuesByNamesOld(dataAttributeValues, workingItems);
+			dataManager.setDataAttributeValuesByNames(dataAttributeValues, workingItems);
 
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"data attribute instance values updated.\"}").build();
 		} catch (IllegalArgumentException e) {
@@ -366,7 +366,7 @@ public class ActivityRestService extends AbstractRestService {
 			String attributePost = postJson.getString("values");
 			
 			Map<String, String> dataClassToStateTransitionStrings = parseDataClassToStateTransitionStrings(dataObjectPost);
-			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransitionOld(dataClassToStateTransitionStrings);
+			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(dataClassToStateTransitionStrings);
 			Map<String, Map<String, Object>> rawDataAttributeValues = parseDataAttribueValues(attributePost);
 
 			caseExecutioner.terminateDataControlNodeInstance(activityInstance, dataClassToStateTransitions, rawDataAttributeValues);

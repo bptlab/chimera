@@ -244,7 +244,7 @@ public class CaseExecutioner {
 			// modify bound DOs 
 			if (! postCondition.isEmpty()) {
 				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
-				dataManager.setDataAttributeValuesByNamesOld(rawDataAttributeValues, usedDataObjects);
+				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
 				controlNodeInstance.setOutputDataObjects(usedDataObjects);
 			}
 			// set bound DOs free

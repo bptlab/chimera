@@ -88,7 +88,7 @@ public class DataManager {
 	 * @return Map from DataClass to ObjectLifecycleState
 	 */
 	@Deprecated
-	public Map<DataClass, ObjectLifecycleState> resolveDataClassToStateTransitionOld(Map<String, String> dataClassToStateTransitionStrings) {
+	public Map<DataClass, ObjectLifecycleState> resolveDataClassToStateTransition(Map<String, String> dataClassToStateTransitionStrings) {
 		Map<DataClass, ObjectLifecycleState> dataClassToStateTransition = new HashMap<>();
 		Map<String, DataClass> dataClassNameToDataClass = dataModel.getNameToDataClass();
 		for (Entry<String, String> dataClassNameToStateName : dataClassToStateTransitionStrings.entrySet()) {
@@ -403,7 +403,8 @@ public class DataManager {
 	 * @param dataAttributeValues
 	 * @param usedDataObjects
 	 */
-	public void setDataAttributeValuesByNamesOld(Map<String, Map<String, Object>> dataAttributeValues, List<DataObject> usedDataObjects) {
+	@Deprecated
+	public void setDataAttributeValuesByNames(Map<String, Map<String, Object>> dataAttributeValues, List<DataObject> usedDataObjects) {
 		for (Map.Entry<String, Map<String, Object>> dataclassNameToDataAttributeValues : dataAttributeValues.entrySet()) {
 			String dataclassName = dataclassNameToDataAttributeValues.getKey();
 			DataObject usedDataObject = null;
