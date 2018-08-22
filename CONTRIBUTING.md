@@ -22,7 +22,7 @@ This section explains how you can submit a good bug report, which is *understand
 - please check whether the bug has already been reported. You can see all open bugs [here](https://github.com/bptlab/chimera/labels/bug).
 
 #### How do I submit a good bug report?
-Bugs are tracked a github issues with the label "bug". Create a new issue in the repository, add the label "bug", copy [the template](ISSUE_TEMPLATE.md) and fill out the information.
+Bugs are tracked a github issues with the label "bug". Create a new issue in the repository, add the label "bug", copy [the template](BUG_TEMPLATE.md) and fill out the information.
 
 - **Provide a clear and descriptive title** for the issue to identify the problem.
 - **Describe the problem**. What behavior did you observe? What behavior did you expect? 
