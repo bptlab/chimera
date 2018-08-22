@@ -66,7 +66,7 @@ To simplify the local development workflow, you can make use of the `Makefile`.
 ## Contributing
 You want to help us? Great :+1:
 
-Please check out [Contributing.md](Contributing.md) for information how you can contribute to the Chimera project, including templates for bug reports, feature suggestions, and pull requests. For in-depth information about the architecture and the individual components of Chimera, the [developer documentation in the wiki](https://github.com/bptlab/chimera/wiki/DevDoc) is the best starting point.
+Please check out [Contributing.md](CONTRIBUTING.md) for information how you can contribute to the Chimera project, including templates for bug reports, feature suggestions, and pull requests. For in-depth information about the architecture and the individual components of Chimera, the [developer documentation in the wiki](https://github.com/bptlab/chimera/wiki/DevDoc) is the best starting point.
 
 ## License 
 The Chimera case engine is provided under the MIT free and open source software license - see [LICENSE.md](LICENSE.md) for details.
