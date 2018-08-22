@@ -49,5 +49,11 @@ Enhancements are tracked as github issues with the label "feature". Create a new
 
 ## Creating Pull Requests
 
+## Releasing New Versions
+- increase version number in pom.xml
+- update changelog
+
+## Styleguides
+
 ## Finding Help
 
