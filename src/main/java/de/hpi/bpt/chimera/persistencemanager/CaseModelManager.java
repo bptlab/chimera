@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import de.hpi.bpt.chimera.execution.ExecutionService;
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
@@ -21,8 +22,6 @@ public class CaseModelManager {
 	private static boolean isInstantiated = false;
 	private static Map<String, CaseModel> caseModels = new HashMap<>();
 
-	private static EventMapper eventMapper = new EventMapper();
-
 	private CaseModelManager() {
 	}
 
@@ -32,8 +31,6 @@ public class CaseModelManager {
 				caseModels.put(cm.getId(), cm);
 			}
 			log.info("updated CaseModels");
-			eventMapper = DomainModelPersistenceManager.loadEventMapper();
-			log.info("loaded Event Mapper");
 
 			isInstantiated = true;
 		}
@@ -59,11 +56,8 @@ public class CaseModelManager {
 	public static CaseModel parseCaseModel(String jsonString) {
 		mayInstantiate();
 		try {
-			eventMapper = DomainModelPersistenceManager.loadEventMapper();
 			CaseModel cm = CaseModelParser.parseCaseModel(jsonString);
-			caseModels.put(cm.getId(), cm);
-			DomainModelPersistenceManager.saveCaseModel(cm);
-			DomainModelPersistenceManager.saveEventMapper(eventMapper);
+			caseModels.put(cm.getId(), DomainModelPersistenceManager.saveCaseModel(cm));
 			log.info(String.format("new CaseModel: %s deployed", cm.getName()));
 			return cm;
 		} catch (IllegalArgumentException | JSONException | IllegalCaseModelException e) {
@@ -78,8 +72,7 @@ public class CaseModelManager {
 	 */
 	public static void addCaseModel(CaseModel cm) {
 		try {
-			caseModels.put(cm.getId(), cm);
-			DomainModelPersistenceManager.saveCaseModel(cm);
+			caseModels.put(cm.getId(), DomainModelPersistenceManager.saveCaseModel(cm));
 		} catch (Exception e) {
 			throw e;
 		}
@@ -125,30 +118,24 @@ public class CaseModelManager {
 		mayInstantiate();
 		if (caseModels.containsKey(cmId)) {
 			try {
-				ExecutionService.deleteCaseModel(cmId);
-				DomainModelPersistenceManager.deleteCaseModel(cmId);
+				EventDispatcher.deregisterEvents(caseModels.get(cmId));
+				ExecutionService.deleteAllCasesOfCaseModel(cmId);
 				caseModels.remove(cmId);
+				DomainModelPersistenceManager.deleteCaseModel(cmId);
+				log.info("Deleted a CaseModel.");
 			} catch (Exception e) {
-				throw e;
+				log.error("Error while deleting a CaseModel!", e);
 			}
 		} else {
 			throw new IllegalArgumentException(String.format("CaseModel id: %s is not assigned", cmId));
 		}
 	}
 
-	public static CaseStartTrigger getCaseStartTrigger(String eventKey) {
-		mayInstantiate();
-		CaseStartTrigger startTrigger;
-		startTrigger = eventMapper.getCaseStartTriggerToEventKey(eventKey);
-
-		return startTrigger;
+	public static void setCaseModels(Map<String, CaseModel> caseModels) {
+		CaseModelManager.caseModels = caseModels;
 	}
 
-	public static EventMapper getEventMapper() {
-		return eventMapper;
-	}
-
-	public static void setEventMapper(EventMapper loadEventMapper) {
-		eventMapper = loadEventMapper;
+	public static Map<String, CaseModel> getCaseModelsMap() {
+		return caseModels;
 	}
 }

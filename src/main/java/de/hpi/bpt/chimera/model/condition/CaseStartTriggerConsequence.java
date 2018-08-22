@@ -18,7 +18,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 @Entity
 public class CaseStartTriggerConsequence {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
 	@OneToOne(cascade = CascadeType.ALL)
 	private AtomicDataStateCondition dataObjectState;

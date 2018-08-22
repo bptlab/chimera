@@ -15,15 +15,14 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class AtomicDataStateCondition {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.TABLE)
 	private int dbId;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne // (cascade = CascadeType.ALL)
 	protected DataClass dataClass;
-	@OneToOne(cascade = CascadeType.ALL)
-	protected ObjectLifecycleState state;
+	@OneToOne
+	protected volatile ObjectLifecycleState state;
 
 	public AtomicDataStateCondition() {
 		this.dataClass = null;

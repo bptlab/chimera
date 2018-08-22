@@ -26,6 +26,7 @@ public class CaseStarter {
 	}
 
 	public void startCase(String json, CaseExecutioner caseExecutioner) {
+		// TODO: is this really necessary
 		if (new JSONObject(json).length() == 0 && caseStartTrigger.hasMapping()) {
 			throw new IllegalStateException("Could not initialize attributes from empty json");
 		}

@@ -79,7 +79,7 @@ public class ActivityRestService extends AbstractRestService {
 			}
 			return getAllActivitiesWithFilterAndState(caseExecutioner, filterString, stateName, uriInfo);
 		} catch (IllegalCaseModelIdException | IllegalCaseIdException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -170,7 +170,7 @@ public class ActivityRestService extends AbstractRestService {
 
 			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (IllegalStateNameException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -200,7 +200,7 @@ public class ActivityRestService extends AbstractRestService {
 			ActivityJaxBean activity = new ActivityJaxBean(activityInstance);
 			return Response.ok(activity, MediaType.APPLICATION_JSON).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -234,7 +234,7 @@ public class ActivityRestService extends AbstractRestService {
 
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"data attribute instance values updated.\"}").build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -288,7 +288,7 @@ public class ActivityRestService extends AbstractRestService {
 			}
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -325,7 +325,7 @@ public class ActivityRestService extends AbstractRestService {
 			caseExecutioner.beginDataControlNodeInstance(activityInstance, selectedDataObjects);
 			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
 		} catch (Exception e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
@@ -372,7 +372,7 @@ public class ActivityRestService extends AbstractRestService {
 
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 

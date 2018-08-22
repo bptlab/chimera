@@ -6,7 +6,7 @@
 	<groupId>de.hpi.bpt</groupId>
 	<artifactId>chimera-case-engine</artifactId>
 	<packaging>war</packaging>
-	<version>1.3</version>
+	<version>1.4</version>
 	<name>Chimera</name>
 	<scm>
 		<developerConnection>scm:git:ssh://git@gitlab.hpi.de/bptlab/chimera-case-engine.git</developerConnection>
@@ -14,6 +14,10 @@
 
 	<build>
 		<finalName>Chimera</finalName>
+<!-- 	not working when config.properties is missing, like in initial build!	
+		<filters>
+			<filter>${basedir}/config.properties</filter>
+    	</filters> -->
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
@@ -21,14 +25,76 @@
 			</resource>
 			<resource>
 				<directory>${basedir}</directory>
-				<excludes>
-					<exclude>src/test/*</exclude>
-				</excludes>
 				<includes>
 					<include>config.properties</include>
 				</includes>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
+			<plugins>
+				<plugin>
+					<groupId>com.coderplus.maven.plugins</groupId>
+					<artifactId>copy-rename-maven-plugin</artifactId>
+					<version>1.0</version>
+					<executions>
+						<!-- using a different persistence.xml for testing so we can specify and use a second test database -->
+						<!-- the copying is necessary because JPA does not use the persistence.xml stored under test/resources -->
+						<execution>
+							<id>copy-test-persistence</id>
+							<phase>test-compile</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<fileSets>
+									<!--backup the "proper" persistence.xml-->
+									<fileSet>
+										<sourceFile>${project.build.outputDirectory}/META-INF/persistence.xml</sourceFile>
+										<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml.proper</destinationFile>
+									</fileSet>
+									<!--replace the "proper" persistence.xml with the "test" version-->
+									<fileSet>
+										<sourceFile>${project.build.outputDirectory}/META-INF/persistenceTest.xml</sourceFile>
+										<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml</destinationFile>
+									</fileSet>
+								</fileSets>
+							</configuration>
+						</execution>
+						<execution>
+					        <!--restore the "proper" persistence.xml-->
+							<id>restore-persistence</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>rename</goal>
+							</goals>
+							<configuration>
+								<sourceFile>${project.build.outputDirectory}/META-INF/persistence.xml.proper</sourceFile>
+								<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml</destinationFile>
+					      </configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>properties-maven-plugin</artifactId>
+					<version>1.0.0</version>
+					<executions>
+						<execution>
+							<phase>initialize</phase>
+							<goals>
+								<goal>read-project-properties</goal>
+							</goals>
+							<configuration>
+								<files>
+									<file>${basedir}/config.properties</file>
+								</files>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		
+		<pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
@@ -41,7 +107,7 @@
 					
 					<!--  for faster local testing -->
 					 <configuration>
-					 	<path>/Chimera</path>
+						<path>/${project.name}</path>
           				<url>http://localhost:8080/manager/text</url>
         			</configuration>
 			</plugin>
@@ -56,20 +122,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>${basedir}/src/main/resources</directory>
-							<includes>
-								<include>config.properties</include>
-							</includes>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.18.1</version>
@@ -77,44 +129,6 @@
 					<argLine>-noverify</argLine>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.0.0</version>
-				<executions>
-					<execution>
-						<phase>initialize</phase>
-						<goals>
-							<goal>read-project-properties</goal>
-						</goals>
-						<configuration>
-							<files>
-								<file>${basedir}/config.properties</file>
-							</files>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		<plugin>
-    		<groupId>com.coderplus.maven.plugins</groupId>
-    		<artifactId>copy-rename-maven-plugin</artifactId>
-    		<version>1.0.1</version>
-    		<executions>
-      			<execution>
-        			<id>rename-file</id>
-        			<phase>prepare-package</phase>
-        			<goals>
-          				<goal>rename</goal>
-        			</goals>
-        			<configuration>
-						<sourceFile>${project.build.outputDirectory}/META-INF/persistence_template.xml
-						</sourceFile>
-						<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml
-						</destinationFile>						
-					</configuration>
-				</execution>
-			</executions>
-		</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
@@ -125,12 +139,6 @@
 					<!-- aggregated reports for multi-module projects -->
 					<aggregate>true</aggregate>
 					<!-- Exclude Debug-Files -->
-					<instrumentation>
-						<excludes>
-							<exclude>**/Ausprobieren.class</exclude>
-							<exclude>**/debugClass.class</exclude>
-						</excludes>
-					</instrumentation>
 					<check />
 				</configuration>
 			</plugin>
@@ -177,6 +185,8 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.3</version>
 			</plugin>
+			
+			
 			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
 				<version>2.9.1</version> <executions> <execution> <id>generate-service-docs</id> 
 				<phase>generate-resources</phase> <configuration> <doclet>com.carma.swagger.doclet.ServiceDoclet</doclet> 
@@ -187,18 +197,22 @@
 				</configuration> <goals> <goal>javadoc</goal> </goals> </execution> </executions> 
 				</plugin> -->
 		</plugins>
+		</pluginManagement>
 	</build>
 
 	<properties>
-
-		<!-- The value of the schema.version property has to be increased when 
-			the schema changes! -->
-		<schema.version>26</schema.version>
+		<!-- default properties-->
 		<db.schema>chimeradb</db.schema>
 		<db.test.schema>chimeradb_test</db.test.schema>
 		<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
   		<db.url>${db.url.root}${db.schema}</db.url>
 		<db.test.url>${db.url.root}${db.test.schema}</db.test.url>
+		<db.user>chimera</db.user>
+		<db.password>chimera</db.password>
+		<unicorn.url>localhost:8080</unicorn.url>
+		<unicorn.deploy.path>Unicorn-unicorn_BP15_dev</unicorn.deploy.path>
+		<chimera.url>localhost:8080</chimera.url>
+		<chimera.deploy.path>/${project.name}</chimera.deploy.path>
 		<powermock.version>1.6.1</powermock.version>
 		<jersey.version>2.17</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -215,7 +229,6 @@
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
-
 	</dependencyManagement>
 
 	<dependencies>
@@ -292,7 +305,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.34</version>
+			<version>5.1.45</version>
 		</dependency>
 
 		<dependency>
@@ -335,6 +348,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+     		<groupId>org.mock-server</groupId>
+     		<artifactId>mockserver-netty</artifactId>
+     		<version>5.3.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.jayway.restassured</groupId>
 			<artifactId>rest-assured</artifactId>
 			<version>2.4.0</version>
@@ -349,13 +367,15 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
 			<artifactId>jersey-test-framework-provider-grizzly2</artifactId>
-			<version>${jersey.version}</version>
+			<!--<version>${jersey.version}</version>-->
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
 			<artifactId>jersey-test-framework-provider-inmemory</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>com.ibatis</groupId>
 			<artifactId>ibatis2-common</artifactId>
@@ -383,7 +403,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>2.17</version>
+			<!-- <version>2.17</version>  -->
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -413,52 +433,16 @@
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>remote</id>
-			<properties>
-				<db.schema>JEngineV2</db.schema>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.7</version>
-						<executions>
-							<execution>
-								<phase>generate-test-resources</phase>
-								<configuration>
-									<target>
-										<move
-											file="${project.build.outputDirectory}/config_template.properties"
-											tofile="${project.build.outputDirectory}/config.properties" />
-									</target>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<!-- creates config file with default values if not existing -->
-			<id>local</id>
+			<id>initial-build</id>
 			<activation>
 				<file>
 					<missing>${basedir}/config.properties</missing>
 				</file>
 			</activation>
-			<properties>
-				<!-- default values -->
-				<db.user>chimera</db.user>
-				<db.password>bp2016</db.password>
-				<db.schema>chimeradb</db.schema>
-			</properties>
 			<build>
 				<plugins>
 					<plugin>
-						<!-- copy and filter config template to basedir -->
+					<!-- copy and filter config template to basedir -->
 						<artifactId>maven-resources-plugin</artifactId>
 						<version>2.6</version>
 						<executions>
@@ -483,20 +467,20 @@
 					</plugin>
 					<plugin>
 						<!-- rename template file to 'config.properties' -->
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.7</version>
+						<groupId>com.coderplus.maven.plugins</groupId>
+						<artifactId>copy-rename-maven-plugin</artifactId>
+						<version>1.0</version>
 						<executions>
 							<execution>
+								<id>rename-config-template-file</id>
 								<phase>validate</phase>
-								<configuration>
-									<target>
-										<move file="${basedir}/config_template.properties"
-											tofile="${basedir}/config.properties" />
-									</target>
-								</configuration>
 								<goals>
-									<goal>run</goal>
+									<goal>rename</goal>
 								</goals>
+								<configuration>
+									<sourceFile>${basedir}/config_template.properties</sourceFile>
+									<destinationFile>${basedir}/config.properties</destinationFile>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
@@ -504,5 +488,4 @@
 			</build>
 		</profile>
 	</profiles>
-
 </project>

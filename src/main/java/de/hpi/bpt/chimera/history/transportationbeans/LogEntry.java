@@ -21,8 +21,8 @@ import javax.xml.bind.annotation.XmlTransient;
 public abstract class LogEntry {
 
 	@Id
-	@GeneratedValue
-	int dbId;
+	@GeneratedValue(strategy=GenerationType.TABLE)
+	private int dbId;
 
 	// TODO: think about cause
 	private String label;

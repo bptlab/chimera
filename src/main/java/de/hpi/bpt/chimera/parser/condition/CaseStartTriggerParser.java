@@ -36,7 +36,7 @@ public class CaseStartTriggerParser {
 	 * @param parserHelper
 	 * @return CaseStartTrigger
 	 */
-	public static CaseStartTrigger parseCaseStarterTrigger(JSONObject caseStartTriggerJson, CaseModelParserHelper parserHelper, CaseModel parentCaseModel) {
+	public static CaseStartTrigger parseCaseStarterTrigger(JSONObject caseStartTriggerJson, CaseModelParserHelper parserHelper) {
 		CaseStartTrigger caseStartTrigger = new CaseStartTrigger();
 		try {
 			String queryExecutionPlan = caseStartTriggerJson.getString("query");
@@ -44,9 +44,6 @@ public class CaseStartTriggerParser {
 
 			List<CaseStartTriggerConsequence> triggerConsequences = parseTriggerConsequences(caseStartTriggerJson.getJSONArray("dataclasses"), parserHelper);
 			caseStartTrigger.setTriggerConsequence(triggerConsequences);
-
-			caseStartTrigger.setParentCaseModel(parentCaseModel);
-
 		} catch (JSONException | IllegalArgumentException e) {
 			log.error(e);
 			throw new IllegalCaseModelException("Invalid CaseStartTrigger - " + e.getMessage());
@@ -78,11 +75,11 @@ public class CaseStartTriggerParser {
 				AtomicDataStateCondition dataObjectStateCondition = new AtomicDataStateCondition();
 
 				String dataClassName = triggerConsequenceJson.getString("classname");
-				DataClass dataClass = parserHelper.getNameToDataClass(dataClassName);
+				DataClass dataClass = parserHelper.getDataClassByName(dataClassName);
 				dataObjectStateCondition.setDataClass(dataClass);
 
 				String objectLifecycleStateName = triggerConsequenceJson.getString("state");
-				ObjectLifecycleState objectLifecycleState = parserHelper.getNameToObjectLifecycleState(dataClass, objectLifecycleStateName);
+				ObjectLifecycleState objectLifecycleState = parserHelper.getObjectLifecycleStateByName(dataClass, objectLifecycleStateName);
 				dataObjectStateCondition.setObjectLifecycleState(objectLifecycleState);
 
 				List<DataAttributeJsonPath> dataAttributeJsonPath = parseDataAttributeJsonPaths(triggerConsequenceJson.getJSONArray("mapping"), parserHelper, dataClass);

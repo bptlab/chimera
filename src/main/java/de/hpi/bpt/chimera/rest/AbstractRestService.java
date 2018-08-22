@@ -42,7 +42,7 @@ public class AbstractRestService {
 		return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(responseText).build();
 	}
 
-	protected final String buildException(String text) {
+	protected final String buildError(String text) {
 		JSONArray result = new JSONArray();
 		JSONObject content = new JSONObject();
 		content.put("text", text);

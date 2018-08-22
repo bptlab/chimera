@@ -4,34 +4,36 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import de.hpi.bpt.chimera.CaseExecutionerTestHelper;
 import de.hpi.bpt.chimera.CaseModelTestHelper;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
+import de.hpi.bpt.chimera.execution.Unicorn;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.event.BoundaryEventInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.event.StartEventInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
-public class MessageReceiveBehaviorTest {
-	private final String filepath = "src/test/resources/execution/event/receiveEventBehaviorTest.json";
-	private CaseModel cm;
+public class MessageReceiveBehaviorTest extends Unicorn {
+	private final String filepath = "src/test/resources/execution/event/CatchEventBehaviorTest.json";
+
 	private CaseExecutioner caseExecutioner;
-	private String eventJson = "{"
-			+ "\"a\": \"1\","
-			+ "\"b\": \"2\","
-			+ "}";
+	private String eventJson = "{" +
+								"\"a\": \"1\"," +
+								"\"b\": \"2\"," +
+								"\"c\": \"3\"" +
+								"}";
+
 	@Before
-	public void setup() {
-		cm = CaseModelTestHelper.parseCaseModel(filepath);
-		caseExecutioner = new CaseExecutioner(cm, cm.getName());
+	public void setUpTest() {
+		super.setUpTest();
+		String json = CaseModelTestHelper.getJsonString(filepath);
+		CaseModel cm = CaseModelManager.parseCaseModel(json);
+		caseExecutioner = ExecutionService.createCaseExecutioner(cm, cm.getName());
 		caseExecutioner.startCase();
 	}
 
@@ -40,29 +42,28 @@ public class MessageReceiveBehaviorTest {
 		FragmentInstance intermediateFragment = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "IntermediateFragment");
 		assertNotNull(intermediateFragment);
 
-		// StartEvent and ReceiveEvent
-		assertEquals("StartEvent and ReceiveEvent should be in the FragmentInstance", intermediateFragment.getControlNodeInstances().size(), 2);
+		CaseExecutionerTestHelper.executeHumanTaskInstance(caseExecutioner, intermediateFragment, "RegisterEvent");
+		AbstractEventInstance eventInstance = CaseExecutionerTestHelper.getEventInstanceByName(intermediateFragment, "IntermediateReceiveEvent");
+		assertTrue(MessageReceiveEventBehavior.class.isInstance(eventInstance.getBehavior()));
 
-		StartEventInstance startEventInstance = (StartEventInstance) CaseExecutionerTestHelper.getEventInstanceByName(intermediateFragment, "startEvent");
-		assertEquals(startEventInstance.getState(), State.TERMINATED);
+		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
 
-		assertEquals(caseExecutioner.getDataManager().getDataObjects().size(), 0);
-		AbstractEventInstance receiveEvent = CaseExecutionerTestHelper.getEventInstanceByName(intermediateFragment, "intermediateReceiveEvent");
-		assertTrue(IntermediateCatchEventInstance.class.isInstance(receiveEvent));
-		assertTrue(MessageReceiveEventBehavior.class.isInstance(receiveEvent.getBehavior()));
-		assertEquals("ReceiveEvent registered properly", receiveEvent.getState(), State.REGISTERED);
+		assertNotNull("Notification Rule Id was not set", receiveBehavior.getNotificationRule());
+		assertFalse("Notification Rule Id was not set properly", receiveBehavior.getNotificationRule().isEmpty());
+		assertNotEquals("Notification Rule Id was not set properly", "-1", receiveBehavior.getNotificationRule());
 
-		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) receiveEvent.getBehavior();
-		String requestId = receiveBehavior.getUnicornKey();
+		assertEquals("ReceiveEvent in incorrect state", State.REGISTERED, eventInstance.getState());
+
+		assertFalse("No registered events", caseExecutioner.getRegisteredEventBehaviors().isEmpty());
+
+		CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), eventJson);
 		
-		EventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
-		assertEquals("ReceiveEvent terminated properly", receiveEvent.getState(), State.TERMINATED);
-		assertEquals("StartEvent, ReceiveEvent and EndEvent should be in the FragmentInstance", intermediateFragment.getControlNodeInstances().size(), 3);
+		assertEquals("ReceiveEvent terminated properly", State.TERMINATED, eventInstance.getState());
 
-		assertEquals("One DataObject should be created", caseExecutioner.getDataManager().getDataObjects().size(), 1);
+		assertEquals("One DataObject should be created", 1, caseExecutioner.getDataManager().getDataObjects().size());
 		DataObject dataObject = caseExecutioner.getDataManager().getDataObjects().get(0);
 		DataAttributeInstance attributeInstance = dataObject.getDataAttributeInstances().get(0);
-		assertEquals("DataObject was not properly written", attributeInstance.getValue(), "1");
+		assertEquals("DataObject was not properly written", "1", attributeInstance.getValue());
 	}
 
 	@Test
@@ -70,31 +71,56 @@ public class MessageReceiveBehaviorTest {
 		FragmentInstance boundaryFragment = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "BoundaryFragment");
 		assertNotNull(boundaryFragment);
 
-		assertEquals("StartEvent and Task should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 2);
-		assertEquals(caseExecutioner.getDataManager().getDataObjects().size(), 0);
-
-		AbstractActivityInstance task = CaseExecutionerTestHelper.getActivityInstanceByName(caseExecutioner, "task");
+		AbstractActivityInstance task = CaseExecutionerTestHelper.getActivityInstanceByName(boundaryFragment, "Task");
 		assertEquals("BoundaryEvents", task.getControlNode().getAttachedBoundaryEvents().size(), 1);
 		task.begin();
 		assertEquals("task has not begun properly", task.getState(), State.RUNNING);
 		assertEquals("StartEvent, Task and BoundaryEvent should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 3);
 
-		AbstractEventInstance receiveEvent = CaseExecutionerTestHelper.getEventInstanceByName(boundaryFragment, "boundaryReceiveEvent");
-		assertTrue(BoundaryEventInstance.class.isInstance(receiveEvent));
-		assertTrue(MessageReceiveEventBehavior.class.isInstance(receiveEvent.getBehavior()));
-		assertEquals("ReceiveEvent registered properly", receiveEvent.getState(), State.REGISTERED);
+		AbstractEventInstance eventInstance = CaseExecutionerTestHelper.getEventInstanceByName(boundaryFragment, "BoundaryReceiveEvent");
+		assertTrue(MessageReceiveEventBehavior.class.isInstance(eventInstance.getBehavior()));
+		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
 
-		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) receiveEvent.getBehavior();
-		String requestId = receiveBehavior.getUnicornKey();
+		assertNotNull("Notification Rule Id was not set", receiveBehavior.getNotificationRule());
+		assertFalse("Notification Rule Id was not set properly", receiveBehavior.getNotificationRule().isEmpty());
+		assertNotEquals("Notification Rule Id was not set properly", "-1", receiveBehavior.getNotificationRule());
 
-		EventDispatcher.receiveEvent(caseExecutioner.getCaseModel().getId(), caseExecutioner.getCase().getId(), requestId, eventJson);
-		assertEquals("ReceiveEvent terminated properly", receiveEvent.getState(), State.TERMINATED);
+		assertEquals("ReceiveEvent registered properly", eventInstance.getState(), State.REGISTERED);
+
+		CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), eventJson);
+
+		assertEquals("ReceiveEvent terminated properly", eventInstance.getState(), State.TERMINATED);
 		assertEquals("StartEvent, Task, BoundaryEvent and Task after BoundaryEvent should be in the FragmentInstance", boundaryFragment.getControlNodeInstances().size(), 4);
 		assertEquals("Task was not canceled", task.getState(), State.CANCEL);
 
-		assertEquals("One DataObject should be created", caseExecutioner.getDataManager().getDataObjects().size(), 1);
+		assertEquals("One DataObject should be created", 1, caseExecutioner.getDataManager().getDataObjects().size());
 		DataObject dataObject = caseExecutioner.getDataManager().getDataObjects().get(0);
 		DataAttributeInstance attributeInstance = dataObject.getDataAttributeInstances().get(0);
-		assertEquals("DataObject was not properly written", attributeInstance.getValue(), "2");
+		assertEquals("DataObject was not properly written", "2", attributeInstance.getValue());
+	}
+
+	@Test
+	public void testMessageReceiveStartEvent() {
+		FragmentInstance boundaryFragment = CaseExecutionerTestHelper.getFragmentInstanceByName(caseExecutioner, "StartEventFragment");
+
+		AbstractEventInstance eventInstance = CaseExecutionerTestHelper.getEventInstanceByName(boundaryFragment, "StartEvent");
+		assertTrue(MessageReceiveEventBehavior.class.isInstance(eventInstance.getBehavior()));
+		MessageReceiveEventBehavior receiveBehavior = (MessageReceiveEventBehavior) eventInstance.getBehavior();
+
+		assertNotNull("Notification Rule Id was not set", receiveBehavior.getNotificationRule());
+		assertFalse("Notification Rule Id was not set properly", receiveBehavior.getNotificationRule().isEmpty());
+		assertNotEquals("Notification Rule Id was not set properly", "-1", receiveBehavior.getNotificationRule());
+
+		assertEquals("ReceiveEvent registered properly", eventInstance.getState(), State.REGISTERED);
+
+		CaseExecutionerTestHelper.triggerEvent(caseExecutioner, eventInstance, getBase(), eventJson);
+
+		assertEquals("ReceiveEvent terminated properly", eventInstance.getState(), State.TERMINATED);
+		CaseExecutionerTestHelper.getActivityInstanceByName(boundaryFragment, "CheckStartEvent");
+
+		assertEquals("One DataObject should be created", 1, caseExecutioner.getDataManager().getDataObjects().size());
+		DataObject dataObject = caseExecutioner.getDataManager().getDataObjects().get(0);
+		DataAttributeInstance attributeInstance = dataObject.getDataAttributeInstances().get(0);
+		assertEquals("DataObject was not properly written", "3", attributeInstance.getValue());
 	}
 }

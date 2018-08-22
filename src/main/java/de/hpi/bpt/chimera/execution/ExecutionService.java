@@ -22,7 +22,7 @@ public final class ExecutionService {
 	/**
 	 * Map of CaseModelId to a list of {@link CaseExecutioner}s.
 	 */
-	private static Map<String, List<CaseExecutioner>> caseExecutions = new HashMap<>();
+	private static Map<String, List<CaseExecutioner>> caseModelIdToCaseExecutions = new HashMap<>();
 	/**
 	 * Map of CaseId to their {@link CaseExecutioner}. These are the active cases stored in memory.
 	 */
@@ -89,17 +89,43 @@ public final class ExecutionService {
 	}
 
 	/**
-	 * Creates a new {@link CaseExecutioner} for the case model by the given id. 
-	 * The case executioner is added to the list of active cases. The caller still needs to
-	 * start the case, see {@link CaseExecutioner#startCase()}.
+	 * Creates a new {@link CaseExecutioner} for the case model by the given id.
+	 * The case executioner is added to the list of active cases. The caller
+	 * still needs to start the case.
 	 * 
-	 * @param cmId - case model id
-	 * @param name - name for the case
+	 * @param cmId
+	 *            - id of CaseModel to be instantiated
+	 * @param name
+	 *            - name for the case
 	 * @return the created CaseExecutioner
+	 * @throws IllegalCaseModelIdException
+	 *             - if cmId is not assigned
+	 * @see {@link CaseExecutioner#startCase() startCase},
+	 *      {@link #createCaseExecutioner(CaseModel, String)
+	 *      createCaseExecutioner from CaseModel}
 	 */
 	public static CaseExecutioner createCaseExecutioner(String cmId, String name) {
-		CaseModel cm = CaseModelManager.getCaseModel(cmId);
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
+			return createCaseExecutioner(cm, name);
+		} catch (IllegalCaseModelIdException e) {
+			throw e;
+		}
+	}
 
+	/**
+	 * Creates a new {@link CaseExecutioner} for the given case model. The case
+	 * executioner is added to the list of active cases. The caller still needs
+	 * to start the case.
+	 * 
+	 * @param cm
+	 *            - case model to be instantiated
+	 * @param name
+	 *            - name for the case
+	 * @return the created CaseExecutioner
+	 * @see {@link CaseExecutioner#startCase() startCase}
+	 */
+	public static CaseExecutioner createCaseExecutioner(CaseModel cm, String name) {
 		String caseName;
 		if (name == null || name.isEmpty()) {
 			// no name specified, use name of case model
@@ -123,13 +149,13 @@ public final class ExecutionService {
 		String cmId = caseExecutioner.getCaseModel().getId();
 		cases.put(caseId, caseExecutioner);
 		// check whether there are running CaseExecutions to the CaseModel
-		if (caseExecutions.containsKey(cmId)) {
-			List<CaseExecutioner> caseExecutioners = caseExecutions.get(cmId);
+		if (caseModelIdToCaseExecutions.containsKey(cmId)) {
+			List<CaseExecutioner> caseExecutioners = caseModelIdToCaseExecutions.get(cmId);
 			caseExecutioners.add(caseExecutioner);
 		} else {
 			List<CaseExecutioner> caseExecutioners = new ArrayList<>();
 			caseExecutioners.add(caseExecutioner);
-			caseExecutions.put(cmId, caseExecutioners);
+			caseModelIdToCaseExecutions.put(cmId, caseExecutioners);
 		}
 	}
 
@@ -150,7 +176,7 @@ public final class ExecutionService {
 		// TODO talk about the "|| !caseExecutions.containsKey(cmId)". One
 		// commit added it, another deleted it and a third added it again. Maybe
 		// we should clarify that ;).
-		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseExecutions.containsKey(cmId)) {
+		if (!CaseModelManager.isExistingCaseModel(cmId) || !caseModelIdToCaseExecutions.containsKey(cmId)) {
 			List<CaseExecutioner> cases = DomainModelPersistenceManager.loadAllCaseExecutionersWithCaseModelId(cmId);
 			if (cases != null) {
 				for (CaseExecutioner ce : cases) {
@@ -162,12 +188,12 @@ public final class ExecutionService {
 				throw e;
 			}
 		}
-		if (!caseExecutions.containsKey(cmId)) {
+		if (!caseModelIdToCaseExecutions.containsKey(cmId)) {
 			// no existing cases for existing casemodel
 			return new ArrayList<>();
 		}
 		log.info(String.format("Successfully requested all Case-Informations of CaseModel-Id: %s", cmId));
-		return caseExecutions.get(cmId);
+		return caseModelIdToCaseExecutions.get(cmId);
 	}
 
 	/**
@@ -176,15 +202,16 @@ public final class ExecutionService {
 	 * 
 	 * @param cmId
 	 */
-	public static void deleteCaseModel(String cmId) {
-		if (caseExecutions.containsKey(cmId)) {
-			List<CaseExecutioner> executions = caseExecutions.get(cmId);
+	public static void deleteAllCasesOfCaseModel(String cmId) {
+		if (caseModelIdToCaseExecutions.containsKey(cmId)) {
+			List<CaseExecutioner> executions = caseModelIdToCaseExecutions.get(cmId);
 			for (CaseExecutioner caseExecutioner : executions) {
-				// TODO: add deletion of case?
 				DomainModelPersistenceManager.deleteCase(caseExecutioner.getCase());
-				cases.remove(caseExecutioner.getCase().getId(), caseExecutioner);
+				log.info("remove Case with id:" + caseExecutioner.getCase().getId());
+				cases.remove(caseExecutioner.getCase().getId());
 			}
-			caseExecutions.remove(cmId);
+			caseModelIdToCaseExecutions.remove(cmId);
+			log.info("Deleted all Cases of a CaseModel.");
 		} else {
 			log.info(String.format("CaseModel with id: %s is not assigned or hadn't any cases", cmId));
 		}
@@ -197,5 +224,13 @@ public final class ExecutionService {
 	 */
 	public static List<CaseExecutioner> getAllExecutingCaseExecutioner() {
 		return new ArrayList<>(cases.values());
+	}
+
+	public static Map<String, CaseExecutioner> getCasesMap() {
+		return cases;
+	}
+
+	public static Map<String, List<CaseExecutioner>> getCaseModelIdToCaseExecutions() {
+		return caseModelIdToCaseExecutions;
 	}
 }

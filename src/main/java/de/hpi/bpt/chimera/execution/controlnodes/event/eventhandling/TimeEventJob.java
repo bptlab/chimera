@@ -29,7 +29,7 @@ public class TimeEventJob implements Job {
 		}
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(caseModelId, caseId);
 		AbstractEventInstance timerEvent = (AbstractEventInstance) caseExecutioner.getControlNodeInstance(controlNodeInstanceId);
-		timerEvent.terminate();
+		caseExecutioner.terminateDataControlNodeInstance(timerEvent);
 		// de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier.notifyRefresh();
 	}
 }

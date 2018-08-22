@@ -1,79 +1,112 @@
 package de.hpi.bpt.chimera;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
+import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 public class CaseExecutionerTestHelper {
-	/**
-	 * Get the AbstractActivityInstance that is currently hold in a
-	 * CaseExecutioner by its name. If the name does not occur return null.
-	 * 
-	 * @param caseExecutioner
-	 * @param activityInstanceName
-	 * @return AbstractActivityInstance or {@code null} if the name does not
-	 *         occur.
-	 */
-	public static AbstractActivityInstance getActivityInstanceByName(CaseExecutioner caseExecutioner, String activityInstanceName) {
-		List<AbstractActivityInstance> activityInstances = getActivityInstances(caseExecutioner);
-		for (AbstractActivityInstance activityInstance : activityInstances) {
-			if (activityInstance.getControlNode().getName().equals(activityInstanceName)) {
-				return activityInstance;
-			}
+	public static AbstractActivityInstance getActivityInstanceByName(FragmentInstance fragmentInstance, String name) {
+		List<AbstractActivityInstance> possibleActivityInstances = fragmentInstance.getActivityInstances().stream()
+																		.filter(a -> a.getControlNode().getName().equals(name))
+																		.collect(Collectors.toList());
+		if (possibleActivityInstances.size() == 0) {
+			throw new IllegalArgumentException(String.format("The name %s does not exist in the fragment", name));
 		}
-		return null;
+		// TODO: think about how to handle concurrency
+		if (possibleActivityInstances.size() == 1) {
+			return possibleActivityInstances.get(0);
+		}
+		throw new IllegalArgumentException(String.format("The name %s is not unique in the fragment", name));
 	}
 
-	public static AbstractEventInstance getEventInstanceByName(FragmentInstance fragmentInstance, String eventInstanceName) {
-		for (AbstractEventInstance eventInstance : getEventInstances(fragmentInstance)) {
-			if (eventInstance.getControlNode().getName().equals(eventInstanceName)) {
-				return eventInstance;
-			}
+	public static AbstractEventInstance getEventInstanceByName(FragmentInstance fragmentInstance, String name) {
+		List<AbstractEventInstance> possibleEventInstances = fragmentInstance.getControlNodeInstances().stream()
+																.filter(c -> c instanceof AbstractEventInstance && c.getControlNode().getName().equals(name))
+																.map(AbstractEventInstance.class::cast)
+																.collect(Collectors.toList());
+		if (possibleEventInstances.size() == 0) {
+			throw new IllegalArgumentException(String.format("The name %s does not exist in the fragment", name));
 		}
-		return null;
+		if (possibleEventInstances.size() == 1) {
+			return possibleEventInstances.get(0);
+		}
+		throw new IllegalArgumentException(String.format("The name %s is not unique in the fragment", name));
 	}
 
-	/**
-	 * 
-	 * @return all AbstractActivityInstances in all FragmentInstances.
-	 */
-	public static List<AbstractActivityInstance> getActivityInstances(CaseExecutioner caseExecutioner) {
-		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
-		for (FragmentInstance fragmentInstance : caseExecutioner.getCase().getFragmentInstances().values()) {
-			for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstanceIdToInstance().values()) {
-				if (nodeInstance instanceof AbstractActivityInstance) {
-					activityInstances.add((AbstractActivityInstance) nodeInstance);
-				}
-			}
-		}
-		return activityInstances;
-	}
 
-	public static List<AbstractEventInstance> getEventInstances(FragmentInstance fragmentInstance) {
-		List<AbstractEventInstance> eventInstances = new ArrayList<>();
-		for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstanceIdToInstance().values()) {
-			if (nodeInstance instanceof AbstractEventInstance) {
-				eventInstances.add((AbstractEventInstance) nodeInstance);
-			}
-		}
-		return eventInstances;
+	public static List<FragmentInstance> getFragmentInstancesByName(CaseExecutioner caseExecutioner, String name) {
+		return caseExecutioner.getCase().getFragmentInstances().values().stream()
+				.filter(f -> f.getFragment().getName().equals(name))
+				.collect(Collectors.toList());
 	}
 
 	public static FragmentInstance getFragmentInstanceByName(CaseExecutioner caseExecutioner, String name) {
-		FragmentInstance searchedFragmentInstance = null;
-		for (FragmentInstance fragmentInstance : caseExecutioner.getCase().getFragmentInstances().values()) {
-			if (fragmentInstance.getFragment().getName().equals(name)) {
-				if (searchedFragmentInstance != null) {
-					throw new IllegalArgumentException(String.format("more than fragment exists with this name: %s", name));
-				}
-				searchedFragmentInstance = fragmentInstance;
-			}
+		List<FragmentInstance> possibleFragmentInstances = getFragmentInstancesByName(caseExecutioner, name);
+		if (possibleFragmentInstances.size() == 1) {
+			return possibleFragmentInstances.get(0);
 		}
-		return searchedFragmentInstance;
+		throw new IllegalArgumentException(String.format("The name %s is not a unique fragment name in the case", name));
+	}
+	
+	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, FragmentInstance fragmentInstance, String name) {
+		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, name);
+		assertNotNull(humanTaskInstance);
+
+		caseExecutioner.beginDataControlNodeInstance(humanTaskInstance, new ArrayList<>());
+		caseExecutioner.terminateDataControlNodeInstance(humanTaskInstance);
+		assertEquals("State of human task instance is not TERMINATED", State.TERMINATED, humanTaskInstance.getState());
+		return humanTaskInstance;
+	}
+
+	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, FragmentInstance fragmentInstance, String name, ArrayList<DataObject> inputDataObjects) {
+		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, name);
+		assertNotNull(humanTaskInstance);
+
+		DataStateCondition postCondition = humanTaskInstance.getControlNode().getPostCondition();
+		Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = postCondition.getConditionSets().get(0).getDataClassToObjectLifecycleState();
+		caseExecutioner.beginDataControlNodeInstance(humanTaskInstance, inputDataObjects);
+		caseExecutioner.terminateDataControlNodeInstance(humanTaskInstance, dataObjectToObjectLifecycleTransition);
+		assertEquals("State of human task instance is not TERMINATED", State.TERMINATED, humanTaskInstance.getState());
+		return humanTaskInstance;
+	}
+
+	public static AbstractActivityInstance executeHumanTaskInstance(CaseExecutioner caseExecutioner, FragmentInstance fragmentInstance, String name, List<DataObject> inputDataObjects, Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition) {
+		AbstractActivityInstance humanTaskInstance = CaseExecutionerTestHelper.getActivityInstanceByName(fragmentInstance, name);
+		assertNotNull(humanTaskInstance);
+
+		caseExecutioner.beginDataControlNodeInstance(humanTaskInstance, inputDataObjects);
+		caseExecutioner.terminateDataControlNodeInstance(humanTaskInstance, dataObjectToObjectLifecycleTransition);
+		assertEquals("State of human task instance is not TERMINATED", State.TERMINATED, humanTaskInstance.getState());
+		return humanTaskInstance;
+	}
+
+	public static void triggerEvent(CaseExecutioner caseExecutioner, AbstractEventInstance eventInstance, WebTarget base, String body) {
+		String cmId = caseExecutioner.getCaseModel().getId();
+		String caseId = caseExecutioner.getCase().getId();
+		String eventInstanceId = eventInstance.getId();
+		String route = String.format("scenario/%s/instance/%s/events/%s", cmId, caseId, eventInstanceId);
+
+		Response response = base.path(route).request().post(Entity.json(body));
+		if (response.getStatus() != 200) {
+			throw new IllegalArgumentException(String.format("%s : %s", response.getStatus(), response.readEntity(String.class)));
+		}
 	}
 }

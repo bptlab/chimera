@@ -20,10 +20,6 @@ public class MessageSendEventBehavior extends EventBehavior {
 		// at runtime.
 	}
 
-	@Override
-	public void enableControlFlow() {
-		super.enableControlFlow();
-	}
 	public MessageSendEventBehavior(AbstractEventInstance eventInstance) {
 		super(eventInstance);
 	}
@@ -35,6 +31,7 @@ public class MessageSendEventBehavior extends EventBehavior {
 			return;
 		}
 		EventSpawner.spawnEvent(getEventInstance());
-		getEventInstance().terminate();
+		getEventInstance().getFragmentInstance().activate();
+		getEventInstance().getCaseExecutioner().terminateDataControlNodeInstance(getEventInstance());
 	}
 }

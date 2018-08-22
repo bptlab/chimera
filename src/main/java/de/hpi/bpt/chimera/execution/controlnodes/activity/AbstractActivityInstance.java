@@ -27,11 +27,6 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 public abstract class AbstractActivityInstance extends AbstractDataControlNodeInstance {
 	private static final Logger log = Logger.getLogger(AbstractActivityInstance.class);
 
-	/**
-	 * Decide whether the instance will begin automatically.
-	 */
-	private boolean hasAutomaticBegin;
-
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "attachedToActivity")
 	private List<BoundaryEventInstance> attachedBoundaryEventInstances;
 
@@ -53,98 +48,30 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	 */
 	public AbstractActivityInstance(AbstractActivity activity, FragmentInstance fragmentInstance) {
 		super(activity, fragmentInstance);
-		allowAutomaticExecution();
 		this.attachedBoundaryEventInstances = new ArrayList<>();
 	}
 
 	/**
-	 * Enables the incoming control flow of the ActivityInstance. Any previously
-	 * selected DataObjects are cleared.
-	 * If state is INIT, it is set to CONTROLFLOW_ENABLED.
-	 * If data preconditions are fulfilled (or state is already DATAFLOW_ENABLED),
-	 * state is set to READY. If an automatic tasks is READY, it is started.   
-	 */
-	@Override
-	public void enableControlFlow() {
-		getSelectedDataObjects().clear();
-		if (getState().equals(State.INIT)) {
-			setState(State.CONTROLFLOW_ENABLED);
-		}
-		if (getState().equals(State.DATAFLOW_ENABLED) || 
-				getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
-			setState(State.READY);
-		}
-		if (canBegin() && hasAutomaticBegin()) {
-			// automatically select data objects, input set must be unique
-			assert getControlNode().hasUniquePreCondition() : "For automatic execution tasks need an unique pre-condition";
-			List<ConditionSet> conditionSets = getControlNode().getPreCondition().getConditionSets();
-			ConditionSet inputSet = new ConditionSet();
-			if (!conditionSets.isEmpty()) {
-				inputSet = conditionSets.get(0);
-			}
-			Set<DataObject> fulfillingDataObjects = getDataManager().getFulfillingDataObjects(inputSet);
-			if (fulfillingDataObjects.isEmpty() && !conditionSets.isEmpty()) {
-				// this should not happen, someone changed a DO state we needed or locked a DO
-				checkDataFlow();
-			} else {
-				getCaseExecutioner().beginDataControlNodeInstance(this, new ArrayList<>(fulfillingDataObjects));
-			}
-		}
-	}
-
-	/**
-	 * Used for updating the DataFlow of the ActivityInstance.
-	 */
-	public void checkDataFlow() {
-		if (getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
-			enableDataFlow();
-		} else {
-			disableDataFlow();
-		}
-	}
-
-	private void enableDataFlow() {
-		if (getState().equals(State.INIT)) {
-			setState(State.DATAFLOW_ENABLED);
-		} else if (getState().equals(State.CONTROLFLOW_ENABLED)) {
-			setState(State.READY);
-		}
-	}
-
-	private void disableDataFlow() {
-		if (getState().equals(State.DATAFLOW_ENABLED)) {
-			setState(State.INIT);
-		} else if (getState().equals(State.READY)) {
-			setState(State.CONTROLFLOW_ENABLED);
-		}
-	}
-
-	/**
-	 * Begin the Activity Instance. The selected DataObjects were set by the
-	 * CaseExecutioner. If the ActivityInstance is an automatic task and has one
-	 * or none condition set in the output the task will be terminated
-	 * automatically and if there is one condition set it will be used for the
-	 * termination of the task.
+	 * Begin the Activity Instance. Inform the {@link FragmentInstance} that has
+	 * started now. The selected DataObjects were set by the CaseExecutioner. If
+	 * the ActivityInstance is an automatic task and has one or none condition
+	 * set in the output the task will be terminated automatically and if there
+	 * is one condition set it will be used for the termination of the task.
 	 */
 	@Override
 	public void begin() {
 		if (!canBegin()) {
-			log.info(String.format("%s not set to running, because the activty isn't in state READY", this.getControlNode().getName()));
+			log.info(String.format("The activity instance of %s can not begin", this.getControlNode().getName()));
 			return;
 		}
-
+		getFragmentInstance().activate();
 		createAttachedBoundaryEvents();
 
 		setState(State.RUNNING);
 		execute();
 
-		if (this.hasAutomaticBegin && getControlNode().hasUniquePostCondition()) {
-			Map<DataClass, ObjectLifecycleState> dataObjectToObjectLifecycleTransition = new HashMap<>();
-			if (getControlNode().hasPostCondition()) {
-				dataObjectToObjectLifecycleTransition = getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
-			}
-			
-			getCaseExecutioner().terminateDataControlNodeInstance(this, dataObjectToObjectLifecycleTransition);
+		if (hasAutomaticBegin()) {
+			getCaseExecutioner().terminateDataControlNodeInstance(this);
 		}
 	}
 
@@ -166,16 +93,15 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	 */
 	@Override
 	public void terminate() {
-		if (!getState().equals(State.RUNNING)) {
-			log.info(String.format("%s not terminated, because the activity isn't in state RUNNING", this.getControlNode().getName()));
+		if (!canTerminate()) {
+			log.info(String.format("The activity instance of %s can not terminate", this.getControlNode().getName()));
 			return;
 		}
-		for (BoundaryEventInstance boundaryEvent : attachedBoundaryEventInstances) {
-			boundaryEvent.skip();
-		}
-		// TODO: maybe state after creation of following
+		attachedBoundaryEventInstances.forEach(BoundaryEventInstance::skip);
+
 		setState(State.TERMINATED);
-		this.getFragmentInstance().createFollowing(getControlNode());
+		getCaseExecutioner().updateDataFlow();
+		getFragmentInstance().createFollowing(getControlNode());
 	}
 
 
@@ -217,37 +143,12 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 		return (AbstractActivity) super.getControlNode();
 	}
 
-	public boolean hasAutomaticBegin() {
-		return hasAutomaticBegin;
-	}
-
 	/**
-	 * Tries to set the flag for automatic execution of this activity instance
-	 * to {@literal true}. This fails if the activity has multiple input or
-	 * output sets which would require user choice. Gateways themselves take
-	 * care to forbid automatic execution of their successor activities,
-	 * 
-	 * @see {@link ExclusiveGatewayInstance}.
+	 * An activity instance can only terminate if it is in State RUNNING.
 	 */
-	public void allowAutomaticExecution() {
-		if (getControlNode().hasUniquePostCondition() &&
-				getControlNode().hasUniquePreCondition() &&
-					getControlNode().isAutomaticTask()) {
-			hasAutomaticBegin = true;
-		} else {
-			log.warn("Tasks with more than one input or output set cannot be executed automatically.");
-			hasAutomaticBegin = false;
-		}
-	}
-
-	/**
-	 * Sets the flag for automatic execution of this activity to {@literal false}. 
-	 * This is used by exclusive gateways to prevent that the branch starting with the automatic
-	 * activity is always taken. In this case, the automatic activity has to be started manually
-	 * by the user.  
-	 */
-	public void forbidAutomaticStart() {
-		hasAutomaticBegin = false;
+	@Override
+	public boolean canTerminate() {
+		return getState().equals(State.RUNNING);
 	}
 
 	public List<BoundaryEventInstance> getAttachedBoundaryEventInstances() {

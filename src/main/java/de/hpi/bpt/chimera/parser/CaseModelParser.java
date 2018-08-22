@@ -9,16 +9,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventRegistrant;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.parser.datamodel.DataModelParser;
 import de.hpi.bpt.chimera.parser.condition.CaseStartTriggerParser;
-import de.hpi.bpt.chimera.parser.condition.TerminationConditionParser;
+import de.hpi.bpt.chimera.parser.condition.DataStateConditionParser;
 import de.hpi.bpt.chimera.parser.fragment.FragmentParser;
-import de.hpi.bpt.chimera.validation.FragmentValidation;
+import de.hpi.bpt.chimera.validation.FragmentValidator;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
 public class CaseModelParser {
@@ -35,6 +37,7 @@ public class CaseModelParser {
 	 */
 	public static CaseModel parseCaseModel(final String jsonString) {
 		CaseModel caseModel = new CaseModel();
+		caseModel.deployed();
 		try {
 			JSONObject caseModelJson = new JSONObject(jsonString);
 
@@ -56,10 +59,10 @@ public class CaseModelParser {
 			// CaseModelParserHelper
 			CaseModelParserHelper parserHelper = new CaseModelParserHelper(dataModel);
 
-			List<CaseStartTrigger> caseStartTrigger = getCaseStartTrigger(caseModelJson.getJSONArray("startconditions"), parserHelper, caseModel);
+			List<CaseStartTrigger> caseStartTrigger = getCaseStartTrigger(caseModelJson.getJSONArray("startconditions"), parserHelper);
 			caseModel.setStartCaseTrigger(caseStartTrigger);
 
-			TerminationCondition terminationCondition = TerminationConditionParser.parseTerminationCondition(caseModelJson.getJSONArray("terminationconditions"), parserHelper);
+			TerminationCondition terminationCondition = DataStateConditionParser.parseTerminationCondition(caseModelJson.getJSONArray("terminationconditions"), parserHelper);
 			caseModel.setTerminationCondition(terminationCondition);
 			
 			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"), parserHelper);
@@ -71,10 +74,21 @@ public class CaseModelParser {
 			throw e;
 		}
 
-		// register the CaseStartTrigger at Unicorn
-		for (CaseStartTrigger cst : caseModel.getStartCaseTrigger()) {
-			EventDispatcher.registerCaseStartEvent(cst);
+		// register the EventTypes at Unicorn
+		for (DataClass dataClass : caseModel.getDataModel().getDataClasses()) {
+			if (dataClass.isEvent()) {
+				EventRegistrant.registerEventType(dataClass);
+			}
 		}
+
+		// register the CaseStartTrigger at Unicorn
+		// hast to be done AFTER REGISTRATION OF THE EVENTTYPES because you can
+		// only register CaseStartEvents which have an EventType registered at
+		// Unicorn
+		for (CaseStartTrigger cst : caseModel.getStartCaseTrigger()) {
+			EventDispatcher.registerCaseStartEvent(caseModel, cst);
+		}
+
 
 		return caseModel;
 	}
@@ -87,14 +101,14 @@ public class CaseModelParser {
 	 * @param parserHelper
 	 * @return List of CaseStartTrigger
 	 */
-	private static List<CaseStartTrigger> getCaseStartTrigger(JSONArray caseStartTriggerjsonArray, CaseModelParserHelper parserHelper, CaseModel parentCaseModel) {
+	private static List<CaseStartTrigger> getCaseStartTrigger(JSONArray caseStartTriggerjsonArray, CaseModelParserHelper parserHelper) {
 		int arraySize = caseStartTriggerjsonArray.length();
 		List<CaseStartTrigger> caseStartTrigger = new ArrayList<>();
 
 		for (int i = 0; i < arraySize; i++) {
 			JSONObject caseStartTriggerJson = caseStartTriggerjsonArray.getJSONObject(i);
 
-			CaseStartTrigger startTrigger = CaseStartTriggerParser.parseCaseStarterTrigger(caseStartTriggerJson, parserHelper, parentCaseModel);
+			CaseStartTrigger startTrigger = CaseStartTriggerParser.parseCaseStarterTrigger(caseStartTriggerJson, parserHelper);
 			caseStartTrigger.add(startTrigger);
 		}
 
@@ -110,7 +124,7 @@ public class CaseModelParser {
 	 */
 	private static List<Fragment> getFragments(JSONArray fragmentJsonArray, CaseModelParserHelper parserHelper) {
 		int arraySize = fragmentJsonArray.length();
-		FragmentValidation.validateFragmentAmount(arraySize);
+		FragmentValidator.validateFragmentAmount(arraySize);
 		List<Fragment> fragments = new ArrayList<>();
 
 		for (int i = 0; i < arraySize; i++) {

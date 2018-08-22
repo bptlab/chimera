@@ -21,7 +21,7 @@ public class ParallelGatewayInstance extends AbstractGatewayInstance {
 	private static final Logger log = Logger.getLogger(ParallelGatewayInstance.class);
 
 	// ToDo unecessary, because of inherets Gateway AbstractGatewayInstance?
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne // (cascade = CascadeType.ALL)
 	private ParallelGateway parallelGateway;
 
 

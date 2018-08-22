@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.execution.data;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
@@ -23,11 +24,10 @@ public class DataAttributeInstance {
 
 	@Id
 	private String id;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne // (cascade = CascadeType.ALL)
 	private DataAttribute dataAttribute;
 	// ToDo find a Way to persist this Object, now it leads to Errors
-	@Transient
-	private Object value;
+	private Serializable value;
 	@OneToOne(cascade = CascadeType.ALL)
 	private DataObject dataObject;
 
@@ -76,7 +76,7 @@ public class DataAttributeInstance {
 	 */
 	public void setValue(Object value) {
 		if (isValueAllowed(value.toString())) {
-			log.info("DataObject: Attribute value set.");
+			log.debug("DataObject: Attribute value set: " + value);
 			getCaseExecutioner().logDataAttributeTransition(this, value);
 			this.value = value.toString();
 		} else {

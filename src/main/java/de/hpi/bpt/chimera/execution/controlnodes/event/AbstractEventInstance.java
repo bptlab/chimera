@@ -12,8 +12,6 @@ import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.EventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.EventBasedGatewayInstance;
-import de.hpi.bpt.chimera.execution.data.DataObject;
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 
 @Entity
@@ -25,10 +23,6 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	private EventBehavior behavior;
 	@OneToOne(cascade = CascadeType.ALL)
 	private EventBasedGatewayInstance previousEventBasedGatewayInstance;
-
-	// only necessary for JPA as a workaround. Do not use this requestKey!
-	public String requestKey;
-
 
 	/**
 	 * for JPA only
@@ -47,15 +41,6 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	}
 
 	/**
-	 * IncomingBehaviour
-	 */
-	@Override
-	public void enableControlFlow() {
-		setState(State.READY);
-		behavior.enableControlFlow();
-	}
-
-	/**
 	 * ExecutionBehaviour
 	 */
 	@Override
@@ -64,40 +49,41 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 	}
 
 	/**
-	 * OutgoingBehaviour
+	 * Terminate the Event Instance. If the event instance is an successor of an
+	 * event based gateway skip the alternatives. Create Data Object for the
+	 * post condition. If the Event Instance is not a Start Event inform the
+	 * {@link FragmentInstance} that it has started now.
 	 */
 	@Override
 	public void terminate() {
+		if (!canTerminate()) {
+			log.info(String.format("The event instance of %s can not terminate", getControlNode().getName()));
+			return;
+		}
+
 		if (previousEventBasedGatewayInstance != null) {
 			previousEventBasedGatewayInstance.skipAlternativeGateways(this);
 		}
 
-		if (getControlNode().hasUniquePostCondition() && getControlNode().hasPostCondition()) {
-			for (AtomicDataStateCondition condition : getControlNode().getPostCondition().getConditionSets().get(0).getConditions()) {
-				DataObject dataObject = getDataManager().createDataObject(condition);
-				getOutputDataObjects().add(dataObject);
-			}
-		}
-
 		behavior.terminate();
 		setState(State.TERMINATED);
-		getFragmentInstance().updateDataFlow();
+		getCaseExecutioner().updateDataFlow();
 		getFragmentInstance().createFollowing(getControlNode());
 	}
 
 	@Override
 	public void skip() {
-		this.setState(State.SKIPPED);
+		behavior.skip();
+		setState(State.SKIPPED);
 	}
 
 	/**
-	 * 
-	 * @return whether the data control node instance is in the correct state
-	 *         for beginning.
+	 * An event instance should only terminate if it is in State READY or
+	 * REGISTERED.
 	 */
 	@Override
-	public boolean canBegin() {
-		return getState().equals(State.READY) || getState().equals(State.REGISTERED);
+	public boolean canTerminate() {
+		return (getState().equals(State.READY) || getState().equals(State.REGISTERED)) && behavior.canTerminate();
 	}
 
 	// GETTER & SETTER

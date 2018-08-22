@@ -37,8 +37,8 @@ public class DataFlowResolver {
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BpmnDataNode dataNodeReference : fragXmlWrap.getDataNodes()) {
 			DataNode dataNode = new DataNode();
 
-			DataClass dataClass = parserHelper.getNameToDataClass(dataNodeReference.getDataClassName());
-			ObjectLifecycleState olcState = parserHelper.getNameToObjectLifecycleState(dataClass, dataNodeReference.getStateName());
+			DataClass dataClass = parserHelper.getDataClassByName(dataNodeReference.getDataClassName());
+			ObjectLifecycleState olcState = parserHelper.getObjectLifecycleStateByName(dataClass, dataNodeReference.getStateName());
 
 			String unparsedJsonPathMapping = dataNodeReference.getJsonPath();
 			List<DataAttributeJsonPath> dataAttributeJsonPaths = parseDataAttributeJsonPaths(unparsedJsonPathMapping, dataClass, parserHelper);

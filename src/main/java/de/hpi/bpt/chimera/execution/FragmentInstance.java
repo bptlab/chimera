@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
@@ -24,8 +22,12 @@ import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstan
 import de.hpi.bpt.chimera.execution.controlnodes.event.StartEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.AbstractGatewayInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.ExclusiveGatewayInstance;
+import de.hpi.bpt.chimera.execution.data.DataManager;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.condition.FragmentPreCondition;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 
 @Entity
@@ -38,6 +40,8 @@ public class FragmentInstance {
 	private Fragment fragment;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Case caze;
+
+	private FragmentState state;
 	// TODO: think about whether it is needed to store terminated events, etc.
 	// Activities should be recorded for the history.
 	@OneToMany(cascade = CascadeType.ALL)
@@ -59,6 +63,7 @@ public class FragmentInstance {
 
 	public FragmentInstance(Fragment fragment, Case caze) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
+		setState(FragmentState.CREATED);
 		this.fragment = fragment;
 		this.caze = caze;
 		this.controlNodeInstanceIdToInstance = new HashMap<>();
@@ -69,22 +74,20 @@ public class FragmentInstance {
 	 * Start the Case by creating an Instance of the StartEvent and enable the
 	 * ControlFlow of that Instance.
 	 */
-	public void start() {
+	public void enable() {
+		if (!state.equals(FragmentState.CREATED)) {
+			log.info(String.format("The fragment instance of %s cannot start because it is not in state CREATED", getFragment().getName()));
+			return;
+		}
+		if (!isDataFlowEnabled()) {
+			log.info(String.format("The fragment instance of %s cannot start because it is the fragment precondition is not fulfilled", getFragment().getName()));
+			return;
+		}
+		setState(FragmentState.ENABLED);
 		StartEvent startEvent = fragment.getBpmnFragment().getStartEvent();
 		StartEventInstance startEventInstance = (StartEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(startEvent, this);
 		addControlNodeInstance(startEventInstance);
 		startEventInstance.enableControlFlow();
-	}
-
-	/**
-	 * Update DataFlow of all ActivityInstances.
-	 */
-	public void updateDataFlow() {
-		for (ControlNodeInstance nodeInstance : controlNodeInstanceIdToInstance.values()) { 
-			if (nodeInstance instanceof AbstractActivityInstance) {
-				((AbstractActivityInstance) nodeInstance).checkDataFlow();
-			}
-		} 
 	}
 
 	/**
@@ -120,6 +123,84 @@ public class FragmentInstance {
 		}
 	}
 
+	/**
+	 * The fragment instance is data flow enabled if it has already started or
+	 * its {@link FragmentPreCondition} is empty. Otherwise if needs to be
+	 * fulfilled by the current {@link DataObject}s in the {@link DataManager}.
+	 * 
+	 * @return whether the fragment instance is data flow enabled
+	 */
+	public boolean isDataFlowEnabled() {
+		FragmentPreCondition preCondition = getFragment().getFragmentPreCondition();
+		if (preCondition.isEmpty() || isActive()) {
+			return true;
+		}
+
+		List<AtomicDataStateCondition> existingConditions = getCase().getCaseExecutioner().getDataManager().getDataStateConditions();
+		return preCondition.isFulfilled(existingConditions);
+	}
+
+	/**
+	 * The control node instances in a fragment instance can only be executed if
+	 * the fragment instance is in the {@link FragmentState} ENABLED or {@link #isActive()}.
+	 * 
+	 * @return true if the fragment instance is in the {@link FragmentState}
+	 *         ENABLED or {@link #isActive()}.
+	 */
+	public boolean isExecutable() {
+		return state.equals(FragmentState.ENABLED) || isActive();
+	}
+
+	/**
+	 * 
+	 * @return true if the fragment instance is {@link FragmentState#ACTIVE
+	 *         active}
+	 */
+	public boolean isActive() {
+		return state.equals(FragmentState.ACTIVE);
+	}
+
+	public void activate() {
+		if (state.equals(FragmentState.ENABLED)) {
+			setState(FragmentState.ACTIVE);
+			FragmentInstance fragmentInstance = getCase().addFragmentInstance(fragment);
+			if (fragmentInstance != null) {
+				fragmentInstance.enable();
+			}
+		}
+	}
+
+	public void terminate() {
+		caze.removeFragmentInstance(this);
+	}
+
+	/**
+	 * Adapt the {@link FragmentState} of the fragment instance by checking the
+	 * data flow.
+	 */
+	public void checkDataFlow() {
+		if (state.equals(FragmentState.ACTIVE)) {
+			return;
+		}
+
+		// automaton
+		if (isDataFlowEnabled()) {
+			switch (state) {
+				case CREATED:
+					enable();
+					break;
+				case DISABLED:
+					setState(FragmentState.ENABLED);
+					break;
+				default:
+			}	
+		} else {
+			if (state.equals(FragmentState.ENABLED)) {
+				setState(FragmentState.DISABLED);
+			}
+		}
+	}
+	// TODO: is this needed?
 	/**
 	 * 
 	 * @param controlNodes
@@ -168,13 +249,10 @@ public class FragmentInstance {
 	 * @return true if the ControlNode is terminated.
 	 */
 	public boolean isTerminated(AbstractControlNode node) {
-		if (controlNodeIdToInstance.containsKey(node.getId()) && controlNodeIdToInstance.get(node.getId()).getState() == State.TERMINATED) {
-			return true;
-		} else {
-			return false;
-		}
+		return controlNodeIdToInstance.containsKey(node.getId()) && controlNodeIdToInstance.get(node.getId()).getState() == State.TERMINATED;
 	}
 
+	// TODO: is this accidentally switched?
 	// TODO maybe not needed >>> maybe a separate map for executing (Xor-)
 	// Gateways is better and faster
 	/**
@@ -231,7 +309,45 @@ public class FragmentInstance {
 		}
 	}
 
-
+	/**
+	 * 
+	 * @return all ActivityInstances from the FragmentInstance that are not
+	 *         terminated.
+	 */
+	public List<AbstractActivityInstance> getActivActivityInstances() {
+		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
+		getControlNodeInstances().stream()
+			.filter(x -> x instanceof AbstractActivityInstance && !x.getState().equals(State.TERMINATED))
+			.map(AbstractActivityInstance.class::cast)
+			.forEachOrdered(activityInstances::add);
+		return activityInstances;
+	}
+	
+	/**
+	 * Get all ActivityInstances in all Fragment Instances that are in a
+	 * specific State.
+	 * 
+	 * @param state
+	 * @return Collection of ActivityInstances
+	 */
+	public List<AbstractActivityInstance> getActivityInstancesWithState(State state) {
+		return getActivityInstances().stream()
+					.filter(a -> a.getState().equals(state))
+					.collect(Collectors.toList());
+	}
+	/**
+	 * 
+	 * @return all ActivityInstances from the FragmentInstance that are not
+	 *         terminated.
+	 */
+	public List<AbstractActivityInstance> getActivityInstances() {
+		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
+		getControlNodeInstances().stream()
+			.filter(x -> x instanceof AbstractActivityInstance)
+			.map(AbstractActivityInstance.class::cast)
+			.forEachOrdered(activityInstances::add);
+		return activityInstances;
+	}
 	// GETTER & SETTER
 	public String getId() {
 		return id;
@@ -267,5 +383,13 @@ public class FragmentInstance {
 
 	public void setCase(Case caze) {
 		this.caze = caze;
+	}
+
+	public FragmentState getState() {
+		return state;
+	}
+
+	public void setState(FragmentState state) {
+		this.state = state;
 	}
 }

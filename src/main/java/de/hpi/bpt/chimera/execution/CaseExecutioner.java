@@ -5,19 +5,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.MapKey;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -28,6 +21,8 @@ import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
@@ -38,6 +33,7 @@ import de.hpi.bpt.chimera.history.transportationbeans.DataAttributeLog;
 import de.hpi.bpt.chimera.history.transportationbeans.DataObjectLog;
 import de.hpi.bpt.chimera.history.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
@@ -47,8 +43,8 @@ public class CaseExecutioner {
 	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
 
 	@Id
-	@GeneratedValue
-	public int dbId;
+	@GeneratedValue(strategy=GenerationType.TABLE)
+	private int dbId;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "caseExecutioner")
 	private Case caze;
@@ -64,24 +60,8 @@ public class CaseExecutioner {
 	private List<DataObjectLog> dataObjectLogs;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataAttributeLog> dataAttributeLogs;
-
-	// registered Events, used by the EventDispatcher
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "caseexecutioner_controlnodeinstance_map_id", joinColumns = {
-			@JoinColumn(name = "fk_caseexecutioner", referencedColumnName = "dbId") }, inverseJoinColumns = {
-					@JoinColumn(name = "fk_group", referencedColumnName = "id") })
-	@MapKey(name = "id")
-	public Map<String, AbstractEventInstance> idToRegisteredEvent;
-
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "caseexecutioner_controlnodeinstance_map_requestkey", joinColumns = {
-			@JoinColumn(name = "fk_caseexecutioner", referencedColumnName = "dbId") }, inverseJoinColumns = {
-					@JoinColumn(name = "fk_group", referencedColumnName = "id") })
-	@MapKeyColumn(name = "MapKeyColumn_requestkey")
-	@MapKey(name = "requestKey")
-	public Map<String, AbstractEventInstance> keyToRegisteredEvent;
-
-
+	@OneToMany(cascade = CascadeType.ALL)
+	private Map<String, MessageReceiveEventBehavior> registeredEventInstanceIdToReceiveBehavior;
 
 	/**
 	 * for JPA only
@@ -101,8 +81,8 @@ public class CaseExecutioner {
 		this.caze = new Case(caseName, caseModel, this);
 		this.dataManager = new DataManager(caseModel.getDataModel(), this);
 
-		this.idToRegisteredEvent = new HashMap<>();
-		this.keyToRegisteredEvent = new HashMap<>();
+		this.registeredEventInstanceIdToReceiveBehavior = new HashMap<>();
+		this.terminated = false;
 	}
 
 	/**
@@ -110,7 +90,7 @@ public class CaseExecutioner {
 	 */
 	public void startCase() {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
-			fragmentInstance.start();
+			fragmentInstance.enable();
 		}
 	}
 
@@ -164,6 +144,47 @@ public class CaseExecutioner {
 
 	/**
 	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
+	 * transitions of the DataObjects that result from the
+	 * {@link DataStateCondition PostCondition}. Therefore the post condition
+	 * needs to be unique. If the post condition is not unique,
+	 * {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map)
+	 * terminateDataControlNodeInstance} needs to be used. For additionally
+	 * specifying the values for the DataAttributeInstances of the used
+	 * DataObjects use
+	 * {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
+	 * terminateDataControlNodeInstance}.
+	 * 
+	 * @param controlNodeInstance
+	 *            - AbstractDataControlNodeInstance that shall terminate
+	 * 
+	 * @see {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
+	 *      terminateDataControlNodeInstance}
+	 */
+	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance) {
+		try {
+			if (!controlNodeInstance.canTerminate()) {
+				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
+				log.error(e.getMessage());
+				throw e;
+			}
+
+			if (!controlNodeInstance.getControlNode().hasUniquePostCondition()) {
+				return;
+			}
+
+			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = new HashMap<>();
+			if (controlNodeInstance.getControlNode().hasPostCondition()) {
+				dataClassToStateTransitions = controlNodeInstance.getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
+			}
+
+			terminateDataControlNodeInstance(controlNodeInstance, dataClassToStateTransitions, new HashMap<>());
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
 	 * transitions of the DataObjects specified by
 	 * {@code dataClassToStateTransition}. For additionally specifying the
 	 * values for the DataAttributeInstances of the used DataObjects use
@@ -172,7 +193,7 @@ public class CaseExecutioner {
 	 * 
 	 * @param controlNodeInstance
 	 *            - AbstractDataControlNodeInstance that shall terminate
-	 * @param dataClassToStateTransition
+	 * @param dataClassToStateTransitions
 	 *            - Map from DataClass to an ObjectLifecycleState of the
 	 *            DataClass to define the new State for the DataObject with the
 	 *            referred DataClass
@@ -207,17 +228,24 @@ public class CaseExecutioner {
 	 */
 	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions, Map<String, Map<String, Object>> rawDataAttributeValues) {
 		try {
+			// check whether activity instance can terminate
 			if (!controlNodeInstance.canTerminate()) {
 				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
 				log.error(e.getMessage());
 				throw e;
 			}
 			
-			List<DataObject> usedDataObjects = handleDataControlNodeOutputTransitions(controlNodeInstance, dataClassToStateTransitions);
-			dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
-			controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			List<DataObject> boundDataObjects = controlNodeInstance.getSelectedDataObjects();
+			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
+			// modify bound DOs 
+			if (! postCondition.isEmpty()) {
+				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
+				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+				controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			}
+			// set bound DOs free
+			dataManager.unlockDataObjects(boundDataObjects);
 			controlNodeInstance.terminate();
-			updateDataFlow();
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
@@ -229,42 +257,12 @@ public class CaseExecutioner {
 	 */
 	public void updateDataFlow() {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
-			fragmentInstance.updateDataFlow();
+			fragmentInstance.checkDataFlow();
+			fragmentInstance.getActivActivityInstances()
+				.forEach(AbstractActivityInstance::checkDataFlow);
 		}
 	}
 
-	/**
-	 * Handle the data object transition for an AbstractControlNodeInstance.
-	 * Therefore unlock all DataObjects of the instance that were defined at the
-	 * beginning of the instance. In addition let the DataManager handle the
-	 * transitions of the DataObjects specified by the
-	 * dataClassToStateTransitions.
-	 * 
-	 * @param controlNodeInstance
-	 *            - AbstractDataControlNodeInstance to handle
-	 * @param dataClassToStateTransitions
-	 *            - Map from DataClass to an ObjectLifecycleState of the
-	 *            DataClass to define the new State for the DataObject with the
-	 *            referred DataClass
-	 * @return List of all DataObjects that were used as working items and
-	 *         created by the DataManager
-	 */
-	private List<DataObject> handleDataControlNodeOutputTransitions(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
-		try {
-			List<DataObject> workingItems = controlNodeInstance.getSelectedDataObjects();
-			dataManager.unlockDataObjects(workingItems);
-			
-			// TODO: validate whether this works correct
-			List<DataObject> usedDataObject = new ArrayList<>();
-			if (!controlNodeInstance.getControlNode().getPostCondition().getAtomicDataStateConditions().isEmpty()) {
-				usedDataObject = dataManager.handleDataObjectTransitions(workingItems, dataClassToStateTransitions);
-			}
-
-			return usedDataObject;
-		} catch (IllegalArgumentException e) {
-			throw e;
-		}
-	}
 
 	/**
 	 * Get an ControlNodeInstance over all FragmentInstances of the Case by an
@@ -317,11 +315,15 @@ public class CaseExecutioner {
 
 	/**
 	 * Checks whether the Case can be terminated by testing if the
-	 * TerminationCondition is fulfilled.
+	 * TerminationCondition is fulfilled. In addition a Case can only be
+	 * terminated once.
 	 * 
 	 * @return true if the Case can be terminated.
 	 */
 	public boolean canTerminate() {
+		if (isTerminated()) {
+			return false;
+		}
 		TerminationCondition terminationCondition = getCaseModel().getTerminationCondition();
 		return terminationCondition.isFulfilled(dataManager.getDataStateConditions());
 	}
@@ -335,6 +337,16 @@ public class CaseExecutioner {
 	public void terminate() {
 		// TODO think about the consequences
 		if (canTerminate()) {
+			// set all ControlNodeInstances to state Skipped, so no further
+			// controlflow is possible.
+			getCase().getFragmentInstances().values().stream()
+				.map(FragmentInstance::getControlNodeInstances)
+				.flatMap(List::stream)
+				.forEach(ControlNodeInstance::skip);
+			log.info("Terminating the Case" + this.getCase().getName() + ". All ControlNodeInstances are skipped.");
+
+			EventDispatcher.deregisterReceiveEventsOfCase(this.getCase());
+
 			setTerminated(true);
 		}
 	}
@@ -409,30 +421,69 @@ public class CaseExecutioner {
 		logEntries.sort((l1, l2) -> l2.getTimeStamp().compareTo(l1.getTimeStamp()));
 	}
 
+	/**
+	 * Store the {@link MessageReceiveEventBehavior} of an
+	 * {@link AbstractEventInstance} that has previously been registered at
+	 * Unicorn by the message receive behavior of the event instance.
+	 * 
+	 * @param receiveBehavior
+	 *            - MessageReceiveEventBehavior of the registered EventInstance
+	 */
+	public void addRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
+		String instanceId = receiveBehavior.getEventInstance().getId();
+		if (!registeredEventInstanceIdToReceiveBehavior.containsKey(instanceId)) {
+			registeredEventInstanceIdToReceiveBehavior.put(instanceId, receiveBehavior);
+		}
+	}
+
+	/**
+	 * Remove the {@link MessageReceiveEventBehavior} of an
+	 * {@link AbstractEventInstance} that has previously been registered at
+	 * Unicorn by the message receive behavior of the event instance.
+	 * 
+	 * @param receiveBehavior
+	 *            - MessageReceiveEventBehavior of the EventInstance to be
+	 *            de-registered
+	 */
+	public void removeRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
+		String instanceId = receiveBehavior.getEventInstance().getId();
+		if (registeredEventInstanceIdToReceiveBehavior.containsKey(instanceId)) {
+			registeredEventInstanceIdToReceiveBehavior.remove(instanceId, receiveBehavior);
+		}
+	}
+
+	/**
+	 * Receive the {@link MessageReceiveEventBehavior} of an
+	 * {@link AbstractEventInstance} that has previously been registered at
+	 * Unicorn by the Id of the event instance.
+	 * 
+	 * @param eventInstanceId
+	 *            - Id of the registered event
+	 * @return MessageReceiveEventBehavior of the specified registered
+	 *         EventInstance
+	 * @throws IllegalArgumentException
+	 *             if the Id is not assigned
+	 */
+	public MessageReceiveEventBehavior getRegisteredEventBehavior(String eventInstanceId) {
+		if (registeredEventInstanceIdToReceiveBehavior.containsKey(eventInstanceId)) {
+			return registeredEventInstanceIdToReceiveBehavior.get(eventInstanceId);
+		}
+		String message = String.format("The catch event id: %s is not assigned", eventInstanceId);
+		log.error(message);
+		throw new IllegalArgumentException(message);
+	}
+
+	/**
+	 * Receive all {@link MessageReceiveEventBehavior} of previously registered
+	 * {@link AbstractEventInstance}.
+	 * 
+	 * @return List of {@link MessageReceiveEventBehavior} which
+	 *         {@link AbstractEventInstance} is registered in Unicorn.
+	 */
+	public List<MessageReceiveEventBehavior> getRegisteredEventBehaviors() {
+		return new ArrayList<>(registeredEventInstanceIdToReceiveBehavior.values());
+	}
 	// GETTER & SETTER
-
-	public AbstractEventInstance getRegisteredEventFromEventId(String id) {
-		return (AbstractEventInstance) idToRegisteredEvent.get(id);
-	}
-
-	public AbstractEventInstance getRegisteredEventFromRegistrationKey(String key) {
-		return (AbstractEventInstance) keyToRegisteredEvent.get(key);
-	}
-
-	public void registerEvent(String registrationKey, AbstractEventInstance eventInstance) {
-		idToRegisteredEvent.put(eventInstance.getId(), eventInstance);
-		// log.debug("Entry in Hashmap idToRegisteredEvent with id:" +
-		// eventInstance.getId());
-		((AbstractEventInstance) eventInstance).requestKey = registrationKey;
-		keyToRegisteredEvent.put(registrationKey, eventInstance);
-		// log.debug("Entry in Hashmap keyToRegisteredEvent with key:" +
-		// registrationKey);
-	}
-
-	public void removeEvent(String registrationKey, AbstractEventInstance eventInstance) {
-		idToRegisteredEvent.remove(eventInstance.getId());
-		keyToRegisteredEvent.remove(registrationKey);
-	}
 
 	public Case getCase() {
 		return caze;
@@ -478,5 +529,7 @@ public class CaseExecutioner {
 		return dataAttributeLogs;
 	}
 
-
+	public Map<String, MessageReceiveEventBehavior> getRegisteredEventInstanceIdToReceiveBehavior() {
+		return registeredEventInstanceIdToReceiveBehavior;
+	}
 }

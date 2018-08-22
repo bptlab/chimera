@@ -29,6 +29,12 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
 		this.postCondition = new DataStateCondition();
 	}
 
+	/**
+	 * 
+	 * @return true if the control node type executes automatically.
+	 */
+	public abstract boolean isAutomatic();
+
 	// GETTER & SETTER
 	public DataStateCondition getPreCondition() {
 		return preCondition;
