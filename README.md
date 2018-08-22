@@ -11,7 +11,7 @@ Chimera is **not a modeling tool** for case models! Creation and deployment of c
 * Usage of external APIs via webservice tasks
 
 ## Getting started
-The easiest way to try out Chimera is using the publicly available instance at https://bpt-lab.org/chimera-demo, which contains several exemplary case models demonstrating the features of Chimera. Please refer to the [user guide](https://bptlab.github.io/chimera) on how to start and enact cases.
+The easiest way to try out Chimera is using the publicly available instance at https://bpt-lab.org/chimera-demo, which contains several exemplary case models demonstrating the features of Chimera. Please refer to the [user guide](https://bptlab.github.io/chimera) on how to start and enact cases. For developers: the architecture of Chimera is explained in the [developer documentation in the wiki](https://github.com/bptlab/chimera/wiki/DevDoc).
 
 The following instructions will get the Chimera case engine up and running on your local machine.
 
@@ -66,7 +66,7 @@ To simplify the local development workflow, you can make use of the `Makefile`.
 ## Contributing
 You want to help us? Great :+1:
 
-Please check out [Contributing.md](Contributing.md) for information how you can contribute to the Chimera project, including templates for bug reports, feature suggestions, and pull requests.
+Please check out [Contributing.md](Contributing.md) for information how you can contribute to the Chimera project, including templates for bug reports, feature suggestions, and pull requests. For in-depth information about the architecture and the individual components of Chimera, the [developer documentation in the wiki](https://github.com/bptlab/chimera/wiki/DevDoc) is the best starting point.
 
 ## License 
 The Chimera case engine is provided under the MIT free and open source software license - see [LICENSE.md](LICENSE.md) for details.
