@@ -47,13 +47,14 @@ Enhancements are tracked as github issues with the label "feature". Create a new
 - **Explain how the enhancement would benefit users** of Chimera. Mention the usecases in which it would be useful and to which user groups.
 - **(Optionally) describe how the enhancement could be implemented**. Of course, you can skip this step, if you are unsure about how it could be implemented.
 
-## Creating Pull Requests
+## Creating pull requests
 
-## Releasing New Versions
-- increase version number in pom.xml
-- update changelog
+## Releasing new versions
+See https://github.com/bptlab/chimera/wiki/Github-Workflow#releasing-a-new-version for information on releasing new versions of Chimera.
 
 ## Styleguides
 
 ## Finding Help
+The best source for information about Chimera is the [developer documentation](https://github.com/bptlab/chimera/wiki/DevDoc) in the wiki.
 
+**TODO:** Add information on how to contact the Chimera team, maybe joining in Slack?
