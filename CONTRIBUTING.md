@@ -48,6 +48,11 @@ Enhancements are tracked as github issues with the label "feature". Create a new
 - **(Optionally) describe how the enhancement could be implemented**. Of course, you can skip this step, if you are unsure about how it could be implemented.
 
 ## Creating pull requests
+The Chimera project uses Github's pull requests to merge features from feature branches into the `dev` branch, as described on the [development process wiki page](https://github.com/bptlab/chimera/wiki/Github-Workflow).
+Please use the provided [template for pull requests](PULL_REQUEST_TEMPLATE.md) when creating a pull request and fill it out. 
+We will be thankful, when you **provide a clear and descriptive title** and describe in detail **how you implemented the related features / fixed the related bug**. 
+
+The detailed process related to pull requests is described [in the wiki](https://github.com/bptlab/chimera/wiki/Github-Workflow#merge-into-dev).
 
 ## Releasing new versions
 See https://github.com/bptlab/chimera/wiki/Github-Workflow#releasing-a-new-version for information on releasing new versions of Chimera.
