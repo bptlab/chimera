@@ -11,7 +11,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstan
 @XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-public class ActivityLog extends LogEntry {
+public class ActivityLog extends LogEntryTransportationBean {
 
 	/**
 	 * for JPA only

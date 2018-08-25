@@ -11,7 +11,7 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 @XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-public class DataObjectLog extends LogEntry {
+public class DataObjectLog extends LogEntryTransportationBean {
 
 	/**
 	 * for JPA only

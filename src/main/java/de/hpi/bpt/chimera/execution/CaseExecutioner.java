@@ -39,7 +39,7 @@ import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
 import de.hpi.bpt.chimera.rest.beans.history.ActivityLog;
 import de.hpi.bpt.chimera.rest.beans.history.DataAttributeLog;
 import de.hpi.bpt.chimera.rest.beans.history.DataObjectLog;
-import de.hpi.bpt.chimera.rest.beans.history.LogEntry;
+import de.hpi.bpt.chimera.rest.beans.history.LogEntryTransportationBean;
 
 @Entity
 public class CaseExecutioner {
@@ -460,11 +460,11 @@ public class CaseExecutioner {
 	 * Sort the LogEntries descending by time which means the newest LogEntry
 	 * comes first.
 	 * 
-	 * @param logEntries
+	 * @param logEntryTransportationBeans
 	 *            - that shall be sorted
 	 */
-	synchronized private void sortLogs(List<? extends LogEntry> logEntries) {
-		logEntries.sort((l1, l2) -> l2.getTimeStamp().compareTo(l1.getTimeStamp()));
+	synchronized private void sortLogs(List<? extends LogEntryTransportationBean> logEntryTransportationBeans) {
+		logEntryTransportationBeans.sort((l1, l2) -> l2.getTimeStamp().compareTo(l1.getTimeStamp()));
 	}
 
 	/**

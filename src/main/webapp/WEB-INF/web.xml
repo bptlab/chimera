@@ -89,6 +89,7 @@
     <filter>
         <filter-name>CorsFilter</filter-name>
         <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+        <async-supported>true</async-supported>
         <init-param>
             <param-name>cors.allowed.origins</param-name>
             <param-value>*</param-value>

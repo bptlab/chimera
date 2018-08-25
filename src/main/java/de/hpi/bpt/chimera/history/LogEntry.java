@@ -17,7 +17,7 @@ import java.util.Date;
  */
 @XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.NONE)
-@Entity
+@Entity(name = "LogEntry")
 public class LogEntry {
 
 	@Id

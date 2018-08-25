@@ -22,7 +22,7 @@ import org.w3c.dom.Node;
 @Entity(name = "LogEntryTransportationBean")
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class LogEntry {
+public abstract class LogEntryTransportationBean {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.TABLE)
@@ -35,7 +35,7 @@ public abstract class LogEntry {
 	private String newValue;
 	private String objectReferenceId;
 
-	public LogEntry() {
+	public LogEntryTransportationBean() {
 		Date date = new Date();
 		this.timeStamp = new java.sql.Timestamp(date.getTime());
 	}

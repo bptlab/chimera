@@ -10,7 +10,7 @@ import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 @XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-public class DataAttributeLog extends LogEntry {
+public class DataAttributeLog extends LogEntryTransportationBean {
 
 	/**
 	 * for JPA only
