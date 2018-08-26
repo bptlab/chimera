@@ -4,16 +4,33 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Transient;
+
+@Entity
+@NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
 public class User {
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private String id;
 	private String name;
 	private String email;
 	private String password;
+	@ElementCollection(targetClass = SystemRole.class)
+	@Enumerated(EnumType.STRING)
 	private Set<SystemRole> systemRoles;
+	@Transient
 	private Set<Organization> organizations;
 
 	public User() {
-		this.id = UUID.randomUUID().toString().replace("-", "");
+		// this.id = UUID.randomUUID().toString().replace("-", "");
 		this.systemRoles = new HashSet<>();
 		this.organizations = new HashSet<>();
 	}

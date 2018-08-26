@@ -9,6 +9,7 @@ import java.util.Objects;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.exception.IllegalUserIdException;
+import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 public class UserManager {
 	private static Logger log = Logger.getLogger(UserManager.class);
@@ -29,11 +30,6 @@ public class UserManager {
 	 *             if the email is not assigned or the password is wrong.
 	 */
 	public static User authenticateUser(String email, String password) {
-		if (users.isEmpty()) {
-			User admin = createUser("admin", "admin", "admin");
-			admin.getSystemRoles().add(SystemRole.ADMIN);
-		}
-		
 		String hashedPassword = hashPassword(password);
 		for (User user : users.values()) {
 			if (user.getEmail().equals(email)) {
@@ -51,9 +47,9 @@ public class UserManager {
 	 * Create a user with a specific name and assign it to the default
 	 * organization.
 	 * 
-	 * @param name
-	 * @param username
+	 * @param email
 	 * @param password
+	 * @param username
 	 */
 	public static User createUser(String email, String password, String username) {
 		// TODO: validate email, password, username
@@ -62,6 +58,7 @@ public class UserManager {
 		String hashedPassword = hashPassword(password);
 		user.setPassword(hashedPassword);
 		user.setName(username);
+		DomainModelPersistenceManager.create(user);
 		String id = user.getId();
 		users.put(id, user);
 		OrganizationManager.assignMember(OrganizationManager.getDefaultOrganization(), user);
@@ -98,9 +95,14 @@ public class UserManager {
 	public static User getUserById(String userId) {
 		if (users.containsKey(userId)) {
 			return users.get(userId);
+		} else {
+			User user = DomainModelPersistenceManager.loadUser(userId);
+			if (user == null) {
+				throw new IllegalUserIdException(userId);
+			}
+			users.put(userId, user);
+			return user;
 		}
-
-		throw new IllegalUserIdException(userId);
 	}
 
 	/**
@@ -127,7 +129,8 @@ public class UserManager {
 			}
 
 			users.remove(user.getId());
-			log.info(String.format("Deleted user with id %s and name %s", user, name));
+			DomainModelPersistenceManager.removeUser(user);
+			log.info(String.format("Deleted user with id %s and name %s", user.getId(), name));
 		} catch (Exception e) {
 			throw e;
 		}
@@ -151,7 +154,33 @@ public class UserManager {
 		roles.remove(role);
 	}
 
+	/**
+	 * Create an admin for the system who will be the owner of the default
+	 * organization.
+	 */
+	public static void createAdmin() {
+		for (User user : users.values()) {
+			if ("Chimera".equals(user.getEmail())) {
+				return;
+			}
+		}
+		// TODO: create User by properties
+		User admin = createUser("Chimera", "admin", "Chimera");
+		admin.getSystemRoles().add(SystemRole.ADMIN);
+	}
+
 	public static List<User> getUsers() {
 		return new ArrayList<>(users.values());
+	}
+
+	public static Map<String, User> getUsersMap() {
+		return users;
+	}
+
+	public static void setUsers(List<User> newUsers) {
+		users = new HashMap<>();
+		for (User user : newUsers) {
+			users.put(user.getId(), user);
+		}
 	}
 }

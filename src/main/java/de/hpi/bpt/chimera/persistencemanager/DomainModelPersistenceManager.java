@@ -16,6 +16,8 @@ import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.usermanagment.User;
+import de.hpi.bpt.chimera.usermanagment.UserManager;
 
 public class DomainModelPersistenceManager {
 	// TODO in persistence.xml change <property
@@ -108,7 +110,7 @@ public class DomainModelPersistenceManager {
 			} catch (Exception e) {
 				log.error("Case persistence Exception", e);
 			}
-			em.close();
+			// em.close();
 
 			return mergedCaseModel;
 		}
@@ -134,11 +136,11 @@ public class DomainModelPersistenceManager {
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			log.error("Case persistence Exception", e);
-			em.close();
+			// em.close();
 			// TODO: think about this:
 			return caze;
 		}
-		em.close();
+		// em.close();
 
 		return  mergedCase;
 	}
@@ -186,7 +188,7 @@ public class DomainModelPersistenceManager {
 		catch(Exception e){
 			log.error("Case load Exception", e);
 		}
-		em.close();
+		// em.close();
 		return caze;
 	}
 
@@ -202,7 +204,7 @@ public class DomainModelPersistenceManager {
 		} catch (Exception e) {
 			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
 		}
-		em.close();
+		// em.close();
 	}
 
 	/**
@@ -230,7 +232,7 @@ public class DomainModelPersistenceManager {
 			log.error("Error while loading all Cases of a CaseModel Id from database", e);
 		}
 
-		em.close();
+		// em.close();
 		return caseExecutioners;
 	}
 
@@ -269,7 +271,7 @@ public class DomainModelPersistenceManager {
 		CaseModel caseModel = null;
 		EntityManager em = getEntityManager();
 		caseModel = em.find(CaseModel.class, cmId);
-		em.close();
+		// em.close();
 		return caseModel;
 	}
 
@@ -278,7 +280,7 @@ public class DomainModelPersistenceManager {
 		em.getTransaction().begin();
 		List<CaseModel> caseModelList = em.createNamedQuery("CaseModels.getAll", CaseModel.class).getResultList();
 		em.getTransaction().commit();
-		em.close();
+		// em.close();
 
 		if (caseModelList == null)
 			return new ArrayList<>();
@@ -297,10 +299,102 @@ public class DomainModelPersistenceManager {
 					throw new IllegalArgumentException(String.format("CaseModel id : %s is not assigned.", cmId));
 				em.remove(cmToRemove);
 				em.getTransaction().commit();
-				em.close();
+				// em.close();
 			}
 		} catch (Exception e) {
 			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
+		}
+	}
+
+	/**
+	 * Load everything that needs to be loaded from the database.
+	 */
+	public static void loadAll() {
+		UserManager.setUsers(loadUsers());
+	}
+
+	/**
+	 * Initial save of an object to the database.
+	 * 
+	 * @param object
+	 */
+	public static void create(Object object) {
+		try {
+			EntityManager em = getEntityManager();
+			em.getTransaction().begin();
+			em.persist(object);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			log.error("Error during initial persisting", e);
+		}
+	}
+
+	/**
+	 * Save an arbitrary List of objects to the database.
+	 * 
+	 * @param objects
+	 */
+	public static void save(List<? extends Object> objects) {
+		EntityManager em = getEntityManager();
+		em.getTransaction().begin();
+
+		for (Object object : objects) {
+			try {
+				em.merge(object);
+			} catch (Exception e) {
+				log.error("Error during persisting users", e);
+			}
+		}
+		em.getTransaction().commit();
+	}
+
+	/**
+	 * Save every object that needs to be saved to the database.
+	 */
+	public static void saveAll() {
+		save(UserManager.getUsers());
+	}
+
+	/**
+	 * Load a specific user from the database.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public static User loadUser(String userId) {
+		EntityManager em = getEntityManager();
+		return em.find(User.class, userId);
+	}
+
+	/**
+	 * Load all users from the database.
+	 * 
+	 * @return List of {@link User users}
+	 */
+	public static List<User> loadUsers() {
+		EntityManager em = getEntityManager();
+		List<User> users = em.createNamedQuery("User.getAll", User.class).getResultList();
+
+		if (users == null)
+			return new ArrayList<>();
+		else
+			return users;
+	}
+
+	/**
+	 * Delete a specific {@link User} from the database.
+	 * 
+	 * @param user
+	 */
+	public static void removeUser(User user) {
+		EntityManager em = getEntityManager();
+		try {
+			User userToRemove = em.find(User.class, user.getId());
+			em.getTransaction().begin();
+			em.remove(userToRemove);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			log.error("Error during deleting user from database", e);
 		}
 	}
 }
