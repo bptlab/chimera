@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
-import de.hpi.bpt.chimera.usermanagment.Organization;
-import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
-import de.hpi.bpt.chimera.usermanagment.User;
+import de.hpi.bpt.chimera.usermanagement.Organization;
+import de.hpi.bpt.chimera.usermanagement.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagement.User;
 
 @XmlRootElement
 public class OrganizationDetailsJaxBean extends OrganizationOverviewJaxBean {

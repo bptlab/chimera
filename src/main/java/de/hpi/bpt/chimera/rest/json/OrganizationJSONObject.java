@@ -5,8 +5,8 @@ import javax.ws.rs.core.UriInfo;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.usermanagment.Organization;
-import de.hpi.bpt.chimera.usermanagment.User;
+import de.hpi.bpt.chimera.usermanagement.Organization;
+import de.hpi.bpt.chimera.usermanagement.User;
 import net.minidev.json.JSONArray;
 
 public class OrganizationJSONObject extends JSONObject {

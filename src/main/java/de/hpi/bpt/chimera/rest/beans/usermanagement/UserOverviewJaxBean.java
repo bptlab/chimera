@@ -2,7 +2,7 @@ package de.hpi.bpt.chimera.rest.beans.usermanagement;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.usermanagment.User;
+import de.hpi.bpt.chimera.usermanagement.User;
 
 @XmlRootElement
 public class UserOverviewJaxBean {

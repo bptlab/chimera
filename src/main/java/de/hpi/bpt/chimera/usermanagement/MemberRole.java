@@ -1,12 +1,26 @@
-package de.hpi.bpt.chimera.usermanagment;
+package de.hpi.bpt.chimera.usermanagement;
 
 import java.util.Objects;
+import java.util.UUID;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class MemberRole {
+	@Id
+	private String dbId;
 	private String name;
+	@OneToOne
 	private Organization organization;
 
+	public MemberRole() {
+		// JPA
+	}
+
 	public MemberRole(String name, Organization organization) {
+		this.dbId = UUID.randomUUID().toString().replace("-", "");
 		this.name = name;
 		this.organization = organization;
 	}

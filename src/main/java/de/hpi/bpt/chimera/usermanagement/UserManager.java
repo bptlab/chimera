@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.usermanagment;
+package de.hpi.bpt.chimera.usermanagement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,11 +9,13 @@ import java.util.Objects;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.exception.IllegalUserIdException;
+import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 public class UserManager {
 	private static Logger log = Logger.getLogger(UserManager.class);
 	private static Map<String, User> users = new HashMap<>();
 
+	private static final String ADMIN_NAME = "admin";
 	private UserManager() {
 	}
 
@@ -29,11 +31,6 @@ public class UserManager {
 	 *             if the email is not assigned or the password is wrong.
 	 */
 	public static User authenticateUser(String email, String password) {
-		if (users.isEmpty()) {
-			User admin = createUser("admin", "admin", "admin");
-			admin.getSystemRoles().add(SystemRole.ADMIN);
-		}
-		
 		String hashedPassword = hashPassword(password);
 		for (User user : users.values()) {
 			if (user.getEmail().equals(email)) {
@@ -51,20 +48,25 @@ public class UserManager {
 	 * Create a user with a specific name and assign it to the default
 	 * organization.
 	 * 
-	 * @param name
-	 * @param username
+	 * @param email
 	 * @param password
+	 * @param username
 	 */
 	public static User createUser(String email, String password, String username) {
 		// TODO: validate email, password, username
+		if (email.equals(ADMIN_NAME)) {
+			throw new IllegalArgumentException("This name cannot be used");
+		}
 		User user = new User();
 		user.setEmail(email);
 		String hashedPassword = hashPassword(password);
 		user.setPassword(hashedPassword);
 		user.setName(username);
+
+		OrganizationManager.assignMember(OrganizationManager.getDefaultOrganization(), user);
 		String id = user.getId();
 		users.put(id, user);
-		OrganizationManager.assignMember(OrganizationManager.getDefaultOrganization(), user);
+
 		log.info(String.format("Created user with id %s and name %s", id, user.getName()));
 		return user;
 	}
@@ -98,9 +100,14 @@ public class UserManager {
 	public static User getUserById(String userId) {
 		if (users.containsKey(userId)) {
 			return users.get(userId);
+		} else {
+			User user = DomainModelPersistenceManager.loadUser(userId);
+			if (user == null) {
+				throw new IllegalUserIdException(userId);
+			}
+			users.put(userId, user);
+			return user;
 		}
-
-		throw new IllegalUserIdException(userId);
 	}
 
 	/**
@@ -127,7 +134,8 @@ public class UserManager {
 			}
 
 			users.remove(user.getId());
-			log.info(String.format("Deleted user with id %s and name %s", user, name));
+			DomainModelPersistenceManager.removeUser(user);
+			log.info(String.format("Deleted user with id %s and name %s", user.getId(), name));
 		} catch (Exception e) {
 			throw e;
 		}
@@ -147,11 +155,51 @@ public class UserManager {
 		if (!org.isMember(user)) {
 			throw new IllegalArgumentException("The specified user is not a member of the organization");
 		}
-		List<MemberRole> roles = org.getUserIdToRoles().get(user.getId());
+		List<MemberRole> roles = org.getMemberRoles(user);
 		roles.remove(role);
+	}
+
+	/**
+	 * Create an admin for the system who will be the owner of the default
+	 * organization.
+	 */
+	public static User createAdmin() {
+		for (User user : users.values()) {
+			if (ADMIN_NAME.equals(user.getEmail())) {
+				return user;
+			}
+		}
+		// TODO: create User by properties
+		// TODO: validate email, password, username
+		String email = ADMIN_NAME;
+		String password = "admin";
+		String username = ADMIN_NAME;
+
+		User admin = new User();
+		admin.setEmail(email);
+		String hashedPassword = hashPassword(password);
+		admin.setPassword(hashedPassword);
+		admin.setName(username);
+		admin.getSystemRoles().add(SystemRole.ADMIN);
+
+		log.info("Admin created");
+		String id = admin.getId();
+		users.put(id, admin);
+		return admin;
 	}
 
 	public static List<User> getUsers() {
 		return new ArrayList<>(users.values());
+	}
+
+	public static Map<String, User> getUsersMap() {
+		return users;
+	}
+
+	public static void setUsers(List<User> newUsers) {
+		users = new HashMap<>();
+		for (User user : newUsers) {
+			users.put(user.getId(), user);
+		}
 	}
 }
