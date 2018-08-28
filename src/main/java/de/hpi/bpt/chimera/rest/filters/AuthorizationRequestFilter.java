@@ -20,11 +20,11 @@ import de.hpi.bpt.chimera.execution.exception.IllegalIdentifierException;
 import de.hpi.bpt.chimera.execution.exception.IllegalOrganizationIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
-import de.hpi.bpt.chimera.usermanagment.MemberRole;
-import de.hpi.bpt.chimera.usermanagment.Organization;
-import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
-import de.hpi.bpt.chimera.usermanagment.User;
-import de.hpi.bpt.chimera.usermanagment.UserManager;
+import de.hpi.bpt.chimera.usermanagement.MemberRole;
+import de.hpi.bpt.chimera.usermanagement.Organization;
+import de.hpi.bpt.chimera.usermanagement.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagement.User;
+import de.hpi.bpt.chimera.usermanagement.UserManager;
 
 import java.io.IOException;
 import java.util.List;

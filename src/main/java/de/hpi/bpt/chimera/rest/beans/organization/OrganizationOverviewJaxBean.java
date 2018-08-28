@@ -2,7 +2,7 @@ package de.hpi.bpt.chimera.rest.beans.organization;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.usermanagment.Organization;
+import de.hpi.bpt.chimera.usermanagement.Organization;
 
 @XmlRootElement
 public class OrganizationOverviewJaxBean {

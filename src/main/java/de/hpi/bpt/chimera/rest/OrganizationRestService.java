@@ -31,11 +31,11 @@ import de.hpi.bpt.chimera.rest.beans.organization.OrganizationOverviewJaxBean;
 import de.hpi.bpt.chimera.rest.beans.organization.UpdateOrganizationJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.AssignUserJaxBean;
 import de.hpi.bpt.chimera.rest.beans.usermanagement.UserOverviewJaxBean;
-import de.hpi.bpt.chimera.usermanagment.MemberRole;
-import de.hpi.bpt.chimera.usermanagment.Organization;
-import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
-import de.hpi.bpt.chimera.usermanagment.User;
-import de.hpi.bpt.chimera.usermanagment.UserManager;
+import de.hpi.bpt.chimera.usermanagement.MemberRole;
+import de.hpi.bpt.chimera.usermanagement.Organization;
+import de.hpi.bpt.chimera.usermanagement.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagement.User;
+import de.hpi.bpt.chimera.usermanagement.UserManager;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
 import io.swagger.v3.oas.annotations.Operation;

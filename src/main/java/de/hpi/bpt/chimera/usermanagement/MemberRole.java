@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.usermanagment;
+package de.hpi.bpt.chimera.usermanagement;
 
 import java.util.Objects;
 import java.util.UUID;

@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.usermanagment.MemberRole;
-import de.hpi.bpt.chimera.usermanagment.Organization;
-import de.hpi.bpt.chimera.usermanagment.User;
+import de.hpi.bpt.chimera.usermanagement.MemberRole;
+import de.hpi.bpt.chimera.usermanagement.Organization;
+import de.hpi.bpt.chimera.usermanagement.User;
 
 @XmlRootElement
 public class MemberDetailsJaxBean {

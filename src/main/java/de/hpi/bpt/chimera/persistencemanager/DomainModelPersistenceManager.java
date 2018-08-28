@@ -16,10 +16,10 @@ import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.usermanagment.Organization;
-import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
-import de.hpi.bpt.chimera.usermanagment.User;
-import de.hpi.bpt.chimera.usermanagment.UserManager;
+import de.hpi.bpt.chimera.usermanagement.Organization;
+import de.hpi.bpt.chimera.usermanagement.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagement.User;
+import de.hpi.bpt.chimera.usermanagement.UserManager;
 
 public class DomainModelPersistenceManager {
 	// TODO in persistence.xml change <property
@@ -353,10 +353,11 @@ public class DomainModelPersistenceManager {
 		em.getTransaction().commit();
 	}
 
+	// TODO: extends this so casemodels and cases are saved here as well
 	/**
 	 * Save every object that needs to be saved to the database.
 	 */
-	public static void saveAll() {
+	public static void saveOrganizationsAndUsers() {
 		save(OrganizationManager.getOrganizations());
 		save(UserManager.getUsers());
 		log.info("Organizations and Users saved");

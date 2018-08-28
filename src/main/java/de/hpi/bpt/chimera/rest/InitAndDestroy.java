@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebListener;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
-import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagement.OrganizationManager;
 
 @WebListener
 public class InitAndDestroy implements ServletContextListener {
@@ -34,7 +34,7 @@ public class InitAndDestroy implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent arg0) {
 		log.info("shutdown process...");
 		DomainModelPersistenceManager.stopPermanentCasePersistence();
-		DomainModelPersistenceManager.saveAll();
+		DomainModelPersistenceManager.saveOrganizationsAndUsers();
 		DomainModelPersistenceManager.closeEntityManager();
 	}
 }
