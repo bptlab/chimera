@@ -25,7 +25,6 @@ public class InitAndDestroy implements ServletContextListener {
 		DomainModelPersistenceManager.loadAll();
 		log.info("Loaded all resources.");
 		OrganizationManager.createDefaultOrganization();
-		log.info("Created Default Organization.");
 	}
 
 	/**

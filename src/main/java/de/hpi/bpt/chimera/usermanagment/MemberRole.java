@@ -3,17 +3,13 @@ package de.hpi.bpt.chimera.usermanagment;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 @Entity
 public class MemberRole {
 	@Id
-	// @GeneratedValue(strategy = GenerationType.TABLE)
 	private String dbId;
 	private String name;
 	@OneToOne

@@ -47,6 +47,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+// TODO: allow deletion of ownership
 @Tag(name = "organizations")
 @ApiResponses(value = {
 		@ApiResponse(

@@ -14,21 +14,19 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MapKey;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import org.apache.log4j.Logger;
-
 import de.hpi.bpt.chimera.model.CaseModel;
 
+//TODO: use Sets instead of Maps because Users and CaseModels are known
+// through UserManager and CaseModelManager.
 @Entity
 @NamedQuery(name = "Organization.getAll", query = "SELECT o FROM Organization o")
 public class Organization {
-	private static final Logger log = Logger.getLogger(Organization.class);
-
 	@Id
-	// @GeneratedValue(strategy = GenerationType.TABLE)
 	private String id;
 	private String name;
 	private String description;
 
+	// TODO: maybe create an undeletable MemberRole "Owner" instead of this map
 	@OneToMany
 	@JoinTable(name = "Organization_Owners")
 	@MapKey(name = "id")
@@ -147,6 +145,7 @@ public class Organization {
 		this.roles = roles;
 	}
 
+	// TODO: for roles use ids and not names
 	public MemberRole getRole(String roleName) {
 		MemberRole role = null;
 		for (MemberRole orgRole : getRoles()) {
@@ -174,9 +173,23 @@ public class Organization {
 		return userIdToMemberDetails.get(user.getId()).getRoles();
 	}
 
+	public void addOwner(User user) {
+		owners.put(user.getId(), user);
+		if (!isMember(user)) {
+			addMember(user);
+		}
+	}
+
 	public void addMember(User user) {
 		members.put(user.getId(), user);
-		log.info(members.size());
 		userIdToMemberDetails.put(user.getId(), new MemberDetails(user));
+	}
+
+	public void removeMember(User user) {
+		members.remove(user.getId());
+		userIdToMemberDetails.remove(user.getId());
+		if (isOwner(user)) {
+			owners.remove(user.getId());
+		}
 	}
 }

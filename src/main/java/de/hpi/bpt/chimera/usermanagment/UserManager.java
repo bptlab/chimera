@@ -15,6 +15,7 @@ public class UserManager {
 	private static Logger log = Logger.getLogger(UserManager.class);
 	private static Map<String, User> users = new HashMap<>();
 
+	private static final String ADMIN_NAME = "admin";
 	private UserManager() {
 	}
 
@@ -53,12 +54,14 @@ public class UserManager {
 	 */
 	public static User createUser(String email, String password, String username) {
 		// TODO: validate email, password, username
+		if (email.equals(ADMIN_NAME)) {
+			throw new IllegalArgumentException("This name cannot be used");
+		}
 		User user = new User();
 		user.setEmail(email);
 		String hashedPassword = hashPassword(password);
 		user.setPassword(hashedPassword);
 		user.setName(username);
-		// DomainModelPersistenceManager.create(user);
 
 		OrganizationManager.assignMember(OrganizationManager.getDefaultOrganization(), user);
 		String id = user.getId();
@@ -162,15 +165,15 @@ public class UserManager {
 	 */
 	public static User createAdmin() {
 		for (User user : users.values()) {
-			if ("admin".equals(user.getEmail())) {
+			if (ADMIN_NAME.equals(user.getEmail())) {
 				return user;
 			}
 		}
 		// TODO: create User by properties
 		// TODO: validate email, password, username
-		String email = "admin";
+		String email = ADMIN_NAME;
 		String password = "admin";
-		String username = "admin";
+		String username = ADMIN_NAME;
 
 		User admin = new User();
 		admin.setEmail(email);
@@ -179,7 +182,7 @@ public class UserManager {
 		admin.setName(username);
 		admin.getSystemRoles().add(SystemRole.ADMIN);
 
-		// DomainModelPersistenceManager.create(admin);
+		log.info("Admin created");
 		String id = admin.getId();
 		users.put(id, admin);
 		return admin;

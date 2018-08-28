@@ -14,7 +14,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 
 public class CasePersistenceTask extends TimerTask {
-	final static Logger log = Logger.getLogger(CasePersistenceTask.class);
+	private static final Logger log = Logger.getLogger(CasePersistenceTask.class);
 
 	@Override
 	public void run() {
@@ -60,7 +60,6 @@ public class CasePersistenceTask extends TimerTask {
 		} catch (Exception e) {
 			log.error("Error while persisting all CaseModels and Cases", e);
 		}
-		log.debug("Finished persisting all case-modals.");
 	}
 
 }

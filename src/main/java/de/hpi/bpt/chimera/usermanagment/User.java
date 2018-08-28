@@ -1,29 +1,21 @@
 package de.hpi.bpt.chimera.usermanagment;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 @Entity
 @NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
 public class User {
 
-	// @GeneratedValue(strategy = GenerationType.TABLE)
 	@Id
 	private String id;
 	private String name;
@@ -32,9 +24,7 @@ public class User {
 	@ElementCollection(targetClass = SystemRole.class)
 	@Enumerated(EnumType.STRING)
 	private List<SystemRole> systemRoles;
-	// @ManyToMany(mappedBy = "members", cascade = CascadeType.ALL)
-	// @Transient
-	// @OneToMany(cascade = CascadeType.MERGE)
+
 	@ManyToMany(mappedBy = "members")
 	private List<Organization> organizations;
 

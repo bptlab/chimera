@@ -16,6 +16,8 @@ public class OrganizationManager {
 	private static Map<String, Organization> organizations = new HashMap<>();
 	private static Organization defaultOrganization;
 
+	private static final String DEFAULT_ORG_NAME = "Default";
+
 	private OrganizationManager() {
 	}
 
@@ -29,12 +31,11 @@ public class OrganizationManager {
 	 *            - for the organization that will be created
 	 */
 	public static Organization createOrganization(User user, String name) {
-		// TODO: validate name. "Default" needs to be reserved.
+		if (name.equals(DEFAULT_ORG_NAME)) {
+			throw new IllegalArgumentException("This name cannot be used");
+		}
 		Organization organization = new Organization(user, name);
-		log.info("Successfully created organization.");
-		// DomainModelPersistenceManager.create(organization);
 
-		log.info("Successfully persisted organization.");
 		String id = organization.getId();
 		organizations.put(id, organization);
 		user.addOrganization(organization);
@@ -82,6 +83,7 @@ public class OrganizationManager {
 			member.getOrganizations().remove(org);
 		}
 		organizations.remove(org.getId());
+		DomainModelPersistenceManager.removeOrganization(org);
 	}
 
 	/**
@@ -151,7 +153,6 @@ public class OrganizationManager {
 
 		organization.addMember(user);
 		user.addOrganization(organization);
-		log.info("Success");
 	}
 
 	/**
@@ -169,6 +170,10 @@ public class OrganizationManager {
 	 *             is not a member of the organization.
 	 */
 	public static void removeMember(Organization org, User user) {
+		if (org.equals(defaultOrganization)) {
+			throw new IllegalArgumentException("User cannot be removed from the default organization.");
+		}
+
 		String userId = user.getId();
 		if (org.isSoleOwner(user)) {
 			String message = String.format("The user with id %s is the last owner of the organiazion with id %s and can thus not be deleted", userId, org.getId());
@@ -176,9 +181,7 @@ public class OrganizationManager {
 		}
 
 		if (org.isMember(user)) {
-			org.getMembers().remove(userId);
-		} else if (org.isOwner(user)) {
-			org.getOwners().remove(userId);
+			org.removeMember(user);
 		} else {
 			String message = String.format("User with id %s is not a member of organiazion with id %s", userId, org.getId());
 			throw new IllegalArgumentException(message);
@@ -274,7 +277,7 @@ public class OrganizationManager {
 		if (!organization.isMember(newOwner)) {
 			assignMember(organization, newOwner);
 		}
-		organization.getOwners().put(newOwner.getId(), newOwner);
+		organization.addOwner(newOwner);
 	}
 
 	/**
@@ -282,14 +285,17 @@ public class OrganizationManager {
 	 */
 	public static void createDefaultOrganization() {
 		for (Organization org : organizations.values()) {
-			if ("Default".equals(org.getName())) {
+			if (DEFAULT_ORG_NAME.equals(org.getName())) {
 				return;
 			}
 		}
-		log.info("Default Organization to be created.");
 		User admin = UserManager.createAdmin();
-		log.info("Successfully created admin.");
-		defaultOrganization = createOrganization(admin, "Default");
+		Organization organization = new Organization(admin, DEFAULT_ORG_NAME);
+
+		String id = organization.getId();
+		organizations.put(id, organization);
+		admin.addOrganization(organization);
+		log.info("Default organization created");
 	}
 
 	public static Organization getDefaultOrganization() {

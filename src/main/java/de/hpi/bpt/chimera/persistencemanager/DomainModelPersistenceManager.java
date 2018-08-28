@@ -150,7 +150,6 @@ public class DomainModelPersistenceManager {
 	public static void saveAllCaseModelsWithCases() {
 		EntityManager em = getEntityManager();
 		em.getTransaction().begin();
-		log.debug("Started persisting all case-models.");
 
 		for (Map.Entry<String, List<CaseExecutioner>> entry : ExecutionService.getCaseModelIdToCaseExecutions().entrySet()) {
 			List<CaseExecutioner> newCaseExecutions = new ArrayList<>();
@@ -178,7 +177,7 @@ public class DomainModelPersistenceManager {
 		}
 
 		em.getTransaction().commit();
-		log.debug("Finished persisting all case-modals.");
+		log.debug("CaseModels and Cases saved");
 	}
 
 	public static Case loadCase(String caseId) {
@@ -321,6 +320,7 @@ public class DomainModelPersistenceManager {
 	 * 
 	 * @param object
 	 */
+	@Deprecated // Because we do not need an inital persist.
 	public static void create(Object object) {
 		try {
 			EntityManager em = getEntityManager();
@@ -353,56 +353,13 @@ public class DomainModelPersistenceManager {
 		em.getTransaction().commit();
 	}
 
-	public static void saveOrganizations() {
-		EntityManager em = getEntityManager();
-		em.getTransaction().begin();
-
-		for (Map.Entry<String, Organization> entry : OrganizationManager.getOrganizationIdToOrganization().entrySet()) {
-			try {
-				log.info(em.contains(entry.getValue()));
-				if (em.find(Organization.class, entry.getValue().getId()) != null) {
-					log.info("org exists in db");
-				}
-				log.info(entry.getValue().getMembers().size());
-				for (User member : entry.getValue().getMembers().values()) {
-					if (em.find(User.class, member.getId()) != null) {
-						log.info(String.format("Member with id %s exists in db", member.getId()));
-					} else {
-						log.info(String.format("Member with id %s does not exists in db", member.getId()));
-					}
-				}
-				em.merge(entry.getValue());
-				em.flush();
-			} catch (Exception e) {
-				log.error("Error during saving organizations", e);
-			}
-		}
-		em.getTransaction().commit();
-		em.close();
-	}
-
-	public static void saveUsers() {
-		EntityManager em = getEntityManager();
-		em.getTransaction().begin();
-
-		for (Map.Entry<String, User> entry : UserManager.getUsersMap().entrySet()) {
-			try {
-				entry.setValue(em.merge(entry.getValue()));
-			} catch (Exception e) {
-				log.error("Error during saving users", e);
-			}
-		}
-		em.getTransaction().commit();
-	}
-
 	/**
 	 * Save every object that needs to be saved to the database.
 	 */
 	public static void saveAll() {
 		save(OrganizationManager.getOrganizations());
 		save(UserManager.getUsers());
-		// saveOrganizations();
-		// saveUsers();
+		log.info("Organizations and Users saved");
 	}
 
 	/**
@@ -421,7 +378,7 @@ public class DomainModelPersistenceManager {
 	 * 
 	 * @return List of {@link User users}
 	 */
-	public static List<User> loadUsers() {
+	private static List<User> loadUsers() {
 		EntityManager em = getEntityManager();
 		List<User> users = em.createNamedQuery("User.getAll", User.class).getResultList();
 
@@ -461,5 +418,22 @@ public class DomainModelPersistenceManager {
 			return new ArrayList<>();
 		else
 			return organizations;
+	}
+
+	/**
+	 * Delete a specific {@link User} from the database.
+	 * 
+	 * @param user
+	 */
+	public static void removeOrganization(Organization org) {
+		EntityManager em = getEntityManager();
+		try {
+			Organization orgToRemove = em.find(Organization.class, org.getId());
+			em.getTransaction().begin();
+			em.remove(orgToRemove);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			log.error("Error during deleting organization from database", e);
+		}
 	}
 }
