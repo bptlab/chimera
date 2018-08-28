@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.exception.IllegalOrganizationIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 public class OrganizationManager {
 	private static Logger log = Logger.getLogger(OrganizationManager.class);
@@ -28,10 +29,15 @@ public class OrganizationManager {
 	 *            - for the organization that will be created
 	 */
 	public static Organization createOrganization(User user, String name) {
+		// TODO: validate name. "Default" needs to be reserved.
 		Organization organization = new Organization(user, name);
+		log.info("Successfully created organization.");
+		// DomainModelPersistenceManager.create(organization);
+
+		log.info("Successfully persisted organization.");
 		String id = organization.getId();
 		organizations.put(id, organization);
-		user.getOrganizations().add(organization);
+		user.addOrganization(organization);
 		log.info(String.format("User with id %s and name %s created organization with id %s and name %s", user.getId(), user.getName(), id, organization.getName()));
 		return organization;
 	}
@@ -49,7 +55,13 @@ public class OrganizationManager {
 		if (organizations.containsKey(orgId)) {
 			return organizations.get(orgId);
 		}
-		throw new IllegalOrganizationIdException(orgId);
+
+		Organization org = DomainModelPersistenceManager.loadOrganization(orgId);
+		if (org == null) {
+			throw new IllegalOrganizationIdException(orgId);
+		}
+		organizations.put(orgId, org);
+		return org;
 	}
 
 	/**
@@ -101,7 +113,7 @@ public class OrganizationManager {
 	 * @return List of casemodels that the {@code user} is allowed to access
 	 */
 	public static List<CaseModel> getCaseModels(Organization org, User user) {
-		List<MemberRole> memberRoles = org.getUserIdToRoles().get(user.getId());
+		List<MemberRole> memberRoles = org.getMemberRoles(user);
 		List<CaseModel> caseModels = new ArrayList<>();
 
 		if (org.isOwner(user)) {
@@ -133,15 +145,13 @@ public class OrganizationManager {
 	 *
 	 */
 	public static void assignMember(Organization organization, User user) {
-		Map<String, User> members = organization.getMembers();
-		String userId = user.getId();
-		if (members.containsKey(userId)) {
-			throw new IllegalArgumentException(String.format("User with id %s and name %s is already a assigned to the organization with id %s and name %s", userId, user.getName(), organization.getId(), organization.getName()));
+		if (organization.isMember(user)) {
+			throw new IllegalArgumentException(String.format("User with id %s and name %s is already a assigned to the organization with id %s and name %s", user.getId(), user.getName(), organization.getId(), organization.getName()));
 		}
 
-		members.put(userId, user);
-		organization.getUserIdToRoles().put(userId, new ArrayList<>());
-		user.getOrganizations().add(organization);
+		organization.addMember(user);
+		user.addOrganization(organization);
+		log.info("Success");
 	}
 
 	/**
@@ -176,23 +186,6 @@ public class OrganizationManager {
 	}
 
 	/**
-	 * Receive the default organization. If it does not exist, it will be
-	 * created.
-	 * 
-	 * @return {@link Organization}
-	 */
-	public static Organization getDefaultOrganization() {
-		if (defaultOrganization == null) {
-			User chimera = new User();
-			chimera.setEmail("email");
-			chimera.setName("Chimera");
-			chimera.setPassword("asdf");
-			defaultOrganization = createOrganization(chimera, "Default");
-		}
-		return defaultOrganization;
-	}
-
-	/**
 	 * Create a new organizational role for an organization. The name for
 	 * organizational roles must be unique.
 	 * 
@@ -210,7 +203,8 @@ public class OrganizationManager {
 			}
 		}
 		
-		org.getRoles().add(new MemberRole(name, org));
+		MemberRole role = new MemberRole(name, org);
+		org.getRoles().add(role);
 	}
 	
 	/**
@@ -229,8 +223,7 @@ public class OrganizationManager {
 			throw new IllegalArgumentException("The role does not belong to the organization");
 		}
 
-		for (String userId : org.getUserIdToRoles().keySet()) {
-			User user = UserManager.getUserById(userId);
+		for (User user : org.getMembers().values()) {
 			UserManager.deleteRole(user, org, role);
 		}
 
@@ -256,7 +249,7 @@ public class OrganizationManager {
 			throw new IllegalArgumentException("The user is not a member of the organization");
 		}
 
-		List<MemberRole> assignedRoles = organization.getUserIdToRoles().get(user.getId());
+		List<MemberRole> assignedRoles = organization.getMemberRoles(user);
 		if (assignedRoles.contains(role)) {
 			throw new IllegalArgumentException(String.format("The user already has the role %s", role.getName()));
 		}
@@ -284,7 +277,41 @@ public class OrganizationManager {
 		organization.getOwners().put(newOwner.getId(), newOwner);
 	}
 
+	/**
+	 * Create the default organization if it does not exist yet.
+	 */
+	public static void createDefaultOrganization() {
+		for (Organization org : organizations.values()) {
+			if ("Default".equals(org.getName())) {
+				return;
+			}
+		}
+		log.info("Default Organization to be created.");
+		User admin = UserManager.createAdmin();
+		log.info("Successfully created admin.");
+		defaultOrganization = createOrganization(admin, "Default");
+	}
+
+	public static Organization getDefaultOrganization() {
+		return defaultOrganization;
+	}
+
 	public static void setDefaultOrganization(Organization defaultOrganization) {
 		OrganizationManager.defaultOrganization = defaultOrganization;
+	}
+
+	public static List<Organization> getOrganizations() {
+		return new ArrayList<>(organizations.values());
+	}
+
+	public static Map<String, Organization> getOrganizationIdToOrganization() {
+		return organizations;
+	}
+
+	public static void setOrganizations(List<Organization> newOrganizations) {
+		organizations = new HashMap<>();
+		for (Organization org : newOrganizations) {
+			organizations.put(org.getId(), org);
+		}
 	}
 }

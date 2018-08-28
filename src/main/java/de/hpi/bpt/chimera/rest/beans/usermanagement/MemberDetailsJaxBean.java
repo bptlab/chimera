@@ -18,7 +18,7 @@ public class MemberDetailsJaxBean {
 	public MemberDetailsJaxBean(Organization org, User user) {
 		setName(user.getName());
 		setId(user.getId());
-		List<String> memberRoles = org.getUserIdToRoles().get(user.getId()).stream()
+		List<String> memberRoles = org.getMemberRoles(user).stream()
 									.map(MemberRole::getName)
 									.collect(Collectors.toList());
 		setRoles(memberRoles);

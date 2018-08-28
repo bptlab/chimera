@@ -1,9 +1,12 @@
 package de.hpi.bpt.chimera.usermanagment;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,28 +14,34 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 @Entity
 @NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
 public class User {
+
+	// @GeneratedValue(strategy = GenerationType.TABLE)
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
 	private String id;
 	private String name;
 	private String email;
 	private String password;
 	@ElementCollection(targetClass = SystemRole.class)
 	@Enumerated(EnumType.STRING)
-	private Set<SystemRole> systemRoles;
-	@Transient
-	private Set<Organization> organizations;
+	private List<SystemRole> systemRoles;
+	// @ManyToMany(mappedBy = "members", cascade = CascadeType.ALL)
+	// @Transient
+	// @OneToMany(cascade = CascadeType.MERGE)
+	@ManyToMany(mappedBy = "members")
+	private List<Organization> organizations;
 
 	public User() {
-		// this.id = UUID.randomUUID().toString().replace("-", "");
-		this.systemRoles = new HashSet<>();
-		this.organizations = new HashSet<>();
+		this.id = UUID.randomUUID().toString().replace("-", "");
+		this.systemRoles = new ArrayList<>();
+		this.organizations = new ArrayList<>();
 	}
 
 	public boolean isAdmin() {
@@ -71,19 +80,23 @@ public class User {
 		this.password = password;
 	}
 
-	public Set<SystemRole> getSystemRoles() {
+	public List<SystemRole> getSystemRoles() {
 		return systemRoles;
 	}
 
-	public void setSystemRoles(Set<SystemRole> systemRoles) {
+	public void setSystemRoles(List<SystemRole> systemRoles) {
 		this.systemRoles = systemRoles;
 	}
 
-	public Set<Organization> getOrganizations() {
+	public List<Organization> getOrganizations() {
 		return organizations;
 	}
 
-	public void setOrganizations(Set<Organization> organizations) {
+	public void setOrganizations(List<Organization> organizations) {
 		this.organizations = organizations;
+	}
+
+	public void addOrganization(Organization organization) {
+		organizations.add(organization);
 	}
 }

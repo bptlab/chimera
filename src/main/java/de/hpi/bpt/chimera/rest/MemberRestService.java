@@ -81,7 +81,7 @@ public class MemberRestService extends AbstractRestService {
 	 *         to view this information.
 	 */
 	@GET
-	@Path("{organizationId}/members")
+	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Operation(
 		summary = "Receive all members of a specific organization",
@@ -119,7 +119,7 @@ public class MemberRestService extends AbstractRestService {
 	 *         allowed to change this information.
 	 */
 	@POST
-	@Path("{organizationId}/members")
+	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Operation(
 		summary = "Assign an user as a new member of a specific organization",
@@ -171,7 +171,7 @@ public class MemberRestService extends AbstractRestService {
 	 *         these information.
 	 */
 	@GET
-	@Path("{organizationId}/members/{userId}")
+	@Path("{userId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Operation(
 		summary = "Receive information about a specific member",
@@ -210,7 +210,7 @@ public class MemberRestService extends AbstractRestService {
 	 *         membership.
 	 */
 	@DELETE
-	@Path("{organizationId}/members/{userId}")
+	@Path("{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Operation(
 		summary = "Remove a member from an organization",
@@ -257,7 +257,7 @@ public class MemberRestService extends AbstractRestService {
 	 *         information.
 	 */
 	@GET
-	@Path("{organizationId}/members/{userId}/roles")
+	@Path("{userId}/roles")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Operation(
 		summary = "Get all roles from a member in an organization",
@@ -273,7 +273,7 @@ public class MemberRestService extends AbstractRestService {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(NOT_A_MEMBER_MESSAGE)).build();
 		}
 
-		List<MemberRole> roles = organization.getUserIdToRoles().get(userToView.getId());
+		List<MemberRole> roles = organization.getMemberRoles(userToView);
 		JSONObject result = new JSONObject(new MultipleRolesJaxBean(roles));
 
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
@@ -298,7 +298,7 @@ public class MemberRestService extends AbstractRestService {
 	 *         request is not allowed to change these information.
 	 */
 	@POST
-	@Path("{organizationId}/members/{userId}/roles")
+	@Path("{userId}/roles")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Operation(
 		summary = "Assign a role to a member",
@@ -323,7 +323,7 @@ public class MemberRestService extends AbstractRestService {
 			MemberRole role = organization.getRole(bean.getName());
 			OrganizationManager.assignRole(organization, userToAssign, role);
 
-			List<MemberRole> roles = organization.getUserIdToRoles().get(userToAssign.getId());
+			List<MemberRole> roles = organization.getMemberRoles(userToAssign);
 			JSONObject result = new JSONObject(new MultipleRolesJaxBean(roles));
 
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
@@ -354,7 +354,7 @@ public class MemberRestService extends AbstractRestService {
 	 *         request is not allowed to change these information.
 	 */
 	@DELETE
-	@Path("{organizationId}/members/{userId}/roles/{roleName}")
+	@Path("{userId}/roles/{roleName}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Operation(
 		summary = "Remove a specific role from a member",
@@ -378,7 +378,7 @@ public class MemberRestService extends AbstractRestService {
 			MemberRole role = organization.getRole(roleName);
 			UserManager.deleteRole(requestedUser, organization, role);
 
-			List<MemberRole> roles = organization.getUserIdToRoles().get(requestedUser.getId());
+			List<MemberRole> roles = organization.getMemberRoles(requestedUser);
 			JSONObject result = new JSONObject(new MultipleRolesJaxBean(roles));
 
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
@@ -408,7 +408,7 @@ public class MemberRestService extends AbstractRestService {
 	 *         allowed to view these information.
 	 */
 	@GET
-	@Path("{organizationId}/members/{userId}/cases")
+	@Path("{userId}/cases")
 	@Tag(name = "cases")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Operation(

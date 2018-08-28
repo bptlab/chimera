@@ -58,10 +58,12 @@ public class UserManager {
 		String hashedPassword = hashPassword(password);
 		user.setPassword(hashedPassword);
 		user.setName(username);
-		DomainModelPersistenceManager.create(user);
+		// DomainModelPersistenceManager.create(user);
+
+		OrganizationManager.assignMember(OrganizationManager.getDefaultOrganization(), user);
 		String id = user.getId();
 		users.put(id, user);
-		OrganizationManager.assignMember(OrganizationManager.getDefaultOrganization(), user);
+
 		log.info(String.format("Created user with id %s and name %s", id, user.getName()));
 		return user;
 	}
@@ -150,7 +152,7 @@ public class UserManager {
 		if (!org.isMember(user)) {
 			throw new IllegalArgumentException("The specified user is not a member of the organization");
 		}
-		List<MemberRole> roles = org.getUserIdToRoles().get(user.getId());
+		List<MemberRole> roles = org.getMemberRoles(user);
 		roles.remove(role);
 	}
 
@@ -158,15 +160,29 @@ public class UserManager {
 	 * Create an admin for the system who will be the owner of the default
 	 * organization.
 	 */
-	public static void createAdmin() {
+	public static User createAdmin() {
 		for (User user : users.values()) {
-			if ("Chimera".equals(user.getEmail())) {
-				return;
+			if ("admin".equals(user.getEmail())) {
+				return user;
 			}
 		}
 		// TODO: create User by properties
-		User admin = createUser("Chimera", "admin", "Chimera");
+		// TODO: validate email, password, username
+		String email = "admin";
+		String password = "admin";
+		String username = "admin";
+
+		User admin = new User();
+		admin.setEmail(email);
+		String hashedPassword = hashPassword(password);
+		admin.setPassword(hashedPassword);
+		admin.setName(username);
 		admin.getSystemRoles().add(SystemRole.ADMIN);
+
+		// DomainModelPersistenceManager.create(admin);
+		String id = admin.getId();
+		users.put(id, admin);
+		return admin;
 	}
 
 	public static List<User> getUsers() {

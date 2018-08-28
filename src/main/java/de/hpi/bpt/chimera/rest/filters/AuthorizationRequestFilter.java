@@ -149,7 +149,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			return;
 		}
 
-		List<MemberRole> memberRoles = organization.getUserIdToRoles().get(requester.getId());
+		List<MemberRole> memberRoles = organization.getMemberRoles(requester);
 		for (MemberRole role : memberRoles) {
 			if (cm.getAllowedRoles().contains(role)) {
 				return;

@@ -6,17 +6,61 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.MapKey;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import org.apache.log4j.Logger;
+
 import de.hpi.bpt.chimera.model.CaseModel;
 
+@Entity
+@NamedQuery(name = "Organization.getAll", query = "SELECT o FROM Organization o")
 public class Organization {
+	private static final Logger log = Logger.getLogger(Organization.class);
+
+	@Id
+	// @GeneratedValue(strategy = GenerationType.TABLE)
 	private String id;
 	private String name;
 	private String description;
+
+	@OneToMany
+	@JoinTable(name = "Organization_Owners")
+	@MapKey(name = "id")
 	private Map<String, User> owners;
+
+	// TODO: theoretically it is possible to put a CascadeType.MERGE here and it
+	// should not be necessary to save Users extra because every User is in the
+	// Default Organization. But does it take longer?
+	@ManyToMany
+	@JoinTable(name = "Organization_Members")
+	@MapKey(name = "id")
 	private Map<String, User> members;
+
+	@OneToMany
+	@MapKey(name = "cmId")
 	private Map<String, CaseModel> caseModels;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "Organization_AvailableRoles")
 	private List<MemberRole> roles;
-	private Map<String, List<MemberRole>> userIdToRoles;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "Organization_UserRoles")
+	private Map<String, MemberDetails> userIdToMemberDetails;
+
+	public Organization() {
+		this.owners = new HashMap<>();
+		this.members = new HashMap<>();
+		this.caseModels = new HashMap<>();
+		this.roles = new ArrayList<>();
+		this.userIdToMemberDetails = new HashMap<>();
+	}
 
 	public Organization(User owner, String name) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
@@ -31,7 +75,8 @@ public class Organization {
 
 		this.caseModels = new HashMap<>();
 		this.roles = new ArrayList<>();
-		this.userIdToRoles = new HashMap<>();
+		this.userIdToMemberDetails = new HashMap<>();
+		userIdToMemberDetails.put(owner.getId(), new MemberDetails(owner));
 	}
 
 	public boolean isOwner(User user) {
@@ -117,11 +162,21 @@ public class Organization {
 		return role;
 	}
 
-	public Map<String, List<MemberRole>> getUserIdToRoles() {
-		return userIdToRoles;
+	public Map<String, MemberDetails> getUserIdToMemberDetails() {
+		return userIdToMemberDetails;
 	}
 
-	public void setUserIdToRoles(Map<String, List<MemberRole>> userIdToRoles) {
-		this.userIdToRoles = userIdToRoles;
+	public void setUserIdToMemberDetails(Map<String, MemberDetails> userIdToMemberDetails) {
+		this.userIdToMemberDetails = userIdToMemberDetails;
+	}
+
+	public List<MemberRole> getMemberRoles(User user) {
+		return userIdToMemberDetails.get(user.getId()).getRoles();
+	}
+
+	public void addMember(User user) {
+		members.put(user.getId(), user);
+		log.info(members.size());
+		userIdToMemberDetails.put(user.getId(), new MemberDetails(user));
 	}
 }

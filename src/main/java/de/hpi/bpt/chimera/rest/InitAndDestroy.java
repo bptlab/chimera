@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebListener;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
-import de.hpi.bpt.chimera.usermanagment.UserManager;
+import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
 
 @WebListener
 public class InitAndDestroy implements ServletContextListener {
@@ -23,7 +23,9 @@ public class InitAndDestroy implements ServletContextListener {
 		log.info("start-up process...");
 		DomainModelPersistenceManager.startPermanentCasePersistence();
 		DomainModelPersistenceManager.loadAll();
-		UserManager.createAdmin();
+		log.info("Loaded all resources.");
+		OrganizationManager.createDefaultOrganization();
+		log.info("Created Default Organization.");
 	}
 
 	/**

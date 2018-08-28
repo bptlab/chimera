@@ -16,6 +16,8 @@ import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.usermanagment.Organization;
+import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
 import de.hpi.bpt.chimera.usermanagment.User;
 import de.hpi.bpt.chimera.usermanagment.UserManager;
 
@@ -311,6 +313,7 @@ public class DomainModelPersistenceManager {
 	 */
 	public static void loadAll() {
 		UserManager.setUsers(loadUsers());
+		OrganizationManager.setOrganizations(loadOrganizations());
 	}
 
 	/**
@@ -330,7 +333,7 @@ public class DomainModelPersistenceManager {
 	}
 
 	/**
-	 * Save an arbitrary List of objects to the database.
+	 * Save an arbitrary List of entities to the database.
 	 * 
 	 * @param objects
 	 */
@@ -340,9 +343,53 @@ public class DomainModelPersistenceManager {
 
 		for (Object object : objects) {
 			try {
-				em.merge(object);
+				object = em.merge(object);
+				// TODO: research whether good use?
+				em.flush();
 			} catch (Exception e) {
-				log.error("Error during persisting users", e);
+				log.error(String.format("Error during saving %s", object.getClass().getName()), e);
+			}
+		}
+		em.getTransaction().commit();
+	}
+
+	public static void saveOrganizations() {
+		EntityManager em = getEntityManager();
+		em.getTransaction().begin();
+
+		for (Map.Entry<String, Organization> entry : OrganizationManager.getOrganizationIdToOrganization().entrySet()) {
+			try {
+				log.info(em.contains(entry.getValue()));
+				if (em.find(Organization.class, entry.getValue().getId()) != null) {
+					log.info("org exists in db");
+				}
+				log.info(entry.getValue().getMembers().size());
+				for (User member : entry.getValue().getMembers().values()) {
+					if (em.find(User.class, member.getId()) != null) {
+						log.info(String.format("Member with id %s exists in db", member.getId()));
+					} else {
+						log.info(String.format("Member with id %s does not exists in db", member.getId()));
+					}
+				}
+				em.merge(entry.getValue());
+				em.flush();
+			} catch (Exception e) {
+				log.error("Error during saving organizations", e);
+			}
+		}
+		em.getTransaction().commit();
+		em.close();
+	}
+
+	public static void saveUsers() {
+		EntityManager em = getEntityManager();
+		em.getTransaction().begin();
+
+		for (Map.Entry<String, User> entry : UserManager.getUsersMap().entrySet()) {
+			try {
+				entry.setValue(em.merge(entry.getValue()));
+			} catch (Exception e) {
+				log.error("Error during saving users", e);
 			}
 		}
 		em.getTransaction().commit();
@@ -352,7 +399,10 @@ public class DomainModelPersistenceManager {
 	 * Save every object that needs to be saved to the database.
 	 */
 	public static void saveAll() {
+		save(OrganizationManager.getOrganizations());
 		save(UserManager.getUsers());
+		// saveOrganizations();
+		// saveUsers();
 	}
 
 	/**
@@ -396,5 +446,20 @@ public class DomainModelPersistenceManager {
 		} catch (Exception e) {
 			log.error("Error during deleting user from database", e);
 		}
+	}
+
+	public static Organization loadOrganization(String orgId) {
+		EntityManager em = getEntityManager();
+		return em.find(Organization.class, orgId);
+	}
+
+	private static List<Organization> loadOrganizations() {
+		EntityManager em = getEntityManager();
+		List<Organization> organizations = em.createNamedQuery("Organization.getAll", Organization.class).getResultList();
+
+		if (organizations == null)
+			return new ArrayList<>();
+		else
+			return organizations;
 	}
 }
