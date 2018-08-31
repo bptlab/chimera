@@ -47,6 +47,14 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		this.requestContext = requestContext;
+		String path = requestContext.getUriInfo().getPath();
+		String[] pathParts = path.split("/");
+		// TODO: remove this workaround so the old version of the api is not
+		// filtered as soon
+		// as version 2 is removed
+		if (pathParts[0].equals("v2") || pathParts[1].equals("v2")) {
+			return;
+		}
 
 		try {
 			validateUser();
