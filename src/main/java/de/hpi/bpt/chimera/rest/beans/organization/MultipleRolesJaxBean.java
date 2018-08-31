@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.usermanagment.MemberRole;
+import de.hpi.bpt.chimera.usermanagement.MemberRole;
 
 @XmlRootElement
 public class MultipleRolesJaxBean {

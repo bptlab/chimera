@@ -20,11 +20,11 @@ import de.hpi.bpt.chimera.execution.exception.IllegalIdentifierException;
 import de.hpi.bpt.chimera.execution.exception.IllegalOrganizationIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
-import de.hpi.bpt.chimera.usermanagment.MemberRole;
-import de.hpi.bpt.chimera.usermanagment.Organization;
-import de.hpi.bpt.chimera.usermanagment.OrganizationManager;
-import de.hpi.bpt.chimera.usermanagment.User;
-import de.hpi.bpt.chimera.usermanagment.UserManager;
+import de.hpi.bpt.chimera.usermanagement.MemberRole;
+import de.hpi.bpt.chimera.usermanagement.Organization;
+import de.hpi.bpt.chimera.usermanagement.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagement.User;
+import de.hpi.bpt.chimera.usermanagement.UserManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,6 +47,14 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		this.requestContext = requestContext;
+		String path = requestContext.getUriInfo().getPath();
+		String[] pathParts = path.split("/");
+		// TODO: remove this workaround so the old version of the api is not
+		// filtered as soon
+		// as version 2 is removed
+		if (pathParts[0].equals("v2") || pathParts[1].equals("v2")) {
+			return;
+		}
 
 		try {
 			validateUser();
@@ -149,7 +157,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			return;
 		}
 
-		List<MemberRole> memberRoles = organization.getUserIdToRoles().get(requester.getId());
+		List<MemberRole> memberRoles = organization.getMemberRoles(requester);
 		for (MemberRole role : memberRoles) {
 			if (cm.getAllowedRoles().contains(role)) {
 				return;
