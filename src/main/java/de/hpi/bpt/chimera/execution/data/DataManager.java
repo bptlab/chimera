@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Map.Entry;
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
@@ -350,12 +353,13 @@ public class DataManager {
 	public Set<DataObject> getFulfillingDataObjects(ConditionSet inputSet) {
 		Set<DataObject> fulfillingDataObjects = new HashSet<>();
 		for (AtomicDataStateCondition condition : inputSet.getConditions()) {
-			DataObject fulfillingDataObject = getAvailableDataObjects(condition).iterator().next();
-			if (fulfillingDataObject == null) { // no fulfilling data object
-												// found
+			try {
+				DataObject fulfillingDataObject = getAvailableDataObjects(condition).iterator().next();
+				fulfillingDataObjects.add(fulfillingDataObject);
+			} catch (NoSuchElementException e) {
+				// no fulfilling data object found
 				return new HashSet<>();
 			}
-			fulfillingDataObjects.add(fulfillingDataObject);
 		}
 		return fulfillingDataObjects;
 	}
@@ -370,7 +374,7 @@ public class DataManager {
 	public Set<DataObject> getAvailableDataObjects(AtomicDataStateCondition condition) {
 		Set<DataObject> availableDataObjects = new HashSet<>();
 
-		for (DataObject dataObject : dataObjectIdToDataObject.values()) {
+		for (DataObject dataObject : getAvailableDataObjects()) {
 			if (condition.equals(dataObject.getCondition())) {
 				availableDataObjects.add(dataObject);
 			}
@@ -490,6 +494,16 @@ public class DataManager {
 		return dataObjects;
 	}
 
+	/**
+	 * 
+	 * @return all DataObjects that are not locked.
+	 */
+	public Set<DataObject> getAvailableDataObjects() {
+		return dataObjectIdToDataObject.values().stream()
+				.filter(d -> !d.isLocked())
+				.collect(Collectors.toSet());
+	}
+	
 	// GETTER & SETTER
 	public DataModel getDataModel() {
 		return dataModel;

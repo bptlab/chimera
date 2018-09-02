@@ -1,10 +1,8 @@
 package de.hpi.bpt.chimera.execution.controlnodes.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,9 +15,6 @@ import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.event.BoundaryEventInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
-import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 
@@ -125,7 +120,9 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 		}
 		setState(State.CANCEL);
 
-		List<DataObject> workingItems = getSelectedDataObjects();
+		// It is possible that an attached boundary event already unlocked some
+		// of the selected data objects
+		List<DataObject> workingItems = getSelectedDataObjects().stream().filter(d -> d.isLocked()).collect(Collectors.toList());
 		this.getCaseExecutioner().getDataManager().unlockDataObjects(workingItems);
 	}
 
