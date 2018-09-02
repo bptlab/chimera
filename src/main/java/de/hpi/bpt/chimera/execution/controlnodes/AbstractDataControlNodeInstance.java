@@ -70,7 +70,7 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 		if (getState().equals(State.INIT)) {
 			setState(State.CONTROLFLOW_ENABLED);
 		}
-		if (getState().equals(State.DATAFLOW_ENABLED) || getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
+		if (isDataFlowEnabled()) {
 			setState(State.READY);
 		}
 		if (canBeginAutomatically()) {
@@ -92,6 +92,11 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 		}
 	}
 
+	public boolean isDataFlowEnabled() {
+		return getState().equals(State.DATAFLOW_ENABLED) || getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions());
+	}
+
+	
 	/**
 	 * Used for updating the DataFlow of the ActivityInstance.
 	 */
