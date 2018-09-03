@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceTypeException;
 import de.hpi.bpt.chimera.execution.exception.IllegalIdentifierException;
@@ -192,9 +193,16 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		String activityInstanceId = parameters.getFirst("activityInstanceId");
 
 		try {
-			caseExecutioner.getActivityInstance(activityInstanceId);
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+			validateRole(activityInstance);
 		} catch (Exception e) {
 			throw e;
+		}
+	}
+
+	private void validateRole(AbstractActivityInstance activityInstance) {
+		if (!UserManager.hasAccess(requester, organization, activityInstance)) {
+			throw new IllegalArgumentException(UNAUTHORIZED_VIEW_MESSAGE);
 		}
 	}
 }
