@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.DefaultValue;
@@ -11,6 +12,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
@@ -29,6 +32,10 @@ import de.hpi.bpt.chimera.rest.beans.activity.TerminateActivityJaxBean;
 import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
 import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
 import de.hpi.bpt.chimera.rest.beans.miscellaneous.MessageJaxBean;
+import de.hpi.bpt.chimera.usermanagement.Organization;
+import de.hpi.bpt.chimera.usermanagement.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagement.User;
+import de.hpi.bpt.chimera.usermanagement.UserManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,9 +63,15 @@ public class ActivityRestService extends AbstractRestService {
 
 	@GET
 	@Path("")
-	@Operation(summary = "Receive the activity instances of a case", responses = {
-			@ApiResponse(responseCode = "200", description = "Successfully requested the activity instances.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleActivitiesJaxBean.class))) })
-	public Response receiveActivityInstances(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @DefaultValue("") @QueryParam("filter") String filterString, @DefaultValue("") @QueryParam("state") String stateName) {
+	@Operation(
+		summary = "Receive the activity instances of a case",
+		responses = {
+			@ApiResponse(
+				responseCode = "200", description = "Successfully requested the activity instances.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleActivitiesJaxBean.class))) })
+	public Response receiveActivityInstances(@Context ContainerRequestContext requestContext, @PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @DefaultValue("") @QueryParam("filter") String filterString, @DefaultValue("") @QueryParam("state") String stateName) {
+		User user = retrieveUser(requestContext);
+		Organization org = OrganizationManager.getOrganizationById(orgId);
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(caseId);
 
 		List<AbstractActivityInstance> activityInstances = new ArrayList<>();
@@ -79,10 +92,16 @@ public class ActivityRestService extends AbstractRestService {
 		}
 
 		if (!filterString.isEmpty()) {
-			activityInstances = activityInstances.stream().filter(instance -> instance.getControlNode().getName().contains(filterString)).collect(Collectors.toList());
+			activityInstances = activityInstances.stream()
+									.filter(instance -> instance.getControlNode().getName().contains(filterString))
+									.collect(Collectors.toList());
 		}
 
-		JSONObject result = new JSONObject(new MultipleActivitiesJaxBean(activityInstances));
+		Predicate<AbstractActivityInstance> canAccess = a -> UserManager.hasAccess(user, org, a);
+		List<AbstractActivityInstance> accessableInstances = activityInstances.stream()
+																.filter(canAccess)
+																.collect(Collectors.toList());
+		JSONObject result = new JSONObject(new MultipleActivitiesJaxBean(accessableInstances));
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 	

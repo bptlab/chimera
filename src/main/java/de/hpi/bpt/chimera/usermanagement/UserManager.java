@@ -5,10 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.exception.IllegalUserIdException;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 public class UserManager {
@@ -157,6 +161,45 @@ public class UserManager {
 		}
 		List<MemberRole> roles = org.getMemberRoles(user);
 		roles.remove(role);
+	}
+
+	/**
+	 * Decide whether a user can access a certain
+	 * {@link AbstractActivityInstance} with roles provided by an
+	 * {@link Organization}. Only {@link HumanTask} has a defined role. An owner
+	 * has access to all activities in an organization. If the role of the task
+	 * is {@code member} every member of the organization has access to it.
+	 * Otherwise the {@link User} needs to have the correct {@link MemberRole}
+	 * in the organization.
+	 * 
+	 * @param user
+	 * @param org
+	 * @param activityInstance
+	 * @return boolean whether a user can access a certain Activity Instance
+	 *         with roles provided by the Organization.
+	 */
+	public static boolean hasAccess(User user, Organization org, AbstractActivityInstance activityInstance) {
+		if (!org.isMember(user)) {
+			return false;
+		}
+		if (org.isOwner(user)) {
+			return true;
+		}
+
+		AbstractActivity activity = activityInstance.getControlNode();
+		if (!(activity instanceof HumanTask)) {
+			return true;
+		}
+		HumanTask task = (HumanTask) activity;
+		String role = task.getRole();
+
+		if ("member".equals(role)) {
+			return true;
+		}
+		List<MemberRole> memberRoles = org.getMemberRoles(user);
+		Predicate<MemberRole> hasRole = r -> r.getName().equals(role);
+
+		return memberRoles.stream().anyMatch(hasRole);
 	}
 
 	/**
