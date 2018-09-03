@@ -54,7 +54,7 @@ public class DataObjectRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the dataobjects.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MultipleDataObjectsJaxBean.class)))})
-	public Response getDataObjects(@PathParam("caseId") String caseId, @DefaultValue("") @QueryParam("filter") String filterString) {
+	public Response getDataObjects(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @DefaultValue("") @QueryParam("filter") String filterString) {
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(caseId);
 
 		DataManager dataManager = caseExecutioner.getDataManager();
@@ -77,7 +77,7 @@ public class DataObjectRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the dataobject.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = DataObjectJaxBean.class)))})
-	public Response getDataObject(@PathParam("caseId") String caseId, @PathParam("dataObjectId") String dataObjectId) {
+	public Response getDataObject(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @PathParam("dataObjectId") String dataObjectId) {
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(caseId);
 

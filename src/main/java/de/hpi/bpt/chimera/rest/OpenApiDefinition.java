@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @OpenAPIDefinition(
@@ -23,11 +22,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 		@Tag(name = "activities", description = "Requests concerning activities."),
 		@Tag(name = "events", description = "Requests concerning events."),
 		@Tag(name = "emails", description = "Requests concerning email tasks."),
-		@Tag(name = "members", description = "Requests concerning members of an organization.")},
-	servers = {
-		@Server(url = "https://bpt-lab.org/chimera-dev/api"),
-		@Server(url = "http://localhost:8080/Chimera/api")
-	})
+		@Tag(name = "members", description = "Requests concerning members of an organization.") }
+// There is an undesired behavior in the automatic generation of the server
+// object in swagger because the attribute 'allowedValues' in @ServerVariable
+// always results in 'enum' in the swagger json.
+// This means there is always a dropdown menu and not a textfield.
+// To resolve this the server attribute of the open api definition is described
+// in {basedir}/src/main/webapp/WEB-INF/openapi-configuration.json
+)
 @SecurityScheme(
 	name = "BasicAuth",
 	type = SecuritySchemeType.HTTP,

@@ -50,9 +50,11 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 		this.requestContext = requestContext;
 		String path = requestContext.getUriInfo().getPath();
 		String[] pathParts = path.split("/");
+		if (pathParts.length <= 1) {
+			return;
+		}
 		// TODO: remove this workaround so the old version of the api is not
-		// filtered as soon
-		// as version 2 is removed
+		// filtered as soon as version 2 is removed
 		if (pathParts[0].equals("v2") || pathParts[1].equals("v2")) {
 			return;
 		}
