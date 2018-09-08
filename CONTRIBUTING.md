@@ -58,6 +58,7 @@ The detailed process related to pull requests is described [in the wiki](https:/
 See https://github.com/bptlab/chimera/wiki/Github-Workflow#releasing-a-new-version for information on releasing new versions of Chimera.
 
 ## Styleguides
+You find styleguides for code, commit messages, and github issues on the wiki page https://github.com/bptlab/chimera/wiki/Styleguides.
 
 ## Finding Help
 The best source for information about Chimera is the [developer documentation](https://github.com/bptlab/chimera/wiki/DevDoc) in the wiki.
