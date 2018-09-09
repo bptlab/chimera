@@ -63,7 +63,11 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 			validateCase();
 			validateActivityInstance();
 		} catch (WebApplicationException e) {
-			throw e;
+			if (e.getResponse().getStatus() == Response.Status.UNAUTHORIZED.getStatusCode()) {
+				Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).header("WWW-Authenticate", "Basic").build();
+				this.requestContext.abortWith(unauthorized);
+			}
+			// throw e;
 		} catch (IllegalIdentifierException e) {
 			log.error(e);
 			JSONObject message = new JSONObject(new DangerExceptionJaxBean(e.getMessage()));
