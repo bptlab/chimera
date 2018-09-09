@@ -14,3 +14,4 @@ src/main/resources/META-INF/persistence.xml
 src/main/resources/
 config.properties
 config_template.properties
+mysql_schema_version.txt

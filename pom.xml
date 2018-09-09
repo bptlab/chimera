@@ -48,14 +48,20 @@
 				          </properties>
 				          <source>
 				          	def file = new File('mysql_schema_version.txt') 
-				          	int  oldVersion = file.text.toInteger()
-				          	if(properties['version'].toInteger() == oldVersion){
-				          		println 'Database version did not changed. Database will not be recreated.'
-				          	} else {
-				          		println 'Database version changed. Database schema will be deleted and recreated.'
-				          		project.properties.eclipseLinkDdlGeneration = 'drop-and-create-tables'
-				          		file.write(properties['version'])				          		
-				          	}
+				          	if(file.exists()){
+					          	int  oldVersion = file.text.toInteger()
+					          	if(properties['version'].toInteger() == oldVersion){
+					          		println 'Database version did not changed. Database will not be recreated.'
+					          	} else {
+					          		println 'Database version changed. Database schema will be deleted and recreated.'
+					          		project.properties.eclipseLinkDdlGeneration = 'drop-and-create-tables'
+					          		file.write(properties['version'])				          		
+					          	}
+					          } else{
+					          	println 'No current database schema version found. Database schema will be deleted and recreated.'
+					          		project.properties.eclipseLinkDdlGeneration = 'drop-and-create-tables'
+					          		file.write(properties['version'])
+					          }
 				          </source>
 				        </configuration>
 				      </execution>
