@@ -286,6 +286,7 @@ public class OrganizationManager {
 	public static void createDefaultOrganization() {
 		for (Organization org : organizations.values()) {
 			if (DEFAULT_ORG_NAME.equals(org.getName())) {
+				setDefaultOrganization(org);
 				return;
 			}
 		}
@@ -294,6 +295,7 @@ public class OrganizationManager {
 
 		String id = organization.getId();
 		organizations.put(id, organization);
+		setDefaultOrganization(organization);
 		admin.addOrganization(organization);
 		log.info("Default organization created");
 	}

@@ -3,9 +3,11 @@ package de.hpi.bpt.chimera.validation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.BoundaryEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
@@ -48,6 +50,7 @@ public class FragmentValidator {
 			validateTimerEventPosition();
 			validateEventType();
 			validateDataControlNodeAmount();
+			validateTaskRoles();
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
@@ -142,6 +145,25 @@ public class FragmentValidator {
 		}
 	}
 
+	/**
+	 * Validate the name of roles.
+	 */
+	private void validateTaskRoles() {
+		List<HumanTask> tasks = fragment.getBpmnFragment().getActivities().stream()
+									.filter(a -> a instanceof HumanTask)
+									.map(HumanTask.class::cast)
+									.collect(Collectors.toList());
+
+		for (HumanTask task : tasks) {
+			try {
+				String role = task.getRole();
+				NameValidation.validateName(role);
+			} catch (Exception e) {
+				throw e;
+			}
+		}
+	}
+	
 	public Fragment getFragment() {
 		return fragment;
 	}
