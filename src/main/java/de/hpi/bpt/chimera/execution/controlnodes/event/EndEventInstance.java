@@ -32,7 +32,7 @@ public class EndEventInstance extends AbstractEventInstance {
 		}
 
 		super.terminate();
-		// getFragmentInstance().terminate();
+		getFragmentInstance().terminate();
 	}
 
 	@Override
