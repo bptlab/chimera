@@ -1,0 +1,28 @@
+{
+	"terminationconditions": [],
+	"fragments": [{
+		"bound": {
+			"hasBound": false,
+			"limit": 100
+		},
+		"preconditions": [],
+		"_id": "5ba145cc7593420040cadd91",
+		"name": "Default Fragment",
+		"content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" id=\"Definitions_1\" targetNamespace=\"http://bpmn.io/schema/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:outgoing>SequenceFlow_0vy2x8y</bpmn:outgoing>\n    </bpmn:startEvent>\n    <bpmn:task id=\"Task_0wyhfye\" name=\"First Task\">\n      <bpmn:incoming>SequenceFlow_0vy2x8y</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1bh0k4z</bpmn:outgoing>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0vy2x8y\" sourceRef=\"StartEvent_1\" targetRef=\"Task_0wyhfye\" />\n    <bpmn:endEvent id=\"EndEvent_0cah2hq\">\n      <bpmn:incoming>SequenceFlow_0vk2xuc</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:task id=\"Task_10ryuhu\" name=\"Second Task\">\n      <bpmn:incoming>SequenceFlow_1bh0k4z</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0vk2xuc</bpmn:outgoing>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1bh0k4z\" sourceRef=\"Task_0wyhfye\" targetRef=\"Task_10ryuhu\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_0vk2xuc\" sourceRef=\"Task_10ryuhu\" targetRef=\"EndEvent_0cah2hq\" />\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"183\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"156\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_0wyhfye_di\" bpmnElement=\"Task_0wyhfye\">\n        <dc:Bounds x=\"319\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0vy2x8y_di\" bpmnElement=\"SequenceFlow_0vy2x8y\">\n        <di:waypoint x=\"219\" y=\"191\" />\n        <di:waypoint x=\"251\" y=\"191\" />\n        <di:waypoint x=\"251\" y=\"191\" />\n        <di:waypoint x=\"319\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"201\" y=\"110\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_0cah2hq_di\" bpmnElement=\"EndEvent_0cah2hq\">\n        <dc:Bounds x=\"669\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"642\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_10ryuhu_di\" bpmnElement=\"Task_10ryuhu\">\n        <dc:Bounds x=\"486.6492450638792\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1bh0k4z_di\" bpmnElement=\"SequenceFlow_1bh0k4z\">\n        <di:waypoint x=\"419\" y=\"191\" />\n        <di:waypoint x=\"487\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"453\" y=\"170\" width=\"0\" height=\"12\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0vk2xuc_di\" bpmnElement=\"SequenceFlow_0vk2xuc\">\n        <di:waypoint x=\"587\" y=\"191\" />\n        <di:waypoint x=\"669\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"628\" y=\"170\" width=\"0\" height=\"12\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n",
+		"policy": "sequential",
+		"revision": 5,
+		"__v": 0
+	}],
+	"_id": "5ba145cc7593420040cadd8f",
+	"name": "SequentialFragmentInstantiationTest",
+	"revision": 1,
+	"startconditions": [],
+	"domainmodel": {
+		"_id": "5ba145cc7593420040cadd90",
+		"dataclasses": [],
+		"revision": 1,
+		"name": "SequentialFragmentInstantiationTest",
+		"__v": 0
+	},
+	"__v": 0
+}

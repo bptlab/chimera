@@ -2,6 +2,8 @@ package de.hpi.bpt.chimera.model.fragment;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,6 +29,11 @@ public class Fragment {
 	private BpmnFragment bpmnFragment;
 	@OneToOne(cascade = CascadeType.ALL)
 	private FragmentPreCondition fragmentPreCondition;
+
+	@Enumerated(EnumType.STRING)
+	private FragmentInstantiationPolicy policy;
+	private boolean hasBound;
+	private int instantiationLimit;
 
 	public String getId() {
 		return id;
@@ -68,5 +75,29 @@ public class Fragment {
 
 	public void setFragmentPreCondition(FragmentPreCondition fragmentPreCondition) {
 		this.fragmentPreCondition = fragmentPreCondition;
+	}
+
+	public FragmentInstantiationPolicy getPolicy() {
+		return policy;
+	}
+
+	public void setPolicy(FragmentInstantiationPolicy policy) {
+		this.policy = policy;
+	}
+
+	public boolean getHasBound() {
+		return hasBound;
+	}
+
+	public void setHasBound(boolean hasBound) {
+		this.hasBound = hasBound;
+	}
+
+	public int getInstantiationLimit() {
+		return instantiationLimit;
+	}
+
+	public void setInstantiationLimit(int instantiationLimit) {
+		this.instantiationLimit = instantiationLimit;
 	}
 }
