@@ -13,6 +13,16 @@ We try to follow established open source principles to teach them to our student
 
 :notebook: You can read more about our vision [in the wiki](https://github.com/bptlab/chimera/wiki/ProductVision)
 
+## Code of Conduct
+
+We strive to be a inclusive, academic community bound by the principles of scientific research. 
+Our goals are to improve the understanding of Case Management and BPM as a whole.
+The Case Management discipline is all about improving communication and collaboration between case workers, stakeholders, and clients.
+To this end, we foster a fact-based and polite conversation style, when discussing the vision and development of Chimera.
+Critique aiming at the political, religious, geographical, or gender context of a person is not tolerated; discussing this contexts is, although this project is not the right place for it.
+
+**TODO**: Add contact email
+
 ## Reporting Bugs
 This section explains how you can submit a good bug report, which is *understandable* and *reproducible*.
 
