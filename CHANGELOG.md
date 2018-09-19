@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### added
+- fragment instantiation policy that includes the behaviors sequential and concurrent and an optional limit of instantiations  
+
+### added
 - new API version 3 that includes management of organizations and users (**todo:** add link to wiki)
 - automatic generation of API specification using swagger
 
