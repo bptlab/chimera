@@ -26,8 +26,8 @@ import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.FragmentPreCondition;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
+import de.hpi.bpt.chimera.model.fragment.FragmentInstantiationPolicy;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 
 @Entity
@@ -59,7 +59,6 @@ public class FragmentInstance {
 		// JPA needs an empty constructor to instantiate objects of this class
 		// at runtime.
 	}
-
 
 	public FragmentInstance(Fragment fragment, Case caze) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
@@ -160,18 +159,38 @@ public class FragmentInstance {
 		return state.equals(FragmentState.ACTIVE);
 	}
 
+	/**
+	 * Transfer the fragment instance from {@link FragmentState#ENABLED} to
+	 * {@link FragmentState#ACTIVE}. If the instantiated fragment has the policy
+	 * {@link FragmentInstantiationPolicy#CONCURRENT} a new fragment of this
+	 * type will be instantiated and enabled.
+	 */
 	public void activate() {
 		if (state.equals(FragmentState.ENABLED)) {
 			setState(FragmentState.ACTIVE);
-			FragmentInstance fragmentInstance = getCase().addFragmentInstance(fragment);
-			if (fragmentInstance != null) {
-				fragmentInstance.enable();
+
+			if (getFragment().getPolicy().equals(FragmentInstantiationPolicy.CONCURRENT)) {
+				getCase().instantiateFragmentAndEnableInstance(getFragment());
 			}
 		}
 	}
 
+	/**
+	 * Terminate the fragment instance. If the instantiated fragment has the
+	 * policy {@link FragmentInstantiationPolicy#SEQUENTIAL} a new fragment of
+	 * this type will be instantiated and enabled.
+	 * 
+	 * @see {@link Case#terminateFragmentInstance(FragmentInstance)
+	 *      terminateFragmentInstance},
+	 *      {@link Case#instantiateFragmentAndEnableInstance(Fragment)
+	 *      instantiateFragmentAndEnableInstance}
+	 */
 	public void terminate() {
-		caze.removeFragmentInstance(this);
+		caze.terminateFragmentInstance(this);
+
+		if (getFragment().getPolicy().equals(FragmentInstantiationPolicy.SEQUENTIAL)) {
+			getCase().instantiateFragmentAndEnableInstance(getFragment());
+		}
 	}
 
 	/**

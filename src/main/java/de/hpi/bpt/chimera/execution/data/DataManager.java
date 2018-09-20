@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Map.Entry;
+import java.util.Optional;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -31,6 +35,9 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.rest.beans.activity.ObjectLifecycleTransitionJaxBean;
+import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataAttributeJaxBean;
+import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
 
 /**
  * I manage the data objects of a case.
@@ -83,6 +90,7 @@ public class DataManager {
 	 * @param dataClassToStateTransitionStrings
 	 * @return Map from DataClass to ObjectLifecycleState
 	 */
+	@Deprecated
 	public Map<DataClass, ObjectLifecycleState> resolveDataClassToStateTransition(Map<String, String> dataClassToStateTransitionStrings) {
 		Map<DataClass, ObjectLifecycleState> dataClassToStateTransition = new HashMap<>();
 		Map<String, DataClass> dataClassNameToDataClass = dataModel.getNameToDataClass();
@@ -108,6 +116,37 @@ public class DataManager {
 	}
 
 	/**
+	 * Resolve a Map of DataClass name and ObjectLifecycle name to the
+	 * corresponding DataClass and ObjectLifecycleState.
+	 * 
+	 * @param dataClassToStateTransitionStrings
+	 * @return Map from DataClass to ObjectLifecycleState
+	 */
+	public List<ObjectLifecycleTransition> resolveDataClassToStateTransition(List<ObjectLifecycleTransitionJaxBean> rawObjectLifecycleTransitions) {
+		List<ObjectLifecycleTransition> objectLifecycleTransitions = new ArrayList<>();
+		Map<String, DataClass> dataClassNameToDataClass = dataModel.getNameToDataClass();
+		for (ObjectLifecycleTransitionJaxBean rawObjectLifecycleTransition : rawObjectLifecycleTransitions) {
+			String dataClassName = rawObjectLifecycleTransition.getDataclass();
+			if (!dataClassNameToDataClass.containsKey(dataClassName)) {
+				IllegalDataClassNameException e = new IllegalDataClassNameException(dataClassName);
+				log.error(e.getMessage());
+				throw e;
+			}
+			DataClass dataClass = dataClassNameToDataClass.get(dataClassName);
+			String objectLifecycleStateName = rawObjectLifecycleTransition.getObjectlifecyclestate();
+			Map<String, ObjectLifecycleState> olcStateNameToOlcState = dataClass.getNameToObjectLifecycleState();
+			if (!olcStateNameToOlcState.containsKey(objectLifecycleStateName)) {
+				IllegalObjectLifecycleStateNameException e = new IllegalObjectLifecycleStateNameException(dataClass, dataClassName);
+				log.error(e.getMessage());
+				throw e;
+			}
+			ObjectLifecycleState olcState = olcStateNameToOlcState.get(objectLifecycleStateName);
+			objectLifecycleTransitions.add(new ObjectLifecycleTransition(dataClass, olcState));
+		}
+		return objectLifecycleTransitions;
+	}
+
+	/**
 	 * Handle the transitions and new creations of DataObject that shell make a
 	 * transition specified in {@code dataClassToStateTransitions}. Therefore
 	 * validate if the DataClasses of these DataObjects exist in
@@ -124,6 +163,7 @@ public class DataManager {
 	 * @return the List of DataObject that had a transition and were newly
 	 *         created
 	 */
+	@Deprecated
 	public List<DataObject> handleDataObjectTransitions(List<DataObject> boundDataObjects, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		// validation
 		List<DataObject> transitionedDataObjects = new ArrayList<>();
@@ -159,6 +199,62 @@ public class DataManager {
 		return transitionedDataObjects;
 	}
 
+	/**
+	 * Handle the transitions and new creations of DataObject that shell make a
+	 * transition specified in {@code dataClassToStateTransitions}. Therefore
+	 * validate if the DataClasses of these DataObjects exist in
+	 * {@code objectLifecycleTransitions} and if the the referred
+	 * {@link ObjectLifecycle} is a valid successor of the current
+	 * ObjectLifecycle of the DataObject. The ObjectLifecycleStates of the
+	 * {@code objectLifecycleTransitions} make the designated transition and the
+	 * DataClasses that are in objectLifecycleTransitions but not a DataClass
+	 * of one {@code objectLifecycleTransitions} lead to a new DataObject with the
+	 * referred ObjectLifecycleState.
+	 * 
+	 * @param boundDataObjects
+	 * @param objectLifecycleTransitions
+	 * @return the List of DataObject that had a transition and were newly
+	 *         created
+	 */
+	public List<DataObject> handleDataObjectTransitions(List<DataObject> boundDataObjects, List<ObjectLifecycleTransition> objectLifecycleTransitions) {
+		// TODO: only when all transitions are valid make the transition
+		List<DataObject> resultingDataObjects = new ArrayList<>();
+		for (DataObject dataObject : boundDataObjects) {
+			DataClass dataClass = dataObject.getDataClass();
+			
+			Optional<ObjectLifecycleTransition> optionalTransition = objectLifecycleTransitions.stream()
+																.filter(t -> t.getDataclass().equals(dataClass))
+																.findFirst();
+			if (!optionalTransition.isPresent()) {
+				continue;
+			}
+			ObjectLifecycleTransition objectLifecycleTransition = optionalTransition.get();
+			// check whether OLC allows transition
+			ObjectLifecycleState oldOlcState = dataObject.getObjectLifecycleState();
+			ObjectLifecycleState newOlcState = objectLifecycleTransition.getOlcState();
+			if (!newOlcState.isSuccessorOf(oldOlcState)) { // invalid transition -> throw exception
+				IllegalObjectLifecycleStateSuccessorException e = new IllegalObjectLifecycleStateSuccessorException(dataClass, oldOlcState, newOlcState);
+				log.error(e.getMessage());
+				throw e;
+			}
+			// make transition
+			dataObject.makeObjectLifecycleTransition(newOlcState);
+			resultingDataObjects.add(dataObject);
+			// transition made, remove the data class from the unhandled list
+			objectLifecycleTransitions.remove(objectLifecycleTransition);
+		}
+
+		// create new DataObjects for the yet unhandled data classes
+		for (ObjectLifecycleTransition objectLifecycleTransition : objectLifecycleTransitions) {
+			DataClass dataClass = objectLifecycleTransition.getDataclass();
+			ObjectLifecycleState olcState = objectLifecycleTransition.getOlcState();
+			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
+			DataObject dataObject = createDataObject(condition);
+			resultingDataObjects.add(dataObject);
+		}
+		return resultingDataObjects;
+	}
+	
 	/**
 	 * Lock those {@link DataObject}{@code s} that are referred by the
 	 * dataObjectIds and returns these DataObjects. If a DataObject shall be
@@ -257,12 +353,13 @@ public class DataManager {
 	public Set<DataObject> getFulfillingDataObjects(ConditionSet inputSet) {
 		Set<DataObject> fulfillingDataObjects = new HashSet<>();
 		for (AtomicDataStateCondition condition : inputSet.getConditions()) {
-			DataObject fulfillingDataObject = getAvailableDataObjects(condition).iterator().next();
-			if (fulfillingDataObject == null) { // no fulfilling data object
-												// found
+			try {
+				DataObject fulfillingDataObject = getAvailableDataObjects(condition).iterator().next();
+				fulfillingDataObjects.add(fulfillingDataObject);
+			} catch (NoSuchElementException e) {
+				// no fulfilling data object found
 				return new HashSet<>();
 			}
-			fulfillingDataObjects.add(fulfillingDataObject);
 		}
 		return fulfillingDataObjects;
 	}
@@ -277,7 +374,7 @@ public class DataManager {
 	public Set<DataObject> getAvailableDataObjects(AtomicDataStateCondition condition) {
 		Set<DataObject> availableDataObjects = new HashSet<>();
 
-		for (DataObject dataObject : dataObjectIdToDataObject.values()) {
+		for (DataObject dataObject : getAvailableDataObjects()) {
 			if (condition.equals(dataObject.getCondition())) {
 				availableDataObjects.add(dataObject);
 			}
@@ -310,6 +407,7 @@ public class DataManager {
 	 * @param dataAttributeValues
 	 * @param usedDataObjects
 	 */
+	@Deprecated
 	public void setDataAttributeValuesByNames(Map<String, Map<String, Object>> dataAttributeValues, List<DataObject> usedDataObjects) {
 		for (Map.Entry<String, Map<String, Object>> dataclassNameToDataAttributeValues : dataAttributeValues.entrySet()) {
 			String dataclassName = dataclassNameToDataAttributeValues.getKey();
@@ -328,6 +426,29 @@ public class DataManager {
 				DataAttributeInstance dataAttributeInstance = usedDataObject.getDataAttributeInstanceByName(dataAttributeName);
 				if (dataAttributeInstance != null) {
 					dataAttributeInstance.setValue(dataAttributeNameToValue.getValue());
+				}
+			}
+		}
+	}
+
+	public void setDataAttributeValuesByNames(List<UpdateDataObjectJaxBean> update, List<DataObject> usedDataObjects) {
+		for (UpdateDataObjectJaxBean dataObjectUpdate : update) {
+			String dataclassName = dataObjectUpdate.getDataclass();
+			DataObject usedDataObject = null;
+			for (DataObject dataObject : usedDataObjects) {
+				if (dataObject.getDataClass().getName().equals(dataclassName)) {
+					usedDataObject = dataObject;
+					break;
+				}
+			}
+			if (usedDataObject == null) {
+				continue;
+			}
+			for (UpdateDataAttributeJaxBean dataAttributeUpdate : dataObjectUpdate.getAttributeUpdate()) {
+				String dataAttributeName = dataAttributeUpdate.getAttribute();
+				DataAttributeInstance dataAttributeInstance = usedDataObject.getDataAttributeInstanceByName(dataAttributeName);
+				if (dataAttributeInstance != null) {
+					dataAttributeInstance.setValue(dataAttributeUpdate.getValue());
 				}
 			}
 		}
@@ -373,6 +494,16 @@ public class DataManager {
 		return dataObjects;
 	}
 
+	/**
+	 * 
+	 * @return all DataObjects that are not locked.
+	 */
+	public Set<DataObject> getAvailableDataObjects() {
+		return dataObjectIdToDataObject.values().stream()
+				.filter(d -> !d.isLocked())
+				.collect(Collectors.toSet());
+	}
+	
 	// GETTER & SETTER
 	public DataModel getDataModel() {
 		return dataModel;

@@ -1,9 +1,12 @@
 package de.hpi.bpt.chimera.execution;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -22,11 +25,11 @@ public final class ExecutionService {
 	/**
 	 * Map of CaseModelId to a list of {@link CaseExecutioner}s.
 	 */
-	private static Map<String, List<CaseExecutioner>> caseModelIdToCaseExecutions = new HashMap<>();
+	private static Map<String, List<CaseExecutioner>> caseModelIdToCaseExecutions = new ConcurrentHashMap<>();
 	/**
 	 * Map of CaseId to their {@link CaseExecutioner}. These are the active cases stored in memory.
 	 */
-	private static Map<String, CaseExecutioner> cases = new HashMap<>();
+	private static Map<String, CaseExecutioner> cases = new ConcurrentHashMap<>();
 
 	// Do not instantiate 
 	private ExecutionService() {
@@ -78,7 +81,7 @@ public final class ExecutionService {
 		if (!cases.containsKey(caseId)) {
 			Case caze = DomainModelPersistenceManager.loadCase(caseId);
 			if (caze == null) {
-				IllegalCaseIdException e = new IllegalCaseIdException(cmId);
+				IllegalCaseIdException e = new IllegalCaseIdException(caseId);
 				log.error(e.getMessage());
 				throw e;
 			} else {
@@ -88,6 +91,19 @@ public final class ExecutionService {
 		return cases.get(caseId);
 	}
 
+	public static CaseExecutioner getCaseExecutioner(String caseId) {
+		if (!cases.containsKey(caseId)) {
+			Case caze = DomainModelPersistenceManager.loadCase(caseId);
+			if (caze == null) {
+				IllegalCaseIdException e = new IllegalCaseIdException(caseId);
+				log.error(e.getMessage());
+				throw e;
+			} else {
+				addCase(caze.getCaseExecutioner());
+			}
+		}
+		return cases.get(caseId);
+	}
 	/**
 	 * Creates a new {@link CaseExecutioner} for the case model by the given id.
 	 * The case executioner is added to the list of active cases. The caller
@@ -140,7 +156,7 @@ public final class ExecutionService {
 		return caseExecutioner;
 	}
 
-	private static void addCase(CaseExecutioner caseExecutioner) {
+	synchronized private static void addCase(CaseExecutioner caseExecutioner) {
 		if (cases.containsKey(caseExecutioner.getCase().getId())) {
 			return;
 		}
@@ -193,7 +209,9 @@ public final class ExecutionService {
 			return new ArrayList<>();
 		}
 		log.info(String.format("Successfully requested all Case-Informations of CaseModel-Id: %s", cmId));
-		return caseModelIdToCaseExecutions.get(cmId);
+		return caseModelIdToCaseExecutions.get(cmId).stream()
+				.sorted(Comparator.comparing(CaseExecutioner::getInstantiation))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -202,7 +220,7 @@ public final class ExecutionService {
 	 * 
 	 * @param cmId
 	 */
-	public static void deleteAllCasesOfCaseModel(String cmId) {
+	synchronized public static void deleteAllCasesOfCaseModel(String cmId) {
 		if (caseModelIdToCaseExecutions.containsKey(cmId)) {
 			List<CaseExecutioner> executions = caseModelIdToCaseExecutions.get(cmId);
 			for (CaseExecutioner caseExecutioner : executions) {

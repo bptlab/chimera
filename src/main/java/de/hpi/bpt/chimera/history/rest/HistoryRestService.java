@@ -104,11 +104,11 @@ public class HistoryRestService {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"The instance or scenario ID " + "is incorrect\"}").build();
 		}
 		
-		List<de.hpi.bpt.chimera.history.transportationbeans.LogEntry> logEntries = new ArrayList<>();
-		logEntries.addAll(caseExecutioner.getActivityLogs());
-		logEntries.addAll(caseExecutioner.getDataObjectLogs());
-		logEntries.addAll(caseExecutioner.getDataAttributeLogs());
-		JSONArray result = new JSONArray(logEntries);
+		List<de.hpi.bpt.chimera.rest.beans.history.LogEntryTransportationBean> logEntryTransportationBeans = new ArrayList<>();
+		logEntryTransportationBeans.addAll(caseExecutioner.getActivityLogs());
+		logEntryTransportationBeans.addAll(caseExecutioner.getDataObjectLogs());
+		logEntryTransportationBeans.addAll(caseExecutioner.getDataAttributeLogs());
+		JSONArray result = new JSONArray(logEntryTransportationBeans);
 		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 

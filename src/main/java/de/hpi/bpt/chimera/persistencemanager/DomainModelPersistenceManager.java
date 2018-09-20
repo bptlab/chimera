@@ -16,6 +16,10 @@ import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.usermanagement.Organization;
+import de.hpi.bpt.chimera.usermanagement.OrganizationManager;
+import de.hpi.bpt.chimera.usermanagement.User;
+import de.hpi.bpt.chimera.usermanagement.UserManager;
 
 public class DomainModelPersistenceManager {
 	// TODO in persistence.xml change <property
@@ -42,7 +46,7 @@ public class DomainModelPersistenceManager {
 	 * 
 	 * @return EntityManagerFactory
 	 */
-	public static EntityManagerFactory getEntityManagerFactory() {
+	synchronized public static EntityManagerFactory getEntityManagerFactory() {
 		if (!isEntityManagerFactoryInitialized) {
 			entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 			isEntityManagerFactoryInitialized = true;
@@ -72,7 +76,7 @@ public class DomainModelPersistenceManager {
 	 * application context is destroyed (e.g. server shut down).
 	 * 
 	 */
-	public static void closeEntityManager() {
+	synchronized public static void closeEntityManager() {
 		if (entityManager != null && entityManager.isOpen()) {
 			entityManager.close();
 		}
@@ -93,23 +97,25 @@ public class DomainModelPersistenceManager {
 		EntityManager em = getEntityManager();
 		CaseModel mergedCaseModel = caseModel;
 
-		try {
-			em.getTransaction().begin();
+		synchronized (caseModel) {
+			try {
+				em.getTransaction().begin();
 
-			// CaseModel alreadyExistingCaseModel = em.find(CaseModel.class,
-			// caseModel.getId());
-			// if (alreadyExistingCaseModel != null) {
-			// em.remove(alreadyExistingCaseModel);
-			// }
-			// em.flush();
-			mergedCaseModel = em.merge(caseModel);
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			log.error("Case persistence Exception", e);
+				// CaseModel alreadyExistingCaseModel = em.find(CaseModel.class,
+				// caseModel.getId());
+				// if (alreadyExistingCaseModel != null) {
+				// em.remove(alreadyExistingCaseModel);
+				// }
+				// em.flush();
+				mergedCaseModel = em.merge(caseModel);
+				em.getTransaction().commit();
+			} catch (Exception e) {
+				log.error("Case persistence Exception", e);
+			}
+			// em.close();
+
+			return mergedCaseModel;
 		}
-		em.close();
-
-		return mergedCaseModel;
 	}
 
 	// ToDo make a sober implementation of saving cases. Maybe with an own class
@@ -123,17 +129,20 @@ public class DomainModelPersistenceManager {
 		EntityManager em = getEntityManager();
 		Case mergedCase;
 
+
 		try {
 			em.getTransaction().begin();
-			mergedCase = em.merge(caze);
+			synchronized (caze.getCaseExecutioner()) {
+				mergedCase = em.merge(caze);
+			}
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			log.error("Case persistence Exception", e);
-			em.close();
+			// em.close();
 			// TODO: think about this:
 			return caze;
 		}
-		em.close();
+		// em.close();
 
 		return  mergedCase;
 	}
@@ -141,13 +150,15 @@ public class DomainModelPersistenceManager {
 	public static void saveAllCaseModelsWithCases() {
 		EntityManager em = getEntityManager();
 		em.getTransaction().begin();
-		log.debug("Started persisting all case-models.");
 
 		for (Map.Entry<String, List<CaseExecutioner>> entry : ExecutionService.getCaseModelIdToCaseExecutions().entrySet()) {
 			List<CaseExecutioner> newCaseExecutions = new ArrayList<>();
 			for (CaseExecutioner caseExecutioner : entry.getValue()) {
 				try {
-					CaseExecutioner newCaseExecutioner = em.merge(caseExecutioner);
+					CaseExecutioner newCaseExecutioner;
+					synchronized (caseExecutioner) {
+						newCaseExecutioner = em.merge(caseExecutioner);
+					}
 					ExecutionService.getCasesMap().put(newCaseExecutioner.getCase().getId(), newCaseExecutioner);
 					newCaseExecutions.add(newCaseExecutioner);
 				} catch (Exception e) {
@@ -166,7 +177,7 @@ public class DomainModelPersistenceManager {
 		}
 
 		em.getTransaction().commit();
-		log.debug("Finished persisting all case-modals.");
+		log.debug("CaseModels and Cases saved");
 	}
 
 	public static Case loadCase(String caseId) {
@@ -178,21 +189,23 @@ public class DomainModelPersistenceManager {
 		catch(Exception e){
 			log.error("Case load Exception", e);
 		}
-		em.close();
+		// em.close();
 		return caze;
 	}
 
 	public static void deleteCase(Case caze) {
 		EntityManager em = getEntityManager();
 		try {
-			em.getTransaction().begin();
-			Case caseToRemove = em.find(Case.class, caze.getId());
-			em.remove(caseToRemove);
-			em.getTransaction().commit();
+			synchronized (caze.getCaseExecutioner()) {
+				em.getTransaction().begin();
+				Case caseToRemove = em.find(Case.class, caze.getId());
+				em.remove(caseToRemove);
+				em.getTransaction().commit();
+			}
 		} catch (Exception e) {
 			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
 		}
-		em.close();
+		// em.close();
 	}
 
 	/**
@@ -220,7 +233,7 @@ public class DomainModelPersistenceManager {
 			log.error("Error while loading all Cases of a CaseModel Id from database", e);
 		}
 
-		em.close();
+		// em.close();
 		return caseExecutioners;
 	}
 
@@ -229,7 +242,7 @@ public class DomainModelPersistenceManager {
 	 * Starts a Timer that every {@link PERSISTENCE_INTERVAL} seconds saves all
 	 * existing cases to DB.
 	 */
-	public static void startPermanentCasePersistence() {
+	synchronized public static void startPermanentCasePersistence() {
 		if (timer == null) {
 			log.info("Starting a new permanent repeating CasePersistenceTask");
 			timer = new Timer();
@@ -240,7 +253,7 @@ public class DomainModelPersistenceManager {
 	/**
 	 * Stops the permanent persisting of all cases.
 	 */
-	public static void stopPermanentCasePersistence() {
+	synchronized public static void stopPermanentCasePersistence() {
 		if (timer != null) {
 			timer.cancel();
 		}
@@ -259,7 +272,7 @@ public class DomainModelPersistenceManager {
 		CaseModel caseModel = null;
 		EntityManager em = getEntityManager();
 		caseModel = em.find(CaseModel.class, cmId);
-		em.close();
+		// em.close();
 		return caseModel;
 	}
 
@@ -268,7 +281,7 @@ public class DomainModelPersistenceManager {
 		em.getTransaction().begin();
 		List<CaseModel> caseModelList = em.createNamedQuery("CaseModels.getAll", CaseModel.class).getResultList();
 		em.getTransaction().commit();
-		em.close();
+		// em.close();
 
 		if (caseModelList == null)
 			return new ArrayList<>();
@@ -282,13 +295,146 @@ public class DomainModelPersistenceManager {
 			log.info("Trying do delete, a casemodel with id:" + cmId);
 			em.getTransaction().begin();
 			CaseModel cmToRemove = em.find(CaseModel.class, cmId);
-			if (cmToRemove == null)
-				throw new IllegalArgumentException(String.format("CaseModel id : %s is not assigned.", cmId));
-			em.remove(cmToRemove);
-			em.getTransaction().commit();
-			em.close();
+			synchronized (cmToRemove) {
+				if (cmToRemove == null)
+					throw new IllegalArgumentException(String.format("CaseModel id : %s is not assigned.", cmId));
+				em.remove(cmToRemove);
+				em.getTransaction().commit();
+				// em.close();
+			}
 		} catch (Exception e) {
 			log.error("Can't delete Case. Maybe it's not stored in the database or an other error occured (see error message).", e);
+		}
+	}
+
+	/**
+	 * Load everything that needs to be loaded from the database.
+	 */
+	public static void loadAll() {
+		UserManager.setUsers(loadUsers());
+		OrganizationManager.setOrganizations(loadOrganizations());
+	}
+
+	/**
+	 * Initial save of an object to the database.
+	 * 
+	 * @param object
+	 */
+	@Deprecated // Because we do not need an inital persist.
+	public static void create(Object object) {
+		try {
+			EntityManager em = getEntityManager();
+			em.getTransaction().begin();
+			em.persist(object);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			log.error("Error during initial persisting", e);
+		}
+	}
+
+	/**
+	 * Save an arbitrary List of entities to the database.
+	 * 
+	 * @param objects
+	 */
+	public static void save(List<? extends Object> objects) {
+		EntityManager em = getEntityManager();
+		em.getTransaction().begin();
+
+		for (Object object : objects) {
+			try {
+				object = em.merge(object);
+				// TODO: research whether good use?
+				em.flush();
+			} catch (Exception e) {
+				log.error(String.format("Error during saving %s", object.getClass().getName()), e);
+			}
+		}
+		em.getTransaction().commit();
+	}
+
+	// TODO: extends this so casemodels and cases are saved here as well
+	/**
+	 * Save every object that needs to be saved to the database.
+	 */
+	public static void saveOrganizationsAndUsers() {
+		save(OrganizationManager.getOrganizations());
+		save(UserManager.getUsers());
+		log.info("Organizations and Users saved");
+	}
+
+	/**
+	 * Load a specific user from the database.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public static User loadUser(String userId) {
+		EntityManager em = getEntityManager();
+		return em.find(User.class, userId);
+	}
+
+	/**
+	 * Load all users from the database.
+	 * 
+	 * @return List of {@link User users}
+	 */
+	private static List<User> loadUsers() {
+		EntityManager em = getEntityManager();
+		List<User> users = em.createNamedQuery("User.getAll", User.class).getResultList();
+
+		if (users == null)
+			return new ArrayList<>();
+		else
+			return users;
+	}
+
+	/**
+	 * Delete a specific {@link User} from the database.
+	 * 
+	 * @param user
+	 */
+	public static void removeUser(User user) {
+		EntityManager em = getEntityManager();
+		try {
+			User userToRemove = em.find(User.class, user.getId());
+			em.getTransaction().begin();
+			em.remove(userToRemove);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			log.error("Error during deleting user from database", e);
+		}
+	}
+
+	public static Organization loadOrganization(String orgId) {
+		EntityManager em = getEntityManager();
+		return em.find(Organization.class, orgId);
+	}
+
+	private static List<Organization> loadOrganizations() {
+		EntityManager em = getEntityManager();
+		List<Organization> organizations = em.createNamedQuery("Organization.getAll", Organization.class).getResultList();
+
+		if (organizations == null)
+			return new ArrayList<>();
+		else
+			return organizations;
+	}
+
+	/**
+	 * Delete a specific {@link User} from the database.
+	 * 
+	 * @param user
+	 */
+	public static void removeOrganization(Organization org) {
+		EntityManager em = getEntityManager();
+		try {
+			Organization orgToRemove = em.find(Organization.class, org.getId());
+			em.getTransaction().begin();
+			em.remove(orgToRemove);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			log.error("Error during deleting organization from database", e);
 		}
 	}
 }

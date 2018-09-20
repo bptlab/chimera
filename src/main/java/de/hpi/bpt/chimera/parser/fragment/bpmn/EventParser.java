@@ -1,7 +1,6 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +10,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-
-import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
 
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
@@ -56,6 +53,9 @@ public class EventParser {
 		fragment.setIntermediateCatchEvents(getIntermediateCatchEventsFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver, parserHelper));
 		fragment.setIntermediateThrowEvents(getIntermediateThrowEventsFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.setBoundaryEvents(getBoundaryEventsFromXmlWrapper(fragXmlWrap, fragment.getActivities(), sfResolver, dfResolver));
+		for (AbstractEvent event : fragment.getEvents()) {
+			modifyMessageReceiveEventJsonMapping(event, parserHelper);
+		}
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class EventParser {
 			IntermediateCatchEvent intermediateCatchEvent = new IntermediateCatchEvent();
 			parseEvent(intermediateCatchEvent, xmlIntermediateCatchEvent, sfResolver, dfResolver);
 
-			modifyCatchEventJsonMapping(intermediateCatchEvent, parserHelper);
+			modifyMessageReceiveEventJsonMapping(intermediateCatchEvent, parserHelper);
 			intermediateCatchEventList.add(intermediateCatchEvent);
 		}
 		return intermediateCatchEventList;
@@ -148,16 +148,16 @@ public class EventParser {
 	 * of the form Select * from 'eventclass') and the attribute mapping for all
 	 * attributes need to be empty (no JsonPath expression specified).
 	 * 
-	 * @param intermediateCatchEvent
+	 * @param event
 	 *            - which postconditon may be adjusted
 	 * @param parserHelper
 	 *            - that contains information about the casemodel
 	 */
-	private static void modifyCatchEventJsonMapping(IntermediateCatchEvent intermediateCatchEvent, CaseModelParserHelper parserHelper) {
-		if (intermediateCatchEvent.hasPostCondition() && intermediateCatchEvent.hasUniquePostCondition()
-			&& intermediateCatchEvent.getSpecialBehavior().equals(SpecialBehavior.MESSAGE_RECEIVE)) {
+	private static void modifyMessageReceiveEventJsonMapping(AbstractEvent event, CaseModelParserHelper parserHelper) {
+		if (event.hasPostCondition() && event.hasUniquePostCondition()
+			&& event.getSpecialBehavior().equals(SpecialBehavior.MESSAGE_RECEIVE)) {
 
-			MessageReceiveDefinition receiveDefinition = (MessageReceiveDefinition) intermediateCatchEvent.getSpecialEventDefinition();
+			MessageReceiveDefinition receiveDefinition = (MessageReceiveDefinition) event.getSpecialEventDefinition();
 			Pattern p = Pattern.compile("Select \\* from (\\w+)\\b");
 			Matcher m = p.matcher(receiveDefinition.getEventQuerry());
 			
@@ -172,7 +172,7 @@ public class EventParser {
 			try {
 				dataclass = parserHelper.getDataClassByName(dataClassName);
 			} catch (IllegalArgumentException e) {
-				log.info(String.format("Dataclass %s in event querry of Catch Event %s does not exist.", dataClassName, intermediateCatchEvent.getId()));
+				log.info(String.format("Dataclass %s in event querry of Catch Event %s does not exist.", dataClassName, event.getId()));
 				return;
 			}
 
@@ -180,7 +180,7 @@ public class EventParser {
 				return;
 			}
 
-			ConditionSet conditionSet = intermediateCatchEvent.getPostCondition().getConditionSets().get(0);
+			ConditionSet conditionSet = event.getPostCondition().getConditionSets().get(0);
 			Optional<AtomicDataStateCondition> condition = conditionSet.getConditions().stream().filter(c -> c.getDataClassName().equals(dataClassName)).findFirst();
 
 			if (!condition.isPresent()) {

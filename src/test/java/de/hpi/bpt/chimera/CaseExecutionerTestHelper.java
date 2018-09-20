@@ -60,8 +60,12 @@ public class CaseExecutionerTestHelper {
 
 	public static FragmentInstance getFragmentInstanceByName(CaseExecutioner caseExecutioner, String name) {
 		List<FragmentInstance> possibleFragmentInstances = getFragmentInstancesByName(caseExecutioner, name);
+
 		if (possibleFragmentInstances.size() == 1) {
 			return possibleFragmentInstances.get(0);
+		}
+		if (possibleFragmentInstances.size() == 0) {
+			throw new IllegalArgumentException(String.format("There exists no fragment with the name %s in the case", name));
 		}
 		throw new IllegalArgumentException(String.format("The name %s is not a unique fragment name in the case", name));
 	}

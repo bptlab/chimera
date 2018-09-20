@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
@@ -24,6 +23,8 @@ import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
+import de.hpi.bpt.chimera.usermanagement.MemberRole;
+import de.hpi.bpt.chimera.usermanagement.Organization;
 
 @Entity
 @NamedQuery(name = "CaseModels.getAll", query = "SELECT c FROM CaseModel c")
@@ -45,6 +46,10 @@ public class CaseModel {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Fragment> fragments;
 
+	@OneToOne
+	private Organization organization;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<MemberRole> allowedRoles = new ArrayList<>();
 
 	public CaseModel() {
 		setId(UUID.randomUUID().toString().replace("-", ""));
@@ -82,7 +87,7 @@ public class CaseModel {
 		List<AbstractActivity> result = this.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getActivities()).flatMap(List::stream).filter(activity -> activity.getId().equals(controlNodeId)).collect(Collectors.toList());
 		// there should exact 1 activity with the given Id
 		if (result.size() != 1) {
-			throw new IllegalStateException();
+			throw new IllegalArgumentException(String.format("There is no activity with id: %s", controlNodeId));
 		}
 		// return the found activity
 		return result.get(0);
@@ -165,5 +170,21 @@ public class CaseModel {
 
 	public void setDeployment(Date deployment) {
 		this.deployment = deployment;
+	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	public List<MemberRole> getAllowedRoles() {
+		return allowedRoles;
+	}
+
+	public void setAllowRoles(List<MemberRole> allowedRoles) {
+		this.allowedRoles = allowedRoles;
 	}
 }

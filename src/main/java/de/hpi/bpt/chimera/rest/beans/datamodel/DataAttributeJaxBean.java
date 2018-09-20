@@ -2,7 +2,6 @@ package de.hpi.bpt.chimera.rest.beans.datamodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
 /**
@@ -13,22 +12,6 @@ public class DataAttributeJaxBean {
 	private String id;
 	private String name;
 	private String type;
-	private Object value;
-
-	/**
-	 * Create a DataAttributeConfiguration for an Instance of a DataAttribute.
-	 * 
-	 * @param dataAttributeInstance
-	 */
-	public DataAttributeJaxBean(DataAttributeInstance dataAttributeInstance) {
-		setName(dataAttributeInstance.getDataAttribute().getName());
-		setId(dataAttributeInstance.getId());
-		setType(dataAttributeInstance.getDataAttribute().getType());
-		Object attributeValue = dataAttributeInstance.getValue();
-		if (attributeValue == null)
-			attributeValue = "";
-		setValue(attributeValue);
-	}
 
 	/**
 	 * Create a DataAttributeConfiguration for a DataAttribute.
@@ -39,7 +22,6 @@ public class DataAttributeJaxBean {
 		setName(dataAttribute.getName());
 		setId(dataAttribute.getId());
 		setType(dataAttribute.getType());
-		setValue("");
 	}
 
 	public String getId() {
@@ -64,14 +46,6 @@ public class DataAttributeJaxBean {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public Object getValue() {
-		return value;
-	}
-
-	public void setValue(Object value) {
-		this.value = value;
 	}
 }
 

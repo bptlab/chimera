@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.execution;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,17 +27,19 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispat
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.execution.data.ObjectLifecycleTransition;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceTypeException;
-import de.hpi.bpt.chimera.history.transportationbeans.ActivityLog;
-import de.hpi.bpt.chimera.history.transportationbeans.DataAttributeLog;
-import de.hpi.bpt.chimera.history.transportationbeans.DataObjectLog;
-import de.hpi.bpt.chimera.history.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
+import de.hpi.bpt.chimera.rest.beans.history.ActivityLog;
+import de.hpi.bpt.chimera.rest.beans.history.DataAttributeLog;
+import de.hpi.bpt.chimera.rest.beans.history.DataObjectLog;
+import de.hpi.bpt.chimera.rest.beans.history.LogEntryTransportationBean;
 
 @Entity
 public class CaseExecutioner {
@@ -88,7 +91,7 @@ public class CaseExecutioner {
 	/**
 	 * Start the Case by starting all {@link FragmentInstance}s.
 	 */
-	public void startCase() {
+	synchronized public void startCase() {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
 			fragmentInstance.enable();
 		}
@@ -125,7 +128,7 @@ public class CaseExecutioner {
 	 *            list of {@code ids } of DataObjects that are used by the
 	 *            AbstractActivityInstance
 	 */
-	public void beginDataControlNodeInstance(AbstractDataControlNodeInstance instance, List<DataObject> selectedDataObjects) {
+	synchronized public void beginDataControlNodeInstance(AbstractDataControlNodeInstance instance, List<DataObject> selectedDataObjects) {
 		try {
 			if (!instance.canBegin()) {
 				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot begin");
@@ -226,7 +229,8 @@ public class CaseExecutioner {
 	 *            - Map from name of DataClass to a Map from DataAttribute name
 	 *            to new DataAttributeInstance value
 	 */
-	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions, Map<String, Map<String, Object>> rawDataAttributeValues) {
+	@Deprecated
+	synchronized public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions, Map<String, Map<String, Object>> rawDataAttributeValues) {
 		try {
 			// check whether activity instance can terminate
 			if (!controlNodeInstance.canTerminate()) {
@@ -251,11 +255,53 @@ public class CaseExecutioner {
 		}
 	}
 	
+	/**
+	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
+	 * transitions of the DataObjects specified by
+	 * {@code dataClassToStateTransition}. After the transitions of the
+	 * DataObjects change the values of those DataAttributeInstances specified
+	 * by rawDataAttributeValues.
+	 * 
+	 * @param controlNodeInstance
+	 *            - AbstractDataControlNodeInstance that shall terminate
+	 * @param objectLifecycleTransitions
+	 *            - List of DataClass and ObjectLifecycleState of the DataClass
+	 *            to define the new State for the DataObject with the referred
+	 *            DataClass
+	 * @param rawDataAttributeValues
+	 *            - Map from name of DataClass to a Map from DataAttribute name
+	 *            to new DataAttributeInstance value
+	 */
+	// TODO: think about whether ids should be used instead of names
+	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, List<ObjectLifecycleTransition> objectLifecycleTransitions, List<UpdateDataObjectJaxBean> rawDataAttributeValues) {
+		try {
+			// check whether activity instance can terminate
+			if (!controlNodeInstance.canTerminate()) {
+				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
+				log.error(e.getMessage());
+				throw e;
+			}
+
+			List<DataObject> boundDataObjects = controlNodeInstance.getSelectedDataObjects();
+			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
+			// modify bound DOs
+			if (!postCondition.isEmpty()) {
+				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, objectLifecycleTransitions);
+				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+				controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			}
+			// set bound DOs free
+			dataManager.unlockDataObjects(boundDataObjects);
+			controlNodeInstance.terminate();
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
 
 	/**
 	 * Update DataFlow of all ActivityInstances.
 	 */
-	public void updateDataFlow() {
+	synchronized public void updateDataFlow() {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
 			fragmentInstance.checkDataFlow();
 			fragmentInstance.getActivActivityInstances()
@@ -334,7 +380,7 @@ public class CaseExecutioner {
 	 * 
 	 * @see #canTerminate()
 	 */
-	public void terminate() {
+	synchronized public void terminate() {
 		// TODO think about the consequences
 		if (canTerminate()) {
 			// set all ControlNodeInstances to state Skipped, so no further
@@ -362,7 +408,7 @@ public class CaseExecutioner {
 	 * @param newState
 	 *            - of the ActivityInstance
 	 */
-	public void logActivityTransition(AbstractActivityInstance activityInstance, State newState) {
+	synchronized public void logActivityTransition(AbstractActivityInstance activityInstance, State newState) {
 		List<State> stateable = new ArrayList<>( Arrays.asList(State.INIT, State.RUNNING, State.TERMINATED) );
 		if (stateable.contains(newState)) {
 			ActivityLog activityLog = new ActivityLog(activityInstance, activityInstance.getState(), newState);
@@ -381,14 +427,14 @@ public class CaseExecutioner {
 	 * @param newObjectLifecycleState
 	 *            - of the DataObject
 	 */
-	public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState newObjectLifecycleState) {
+	synchronized public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState newObjectLifecycleState) {
 		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance, dataObjectInstance.getObjectLifecycleState(), newObjectLifecycleState);
 		dataObjectLogs.add(dataObjectLog);
 		// TODO: think about necessary
 		sortLogs(dataObjectLogs);
 	}
 
-	public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState oldObjectLifecycleState, ObjectLifecycleState newObjectLifecycleState) {
+	synchronized public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState oldObjectLifecycleState, ObjectLifecycleState newObjectLifecycleState) {
 		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance, oldObjectLifecycleState, newObjectLifecycleState);
 		dataObjectLogs.add(dataObjectLog);
 		// TODO: think about necessary
@@ -403,7 +449,7 @@ public class CaseExecutioner {
 	 * @param newValue
 	 *            - of the DataAttributeInstance
 	 */
-	public void logDataAttributeTransition(DataAttributeInstance dataAttributeInstance, Object newValue) {
+	synchronized public void logDataAttributeTransition(DataAttributeInstance dataAttributeInstance, Object newValue) {
 		DataAttributeLog dataAttributeLog = new DataAttributeLog(dataAttributeInstance, dataAttributeInstance.getValue(), newValue);
 		dataAttributeLogs.add(dataAttributeLog);
 		// TODO: think about necessary
@@ -414,11 +460,11 @@ public class CaseExecutioner {
 	 * Sort the LogEntries descending by time which means the newest LogEntry
 	 * comes first.
 	 * 
-	 * @param logEntries
+	 * @param logEntryTransportationBeans
 	 *            - that shall be sorted
 	 */
-	private void sortLogs(List<? extends LogEntry> logEntries) {
-		logEntries.sort((l1, l2) -> l2.getTimeStamp().compareTo(l1.getTimeStamp()));
+	synchronized private void sortLogs(List<? extends LogEntryTransportationBean> logEntryTransportationBeans) {
+		logEntryTransportationBeans.sort((l1, l2) -> l2.getTimeStamp().compareTo(l1.getTimeStamp()));
 	}
 
 	/**
@@ -429,7 +475,7 @@ public class CaseExecutioner {
 	 * @param receiveBehavior
 	 *            - MessageReceiveEventBehavior of the registered EventInstance
 	 */
-	public void addRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
+	synchronized public void addRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
 		String instanceId = receiveBehavior.getEventInstance().getId();
 		if (!registeredEventInstanceIdToReceiveBehavior.containsKey(instanceId)) {
 			registeredEventInstanceIdToReceiveBehavior.put(instanceId, receiveBehavior);
@@ -445,7 +491,7 @@ public class CaseExecutioner {
 	 *            - MessageReceiveEventBehavior of the EventInstance to be
 	 *            de-registered
 	 */
-	public void removeRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
+	synchronized public void removeRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
 		String instanceId = receiveBehavior.getEventInstance().getId();
 		if (registeredEventInstanceIdToReceiveBehavior.containsKey(instanceId)) {
 			registeredEventInstanceIdToReceiveBehavior.remove(instanceId, receiveBehavior);
@@ -489,7 +535,7 @@ public class CaseExecutioner {
 		return caze;
 	}
 
-	public void setCase(Case caze) {
+	synchronized public void setCase(Case caze) {
 		this.caze = caze;
 	}
 
@@ -497,7 +543,7 @@ public class CaseExecutioner {
 		return caseModel;
 	}
 
-	public void setCaseModel(CaseModel caseModel) {
+	synchronized public void setCaseModel(CaseModel caseModel) {
 		this.caseModel = caseModel;
 	}
 
@@ -505,7 +551,7 @@ public class CaseExecutioner {
 		return dataManager;
 	}
 
-	public void setDataManager(DataManager dataManager) {
+	synchronized public void setDataManager(DataManager dataManager) {
 		this.dataManager = dataManager;
 	}
 
@@ -531,5 +577,9 @@ public class CaseExecutioner {
 
 	public Map<String, MessageReceiveEventBehavior> getRegisteredEventInstanceIdToReceiveBehavior() {
 		return registeredEventInstanceIdToReceiveBehavior;
+	}
+
+	public Date getInstantiation() {
+		return getCase().getInstantiation();
 	}
 }

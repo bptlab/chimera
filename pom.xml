@@ -6,7 +6,7 @@
 	<groupId>de.hpi.bpt</groupId>
 	<artifactId>chimera-case-engine</artifactId>
 	<packaging>war</packaging>
-	<version>1.4</version>
+	<version>1.5</version>
 	<name>Chimera</name>
 	<scm>
 		<developerConnection>scm:git:ssh://git@gitlab.hpi.de/bptlab/chimera-case-engine.git</developerConnection>
@@ -32,6 +32,42 @@
 			</resource>
 		</resources>
 			<plugins>
+			
+				<plugin>
+				  <groupId>org.codehaus.gmaven</groupId>
+				  <artifactId>groovy-maven-plugin</artifactId>
+				    <executions>
+				      <execution>
+				        <phase>generate-sources</phase>
+				        <goals>
+				          <goal>execute</goal>
+				        </goals>
+				        <configuration>
+				          <properties>
+				            <version>${mysql.schema.version}</version>
+				          </properties>
+				          <source>
+				          	def file = new File('mysql_schema_version.txt') 
+				          	if(file.exists()){
+					          	int  oldVersion = file.text.toInteger()
+					          	if(properties['version'].toInteger() == oldVersion){
+					          		println 'Database version did not changed. Database will not be recreated.'
+					          	} else {
+					          		println 'Database version changed. Database schema will be deleted and recreated.'
+					          		project.properties.eclipseLinkDdlGeneration = 'drop-and-create-tables'
+					          		file.write(properties['version'])				          		
+					          	}
+					          } else{
+					          	println 'No current database schema version found. Database schema will be deleted and recreated.'
+					          		project.properties.eclipseLinkDdlGeneration = 'drop-and-create-tables'
+					          		file.write(properties['version'])
+					          }
+				          </source>
+				        </configuration>
+				      </execution>
+				  </executions>
+				</plugin>
+			
 				<plugin>
 					<groupId>com.coderplus.maven.plugins</groupId>
 					<artifactId>copy-rename-maven-plugin</artifactId>
@@ -87,6 +123,7 @@
 							<configuration>
 								<files>
 									<file>${basedir}/config.properties</file>
+									<file>${basedir}/mysql_schema_version.properties</file>
 								</files>
 							</configuration>
 						</execution>
@@ -210,6 +247,7 @@
 		<db.user>chimera</db.user>
 		<db.password>chimera</db.password>
 		<unicorn.url>localhost:8080</unicorn.url>
+		<eclipseLinkDdlGeneration>create-or-extend-tables</eclipseLinkDdlGeneration>
 		<unicorn.deploy.path>Unicorn-unicorn_BP15_dev</unicorn.deploy.path>
 		<chimera.url>localhost:8080</chimera.url>
 		<chimera.deploy.path>/${project.name}</chimera.deploy.path>
@@ -429,6 +467,43 @@
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>org.eclipse.persistence.jpa</artifactId>
 			<version>2.6.4</version>
+		</dependency>
+		<dependency>
+	      	<groupId>io.swagger.core.v3</groupId>
+	      	<artifactId>swagger-jaxrs2</artifactId>
+	      	<version>2.0.0</version>
+	    </dependency>
+	    <!-- 
+	    <dependency>
+	      	<groupId>io.swagger.core.v3</groupId>
+	      	<artifactId>swagger-jaxrs2-servlet-initializer</artifactId>
+	      	<version>2.0.0</version>
+	    </dependency>
+	    -->
+	    <dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>23.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.9.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>2.9.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.9.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.persistence</groupId>
+		    <artifactId>org.eclipse.persistence.moxy</artifactId>
+		    <version>2.7.3</version>
 		</dependency>
 	</dependencies>
 	<profiles>

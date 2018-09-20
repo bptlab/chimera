@@ -32,7 +32,7 @@ public class FragmentConcurrencyFiniteCreationTest extends Unicorn {
 
 	@Test
 	public void testFiniteFragmentInstanceCreation() {
-		int creations = 10;
+		int creations = 50;
 		for (int i = 0; i < creations; i++) {
 			Optional<MessageReceiveEventBehavior> receiveBehavior = caseExecutioner.getRegisteredEventBehaviors().stream().findFirst();
 			if (receiveBehavior.isPresent()) {

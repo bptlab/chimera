@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.condition.FragmentPreCondition;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
+import de.hpi.bpt.chimera.model.fragment.FragmentInstantiationPolicy;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
@@ -20,7 +21,6 @@ public final class FragmentParser {
 	private FragmentParser() {
 	}
 
-	// TODO: validate fragment
 	/**
 	 * 
 	 * Parses a Fragment given as a JSONObject. Therefore calls the
@@ -48,6 +48,7 @@ public final class FragmentParser {
 			String contentXML = fragmentJson.getString("content");
 			fragment.setContentXML(contentXML);
 
+			// TODO: update this as soon as possible
 			if (fragmentJson.has("preconditions")) {
 				FragmentPreCondition fragmentPreCondition = DataStateConditionParser.parseFragmentPreCondition(fragmentJson.getJSONArray("preconditions"), parserHelper);
 				fragment.setFragmentPreCondition(fragmentPreCondition);
@@ -55,6 +56,15 @@ public final class FragmentParser {
 				fragment.setFragmentPreCondition(new FragmentPreCondition());
 			}
 
+			// TODO: update this as soon as possible
+			if (fragmentJson.has("policy")) {
+				String policyText = fragmentJson.getString("policy");
+				FragmentInstantiationPolicy policy = FragmentInstantiationPolicy.fromText(policyText);
+				fragment.setPolicy(policy);
+			} else {
+				fragment.setPolicy(FragmentInstantiationPolicy.SEQUENTIAL);
+			}
+			parseBound(fragmentJson, fragment);
 
 			BpmnFragment bmpnFragment = BpmnXmlFragmentParser.parseBpmnXmlFragment(contentXML, parserHelper);
 			fragment.setBpmnFragment(bmpnFragment);
@@ -66,8 +76,26 @@ public final class FragmentParser {
 			throw new IllegalCaseModelException("Invalid Fragment: " + e.getMessage());
 		}
 
-
-
 		return fragment;
+	}
+
+	/**
+	 * Parse the bound for a fragment from a json.
+	 * 
+	 * @param fragmentJson
+	 * @param fragment
+	 */
+	private static void parseBound(JSONObject fragmentJson, Fragment fragment) {
+		if (fragmentJson.has("bound")) {
+			JSONObject bound = fragmentJson.getJSONObject("bound");
+			boolean hasBound = bound.getBoolean("hasBound");
+			fragment.setHasBound(hasBound);
+			if (hasBound) {
+				int limit = bound.getInt("limit");
+				fragment.setInstantiationLimit(limit);
+			}
+		} else {
+			fragment.setHasBound(false);
+		}
 	}
 }
