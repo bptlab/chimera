@@ -6,7 +6,7 @@
 	<groupId>de.hpi.bpt</groupId>
 	<artifactId>chimera-case-engine</artifactId>
 	<packaging>war</packaging>
-	<version>1.4</version>
+	<version>1.5</version>
 	<name>Chimera</name>
 	<scm>
 		<developerConnection>scm:git:ssh://git@gitlab.hpi.de/bptlab/chimera-case-engine.git</developerConnection>
