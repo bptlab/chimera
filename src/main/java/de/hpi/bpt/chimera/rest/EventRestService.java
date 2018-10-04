@@ -47,13 +47,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 		responseCode = "404", description = "An unassigned identifier was used.",
 		content = @Content(mediaType = "application/json", schema = @Schema(implementation = DangerExceptionJaxBean.class))) })
 @SecurityRequirement(name = "BasicAuth")
-@Path("v3/organizations/{organizationId}/casemodels/{casemodelId}")
+@Path("v3/organizations/{organizationId}/casemodels")
 public class EventRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(EventRestService.class);
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("casestarters")
+	@Path("{casemodelId}/casestarters")
 	@Operation(
 		summary = "Receive all case starters of a casemodels",
 		responses = {
@@ -69,7 +69,7 @@ public class EventRestService extends AbstractRestService {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("casestarters/{caseStarterId}")
+	@Path("{casemodelId}/casestarters/{caseStarterId}")
 	@Operation(
 		summary = "Start a case with a specific casestarter",
 		responses = {
@@ -98,7 +98,7 @@ public class EventRestService extends AbstractRestService {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("cases/{caseId}/events")
+	@Path("{casemodelId}/cases/{caseId}/events")
 	@Operation(
 		summary = "Receive information about all registered events of a case",
 		responses = {
@@ -113,7 +113,7 @@ public class EventRestService extends AbstractRestService {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("cases/{caseId}/events/{eventInstanceId}")
+	@Path("{casemodelId}/cases/{caseId}/events/{eventInstanceId}")
 	@Operation(
 		summary = "Send a specific event",
 		responses = {
