@@ -10,7 +10,6 @@ import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
-import de.hpi.bpt.chimera.rest.beans.datamodel.DataAttributeJaxBean;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataAttributeJaxBeanOld;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataObjectJaxBean;
 
@@ -109,7 +108,7 @@ public class DataDependencyRestService extends AbstractRestService {
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-
+			
 			Map<DataClass, List<ObjectLifecycleState>> possibleDataClassToObjectLifecycleStates = getPossibleObjectLifecycleTransitions(activityInstance);
 			JSONObject result = new JSONObject();
 			for (Map.Entry<DataClass, List<ObjectLifecycleState>> doToOlc : possibleDataClassToObjectLifecycleStates.entrySet()) {

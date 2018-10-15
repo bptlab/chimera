@@ -269,6 +269,7 @@ angular.module('jfrontend')
             };
 
             this.getActivityInput = function (activityInstanceId) {
+            	instanceCtrl.selectedDataObjectIds = {};
                 $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
                     + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/availableInput')
                     .success(function (data) {
