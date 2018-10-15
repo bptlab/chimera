@@ -181,8 +181,10 @@ public class CaseModelRestService extends AbstractRestService {
 	public Response deleteCaseModel(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId) {
 		// TODO: think about who should be allowed to delete a casemodel. Maybe
 		// the owner and the deployer or everyone who is allowed to view it.
+		Organization org = OrganizationManager.getOrganizationById(orgId);
 		try {
-			CaseModelManager.deleteCaseModel(cmId);
+			// CaseModelManager.deleteCaseModel(cmId);
+			OrganizationManager.deleteCaseModel(org, cmId);
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("casemodel deletion successful.")).build();
 		} catch (IllegalArgumentException e) {
 			log.error("deletion failed: " + e);

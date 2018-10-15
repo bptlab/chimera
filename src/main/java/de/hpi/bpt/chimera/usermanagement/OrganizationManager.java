@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.ExecutionService;
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.exception.IllegalOrganizationIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 public class OrganizationManager {
@@ -41,6 +44,12 @@ public class OrganizationManager {
 		user.addOrganization(organization);
 		log.info(String.format("User with id %s and name %s created organization with id %s and name %s", user.getId(), user.getName(), id, organization.getName()));
 		return organization;
+	}
+
+	public static void deleteCaseModel(Organization org, String cmId) {
+		// TODO: move case model manager to organization manager
+		org.getCaseModels().remove(cmId);
+		CaseModelManager.deleteCaseModel(cmId);
 	}
 
 	/**

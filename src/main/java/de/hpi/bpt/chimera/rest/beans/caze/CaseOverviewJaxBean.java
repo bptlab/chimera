@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 
 @XmlRootElement
@@ -13,19 +12,14 @@ public class CaseOverviewJaxBean {
 	private String name;
 	private boolean terminated;
 	private Date instantiation;
-
-	public CaseOverviewJaxBean(Case caze) {
-		setId(caze.getId());
-		setName(caze.getName());
-		setInstantiation(caze.getInstantiation());
-		setTerminated(caze.getCaseExecutioner().isTerminated());
-	}
+	private boolean canTerminate;
 
 	public CaseOverviewJaxBean(CaseExecutioner caseExecutioner) {
 		setId(caseExecutioner.getCase().getId());
 		setName(caseExecutioner.getCase().getName());
 		setInstantiation(caseExecutioner.getCase().getInstantiation());
 		setTerminated(caseExecutioner.isTerminated());
+		setCanTerminate(caseExecutioner.canTerminate());
 	}
 
 	public String getId() {
@@ -58,5 +52,13 @@ public class CaseOverviewJaxBean {
 
 	public void setInstantiation(Date instantiation) {
 		this.instantiation = instantiation;
+	}
+
+	public boolean isCanTerminate() {
+		return canTerminate;
+	}
+
+	public void setCanTerminate(boolean canTerminate) {
+		this.canTerminate = canTerminate;
 	}
 }

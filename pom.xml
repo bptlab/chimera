@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+    <modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.hpi.bpt</groupId>
 	<artifactId>chimera-case-engine</artifactId>
@@ -12,12 +12,29 @@
 		<developerConnection>scm:git:ssh://git@gitlab.hpi.de/bptlab/chimera-case-engine.git</developerConnection>
 	</scm>
 
-	<build>
-		<finalName>Chimera</finalName>
-<!-- 	not working when config.properties is missing, like in initial build!	
-		<filters>
-			<filter>${basedir}/config.properties</filter>
-    	</filters> -->
+    <properties>
+		<!-- default properties-->
+		<db.schema>chimeradb</db.schema>
+		<db.test.schema>chimeradb_test</db.test.schema>
+		<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
+  		<db.url>${db.url.root}${db.schema}</db.url>
+		<db.test.url>${db.url.root}${db.test.schema}</db.test.url>
+		<db.user>chimera</db.user>
+		<db.password>chimera</db.password>
+		<unicorn.url>localhost:8080</unicorn.url>
+		<eclipseLinkDdlGeneration>create-or-extend-tables</eclipseLinkDdlGeneration>
+		<unicorn.deploy.path>Unicorn-unicorn_BP15_dev</unicorn.deploy.path>
+		<chimera.url>localhost:8080</chimera.url>
+		<chimera.deploy.path>/${project.name}</chimera.deploy.path>
+        <npm.output.directory>WebContent/build</npm.output.directory>
+		<powermock.version>1.6.1</powermock.version>
+		<jersey.version>2.17</jersey.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <finalName>${project.name}</finalName>
+		
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
@@ -31,105 +48,140 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-			<plugins>
+
+        <plugins>
+            <!-- Standard plugin to generate WAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>${npm.output.directory}</directory>
+                        </resource>
+                    </webResources>
+                    <webXml>${basedir}/WebContent/web.xml</webXml>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <executions>
+                  
+                    <execution>
+                        <id>npm run build (compile)</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+							<workingDirectory>${basedir}/WebContent</workingDirectory>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
 			
-				<plugin>
-				  <groupId>org.codehaus.gmaven</groupId>
-				  <artifactId>groovy-maven-plugin</artifactId>
-				    <executions>
-				      <execution>
-				        <phase>generate-sources</phase>
-				        <goals>
-				          <goal>execute</goal>
-				        </goals>
-				        <configuration>
-				          <properties>
-				            <version>${mysql.schema.version}</version>
-				          </properties>
-				          <source>
-				          	def file = new File('mysql_schema_version.txt') 
-				          	if(file.exists()){
-					          	int  oldVersion = file.text.toInteger()
-					          	if(properties['version'].toInteger() == oldVersion){
-					          		println 'Database version did not changed. Database will not be recreated.'
-					          	} else {
-					          		println 'Database version changed. Database schema will be deleted and recreated.'
-					          		project.properties.eclipseLinkDdlGeneration = 'drop-and-create-tables'
-					          		file.write(properties['version'])				          		
-					          	}
-					          } else{
-					          	println 'No current database schema version found. Database schema will be deleted and recreated.'
-					          		project.properties.eclipseLinkDdlGeneration = 'drop-and-create-tables'
-					          		file.write(properties['version'])
-					          }
-				          </source>
-				        </configuration>
-				      </execution>
-				  </executions>
-				</plugin>
-			
-				<plugin>
-					<groupId>com.coderplus.maven.plugins</groupId>
-					<artifactId>copy-rename-maven-plugin</artifactId>
-					<version>1.0</version>
-					<executions>
-						<!-- using a different persistence.xml for testing so we can specify and use a second test database -->
-						<!-- the copying is necessary because JPA does not use the persistence.xml stored under test/resources -->
-						<execution>
-							<id>copy-test-persistence</id>
-							<phase>test-compile</phase>
-							<goals>
-								<goal>copy</goal>
-							</goals>
-							<configuration>
-								<fileSets>
-									<!--backup the "proper" persistence.xml-->
-									<fileSet>
-										<sourceFile>${project.build.outputDirectory}/META-INF/persistence.xml</sourceFile>
-										<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml.proper</destinationFile>
-									</fileSet>
-									<!--replace the "proper" persistence.xml with the "test" version-->
-									<fileSet>
-										<sourceFile>${project.build.outputDirectory}/META-INF/persistenceTest.xml</sourceFile>
-										<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml</destinationFile>
-									</fileSet>
-								</fileSets>
-							</configuration>
-						</execution>
-						<execution>
-					        <!--restore the "proper" persistence.xml-->
-							<id>restore-persistence</id>
-							<phase>prepare-package</phase>
-							<goals>
-								<goal>rename</goal>
-							</goals>
-							<configuration>
-								<sourceFile>${project.build.outputDirectory}/META-INF/persistence.xml.proper</sourceFile>
-								<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml</destinationFile>
-					      </configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>properties-maven-plugin</artifactId>
-					<version>1.0.0</version>
-					<executions>
-						<execution>
-							<phase>initialize</phase>
-							<goals>
-								<goal>read-project-properties</goal>
-							</goals>
-							<configuration>
-								<files>
-									<file>${basedir}/config.properties</file>
-									<file>${basedir}/mysql_schema_version.properties</file>
-								</files>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
+			<plugin>
+			  <groupId>org.codehaus.gmaven</groupId>
+			  <artifactId>groovy-maven-plugin</artifactId>
+				<executions>
+				  <execution>
+					<phase>generate-sources</phase>
+					<goals>
+					  <goal>execute</goal>
+					</goals>
+					<configuration>
+					  <properties>
+						<version>${mysql.schema.version}</version>
+					  </properties>
+					  <source>
+						def file = new File('mysql_schema_version.txt') 
+						if(file.exists()){
+							int  oldVersion = file.text.toInteger()
+							if(properties['version'].toInteger() == oldVersion){
+								println 'Database version did not changed. Database will not be recreated.'
+							} else {
+								println 'Database version changed. Database schema will be deleted and recreated.'
+								project.properties.eclipseLinkDdlGeneration = 'drop-and-create-tables'
+								file.write(properties['version'])				          		
+							}
+						  } else{
+							println 'No current database schema version found. Database schema will be deleted and recreated.'
+								project.properties.eclipseLinkDdlGeneration = 'drop-and-create-tables'
+								file.write(properties['version'])
+						  }
+					  </source>
+					</configuration>
+				  </execution>
+			  </executions>
+			</plugin>
+		
+			<plugin>
+				<groupId>com.coderplus.maven.plugins</groupId>
+				<artifactId>copy-rename-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<id>copy-test-persistence</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<fileSets>
+								<fileSet>
+									<sourceFile>${project.build.outputDirectory}/META-INF/persistence.xml</sourceFile>
+									<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml.proper</destinationFile>
+								</fileSet>
+								<fileSet>
+									<sourceFile>${project.build.outputDirectory}/META-INF/persistenceTest.xml</sourceFile>
+									<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml</destinationFile>
+								</fileSet>
+							</fileSets>
+						</configuration>
+					</execution>
+					<execution>
+						<id>restore-persistence</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>rename</goal>
+						</goals>
+						<configuration>
+							<sourceFile>${project.build.outputDirectory}/META-INF/persistence.xml.proper</sourceFile>
+							<destinationFile>${project.build.outputDirectory}/META-INF/persistence.xml</destinationFile>
+					  </configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${basedir}/config.properties</file>
+								<file>${basedir}/mysql_schema_version.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+        </plugins>
 		
 		<pluginManagement>
 		<plugins>
@@ -137,11 +189,6 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
-				<!-- Deployment is configured in profile managed by jenkins <configuration> 
-					<url>http://172.16.64.113:8080/manager/text</url> <server>chimera113</server> 
-					<path>/Chimera</path> </configuration> -->
-					
-					
 					<!--  for faster local testing -->
 					 <configuration>
 						<path>/${project.name}</path>
@@ -222,40 +269,9 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.3</version>
 			</plugin>
-			
-			
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
-				<version>2.9.1</version> <executions> <execution> <id>generate-service-docs</id> 
-				<phase>generate-resources</phase> <configuration> <doclet>com.carma.swagger.doclet.ServiceDoclet</doclet> 
-				<docletArtifact> <groupId>com.carma</groupId> <artifactId>swagger-doclet</artifactId> 
-				<version>1.0.5</version> </docletArtifact> <reportOutputDirectory>${project.build.outputDirectory}</reportOutputDirectory> 
-				<useStandardDocletOptions>false</useStandardDocletOptions> <additionalparam>-apiVersion 
-				0.1 -docBasePath http://interface/v2 -apiBasePath http://interface/v2</additionalparam> 
-				</configuration> <goals> <goal>javadoc</goal> </goals> </execution> </executions> 
-				</plugin> -->
 		</plugins>
 		</pluginManagement>
-	</build>
-
-	<properties>
-		<!-- default properties-->
-		<db.schema>chimeradb</db.schema>
-		<db.test.schema>chimeradb_test</db.test.schema>
-		<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
-  		<db.url>${db.url.root}${db.schema}</db.url>
-		<db.test.url>${db.url.root}${db.test.schema}</db.test.url>
-		<db.user>chimera</db.user>
-		<db.password>chimera</db.password>
-		<unicorn.url>localhost:8080</unicorn.url>
-		<eclipseLinkDdlGeneration>create-or-extend-tables</eclipseLinkDdlGeneration>
-		<unicorn.deploy.path>Unicorn-unicorn_BP15_dev</unicorn.deploy.path>
-		<chimera.url>localhost:8080</chimera.url>
-		<chimera.deploy.path>/${project.name}</chimera.deploy.path>
-		<powermock.version>1.6.1</powermock.version>
-		<jersey.version>2.17</jersey.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
-	</properties>
+    </build>
 
 	<dependencyManagement>
 		<dependencies>
@@ -506,7 +522,8 @@
 		    <version>2.7.3</version>
 		</dependency>
 	</dependencies>
-	<profiles>
+	
+    <profiles>
 		<profile>
 			<id>initial-build</id>
 			<activation>
@@ -562,5 +579,46 @@
 				</plugins>
 			</build>
 		</profile>
-	</profiles>
+		
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+
+                        <configuration>
+                            <environmentVariables>
+                                <PUBLIC_URL>http://localhost:8080/${project.name}</PUBLIC_URL>
+                                <REACT_APP_ROUTER_BASE>/${project.name}</REACT_APP_ROUTER_BASE>
+                            </environmentVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+
+                        <configuration>
+                            <environmentVariables>
+                                <PUBLIC_URL>https://bpt-log.org/${project.name}</PUBLIC_URL>
+                                <REACT_APP_ROUTER_BASE>/${project.name}</REACT_APP_ROUTER_BASE>
+                            </environmentVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
