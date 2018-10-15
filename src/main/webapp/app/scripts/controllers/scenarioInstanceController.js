@@ -302,6 +302,8 @@ angular.module('jfrontend')
             	instanceCtrl.activityOutput[activityInstanceId] = {};
             	instanceCtrl.availableOutputStates[activityInstanceId] = {};
             	instanceCtrl.activityOutputAttributes[activityInstanceId] = {};
+            	instanceCtrl.selectedStates = {};
+                instanceCtrl.attributeValues = {};
                 $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
                     + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/output')
                     .success(function (data) {
