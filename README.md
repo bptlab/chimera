@@ -20,7 +20,7 @@ The following software is necessary to build and run Chimera:
 
    * `Java 8 JDK` available from [Oracle](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). Make sure that the environment variable `JAVA_HOME` points to your JDK folder (e.g. like [this](http://www.wikihow.com/Set-Java-Home)).
    * `Apache Tomcat 7` or newer, available [here](https://tomcat.apache.org/download-70.cgi).
-   * `MySQL 5.7 Server`, available [here](http://dev.mysql.com/downloads/mysql/).
+   * `MySQL 5.7 Server`, available [here](http://dev.mysql.com/downloads/mysql/). For your convenience, you can download the [installer](https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.23.0.msi) (direct link) and install MySQL Server, MySQL Notifier, MySQL Workbench, and Connector/J. 
    * `git`, available [here](https://git-scm.com/downloads), to access the code repositories.
    * `Apache Maven 3`, available [here](http://maven.apache.org/install.html).
 
@@ -28,7 +28,8 @@ The following software is necessary to build and run Chimera:
 
    1. Checkout out the source code from [github](http://github.com/bptlab/chimera). From the command line you can run `git clone https://github.com/bptlab/chimera.git` to download the repository to your machine.
    1. Start your MySQL server and create a database, either using the MySQL Workbench or from the command line: `mysql -u USER_NAME -p PASSWORD -e "create schema SCHEMA_NAME` where `SCHEMA_NAME` should be something like 'chimeradb'.
-   1. Build the source code using Maven: `mvn install -Ddb.user=USER_NAME -Ddb.password=PASSWORD -Ddb.schema=SCHEMA_NAME` Replace *USER_NAME*, *PASSWORD*, and *SCHEMA_NAME* with the values from the previous step.
+   1. Similarily, create a second database to be used for running test cases and name it something like 'chimeradb_test'.
+   1. Build the source code using Maven: `mvn install -Ddb.user=USER_NAME -Ddb.password=PASSWORD -Ddb.schema=SCHEMA_NAME -Ddb.test.schema=TEST_SCHEMA_NAME` Replace *USER_NAME*, *PASSWORD*, *SCHEMA_NAME*, and *TEST_SCHEMA_NAME* with the values from the previous steps.
    1. Check whether the configuration file `config.properties` was copied to the main directory and whether the variables (`mysql.username`, `mysql.password` etc.) have been replaced correctly.
    1. Deploy the created war file `target/Chimera.war` to Tomcat by copying it to the webapps folder in your Tomcat installation.
       * Alternatively, use `mvn tomcat7:deploy-DskipTests` from the command line to automatically deploy the war file. Note however, that you need to configure your Tomcat credentials as described in [this article](http://www.mkyong.com/maven/how-to-deploy-maven-based-war-file-to-tomcat/).
