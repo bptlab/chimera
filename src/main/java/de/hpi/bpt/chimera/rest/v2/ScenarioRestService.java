@@ -7,6 +7,7 @@ import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.rest.RestInterface;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelDetailsJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelOverviewJaxBean;
+import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelPetriNetRepresentationJaxBean;
 import de.hpi.bpt.chimera.rest.beans.casemodel.ConditionsJaxBean;
 
 import org.apache.log4j.Logger;
@@ -134,6 +135,28 @@ public class ScenarioRestService extends AbstractRestService {
 		} catch (IllegalArgumentException e) {
 			log.error("deletion failed: " + e);
 			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
+		}
+	}
+	
+	/**
+	 * TODO: get petri net representation
+	 *
+	 * @param scenarioId The Id of the scenario used inside the database.
+	 * @param uri        Request URI
+	 * @return TODO return stuff
+	 */
+	@GET
+	@Path("scenario/{scenarioId}/petrinet")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPetriNetRepresentation(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
+
+			JSONObject result = new JSONObject(new CaseModelPetriNetRepresentationJaxBean(cm));
+
+			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
 		}
 	}
 
