@@ -3,29 +3,18 @@ package de.hpi.bpt.chimera.model.petrinet;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hpi.bpt.chimera.model.Nameable;
-
-public class Transition implements Nameable {
-	private String name;
+public class Transition extends AbstractPetriNetNode {
 	private final List<Place> inputPlaces = new ArrayList<>();
 	private final List<Place> outputPlaces = new ArrayList<>();
 
-	public Transition() {
-
+	public Transition(TranslationContext context, String name) {
+		super(context, name);
 	}
 
-	public Transition(String name) {
-		setName(name);
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
+	public Transition(TranslationContext context, String name, Place inputPlace, Place outputPlace) {
+		this(context, name);
+		addInputPlace(inputPlace);
+		addOutputPlace(outputPlace);
 	}
 
 	public Transition addInputPlace(Place inputPlace) {

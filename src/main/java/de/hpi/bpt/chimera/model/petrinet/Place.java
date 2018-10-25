@@ -1,27 +1,10 @@
 package de.hpi.bpt.chimera.model.petrinet;
 
-import de.hpi.bpt.chimera.model.Nameable;
-
-public class Place implements Nameable {
-	private String name;
+public class Place extends AbstractPetriNetNode {
 	private int numTokens = 0;
 
-	public Place() {
-
-	}
-
-	public Place(String name) {
-		setName(name);
-	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String getName() {
-		return name;
+	public Place(TranslationContext context, String name) {
+		super(context, name);
 	}
 
 	public int getNumTokens() {
@@ -31,5 +14,4 @@ public class Place implements Nameable {
 	public void setNumTokens(int numTokens) {
 		this.numTokens = numTokens;
 	}
-
 }

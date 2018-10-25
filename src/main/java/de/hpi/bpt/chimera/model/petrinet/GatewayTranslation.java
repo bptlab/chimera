@@ -3,21 +3,15 @@ package de.hpi.bpt.chimera.model.petrinet;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.AbstractGateway;
 
 public class GatewayTranslation extends AbstractTranslation {
-	private final AbstractGateway gateway;
 
 	public GatewayTranslation(TranslationContext translationContext, AbstractGateway gateway) {
-		super(translationContext, gateway.getName());
-		this.gateway = gateway;
+		super(translationContext, gateway.getId());
 
-		PetriNet petriNet = translationContext.getCaseModelTranslation().getPetriNet();
-		final String prefixString = translationContext.getPrefixString();
+		final String prefixString = this.context.getPrefixString();
 
-		initialPlace = petriNet.addPlace(prefixString + "init");
-		finalPlace = petriNet.addPlace(prefixString + "final");
+		initialPlace = addPlace(prefixString + "init");
+		finalPlace = addPlace(prefixString + "final");
 
-		Transition transition = new Transition(prefixString);
-		transition.addInputPlace(initialPlace);
-		transition.addOutputPlace(finalPlace);
-		petriNet.addTransition(transition);
+		addTransition(prefixString, initialPlace, finalPlace);
 	}
 }

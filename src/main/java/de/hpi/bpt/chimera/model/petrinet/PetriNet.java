@@ -7,14 +7,9 @@ public class PetriNet {
 	private List<Place> places = new ArrayList<>();
 	private List<Transition> transitions = new ArrayList<>();
 
-	public Place addPlace(String name) {
-		Place newPlace = new Place(name);
-		addPlace(newPlace);
-		return newPlace;
-	}
-
-	public void addPlace(Place newPlace) {
+	public Place addPlace(Place newPlace) {
 		places.add(newPlace);
+		return newPlace;
 	}
 
 	public List<Place> getPlaces() {
@@ -25,8 +20,9 @@ public class PetriNet {
 		this.places = places;
 	}
 
-	public void addTransition(Transition newTransition) {
+	public Transition addTransition(Transition newTransition) {
 		transitions.add(newTransition);
+		return newTransition;
 	}
 
 	public List<Transition> getTransitions() {

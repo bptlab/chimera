@@ -21,8 +21,9 @@ public class CaseModelTranslation {
 		petriNet = new PetriNet();
 		translationContext = new TranslationContext(this);
 
-		initialPlace = petriNet.addPlace("init");
-		finalPlace = petriNet.addPlace("final");
+		initialPlace = petriNet.addPlace(new Place(translationContext, "init"));
+		initialPlace.setNumTokens(1);
+		finalPlace = petriNet.addPlace(new Place(translationContext, "final"));
 
 		for (Fragment fragment : caseModel.getFragments()) {
 			translateFragment(fragment);
@@ -35,15 +36,13 @@ public class CaseModelTranslation {
 		fragmentTranslations.add(fragmentTranslation);
 
 		// Fragment initialization
-		Transition fragmentInit = new Transition();
-		fragmentInit.addInputPlace(initialPlace);
-		fragmentInit.addOutputPlace(fragmentTranslation.getInitialPlace());
+		Transition fragmentInit = new Transition(translationContext, "initialize-fragment-" + fragment.getId(),
+				initialPlace, fragmentTranslation.getInitialPlace());
 		petriNet.addTransition(fragmentInit);
 
 		// Fragment re-initialization on fragment termination
-		Transition fragmentReInit = new Transition();
-		fragmentReInit.addInputPlace(fragmentTranslation.getFinalPlace());
-		fragmentReInit.addOutputPlace(fragmentTranslation.getInitialPlace());
+		Transition fragmentReInit = new Transition(translationContext, "re-initialize-fragment-" + fragment.getId(),
+				fragmentTranslation.getFinalPlace(), fragmentTranslation.getInitialPlace());
 		petriNet.addTransition(fragmentReInit);
 	}
 

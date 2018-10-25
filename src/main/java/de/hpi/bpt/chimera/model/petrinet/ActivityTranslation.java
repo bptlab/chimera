@@ -3,21 +3,15 @@ package de.hpi.bpt.chimera.model.petrinet;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 
 public class ActivityTranslation extends AbstractTranslation {
-	private final AbstractActivity activity;
 
 	public ActivityTranslation(TranslationContext translationContext, AbstractActivity activity) {
-		super(translationContext, activity.getName());
-		this.activity = activity;
+		super(translationContext, activity.getId());
 
-		PetriNet petriNet = translationContext.getCaseModelTranslation().getPetriNet();
-		final String prefixString = translationContext.getPrefixString();
+		final String prefixString = this.context.getPrefixString();
 
-		initialPlace = petriNet.addPlace(prefixString + "init");
-		finalPlace = petriNet.addPlace(prefixString + "final");
+		initialPlace = addPlace(prefixString + "init");
+		finalPlace = addPlace(prefixString + "final");
 
-		Transition transition = new Transition(activity.getName());
-		transition.addInputPlace(initialPlace);
-		transition.addOutputPlace(finalPlace);
-		petriNet.addTransition(transition);
+		addTransition(prefixString, initialPlace, finalPlace);
 	}
 }

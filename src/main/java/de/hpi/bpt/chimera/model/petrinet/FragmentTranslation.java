@@ -57,19 +57,19 @@ public class FragmentTranslation extends AbstractTranslation {
 
 	private void translateActivity(AbstractActivity activity) {
 		System.out.println(activity + " " + activity.getId());
-		ActivityTranslation activityTranslation = new ActivityTranslation(translationContext, activity);
+		ActivityTranslation activityTranslation = new ActivityTranslation(context, activity);
 		childTranslationsById.put(activity.getId(), activityTranslation);
 	}
 
 	private void translateEvent(AbstractEvent event) {
 		System.out.println(event + " " + event.getId());
-		EventTranslation eventTranslation = new EventTranslation(translationContext, event);
+		EventTranslation eventTranslation = new EventTranslation(context, event);
 		childTranslationsById.put(event.getId(), eventTranslation);
 	}
 
 	private void translateGateway(AbstractGateway gateway) {
 		System.out.println(gateway + " " + gateway.getId());
-		GatewayTranslation gatewayTranslation = new GatewayTranslation(translationContext, gateway);
+		GatewayTranslation gatewayTranslation = new GatewayTranslation(context, gateway);
 		childTranslationsById.put(gateway.getId(), gatewayTranslation);
 	}
 
@@ -95,9 +95,6 @@ public class FragmentTranslation extends AbstractTranslation {
 
 		final String transitionName = source.getPrefixString() + "to_" + target.getPrefixString();
 
-		Transition transition = new Transition(transitionName);
-		transition.addInputPlace(source.getFinalPlace());
-		transition.addOutputPlace(target.getInitialPlace());
-		getPetriNet().addTransition(transition);
+		addTransition(transitionName, source.getFinalPlace(), target.getInitialPlace());
 	}
 }
