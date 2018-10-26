@@ -58,7 +58,7 @@ public abstract class AbstractControlNode {
 		return outgoingSequenceFlows.stream().map(x -> x.getTargetRef()).collect(Collectors.toList());
 	}
 
-	public List<SequenceFlowAssociation> getIncommingSequenceFlows() {
+	public List<SequenceFlowAssociation> getIncomingSequenceFlows() {
 		return incomingSequenceFlows;
 	}
 

@@ -7,9 +7,6 @@ public abstract class AbstractTranslation {
 	protected final TranslationContext context;
 	protected final String name;
 
-	protected Place initialPlace;
-	protected Place finalPlace;
-
 	protected static Logger log = Logger.getLogger(AbstractTranslation.class);
 
 	public AbstractTranslation(TranslationContext translationContext, String name) {
@@ -53,13 +50,5 @@ public abstract class AbstractTranslation {
 
 	public PetriNet getPetriNet() {
 		return context.getCaseModelTranslation().getPetriNet();
-	}
-
-	public Place getInitialPlace() {
-		return initialPlace;
-	}
-
-	public Place getFinalPlace() {
-		return finalPlace;
 	}
 }

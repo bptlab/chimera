@@ -4,16 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hpi.bpt.chimera.model.fragment.Fragment;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.AbstractGateway;
 
-public class FragmentTranslation extends AbstractTranslation {
+public class FragmentTranslation extends AbstractControlNodeTranslation {
 	private final Fragment fragment;
 
-	private final Map<String, AbstractTranslation> childTranslationsById = new HashMap<>();
+	private final Map<String, AbstractControlNodeTranslation> controlNodeTranslationsById = new HashMap<>();
 
 	public FragmentTranslation(TranslationContext translationContext, Fragment fragment) {
 		super(translationContext, fragment.getName());
@@ -32,13 +33,13 @@ public class FragmentTranslation extends AbstractTranslation {
 
 		// Translate gateways
 		for (AbstractGateway gateway : bpmnFragment.getEventBasedGateways()) {
-			translateGateway(gateway);
+			translateEventGateway(gateway);
 		}
 		for (AbstractGateway gateway : bpmnFragment.getExclusiveGateways()) {
-			translateGateway(gateway);
+			translateExclusiveGateway(gateway);
 		}
 		for (AbstractGateway gateway : bpmnFragment.getParallelGateways()) {
-			translateGateway(gateway);
+			translateParallelGateway(gateway);
 		}
 
 		// Translate sequence flow
@@ -47,33 +48,48 @@ public class FragmentTranslation extends AbstractTranslation {
 		}
 
 		// Connect start event
-		AbstractTranslation startEventTranslation = childTranslationsById.get(bpmnFragment.getStartEvent().getId());
+		AbstractControlNodeTranslation startEventTranslation = controlNodeTranslationsById
+				.get(bpmnFragment.getStartEvent().getId());
 		initialPlace = startEventTranslation.getInitialPlace();
 
 		// Connect end event
-		AbstractTranslation endEventTranslation = childTranslationsById.get(bpmnFragment.getEndEvent().getId());
+		AbstractControlNodeTranslation endEventTranslation = controlNodeTranslationsById
+				.get(bpmnFragment.getEndEvent().getId());
 		finalPlace = endEventTranslation.getFinalPlace();
 	}
 
 	private void translateActivity(AbstractActivity activity) {
 		System.out.println(activity + " " + activity.getId());
 		ActivityTranslation activityTranslation = new ActivityTranslation(context, activity);
-		childTranslationsById.put(activity.getId(), activityTranslation);
+		controlNodeTranslationsById.put(activity.getId(), activityTranslation);
 	}
 
 	private void translateEvent(AbstractEvent event) {
 		System.out.println(event + " " + event.getId());
 		EventTranslation eventTranslation = new EventTranslation(context, event);
-		childTranslationsById.put(event.getId(), eventTranslation);
+		controlNodeTranslationsById.put(event.getId(), eventTranslation);
 	}
 
-	private void translateGateway(AbstractGateway gateway) {
+	private void translateExclusiveGateway(AbstractGateway gateway) {
 		System.out.println(gateway + " " + gateway.getId());
-		GatewayTranslation gatewayTranslation = new GatewayTranslation(context, gateway);
-		childTranslationsById.put(gateway.getId(), gatewayTranslation);
+		AbstractGatewayTranslation gatewayTranslation = new ExclusiveGatewayTranslation(context, gateway);
+		controlNodeTranslationsById.put(gateway.getId(), gatewayTranslation);
+	}
+
+	private void translateParallelGateway(AbstractGateway gateway) {
+		System.out.println(gateway + " " + gateway.getId());
+		AbstractGatewayTranslation gatewayTranslation = new ParallelGatewayTranslation(context, gateway);
+		controlNodeTranslationsById.put(gateway.getId(), gatewayTranslation);
+	}
+
+	private void translateEventGateway(AbstractGateway gateway) {
+		translateExclusiveGateway(gateway);
 	}
 
 	private void translateSequenceFlow(SequenceFlowAssociation flowAssociation) {
+		final AbstractControlNode sourceNode = flowAssociation.getSourceRef();
+		final AbstractControlNode targetNode = flowAssociation.getTargetRef();
+
 		final String sourceId = flowAssociation.getSourceRef().getId();
 		final String targetId = flowAssociation.getTargetRef().getId();
 
@@ -81,20 +97,38 @@ public class FragmentTranslation extends AbstractTranslation {
 		System.out.println("- " + sourceId + " " + flowAssociation.getSourceRef());
 		System.out.println("- " + targetId + " " + flowAssociation.getTargetRef());
 
-		AbstractTranslation source = childTranslationsById.get(sourceId);
-		AbstractTranslation target = childTranslationsById.get(targetId);
+		AbstractControlNodeTranslation sourceTranslation = controlNodeTranslationsById.get(sourceId);
+		AbstractControlNodeTranslation targetTranslation = controlNodeTranslationsById.get(targetId);
 
-		if (source == null) {
+		if (sourceTranslation == null) {
 			System.out.println("cannot find source: " + sourceId);
-			childTranslationsById.keySet().stream().forEach(id -> System.out.println(id));
+			controlNodeTranslationsById.keySet().stream().forEach(id -> System.out.println(id));
 		}
-		if (target == null) {
+		if (targetTranslation == null) {
 			System.out.println("cannot find target: " + targetId);
-			childTranslationsById.keySet().stream().forEach(id -> System.out.println(id));
+			controlNodeTranslationsById.keySet().stream().forEach(id -> System.out.println(id));
 		}
 
-		final String transitionName = source.getPrefixString() + "to_" + target.getPrefixString();
+		Place inputPlace;
+		Place outputPlace;
+		if (sourceNode instanceof AbstractGateway) {
+			int gatewayOutgoingFlowIndex = sourceNode.getOutgoingSequenceFlows().indexOf(flowAssociation);
+			inputPlace = ((AbstractGatewayTranslation) sourceTranslation).getOutputPlaces()
+					.get(gatewayOutgoingFlowIndex);
+		} else {
+			inputPlace = sourceTranslation.getFinalPlace();
+		}
 
-		addTransition(transitionName, source.getFinalPlace(), target.getInitialPlace());
+		if (targetNode instanceof AbstractGateway) {
+			int gatewayIncomingFlowIndex = targetNode.getIncomingSequenceFlows().indexOf(flowAssociation);
+			outputPlace = ((AbstractGatewayTranslation) targetTranslation).getInputPlaces()
+					.get(gatewayIncomingFlowIndex);
+		} else {
+			outputPlace = targetTranslation.getInitialPlace();
+		}
+
+		final String transitionName = sourceTranslation.getPrefixString() + "to_" + targetTranslation.getPrefixString();
+
+		addTransition(transitionName, inputPlace, outputPlace);
 	}
 }

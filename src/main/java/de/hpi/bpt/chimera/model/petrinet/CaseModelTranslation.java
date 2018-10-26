@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 
 public class CaseModelTranslation {
@@ -12,6 +13,7 @@ public class CaseModelTranslation {
 
 	private TranslationContext translationContext;
 	private final List<FragmentTranslation> fragmentTranslations = new ArrayList<>();
+	private final List<DataClassTranslation> dataClassTranslations = new ArrayList<>();
 
 	private Place initialPlace;
 	private Place finalPlace;
@@ -27,6 +29,10 @@ public class CaseModelTranslation {
 
 		for (Fragment fragment : caseModel.getFragments()) {
 			translateFragment(fragment);
+		}
+
+		for (DataClass dataClass : caseModel.getDataModel().getDataClasses()) {
+			translateDataClass(dataClass);
 		}
 	}
 
@@ -44,6 +50,10 @@ public class CaseModelTranslation {
 		Transition fragmentReInit = new Transition(translationContext, "re-initialize-fragment-" + fragment.getId(),
 				fragmentTranslation.getFinalPlace(), fragmentTranslation.getInitialPlace());
 		petriNet.addTransition(fragmentReInit);
+	}
+
+	private void translateDataClass(DataClass dataClass) {
+		dataClassTranslations.add(new DataClassTranslation(translationContext, dataClass));
 	}
 
 	public PetriNet getPetriNet() {
