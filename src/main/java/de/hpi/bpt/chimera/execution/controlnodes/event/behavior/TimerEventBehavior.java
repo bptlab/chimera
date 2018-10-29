@@ -3,8 +3,6 @@ package de.hpi.bpt.chimera.execution.controlnodes.event.behavior;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;

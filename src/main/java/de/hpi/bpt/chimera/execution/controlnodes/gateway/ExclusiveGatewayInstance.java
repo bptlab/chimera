@@ -4,18 +4,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -101,7 +96,6 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	public void skipAlternativeBranches(AbstractControlNode ongoingNode) {
 		for (List<String> branch : branches) {
 			if (!branch.contains(ongoingNode.getId())) {
-				// log.info("skipping a branch");
 				skipBranch(branch);
 			}
 		}
@@ -121,8 +115,6 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 			ControlNodeInstance node = this.getFragmentInstance().getControlNodeInstanceById(toSkip);
 			if (node != null) {
 				node.skip();
-				// log.info(String.format("skipping the ControlNode with the id:
-				// %s", node.getControlNode().getId()));
 			}
 		}
 	}

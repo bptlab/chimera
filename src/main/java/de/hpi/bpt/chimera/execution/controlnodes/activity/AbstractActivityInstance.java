@@ -60,6 +60,8 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 			return;
 		}
 		getFragmentInstance().activate();
+		getFragmentInstance().skipAlternativeControlNodes(this);
+		
 		createAttachedBoundaryEvents();
 
 		setState(State.RUNNING);
