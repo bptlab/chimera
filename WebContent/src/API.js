@@ -1,13 +1,30 @@
-const API_URL =
-  "http://localhost:8080/Chimera/api/v3/organizations/e7754ea47ec643d1aeac8f5e2529eed7/casemodels";
+let API_URL;
+
+async function getApiUrl() {
+  if (API_URL) {
+    return API_URL;
+  }
+
+  const URL = "http://localhost:8080/Chimera/api/v3/organizations";
+  const response = await getData(`${URL}`);
+  const organizations = response["organizations"].filter(function(org) {
+    return org.name === "Default";
+  });
+  console.log(organizations);
+  const orgId = organizations[0].id;
+  console.log(orgId);
+  API_URL = `${URL}/${orgId}/casemodels`;
+  return API_URL;
+}
 
 export async function getCaseModel(cmId) {
-  let response = await getData(`${API_URL}/${cmId}`);
+  const URL = `${await getApiUrl()}/${cmId}`;
+  let response = await getData(`${URL}`);
   return response;
 }
 
 export async function startCase(cmId, name) {
-  const URL = `${API_URL}/${cmId}/cases`;
+  const URL = `${await getApiUrl()}/${cmId}/cases`;
   const method = name ? "PUT" : "POST";
   const payload = { name: name };
   const response = await getData(URL, method, payload);
@@ -15,17 +32,18 @@ export async function startCase(cmId, name) {
 }
 
 export async function getCaseModels() {
-  const response = await getData(API_URL);
+  const URL = `${await getApiUrl()}`;
+  const response = await getData(`${URL}`);
   return response["casemodels"];
 }
 
 export async function deleteCaseModel(cmId) {
-  const URL = `${API_URL}/${cmId}`;
+  const URL = `${await getApiUrl()}/${cmId}`;
   await getData(URL, "DELETE");
 }
 
 export async function getCase(cmId, caseId) {
-  const URL = `${API_URL}/${cmId}/cases/${caseId}`;
+  const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}`;
   let response = await getData(URL);
   const response2 = await getData(`${URL}/activities?state=ready`);
   const response3 = await getData(`${URL}/activities?state=running`);
@@ -37,24 +55,24 @@ export async function getCase(cmId, caseId) {
 }
 
 export async function getAvailableActivityInput(cmId, caseId, activityId) {
-  const URL = `${API_URL}/${cmId}/cases/${caseId}/activities/${activityId}/availableInput`;
+  const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/activities/${activityId}/availableInput`;
   const response = await getData(URL);
   return response["dataobjects"];
 }
 
 export async function getAvailableActivityOutput(cmId, caseId, activityId) {
-  const URL = `${API_URL}/${cmId}/cases/${caseId}/activities/${activityId}/availableOutput`;
+  const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/activities/${activityId}/availableOutput`;
   const response = await getData(URL);
   return response;
 }
 
 export async function beginActivity(cmId, caseId, activityId) {
-  const URL = `${API_URL}/${cmId}/cases/${caseId}/activities/${activityId}/begin`;
+  const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/activities/${activityId}/begin`;
   await getData(URL, "POST", []);
 }
 
 export async function closeCase(cmId, caseId) {
-  const URL = `${API_URL}/${cmId}/cases/${caseId}/terminate`;
+  const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/terminate`;
   await getData(URL, "POST");
 }
 
