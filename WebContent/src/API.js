@@ -31,10 +31,21 @@ export async function startCase(cmId, name) {
   return response;
 }
 
+//@depricated
 export async function getCaseModels() {
   const URL = `${await getApiUrl()}`;
   const response = await getData(`${URL}`);
   return response["casemodels"];
+}
+
+export async function getOrganization() {
+  const response = await getData(API_URL);
+  return response;
+}
+
+export async function getRoles(){
+  const response = await getData(ROLES_URL);
+  return response["roles"];
 }
 
 export async function deleteCaseModel(cmId) {

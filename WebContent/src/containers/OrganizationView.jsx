@@ -1,58 +1,54 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 
-import { getCaseModels } from "../API";
+import {getOrganization, getRoles} from "../API"
+
 import NavBar from "./NavBar";
-import ExpandableOverview from "../components/ExpandableOverview";
+
+import CaseModelList from "./CaseModelList"
+import SearchableList from "../components/SearchableList"
 
 class OrganizationView extends Component {
   state = {
-    casemodels: []
-  };
+    casemodels: [],
+    roles: ["1", "2", "3"],
+    members: [],
+  }
 
   componentDidMount = async () => {
-    let casemodels = await getCaseModels();
-    // per default all casemodels are collapsed
-    casemodels.map(cm => (cm.isCollapsed = false));
-    this.setState({ casemodels });
-  };
+    let organization = await getOrganization();
+    let roles = await getRoles();
+    let members = organization.members.map( member => member.name + " (" + member.email + ")");
+    alert(JSON.stringify(organization, null, 2));
+    this.setState({
+      casemodels: organization.casemodels,
+      roles: roles,
+      members: members,
+    });
+  }
 
   render() {
     return (
       <React.Fragment>
         <NavBar />
-        <main className="main-container">
-          <div className="container">
-            {this.state.casemodels.map((cm, idx) => {
-              const casemodelOverviewHeader = (
-                <Link to={"casemodels/" + cm.id}>{cm.name}</Link>
-              );
-              return (
-                <ExpandableOverview
-                  key={idx}
-                  cm={cm}
-                  idx={idx}
-                  header={casemodelOverviewHeader}
-                  body={"cm.description"}
-                />
-              );
-            })}
-          </div>
-        </main>
+        <ul className="nav nav-tabs" id="myTab" role="tablist">
+          <li className="nav-item">
+            <a className="nav-link active" id="casemodel-tab" data-toggle="tab" href="#casemodels" role="tab" aria-controls="home" aria-selected="true">Case Models</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" id="roles-tab" data-toggle="tab" href="#roles" role="tab" aria-controls="profile" aria-selected="false">Roles</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" id="members-tab" data-toggle="tab" href="#members" role="tab" aria-controls="contact" aria-selected="false">Members</a>
+          </li>
+        </ul>
+        <div className="tab-content" id="myTabContent">
+          <div className="tab-pane fade show active" id="casemodels" role="tabpanel" aria-labelledby="casemodel-tab"><CaseModelList casemodels={this.state.casemodels}/></div>
+          <div className="tab-pane fade" id="roles" role="tabpanel" aria-labelledby="roles-tab"><SearchableList elements = {this.state.roles}/></div>
+          <div className="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab"><SearchableList elements = {this.state.members}/></div>
+        </div>
       </React.Fragment>
     );
   }
 }
-
-OrganizationView.propTypes = {
-  casemodels: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-      isCollapsed: PropTypes.bool.isRequired
-    })
-  )
-};
 
 export default OrganizationView;
