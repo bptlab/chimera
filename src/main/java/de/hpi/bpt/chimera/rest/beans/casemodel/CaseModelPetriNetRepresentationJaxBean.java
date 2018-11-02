@@ -46,6 +46,7 @@ public class CaseModelPetriNetRepresentationJaxBean {
 	public String getDotOutput() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("digraph G {\n");
+		builder.append("  rankdir=LR;\n");
 
 		builder.append("  subgraph places {\n");
 		builder.append("    graph [shape=circle];\n");
@@ -55,7 +56,8 @@ public class CaseModelPetriNetRepresentationJaxBean {
 		builder.append("  }\n");
 
 		builder.append("  subgraph transitions {\n");
-		builder.append("    node [shape=rect,height=0.2,width=2];\n");
+		// builder.append(" node [shape=rect,fixedsize=true,height=2,width=0.2];\n");
+		builder.append("    node [shape=rect,height=2,width=0.2];\n");
 		builder.append(petriNet.getTransitions().stream().map(transition -> "    \"" + transition.getName() + "\";\n")
 				.collect(Collectors.joining("")));
 		builder.append("  }\n");

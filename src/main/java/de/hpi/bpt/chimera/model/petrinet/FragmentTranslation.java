@@ -11,8 +11,10 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.AbstractGateway;
 
-public class FragmentTranslation extends AbstractControlNodeTranslation {
+public class FragmentTranslation extends AbstractTranslation {
 	private final Fragment fragment;
+	protected final Place initialPlace;
+	protected final Place finalPlace;
 
 	private final Map<String, AbstractControlNodeTranslation> controlNodeTranslationsById = new HashMap<>();
 
@@ -130,5 +132,13 @@ public class FragmentTranslation extends AbstractControlNodeTranslation {
 		final String transitionName = sourceTranslation.getPrefixString() + "to_" + targetTranslation.getPrefixString();
 
 		addTransition(transitionName, inputPlace, outputPlace);
+	}
+
+	public Place getInitialPlace() {
+		return initialPlace;
+	}
+
+	public Place getFinalPlace() {
+		return finalPlace;
 	}
 }
