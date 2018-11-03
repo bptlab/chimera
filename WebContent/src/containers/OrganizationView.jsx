@@ -18,7 +18,6 @@ class OrganizationView extends Component {
     let organization = await getOrganization();
     let roles = await getRoles();
     let members = organization.members.map( member => member.name + " (" + member.email + ")");
-    alert(JSON.stringify(organization, null, 2));
     this.setState({
       casemodels: organization.casemodels,
       roles: roles,

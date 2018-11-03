@@ -14,8 +14,19 @@ class SearchableList extends Component {
     this.setState({
       elements: this.props.elements,
       displayedElements: this.props.elements,
+      width: window.innerWidth,
+      height: window.innerHeight,
     });
+    window.addEventListener('resize', event => this.updateWindowDimensions());
   };
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', even => this.updateWindowDimensions());
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
 
   componentWillReceiveProps(nextProps){
     /*alert(nextProps.elements);
@@ -41,15 +52,17 @@ class SearchableList extends Component {
             this.filterElements(this.props.elements, filterString);
           }}
         />
-        <main className="main-container">
-          <div className="container">
-            <ul className="list-group">
-              {this.state.displayedElements.map((element) =>
-                <li className="list-group-item" key={element}>{element}</li>
-              )}
-            </ul>
-          </div>
-        </main>
+        <div style={{overflow: "auto", height: this.state.height * 0.5}}>
+          <main className="main-container" >
+            <div className="container">
+              <ul className="list-group">
+                {this.state.displayedElements.map((element) =>
+                  <li className="list-group-item" key={element}>{element}</li>
+                )}
+              </ul>
+            </div>
+          </main>
+        </div>
       </React.Fragment>
     );
   }

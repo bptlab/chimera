@@ -1,11 +1,13 @@
+const URL = "http://localhost:8080/Chimera/api/v3/organizations";
+
 let API_URL;
+
 
 async function getApiUrl() {
   if (API_URL) {
     return API_URL;
   }
 
-  const URL = "http://localhost:8080/Chimera/api/v3/organizations";
   const response = await getData(`${URL}`);
   const organizations = response["organizations"].filter(function(org) {
     return org.name === "Default";
@@ -15,6 +17,13 @@ async function getApiUrl() {
   console.log(orgId);
   API_URL = `${URL}/${orgId}/casemodels`;
   return API_URL;
+}
+
+//Think about making the API_URL without the /casemodels so that we do not need this convenient function
+async function getOrganizationApiUrl(){
+  //return API_URL without /casemodels in the end
+  let api_url = await getApiUrl();
+  return await api_url.substr(0, api_url.length - 11);
 }
 
 export async function getCaseModel(cmId) {
@@ -39,12 +48,12 @@ export async function getCaseModels() {
 }
 
 export async function getOrganization() {
-  const response = await getData(API_URL);
+  const response = await getData(await getOrganizationApiUrl());
   return response;
 }
 
 export async function getRoles(){
-  const response = await getData(ROLES_URL);
+  const response = await getData(`${await getOrganizationApiUrl()}/roles`);
   return response["roles"];
 }
 

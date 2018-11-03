@@ -15,7 +15,7 @@ class NavBar extends Component {
   CaseModelBreadCrump = casemodel => {
     if (casemodel) {
       return (
-        <li className="breadcrumb-item">
+        <li className="breadcrumb-item fixed-top">
           <a
             aria-current="page"
             href={this.url() + "/casemodels/" + casemodel.id}
