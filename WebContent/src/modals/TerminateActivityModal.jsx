@@ -1,6 +1,53 @@
 import React, { Component } from "react";
 import { getAvailableActivityOutput } from "../API";
 
+class ChooseState extends Component {
+  render() {
+    const { dataclasses } = this.props;
+    return (
+      <div>
+        {dataclasses.map((dataclass, idx) => (
+          <div key={idx} className="input-group mb-3">
+            <div className="input-group-prepend">
+              <label className="input-group-text">
+                {dataclass.dataclassName}
+              </label>
+            </div>
+            <select className="custom-select">
+              {dataclass.availableStates.map((state, idx) => (
+                <option key={idx}>state</option>
+              ))}
+            </select>
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+
+class ChangeAttributeValues extends Component {
+  render() {
+    const { dataclass } = this.props;
+    const { dataclassName, attributeConfiguration } = dataclass;
+    return (
+      <div>
+        <label>{dataclassName}</label>
+        {attributeConfiguration.map((attribute, idx) => (
+          <div key={idx} className="input-group mb-3">
+            <div className="input-group-prepend">
+              <label className="input-group-text">{attribute.name}</label>
+            </div>
+            <input type="text" className="form-control" />
+            <div className="input-group-append">
+              <label className="input-group-text">{attribute.type}</label>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+
 class TerminateActivityModal extends Component {
   state = {
     dataclasses: [],
@@ -35,7 +82,7 @@ class TerminateActivityModal extends Component {
             <form>
               <div className="modal-header">
                 <h4 className="modal-title" id="terminateActivityModalTitle">
-                  Terminate the activity
+                  Complete the Task: {activity.label}
                 </h4>
                 <button
                   type="button"
@@ -47,57 +94,15 @@ class TerminateActivityModal extends Component {
                 </button>
               </div>
               <div className="modal-body">
-                <label>
-                  Select data objects for '{activity.label}
-                  '.
-                </label>
-                <br />
-                <label>New Creation</label>
-                {dataclasses.map(d => (
-                  <div>
-                    <h6>{d.dataclassName}</h6>
-                    <label>Available States</label>
-                    {d.availableStates.map(s => (
-                      <div>
-                        <label>{s}</label>
-                      </div>
-                    ))}
-                    <label>Attributes</label>
-                    {d.attributeConfiguration.map(a => (
-                      <div>
-                        <label>{a.name}</label>
-                        <label>({a.type})</label>
-                        <input
-                          type="text"
-                          value={a.value}
-                          placeholder="Enter value"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ))}
-                <label>Transitions</label>
-                {dataobjects.map(d => (
-                  <div>
-                    <h6>{d.dataclassName}</h6>
-                    <label>Available States</label>
-                    {d.availableStates.map(s => (
-                      <div>
-                        <label>{s}</label>
-                      </div>
-                    ))}
-                    <label>Attributes</label>
-                    {d.attributeConfiguration.map(a => (
-                      <div>
-                        <label>{a.name}</label>
-                        <label>{a.type}</label>
-                        <input
-                          type="text"
-                          value={a.value}
-                          placeholder="Enter value"
-                        />
-                      </div>
-                    ))}
+                <label>Select states of data objects</label>
+                <ChooseState dataclasses={dataclasses} />
+                <hr />
+
+                <label>Write values of data attributes</label>
+                {dataclasses.map((dataclass, idx) => (
+                  <div key={idx}>
+                    <ChangeAttributeValues dataclass={dataclass} />
+                    {idx === dataclasses.length - 1 ? "" : <hr />}
                   </div>
                 ))}
               </div>
@@ -110,7 +115,7 @@ class TerminateActivityModal extends Component {
                   className="btn btn-default btn-primary"
                   onClick={() => onSubmit(activity, this.state.dataObjects)}
                 >
-                  Start
+                  Complete
                 </button>
               </div>
             </form>
