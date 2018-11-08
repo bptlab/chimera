@@ -25,7 +25,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.EventBasedGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
-
+ 
 /**
  * This class represents an ExclusiveGateway. It provides methods and functions
  * for the incoming and outgoing controlflow logic as well as functions for
