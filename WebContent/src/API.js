@@ -2,7 +2,6 @@ const URL = "http://localhost:8080/Chimera/api/v3/organizations";
 
 let API_URL;
 
-
 async function getApiUrl() {
   if (API_URL) {
     return API_URL;
@@ -20,7 +19,7 @@ async function getApiUrl() {
 }
 
 //Think about making the API_URL without the /casemodels so that we do not need this convenient function
-async function getOrganizationApiUrl(){
+async function getOrganizationApiUrl() {
   //return API_URL without /casemodels in the end
   let api_url = await getApiUrl();
   return await api_url.substr(0, api_url.length - 11);
@@ -52,7 +51,7 @@ export async function getOrganization() {
   return response;
 }
 
-export async function getRoles(){
+export async function getRoles() {
   const response = await getData(`${await getOrganizationApiUrl()}/roles`);
   return response["roles"];
 }
@@ -83,7 +82,7 @@ export async function getAvailableActivityInput(cmId, caseId, activityId) {
 export async function getAvailableActivityOutput(cmId, caseId, activityId) {
   const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/activities/${activityId}/availableOutput`;
   const response = await getData(URL);
-  return response;
+  return response["output"];
 }
 
 export async function beginActivity(cmId, caseId, activityId) {

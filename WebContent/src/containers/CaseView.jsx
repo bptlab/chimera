@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { getCase, beginActivity, closeCase } from "../API";
+import {
+  getCase,
+  beginActivity,
+  closeCase,
+  getAvailableActivityOutput
+} from "../API";
 import NavBar from "./NavBar";
 import BeginActivityModal from "../modals/BeginActivityModal";
 import TerminateActivityModal from "../modals/TerminateActivityModal";
@@ -26,9 +31,33 @@ class CaseView extends Component {
       dataObjects: []
     },
     selectedActivityForBegin: { id: "", label: "" },
-    selectedActivityForTermination: { id: "", label: "" }
+    selectedActivityForTermination: { id: "", label: "" },
+    terminationValues: {}
   };
 
+  // output: {
+  //   "activityId": [{
+  //     "dataclassName": "",
+  //     "availableStates": ["name"]
+  //     "attributes": [{
+  //       "name": "",
+  //       "type": "",
+  //       "value": ""
+  //     }]
+  //   }]
+  // }
+  // terminationValues: {
+  //   "activityId": [{
+  //     "dataclassName": "",
+  //     "state": "", // muss hinzugefügt werden
+  //     "availableStates": ["name"] // wird gelöscht
+  //     "attributes": [{
+  //       "name": ""
+  //       "type": "" // wird gelöscht
+  //       "value": ""
+  //     }]
+  //   }]
+  // }
   componentDidMount = async () => {
     const { cmId, caseId } = this.props.match.params;
     const caze = await getCase(cmId, caseId);
@@ -46,8 +75,31 @@ class CaseView extends Component {
     this.setState({ selectedActivityForBegin: activity });
   };
 
-  selectActivityForTermination = activity => {
-    this.setState({ selectedActivityForTermination: activity });
+  selectActivityForTermination = async activity => {
+    const { id } = activity;
+    if (this.state.terminationValues[id]) {
+      this.setState({
+        selectedActivityForTermination: activity
+      });
+    } else {
+      const { cmId, caseId } = this.props.match.params;
+      const output = await getAvailableActivityOutput(cmId, caseId, id);
+
+      const terminationValue = output.map(dataclass => ({
+        ...dataclass,
+        state: dataclass.availableStates[0]
+      }));
+
+      const terminationValues = {
+        ...this.state.terminationValues,
+        [id]: terminationValue
+      };
+
+      this.setState({
+        selectedActivityForTermination: activity,
+        terminationValues
+      });
+    }
   };
 
   closeCaseButton = () => {
@@ -67,13 +119,70 @@ class CaseView extends Component {
     this.componentDidMount();
   };
 
+  terminateActivityModal = () => {
+    const {
+      selectedActivityForTermination,
+      terminationValues,
+      dataclasses
+    } = this.state;
+    return (
+      <TerminateActivityModal
+        activity={selectedActivityForTermination}
+        match={this.props.match}
+        terminationValues={terminationValues[selectedActivityForTermination.id]}
+        handleStateChanges={this.handleStateChanges}
+        handleAttributeValueChanges={this.handleAttributeValueChanges}
+        dataclasses={dataclasses}
+        onSubmit={this.handleTerminateActivity}
+      />
+    );
+  };
+
+  handleStateChanges = (activity, dataclassName, state) => {
+    const { id } = activity;
+    let terminationValues = { ...this.state.terminationValues };
+    let dataclass = terminationValues[id].find(
+      d => d.dataclassName === dataclassName
+    );
+    dataclass.state = state;
+    this.setState({ terminationValues });
+  };
+
+  handleAttributeValueChanges = (
+    activity,
+    dataclassName,
+    attributeName,
+    value
+  ) => {
+    const { id } = activity;
+
+    let terminationValues = { ...this.state.terminationValues };
+    let dataclass = terminationValues[id].find(
+      d => d.dataclassName === dataclassName
+    );
+
+    let attribute = dataclass.attributes.find(a => a.name === attributeName);
+    attribute.value = value;
+    this.setState({ terminationValues });
+  };
+
+  // modify copy of state to fit API
+  handleTerminateActivity = activity => {
+    const { id } = activity;
+    let terminationValues = [...this.state.terminationValues[id]];
+    terminationValues.forEach(dataclass => {
+      delete dataclass.availableStates;
+      dataclass.attributes.forEach(attribute => {
+        delete attribute.type;
+      });
+    });
+    console.log(terminationValues);
+  };
+
   // TODO: maybe pass not all matches but only the ids
   render() {
-    const {
-      caze,
-      selectedActivityForBegin,
-      selectedActivityForTermination
-    } = this.state;
+    const { caze, selectedActivityForBegin } = this.state;
+
     return (
       <React.Fragment>
         <NavBar
@@ -86,11 +195,9 @@ class CaseView extends Component {
             match={this.props.match}
             onSubmit={this.handleBeginActivity}
           />
-          <TerminateActivityModal
-            activity={selectedActivityForTermination}
-            match={this.props.match}
-            onSubmit={this.handleTerminateActivity}
-          />
+
+          {this.terminateActivityModal()}
+
           <div className="container">
             <h1>{caze.name}</h1>
             <h5>{caze.id}</h5>
