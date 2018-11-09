@@ -1,7 +1,9 @@
 package de.hpi.bpt.chimera.rest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -16,6 +18,8 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import de.hpi.bpt.chimera.rest.beans.activity.*;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
@@ -26,10 +30,6 @@ import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstan
 import de.hpi.bpt.chimera.execution.data.DataManager;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.execution.data.ObjectLifecycleTransition;
-import de.hpi.bpt.chimera.rest.beans.activity.ActivityJaxBean;
-import de.hpi.bpt.chimera.rest.beans.activity.MultipleActivitiesJaxBean;
-import de.hpi.bpt.chimera.rest.beans.activity.TerminateActivityJaxBean;
-import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
 import de.hpi.bpt.chimera.rest.beans.exception.DangerExceptionJaxBean;
 import de.hpi.bpt.chimera.rest.beans.miscellaneous.MessageJaxBean;
 import de.hpi.bpt.chimera.usermanagement.Organization;
@@ -185,15 +185,27 @@ public class ActivityRestService extends AbstractRestService {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully terminated the activity instance.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageJaxBean.class)))})
-	public Response terminateActivityInstance(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, TerminateActivityJaxBean post) {
+	public Response terminateActivityInstance(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, List<DataUpdateRaw> post) {
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+			DataManager dataManager = caseExecutioner.getDataManager();
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 
-			List<ObjectLifecycleTransition> objectLifecycleTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(post.getTransitions());
-			List<UpdateDataObjectJaxBean> rawDataAttributeValues = post.getAttributeUpdates();
-
-			caseExecutioner.terminateDataControlNodeInstance(activityInstance, objectLifecycleTransitions, rawDataAttributeValues);
+			// validate and find duplicates
+			// List<ObjectLifecycleTransition> objectLifecycleTransitions = caseExecutioner.getDataManager().resolveDataClassToStateTransition(post.getTransitions());
+			// List<UpdateDataObjectJaxBean> rawDataAttributeValues = post.getAttributeUpdates();
+			List<String> dataclassNames = post.stream().map(DataUpdateRaw::getDataclassName).collect(Collectors.toList());
+			Optional<String> duplicateNameOptional = dataclassNames.stream()
+														.filter(n -> Collections.frequency(dataclassNames, n) > 1)
+														.findFirst();
+			if (duplicateNameOptional.isPresent()) {
+				return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError(String.format("The post contains a duplicate update for %s", duplicateNameOptional.get()))).build();
+			}
+			List<DataUpdate> dataUpdates = post.stream()
+											.map(u -> u.convert(dataManager))
+											.collect(Collectors.toList());
+			// TODO: find duplicates
+			caseExecutioner.terminateDataControlNodeInstance(activityInstance, dataUpdates);
 
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(buildMessage("activity terminated.")).build();
 		} catch (IllegalArgumentException e) {

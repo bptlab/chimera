@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import {
   getCase,
   beginActivity,
+  terminateActivity,
   closeCase,
   getAvailableActivityOutput
 } from "../API";
@@ -167,16 +168,22 @@ class CaseView extends Component {
   };
 
   // modify copy of state to fit API
-  handleTerminateActivity = activity => {
+  handleTerminateActivity = async activity => {
+    const { cmId, caseId } = this.props.match.params;
     const { id } = activity;
-    let terminationValues = [...this.state.terminationValues[id]];
-    terminationValues.forEach(dataclass => {
+
+    let activityTerminationValues = [...this.state.terminationValues[id]];
+    activityTerminationValues.forEach(dataclass => {
       delete dataclass.availableStates;
       dataclass.attributes.forEach(attribute => {
         delete attribute.type;
       });
     });
-    console.log(terminationValues);
+    let terminationValues = { ...this.state.terminationValues };
+    delete terminationValues[id];
+    this.setState({ terminationValues });
+    await terminateActivity(cmId, caseId, id, activityTerminationValues);
+    this.componentDidMount();
   };
 
   // TODO: maybe pass not all matches but only the ids

@@ -1,11 +1,6 @@
 package de.hpi.bpt.chimera.execution;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.rest.beans.activity.DataAttributeValue;
+import de.hpi.bpt.chimera.rest.beans.activity.DataUpdate;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
@@ -292,6 +290,50 @@ public class CaseExecutioner {
 			}
 			// set bound DOs free
 			dataManager.unlockDataObjects(boundDataObjects);
+			controlNodeInstance.terminate();
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	// TODO: make this the only and final version
+	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, List<DataUpdate> dataUpdates) {
+		try {
+			// check whether activity instance can terminate
+			if (!controlNodeInstance.canTerminate()) {
+				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
+				log.error(e.getMessage());
+				throw e;
+			}
+
+			List<DataObject> workingItems = controlNodeInstance.getSelectedDataObjects();
+			List<DataObject> outputDataObjects = new ArrayList<>();
+
+			for(DataUpdate dataUpdate : dataUpdates) {
+				DataClass dataclass = dataUpdate.getDataClass();
+				ObjectLifecycleState objectLifecycleState = dataUpdate.getObjectLifecycleState();
+				List<DataAttributeValue> dataAttributeValues = dataUpdate.getDataAttributeValues();
+
+				Optional<DataObject> dataObjectOptional = workingItems.stream()
+															.filter(d -> d.getDataClass().equals(dataclass))
+															.findAny();
+				DataObject dataObject;
+				if (dataObjectOptional.isPresent()) {
+					// Transition
+					dataObject = dataObjectOptional.get();
+					dataObject.makeObjectLifecycleTransition(objectLifecycleState);
+
+				} else {
+					// Creation
+					AtomicDataStateCondition condition = new AtomicDataStateCondition(dataclass, objectLifecycleState);
+					dataObject = getDataManager().createDataObject(condition);
+				}
+				dataObject.setDataAttributeInstanceValues(dataAttributeValues);
+				outputDataObjects.add(dataObject);
+			}
+
+			controlNodeInstance.setOutputDataObjects(outputDataObjects);
+			dataManager.unlockDataObjects(workingItems);
 			controlNodeInstance.terminate();
 		} catch (IllegalArgumentException e) {
 			throw e;

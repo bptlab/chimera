@@ -19,6 +19,7 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.rest.beans.activity.DataAttributeValue;
 
 @Entity
 public class DataObject {
@@ -87,6 +88,17 @@ public class DataObject {
 		}
 	}
 
+	public void setDataAttributeInstanceValues(List<DataAttributeValue> dataAttributeValues) {
+		for (DataAttributeValue dataAttributeValue : dataAttributeValues) {
+			DataAttribute dataAttribute = dataAttributeValue.getDataAttribute();
+			DataAttributeInstance dataAttributeInstance = getDataAttributeInstances().stream()
+															.filter(d -> d.getDataAttribute().equals(dataAttribute))
+															.findFirst()
+															.get();
+			dataAttributeInstance.setValue(dataAttributeValue.getValue());
+		}
+	}
+
 	/**
 	 * Make the transition of the ObjectLifecycleState of the DataStateCondition
 	 * in the DataObject. Therefore check if the new State is a successor of the
@@ -120,6 +132,10 @@ public class DataObject {
 
 	public DataClass getDataClass() {
 		return condition.getDataClass();
+	}
+
+	public String getDataclassName() {
+		return condition.getDataClassName();
 	}
 
 	public synchronized ObjectLifecycleState getObjectLifecycleState() {

@@ -1,9 +1,6 @@
 package de.hpi.bpt.chimera.model.datamodel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -84,4 +81,10 @@ public class DataModel {
 		}
 		return nameToDataClass;
 	}
+
+    public Optional<DataClass> getDataClassByName(String dataclassName) {
+		return getDataClasses().stream()
+				.filter(dc -> dc.getName().equals(dataclassName))
+				.findFirst();
+    }
 }

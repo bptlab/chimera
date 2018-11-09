@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { getAvailableActivityOutput } from "../API";
 
 class ChooseState extends Component {
   render() {
@@ -155,6 +154,7 @@ class TerminateActivityModal extends Component {
                 <button
                   type="button"
                   className="btn btn-default btn-primary"
+                  data-dismiss="modal"
                   onClick={() => onSubmit(activity)}
                 >
                   Complete

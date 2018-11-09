@@ -90,6 +90,16 @@ export async function beginActivity(cmId, caseId, activityId) {
   await getData(URL, "POST", []);
 }
 
+export async function terminateActivity(
+  cmId,
+  caseId,
+  activityId,
+  terminationValues
+) {
+  const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/activities/${activityId}/terminate`;
+  await getData(URL, "POST", terminationValues);
+}
+
 export async function closeCase(cmId, caseId) {
   const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/terminate`;
   await getData(URL, "POST");

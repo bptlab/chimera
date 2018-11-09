@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.model.datamodel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -64,6 +65,18 @@ public class DataClass implements Nameable, Listable {
 			nameToObjectLifecycleState.put(objectLifecycleState.getName(), objectLifecycleState);
 		}
 		return nameToObjectLifecycleState;
+	}
+
+	public Optional<ObjectLifecycleState> getObjectLifecycleStateByName(String stateName) {
+		return getObjectLifecycle().getObjectLifecycleStates().stream()
+				.filter(s -> s.getName().equals(stateName))
+				.findFirst();
+	}
+
+	public Optional<DataAttribute> getDataAttributeByName(String dataAttributeName) {
+		return getDataAttributes().stream()
+				.filter(d -> d.getName().equals(dataAttributeName))
+				.findFirst();
 	}
 
 	@Override
