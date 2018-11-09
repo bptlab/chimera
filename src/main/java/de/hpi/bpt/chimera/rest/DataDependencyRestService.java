@@ -7,6 +7,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import de.hpi.bpt.chimera.rest.beans.activity.OutputJaxBean;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
@@ -95,7 +97,7 @@ public class DataDependencyRestService extends AbstractRestService {
 		responses = {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the dataobjects and dataclasses.",
-				content = @Content(mediaType = "application/json", schema = @Schema(implementation = AvailableOutputJaxBean.class)))})
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = OutputJaxBean.class)))})
 	public Response getOutputDataObjects(@PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
@@ -103,7 +105,7 @@ public class DataDependencyRestService extends AbstractRestService {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildError("Activity Instance needs to be running.")).build();
 		}
 
-		JSONObject result = new JSONObject(new AvailableOutputJaxBean(activityInstance));
+		JSONObject result = new JSONObject(new OutputJaxBean(activityInstance));
 		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 }
