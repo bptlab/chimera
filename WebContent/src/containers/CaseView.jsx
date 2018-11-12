@@ -6,6 +6,7 @@ import {
   beginActivity,
   terminateActivity,
   closeCase,
+  getAvailableActivityInput,
   getAvailableActivityOutput
 } from "../API";
 import NavBar from "./NavBar";
@@ -32,6 +33,7 @@ class CaseView extends Component {
       dataObjects: []
     },
     selectedActivityForBegin: { id: "", label: "" },
+    dataObjectsForBegin: {},
     selectedActivityForTermination: { id: "", label: "" },
     terminationValues: {}
   };
@@ -72,8 +74,16 @@ class CaseView extends Component {
     this.componentDidMount();
   };
 
-  selectActivityForBegin = activity => {
-    this.setState({ selectedActivityForBegin: activity });
+  selectActivityForBegin = async selectedActivityForBegin => {
+    const { id } = selectedActivityForBegin;
+    const { cmId, caseId } = this.props.match.params;
+    const dataObjects = await getAvailableActivityInput(cmId, caseId, id);
+    console.log(dataObjects);
+    const dataObjectsForBegin = {
+      ...this.dataObjectsForBegin,
+      [id]: dataObjects
+    };
+    this.setState({ dataObjectsForBegin, selectedActivityForBegin });
   };
 
   selectActivityForTermination = async activity => {

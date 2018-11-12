@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import AttributeConfiguration from "../components/modals/AttributeConfiguration";
 
 class ChooseState extends Component {
   render() {
@@ -77,6 +78,7 @@ class TerminateActivityModal extends Component {
       terminationValues,
       handleAttributeValueChanges
     } = this.props;
+
     if (!terminationValues) {
       return "";
     }
@@ -86,10 +88,20 @@ class TerminateActivityModal extends Component {
         <label>Write values of data attributes</label>
         {terminationValues.map((dataclass, idx) => (
           <div key={idx}>
-            <ChangeAttributeValues
-              activity={activity}
-              dataclass={dataclass}
-              handleAttributeValueChanges={handleAttributeValueChanges}
+            <label>
+              {dataclass.dataclassName}[{dataclass.state}]
+            </label>
+            <AttributeConfiguration
+              editable={true}
+              attributes={dataclass.attributes}
+              handleAttributeValueChanges={(attributeName, newValue) =>
+                handleAttributeValueChanges(
+                  activity,
+                  dataclass.dataclassName,
+                  attributeName,
+                  newValue
+                )
+              }
             />
             {idx === terminationValues.length - 1 ? "" : <hr />}
           </div>
@@ -97,6 +109,7 @@ class TerminateActivityModal extends Component {
       </div>
     );
   };
+
   render() {
     const {
       activity,

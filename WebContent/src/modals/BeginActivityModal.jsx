@@ -1,19 +1,8 @@
 import React, { Component } from "react";
-import { getAvailableActivityInput } from "../API";
 
 class BeginActivityModal extends Component {
   state = {
     dataObjects: []
-  };
-
-  componentWillReceiveProps = async props => {
-    const { id } = props.activity;
-    if (id) {
-      const { cmId, caseId } = props.match.params;
-      const dataObjects = await getAvailableActivityInput(cmId, caseId, id);
-      console.log(dataObjects);
-      this.setState({ dataObjects });
-    }
   };
 
   render() {
