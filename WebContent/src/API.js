@@ -85,9 +85,9 @@ export async function getAvailableActivityOutput(cmId, caseId, activityId) {
   return response["output"];
 }
 
-export async function beginActivity(cmId, caseId, activityId) {
+export async function beginActivity(cmId, caseId, activityId, selectedIds) {
   const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/activities/${activityId}/begin`;
-  await getData(URL, "POST", []);
+  await getData(URL, "POST", selectedIds);
 }
 
 export async function terminateActivity(
