@@ -38,51 +38,42 @@ class CaseView extends Component {
     terminationValues: {}
   };
 
-  // output: {
-  //   "activityId": [{
-  //     "dataclassName": "",
-  //     "availableStates": ["name"]
-  //     "attributes": [{
-  //       "name": "",
-  //       "type": "",
-  //       "value": ""
-  //     }]
-  //   }]
-  // }
-  // terminationValues: {
-  //   "activityId": [{
-  //     "dataclassName": "",
-  //     "state": "", // muss hinzugefügt werden
-  //     "availableStates": ["name"] // wird gelöscht
-  //     "attributes": [{
-  //       "name": ""
-  //       "type": "" // wird gelöscht
-  //       "value": ""
-  //     }]
-  //   }]
-  // }
   componentDidMount = async () => {
     const { cmId, caseId } = this.props.match.params;
     const caze = await getCase(cmId, caseId);
     this.setState({ caze });
   };
 
-  handleBeginActivity = async (activity, dataObjects) => {
-    const { cmId, caseId } = this.props.match.params;
+  handleBeginActivity = async activity => {
     const { id } = activity;
-    await beginActivity(cmId, caseId, id);
+    const { cmId, caseId } = this.props.match.params;
+    const { dataObjectsForBegin } = this.state;
+
+    const selectedIds = Object.keys(dataObjectsForBegin).reduce(
+      (selectedIds, dataclass) => {
+        const { id } = dataObjectsForBegin[dataclass].selected;
+        selectedIds.push(id);
+        return selectedIds;
+      },
+      []
+    );
+    await beginActivity(cmId, caseId, id, selectedIds);
     this.componentDidMount();
   };
 
   selectActivityForBegin = async selectedActivityForBegin => {
     const { id } = selectedActivityForBegin;
     const { cmId, caseId } = this.props.match.params;
-    const dataObjects = await getAvailableActivityInput(cmId, caseId, id);
-    console.log(dataObjects);
-    const dataObjectsForBegin = {
-      ...this.dataObjectsForBegin,
-      [id]: dataObjects
-    };
+    let dataObjects = await getAvailableActivityInput(cmId, caseId, id);
+
+    const dataObjectsForBegin = dataObjects.reduce((map, obj) => {
+      const dataclassName = obj.dataclass;
+      if (!map[dataclassName]) {
+        map[dataclassName] = { dataobjects: [], selected: obj };
+      }
+      map[obj.dataclass].dataobjects.push(obj);
+      return map;
+    }, {});
     this.setState({ dataObjectsForBegin, selectedActivityForBegin });
   };
 
@@ -130,20 +121,41 @@ class CaseView extends Component {
     this.componentDidMount();
   };
 
+  beginActivityModal = () => {
+    const { selectedActivityForBegin, dataObjectsForBegin } = this.state;
+    return (
+      <BeginActivityModal
+        activity={selectedActivityForBegin}
+        beginValues={dataObjectsForBegin}
+        onSubmit={this.handleBeginActivity}
+        onDataObjectChanges={this.handleDataObjectChanges}
+      />
+    );
+  };
+
+  handleDataObjectChanges = (dataclassName, dataObjectId) => {
+    const dataclass = this.state.dataObjectsForBegin[dataclassName];
+    const selected = dataclass.dataobjects.find(d => d.id === dataObjectId);
+
+    const updatedDataclass = {
+      ...dataclass,
+      selected
+    };
+    const dataObjectsForBegin = {
+      ...this.state.dataObjectsForBegin,
+      [dataclassName]: updatedDataclass
+    };
+    this.setState({ dataObjectsForBegin });
+  };
+
   terminateActivityModal = () => {
-    const {
-      selectedActivityForTermination,
-      terminationValues,
-      dataclasses
-    } = this.state;
+    const { selectedActivityForTermination, terminationValues } = this.state;
     return (
       <TerminateActivityModal
         activity={selectedActivityForTermination}
-        match={this.props.match}
         terminationValues={terminationValues[selectedActivityForTermination.id]}
         handleStateChanges={this.handleStateChanges}
         handleAttributeValueChanges={this.handleAttributeValueChanges}
-        dataclasses={dataclasses}
         onSubmit={this.handleTerminateActivity}
       />
     );
@@ -177,7 +189,6 @@ class CaseView extends Component {
     this.setState({ terminationValues });
   };
 
-  // modify copy of state to fit API
   handleTerminateActivity = async activity => {
     const { cmId, caseId } = this.props.match.params;
     const { id } = activity;
@@ -196,9 +207,8 @@ class CaseView extends Component {
     this.componentDidMount();
   };
 
-  // TODO: maybe pass not all matches but only the ids
   render() {
-    const { caze, selectedActivityForBegin } = this.state;
+    const { caze } = this.state;
 
     return (
       <React.Fragment>
@@ -207,11 +217,7 @@ class CaseView extends Component {
           caze={caze}
         />
         <main className="main-container">
-          <BeginActivityModal
-            activity={selectedActivityForBegin}
-            match={this.props.match}
-            onSubmit={this.handleBeginActivity}
-          />
+          {this.beginActivityModal()}
 
           {this.terminateActivityModal()}
 
@@ -223,27 +229,31 @@ class CaseView extends Component {
             <h5>Deployed on {caze.instantiation}</h5>
             <h5>Open activities</h5>
             {caze.activities.ready.map((a, idx) => (
-              <button
-                key={idx}
-                className="btn"
-                data-toggle="modal"
-                data-target="#beginActivityModal"
-                onClick={() => this.selectActivityForBegin(a)}
-              >
-                {a.label}
-              </button>
+              <div>
+                <button
+                  key={idx}
+                  className="btn"
+                  data-toggle="modal"
+                  data-target="#beginActivityModal"
+                  onClick={() => this.selectActivityForBegin(a)}
+                >
+                  {a.label}
+                </button>
+              </div>
             ))}
             <h5>Running activities</h5>
             {caze.activities.running.map((a, idx) => (
-              <button
-                key={idx}
-                className="btn"
-                data-toggle="modal"
-                data-target="#terminateActivityModal"
-                onClick={() => this.selectActivityForTermination(a)}
-              >
-                {a.label}
-              </button>
+              <div>
+                <button
+                  key={idx}
+                  className="btn"
+                  data-toggle="modal"
+                  data-target="#terminateActivityModal"
+                  onClick={() => this.selectActivityForTermination(a)}
+                >
+                  {a.label}
+                </button>
+              </div>
             ))}
           </div>
         </main>

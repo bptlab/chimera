@@ -3,20 +3,17 @@ import React, { Component } from "react";
 class AttributeConfiguration extends Component {
   attributeValue = attribute => {
     const { editable, handleAttributeValueChanges } = this.props;
-    if (editable) {
-      return (
-        <input
-          type="text"
-          className="form-control"
-          value={attribute.value || ""}
-          onChange={event =>
-            handleAttributeValueChanges(attribute.name, event.target.value)
-          }
-        />
-      );
-    } else {
-      return <label>{attribute.value}</label>;
-    }
+    return (
+      <input
+        type="text"
+        className="form-control"
+        value={attribute.value || ""}
+        onChange={event =>
+          handleAttributeValueChanges(attribute.name, event.target.value)
+        }
+        readOnly={!editable}
+      />
+    );
   };
 
   render() {

@@ -24,6 +24,7 @@ class ChooseState extends Component {
                   event.target.value
                 )
               }
+              disabled={dataclass.availableStates.length === 1}
             >
               {dataclass.availableStates.map((state, idx) => (
                 <option key={idx}>{state}</option>
@@ -36,42 +37,28 @@ class ChooseState extends Component {
   }
 }
 
-class ChangeAttributeValues extends Component {
-  render() {
-    const { activity, dataclass, handleAttributeValueChanges } = this.props;
-    const { dataclassName, attributes } = dataclass;
+class TerminateActivityModal extends Component {
+  terminateActivityForm = () => {
+    const { activity, terminationValues, handleStateChanges } = this.props;
+    if (!terminationValues) {
+      return "";
+    }
+    if (terminationValues.length === 0) {
+      return <label>No output condition defined</label>;
+    }
     return (
       <div>
-        <label>{dataclassName}</label>
-        {attributes.map((attribute, idx) => (
-          <div key={idx} className="input-group mb-3">
-            <div className="input-group-prepend">
-              <label className="input-group-text">{attribute.name}</label>
-            </div>
-            <input
-              type="text"
-              className="form-control"
-              value={attribute.value || ""}
-              onChange={event =>
-                handleAttributeValueChanges(
-                  activity,
-                  dataclassName,
-                  attribute.name,
-                  event.target.value
-                )
-              }
-            />
-            <div className="input-group-append">
-              <label className="input-group-text">{attribute.type}</label>
-            </div>
-          </div>
-        ))}
+        <label>Select states of data objects</label>
+        <ChooseState
+          activity={activity}
+          terminationValues={terminationValues}
+          handleStateChanges={handleStateChanges}
+        />
+        {this.dataAttributeChangesForm()}
       </div>
     );
-  }
-}
+  };
 
-class TerminateActivityModal extends Component {
   dataAttributeChangesForm = () => {
     const {
       activity,
@@ -79,31 +66,45 @@ class TerminateActivityModal extends Component {
       handleAttributeValueChanges
     } = this.props;
 
-    if (!terminationValues) {
+    const dataclassWithAttributes = terminationValues.filter(
+      dataclass => dataclass.attributes.length > 0
+    );
+    if (!dataclassWithAttributes) {
       return "";
     }
 
+    const editDataAttributes = dataclass => {
+      const { dataclassName, state, attributes } = dataclass;
+
+      return (
+        <React.Fragment>
+          <label>
+            {dataclassName}[{state}]
+          </label>
+          <AttributeConfiguration
+            editable={true}
+            attributes={attributes}
+            handleAttributeValueChanges={(attributeName, newValue) =>
+              handleAttributeValueChanges(
+                activity,
+                dataclassName,
+                attributeName,
+                newValue
+              )
+            }
+          />
+        </React.Fragment>
+      );
+    };
+
     return (
       <div>
+        <hr />
         <label>Write values of data attributes</label>
-        {terminationValues.map((dataclass, idx) => (
+        {dataclassWithAttributes.map((dataclass, idx) => (
           <div key={idx}>
-            <label>
-              {dataclass.dataclassName}[{dataclass.state}]
-            </label>
-            <AttributeConfiguration
-              editable={true}
-              attributes={dataclass.attributes}
-              handleAttributeValueChanges={(attributeName, newValue) =>
-                handleAttributeValueChanges(
-                  activity,
-                  dataclass.dataclassName,
-                  attributeName,
-                  newValue
-                )
-              }
-            />
-            {idx === terminationValues.length - 1 ? "" : <hr />}
+            {editDataAttributes(dataclass)}
+            {idx < dataclassWithAttributes.length - 1 ? <hr /> : ""}
           </div>
         ))}
       </div>
@@ -111,14 +112,8 @@ class TerminateActivityModal extends Component {
   };
 
   render() {
-    const {
-      activity,
-      onSubmit,
-      terminationValues,
-      handleStateChanges
-    } = this.props;
+    const { activity, onSubmit } = this.props;
 
-    // const { dataclasses, dataobjects } = this.state;
     return (
       <div
         className="modal fade bs-example-modal-sm"
@@ -143,23 +138,8 @@ class TerminateActivityModal extends Component {
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div className="modal-body">
-                {terminationValues ? (
-                  <div>
-                    <label>Select states of data objects</label>
-                    <ChooseState
-                      activity={activity}
-                      terminationValues={terminationValues}
-                      handleStateChanges={handleStateChanges}
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
-                <hr />
 
-                {this.dataAttributeChangesForm()}
-              </div>
+              <div className="modal-body">{this.terminateActivityForm()}</div>
               <div className="modal-footer">
                 <button type="button" className="btn" data-dismiss="modal">
                   Close
