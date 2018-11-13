@@ -173,7 +173,7 @@ public class WebServiceTaskInstance extends AbstractActivityInstance {
 			for (DataObject dataObject : getOutputDataObjects()) {
 				AtomicDataStateCondition condition = dataObject.getCondition();
 				Map<DataAttribute, String> dataAttributeToJsonPath = getControlNode().getJsonPathMapping().get(condition);
-				DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, webServiceJson);
+				DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, webServiceJson, getSelectedDataObjects());
 			}
 	    }
 

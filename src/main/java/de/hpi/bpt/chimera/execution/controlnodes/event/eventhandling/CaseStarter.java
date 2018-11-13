@@ -48,7 +48,7 @@ public class CaseStarter {
 
 			DataObject dataObject = dataManager.createDataObject(condition);
 			Map<DataAttribute, String> dataAttributeToJsonPath = triggerConsequence.getDataAttributeToJsonPath();
-			DataAttributeInstanceWriter.writeDataAttributeInstances(dataObject, dataAttributeToJsonPath, json);
+			DataAttributeInstanceWriter.writeDataAttributeInstancesFromJson(dataObject, dataAttributeToJsonPath, json);
 		}
 	}
 }
