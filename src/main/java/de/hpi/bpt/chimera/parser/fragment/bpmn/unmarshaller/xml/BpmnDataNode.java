@@ -35,7 +35,7 @@ public class BpmnDataNode {
 	/**
 	 * JsonObject that might contain a jsonpath expression for each data attribute.
 	 */
-	@XmlAttribute(name = "griffin:jsonpath")
+	@XmlAttribute(name = "griffin:datasource")
 	private String jsonPath = "";
 
 	// GETTER

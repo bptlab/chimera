@@ -22,11 +22,24 @@ public final class DataAttributeInstanceWriter {
 	private DataAttributeInstanceWriter() {
 	}
 
+    /**
+     * Given a data object, some data represented as Json-String, a map [attribute -> JsonPath expression]
+     * and some input data objects this method will evaluate the JsonPath expression against the data
+     * or the process variables against the input data objects and write the resulting values into
+     * the attributes of the output data object.
+     *
+     * @param outputDataObject - the {@link DataObject} to be written
+     * @param dataAttributeToKeys - a map with a JsonPath expression or process variable for each attribute
+     * @param json - the data as a Json-String
+     * @param inputDataObjects - the {@link List<DataObject>} that provides the data to be written
+     */
 	public static void writeDataAttributeInstances(DataObject outputDataObject, Map<DataAttribute, String> dataAttributeToKeys, String json, List<DataObject> inputDataObjects) {
 		Map<DataAttribute, String> dataAttributeToJsonPath =
-				dataAttributeToKeys.entrySet().stream().filter(map -> map.getValue().startsWith("$")).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+				dataAttributeToKeys.entrySet().stream().filter(map -> map.getValue().startsWith("$"))
+						.collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
 		Map<DataAttribute, String> dataAttributeToProcessVariable =
-				dataAttributeToKeys.entrySet().stream().filter(map -> map.getValue().startsWith("#")).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+				dataAttributeToKeys.entrySet().stream().filter(map -> map.getValue().startsWith("#"))
+						.collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
 		DataAttributeInstanceWriter.writeDataAttributeInstancesFromJson(outputDataObject, dataAttributeToJsonPath, json);
 		DataAttributeInstanceWriter.writeDataAttributeInstancesFromDataObject(outputDataObject, dataAttributeToProcessVariable, inputDataObjects);
 	}
@@ -64,13 +77,22 @@ public final class DataAttributeInstanceWriter {
 		}
 	}
 
-	public static void writeDataAttributeInstancesFromDataObject(DataObject outputDataObject, Map<DataAttribute, String> dataAttributeToProcessVariable, List<DataObject> inputDataObjects) {
-		log.info(String.format("Writing attributes for DO <%s> based on data...", outputDataObject));
+    /**
+     * Given a data object, some input data objects, and a map [attribute -> JsonPath expression]
+     * this method will evaluate the process variable expression against the input data objects
+     * and write the resulting values into the attributes of the data object.
+     *
+     * @param dataObject - the {@link DataObject} to be written
+     * @param dataAttributeToProcessVariable - a map with a JsonPath expression or process variable for each attribute
+     * @param inputDataObjects - the {@link List<DataObject>} that provides the data to be written
+     */
+	public static void writeDataAttributeInstancesFromDataObject(DataObject dataObject, Map<DataAttribute, String> dataAttributeToProcessVariable, List<DataObject> inputDataObjects) {
+		log.info(String.format("Writing attributes for DO <%s> based on data...", dataObject));
 		if (dataAttributeToProcessVariable == null) {
 			log.error("No map [Attribute -> Process Variable Expression] provided");
 			return;
 		}
-		for (DataAttributeInstance dataAttributeInstance : outputDataObject.getDataAttributeInstances()) {
+		for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
 
 			if (!dataAttributeToProcessVariable.containsKey(dataAttributeInstance.getDataAttribute())) {
 				continue;
@@ -84,9 +106,8 @@ public final class DataAttributeInstanceWriter {
 					DataObject inputDataObject =
 							inputDataObjects
 									.stream()
-									.filter(x -> x.getDataClass().getName() == dcReference)
-									.findFirst()
-									.get();
+									.filter(x -> dcReference.equals(x.getDataClass().getName()))
+									.findFirst().get();
 					String value = inputDataObject.getDataAttributeInstanceByName(attrReference).getValue().toString();
 					dataAttributeInstance.setValue(value);
 				}
