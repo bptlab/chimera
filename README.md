@@ -39,6 +39,16 @@ The following software is necessary to build and run Chimera:
 Now that you have the Chimera case engine running, you probably want to execute some case models. 
 To create case models and deploy them into Chimera you will need the [Gryphon Case Modeler](https://github.com/bptlab/gryphon).
 
+## Executing Cases
+To manually start a new case select the case model from the left menu and click on the green `Start Instance` button.
+This will open the case view. Enabled activities are displayed on the right; you can begin an activity by clicking on its name.
+If the activity has a data pre-condition you will need to select a data object on which it operates.
+
+Running activities are displayed in the middle. You can terminate them by clicking on the checkmark symbol. 
+This will open a modal dialog, which allows to terminate the activity and set state and values of a potential output data object.
+
+**For further information check the [Chimera user guide](https://bptlab.github.io/chimera).**
+
 ## Deployment
 Chimera offers two main deployment options: 1) using a Java Servlet container like Apache Tomcat, 2) using a [Docker](https://www.docker.com/) image.
 

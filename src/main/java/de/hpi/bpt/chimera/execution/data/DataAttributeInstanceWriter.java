@@ -1,6 +1,8 @@
 package de.hpi.bpt.chimera.execution.data;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -20,6 +22,28 @@ public final class DataAttributeInstanceWriter {
 	private DataAttributeInstanceWriter() {
 	}
 
+    /**
+     * Given a data object, some data represented as Json-String, a map [attribute -> JsonPath expression]
+     * and some input data objects this method will evaluate the JsonPath expression against the data
+     * or the process variables against the input data objects and write the resulting values into
+     * the attributes of the output data object.
+     *
+     * @param outputDataObject - the {@link DataObject} to be written
+     * @param dataAttributeToKeys - a map with a JsonPath expression or process variable for each attribute
+     * @param json - the data as a Json-String
+     * @param inputDataObjects - the {@link List<DataObject>} that provides the data to be written
+     */
+	public static void writeDataAttributeInstances(DataObject outputDataObject, Map<DataAttribute, String> dataAttributeToKeys, String json, List<DataObject> inputDataObjects) {
+		Map<DataAttribute, String> dataAttributeToJsonPath =
+				dataAttributeToKeys.entrySet().stream().filter(map -> map.getValue().startsWith("$"))
+						.collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
+		Map<DataAttribute, String> dataAttributeToProcessVariable =
+				dataAttributeToKeys.entrySet().stream().filter(map -> map.getValue().startsWith("#"))
+						.collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
+		DataAttributeInstanceWriter.writeDataAttributeInstancesFromJson(outputDataObject, dataAttributeToJsonPath, json);
+		DataAttributeInstanceWriter.writeDataAttributeInstancesFromDataObject(outputDataObject, dataAttributeToProcessVariable, inputDataObjects);
+	}
+
 	/**
 	 * Given a data object, some data represented as Json-String, and a map [attribute -> JsonPath expression]
 	 * this method will evaluate the JsonPath expression against the data and write the resulting values into 
@@ -29,7 +53,7 @@ public final class DataAttributeInstanceWriter {
 	 * @param dataAttributeToJsonPath - a map with a JsonPath expression for each attribute
 	 * @param json - the data as a Json-String
 	 */
-	public static void writeDataAttributeInstances(DataObject dataObject, Map<DataAttribute, String> dataAttributeToJsonPath, String json) {
+	public static void writeDataAttributeInstancesFromJson(DataObject dataObject, Map<DataAttribute, String> dataAttributeToJsonPath, String json) {
 		log.info(String.format("Writing attributes for DO <%s> based on data%n%s", dataObject, json));
 		if (dataAttributeToJsonPath == null) {
 			log.error("No map [Attribute -> JsonPath Expression] provided");
@@ -48,6 +72,47 @@ public final class DataAttributeInstanceWriter {
 				}
 			} catch (Exception e) {
 				log.error("Error while evaluating JsonPath expression against Json data. Check the JsonPath expression and data.", e);
+				dataAttributeInstance.setValue("ERROR");
+			}
+		}
+	}
+
+    /**
+     * Given a data object, some input data objects, and a map [attribute -> JsonPath expression]
+     * this method will evaluate the process variable expression against the input data objects
+     * and write the resulting values into the attributes of the data object.
+     *
+     * @param dataObject - the {@link DataObject} to be written
+     * @param dataAttributeToProcessVariable - a map with a JsonPath expression or process variable for each attribute
+     * @param inputDataObjects - the {@link List<DataObject>} that provides the data to be written
+     */
+	public static void writeDataAttributeInstancesFromDataObject(DataObject dataObject, Map<DataAttribute, String> dataAttributeToProcessVariable, List<DataObject> inputDataObjects) {
+		log.info(String.format("Writing attributes for DO <%s> based on data...", dataObject));
+		if (dataAttributeToProcessVariable == null) {
+			log.error("No map [Attribute -> Process Variable Expression] provided");
+			return;
+		}
+		for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
+
+			if (!dataAttributeToProcessVariable.containsKey(dataAttributeInstance.getDataAttribute())) {
+				continue;
+			}
+			String processVariable = dataAttributeToProcessVariable.get(dataAttributeInstance.getDataAttribute());
+			try {
+				if (processVariable != null && !processVariable.isEmpty()) {
+					processVariable = processVariable.substring(1);
+					String dcReference = processVariable.split("\\.")[0];
+					String attrReference = processVariable.split("\\.")[1];
+					DataObject inputDataObject =
+							inputDataObjects
+									.stream()
+									.filter(x -> dcReference.equals(x.getDataClass().getName()))
+									.findFirst().get();
+					String value = inputDataObject.getDataAttributeInstanceByName(attrReference).getValue().toString();
+					dataAttributeInstance.setValue(value);
+				}
+			} catch (Exception e) {
+				log.error("Error while evaluating ProcessVariable expression against Data Object. Check the Process Variable and data.", e);
 				dataAttributeInstance.setValue("ERROR");
 			}
 		}
