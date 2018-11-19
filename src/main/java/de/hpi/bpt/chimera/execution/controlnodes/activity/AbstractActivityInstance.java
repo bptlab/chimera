@@ -68,7 +68,6 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 		execute();
 
 		if (hasAutomaticBegin()) {
-			log.info(this);
 			getCaseExecutioner().terminateDataControlNodeInstance(this);
 		}
 	}
@@ -91,7 +90,6 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 	 */
 	@Override
 	public void terminate() {
-		log.info("Super terminate");
 		if (!canTerminate()) {
 			log.info(String.format("The activity instance of %s can not terminate", this.getControlNode().getName()));
 			return;
