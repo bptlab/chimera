@@ -54,7 +54,7 @@ public class CaseModelTranslation {
 		fragmentInitializationTransition.addOutputPlace(fragmentTranslation.getInitialPlace());
 
 		// Fragment re-initialization on fragment termination
-		Transition fragmentReInit = new Transition(translationContext, "re-initialize-fragment-" + fragment.getId(),
+		Transition fragmentReInit = new Transition(translationContext, "reInitializeFragment-" + fragment.getId(),
 				fragmentTranslation.getFinalPlace(), fragmentTranslation.getInitialPlace());
 		petriNet.addTransition(fragmentReInit);
 	}
@@ -64,7 +64,7 @@ public class CaseModelTranslation {
 	}
 
 	private void translateTerminationCondition(TerminationCondition terminationCondition) {
-		Place pseudoFragmentPlace = petriNet.addPlace(new Place(this.translationContext, "terminationCondition_pre"));
+		Place pseudoFragmentPlace = petriNet.addPlace(new Place(this.translationContext, "terminationConditionPre"));
 
 		fragmentInitializationTransition.addOutputPlace(pseudoFragmentPlace);
 

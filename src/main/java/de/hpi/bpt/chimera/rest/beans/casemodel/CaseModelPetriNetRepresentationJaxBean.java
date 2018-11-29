@@ -1,5 +1,11 @@
 package de.hpi.bpt.chimera.rest.beans.casemodel;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -7,12 +13,56 @@ import javax.xml.bind.annotation.XmlRootElement;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.petrinet.CaseModelTranslation;
 import de.hpi.bpt.chimera.model.petrinet.PetriNet;
+import de.hpi.bpt.chimera.model.petrinet.Place;
+import de.hpi.bpt.chimera.model.petrinet.Transition;
 
 @XmlRootElement
 public class CaseModelPetriNetRepresentationJaxBean {
 	private String id;
 	private String name;
 	private PetriNet petriNet;
+
+	private static class Cluster {
+		private final String name;
+		private final Map<String, Cluster> childrenByName = new HashMap<>();
+		private final List<Place> places = new ArrayList<>();
+		private final List<Transition> transitions = new ArrayList<>();
+
+		public Cluster(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public List<Place> getPlaces() {
+			return places;
+		}
+
+		public void addPlace(Place p) {
+			places.add(p);
+		}
+
+		public List<Transition> getTransitions() {
+			return transitions;
+		}
+
+		public void addTransition(Transition t) {
+			transitions.add(t);
+		}
+
+		public Cluster getChildByName(String clusterName) {
+			if (!childrenByName.containsKey(clusterName)) {
+				childrenByName.put(clusterName, new Cluster(clusterName));
+			}
+			return childrenByName.get(clusterName);
+		}
+
+		public Collection<Cluster> getChildren() {
+			return childrenByName.values();
+		}
+	}
 
 	public CaseModelPetriNetRepresentationJaxBean(CaseModel cm) {
 		setId(cm.getId());
@@ -43,34 +93,112 @@ public class CaseModelPetriNetRepresentationJaxBean {
 		return builder.toString();
 	}
 
+	private String indent(int indentationLevel) {
+		return String.join("", Collections.nCopies(indentationLevel, "  "));
+	}
+
+	private String getPlaceFormat(int indentationLevel) {
+		return indent(indentationLevel) + "node [shape=circle,fixedsize=true,width=2];\n";
+	}
+
+	private String formatPlace(Place p, int indentationLevel) {
+		return indent(indentationLevel) + "\"" + p.getName() + "\";\n";
+	}
+
+	private String getTransitionFormat(int indentationLevel) {
+		return indent(indentationLevel) + "node [shape=rect,height=2,width=0.2];\n";
+	}
+
+	private String formatTransitionEdges(Transition t, int indentationLevel) {
+		String s = "";
+		for (Place ip : t.getInputPlaces()) {
+			s += indent(indentationLevel);
+			s += "\"" + ip.getName() + "\" -> \"" + t.getName() + "\";\n";
+		}
+		for (Place op : t.getOutputPlaces()) {
+			s += indent(indentationLevel);
+			s += "\"" + t.getName() + "\" -> \"" + op.getName() + "\";\n";
+		}
+		return s;
+	}
+
+	private String formatTransition(Transition t, int indentationLevel) {
+		return indent(indentationLevel) + "\"" + t.getName() + "\";\n";
+	}
+
+	private void getClusterDotOutput(StringBuilder builder, Cluster cluster, int indentationLevel) {
+
+		// root cluster has no subgraph
+		if (indentationLevel > 0) {
+			builder.append(indent(indentationLevel));
+			builder.append("subgraph cluster_" + cluster.getName() + " {\n");
+		}
+
+		int innerIndentationLevel = indentationLevel + 1;
+
+		// nested clusters
+		for (Cluster childCluster : cluster.getChildren()) {
+			getClusterDotOutput(builder, childCluster, innerIndentationLevel);
+		}
+
+		// places
+		if (!cluster.getPlaces().isEmpty()) {
+			builder.append(getPlaceFormat(innerIndentationLevel));
+		}
+		for (Place p : cluster.getPlaces()) {
+			builder.append(formatPlace(p, innerIndentationLevel));
+		}
+
+		// transitions
+		if (!cluster.getTransitions().isEmpty()) {
+			builder.append(getTransitionFormat(innerIndentationLevel));
+		}
+		for (Transition t : cluster.getTransitions()) {
+			builder.append(formatTransition(t, innerIndentationLevel));
+		}
+
+		if (indentationLevel > 0) {
+			builder.append(indent(indentationLevel));
+			builder.append("}\n");
+		}
+	}
+
 	public String getDotOutput() {
+
+		Cluster rootCluster = new Cluster("");
+
+		// Cluster places
+		for (Place place : petriNet.getPlaces()) {
+			Cluster cluster = rootCluster;
+			// Navigate clusters and create on-demand
+			for (String prefix : place.getContext().getPrefixes()) {
+				cluster = cluster.getChildByName(prefix);
+			}
+			cluster.addPlace(place);
+		}
+
+		// Cluster transitions
+		for (Transition transition : petriNet.getTransitions()) {
+			Cluster cluster = rootCluster;
+			// Navigate clusters and create on-demand
+			for (String prefix : transition.getContext().getPrefixes()) {
+				cluster = cluster.getChildByName(prefix);
+			}
+			cluster.addTransition(transition);
+		}
+
+		// Outer skeleton
 		StringBuilder builder = new StringBuilder();
 		builder.append("digraph G {\n");
-		builder.append("  rankdir=LR;\n");
+		builder.append(indent(1)).append("rankdir=LR;\n");
 
-		builder.append("  subgraph places {\n");
-		builder.append("    graph [shape=circle];\n");
-		builder.append("    node [shape=circle,fixedsize=true,width=2];\n");
-		builder.append(petriNet.getPlaces().stream().map(place -> "    \"" + place.getName() + "\";\n")
-				.collect(Collectors.joining("")));
-		builder.append("  }\n");
+		// Clusters
+		getClusterDotOutput(builder, rootCluster, 0);
 
-		builder.append("  subgraph transitions {\n");
-		// builder.append(" node [shape=rect,fixedsize=true,height=2,width=0.2];\n");
-		builder.append("    node [shape=rect,height=2,width=0.2];\n");
-		builder.append(petriNet.getTransitions().stream().map(transition -> "    \"" + transition.getName() + "\";\n")
-				.collect(Collectors.joining("")));
-		builder.append("  }\n");
-
-		builder.append(petriNet.getTransitions().stream().map(transition -> {
-			return ""
-					+ transition.getInputPlaces().stream()
-							.map(place -> "  \"" + place.getName() + "\" -> \"" + transition.getName() + "\";\n")
-							.collect(Collectors.joining(""))
-					+ transition.getOutputPlaces().stream()
-							.map(place -> "  \"" + transition.getName() + "\" -> \"" + place.getName() + "\";\n")
-							.collect(Collectors.joining(""));
-		}).collect(Collectors.joining("")));
+		// Edges
+		for (Transition t : petriNet.getTransitions()) {
+			builder.append(formatTransitionEdges(t, 1));
+		}
 
 		builder.append("}");
 		return builder.toString();

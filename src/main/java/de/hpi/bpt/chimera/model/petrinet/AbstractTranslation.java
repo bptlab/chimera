@@ -16,9 +16,9 @@ public abstract class AbstractTranslation {
 		log.warn(this.getClass().getName() + " Translation prefix: " + this.context.getPrefixString());
 	}
 
-	// Replace everything non-alphanumeric with a '-'
+	// Replace everything non-alphanumeric with a ''
 	private String sanitizeName(String name) {
-		return name.replaceAll("[^a-zA-Z0-9-]", "-");
+		return name.replaceAll("[^a-zA-Z0-9]", "");
 	}
 
 	protected Place addPlace(String name) {

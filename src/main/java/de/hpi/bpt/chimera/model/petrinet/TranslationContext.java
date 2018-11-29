@@ -23,7 +23,7 @@ public class TranslationContext {
 
 	public TranslationContext withPrefix(String prefix) {
 		List<String> newPrefixes = new ArrayList<>();
-		newPrefixes.addAll(prefixes);
+		newPrefixes.addAll(getPrefixes());
 		newPrefixes.add(prefix);
 		return new TranslationContext(getCaseModelTranslation(), newPrefixes);
 	}
@@ -33,6 +33,10 @@ public class TranslationContext {
 	}
 
 	public String getPrefixString() {
-		return String.join("_", prefixes) + "_";
+		return String.join("_", getPrefixes()) + "_";
+	}
+
+	public List<String> getPrefixes() {
+		return prefixes;
 	}
 }
