@@ -9,8 +9,6 @@ public class ActivityTranslation extends AbstractDataControlNodeTranslation {
 
 		final String prefixString = this.context.getPrefixString();
 
-		System.out.println("Activity " + activity.getId() + "inner initial place: " + getInnerInitialPlace().getName()
-				+ " inner final place: " + getInnerFinalPlace());
 		addTransition(prefixString, getInnerInitialPlace(), getInnerFinalPlace());
 	}
 }

@@ -13,7 +13,6 @@ public abstract class AbstractTranslation {
 		name = sanitizeName(name);
 		this.context = translationContext.withPrefix(name);
 		this.name = name;
-		log.warn(this.getClass().getName() + " Translation prefix: " + this.context.getPrefixString());
 	}
 
 	// Replace everything non-alphanumeric with a ''

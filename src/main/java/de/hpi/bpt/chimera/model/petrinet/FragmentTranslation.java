@@ -61,25 +61,21 @@ public class FragmentTranslation extends AbstractTranslation {
 	}
 
 	private void translateActivity(AbstractActivity activity) {
-		System.out.println(activity + " " + activity.getId());
 		ActivityTranslation activityTranslation = new ActivityTranslation(context, activity);
 		controlNodeTranslationsById.put(activity.getId(), activityTranslation);
 	}
 
 	private void translateEvent(AbstractEvent event) {
-		System.out.println(event + " " + event.getId());
 		EventTranslation eventTranslation = new EventTranslation(context, event);
 		controlNodeTranslationsById.put(event.getId(), eventTranslation);
 	}
 
 	private void translateExclusiveGateway(AbstractGateway gateway) {
-		System.out.println(gateway + " " + gateway.getId());
 		AbstractGatewayTranslation gatewayTranslation = new ExclusiveGatewayTranslation(context, gateway);
 		controlNodeTranslationsById.put(gateway.getId(), gatewayTranslation);
 	}
 
 	private void translateParallelGateway(AbstractGateway gateway) {
-		System.out.println(gateway + " " + gateway.getId());
 		AbstractGatewayTranslation gatewayTranslation = new ParallelGatewayTranslation(context, gateway);
 		controlNodeTranslationsById.put(gateway.getId(), gatewayTranslation);
 	}
@@ -95,20 +91,16 @@ public class FragmentTranslation extends AbstractTranslation {
 		final String sourceId = flowAssociation.getSourceRef().getId();
 		final String targetId = flowAssociation.getTargetRef().getId();
 
-		System.out.println(flowAssociation.getId() + " " + flowAssociation);
-		System.out.println("- " + sourceId + " " + flowAssociation.getSourceRef());
-		System.out.println("- " + targetId + " " + flowAssociation.getTargetRef());
-
 		AbstractControlNodeTranslation sourceTranslation = controlNodeTranslationsById.get(sourceId);
 		AbstractControlNodeTranslation targetTranslation = controlNodeTranslationsById.get(targetId);
 
 		if (sourceTranslation == null) {
-			System.out.println("cannot find source: " + sourceId);
 			controlNodeTranslationsById.keySet().stream().forEach(id -> System.out.println(id));
+			throw new RuntimeException("cannot find source: " + sourceId);
 		}
 		if (targetTranslation == null) {
-			System.out.println("cannot find target: " + targetId);
 			controlNodeTranslationsById.keySet().stream().forEach(id -> System.out.println(id));
+			throw new RuntimeException("cannot find target: " + targetId);
 		}
 
 		Place inputPlace;

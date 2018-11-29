@@ -6,8 +6,8 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractControl
 
 	protected final Place innerInitialPlace;
 	protected final Place innerFinalPlace;
-	protected DataStatePreConditionTranslation precondition;
-	protected DataStatePostConditionTranslation postcondition;
+	protected final DataStatePreConditionTranslation precondition;
+	protected final DataStatePostConditionTranslation postcondition;
 
 	public AbstractDataControlNodeTranslation(TranslationContext translationContext, AbstractDataControlNode node,
 			String name) {
@@ -15,13 +15,25 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractControl
 
 		final String prefixString = this.context.getPrefixString();
 
-		innerInitialPlace = addPlace(prefixString + "innerInit");
-		innerFinalPlace = addPlace(prefixString + "innerFinal");
+		// Only add precondition overhead if necessary
+		if (!node.getPreCondition().getConditionSets().isEmpty()) {
+			innerInitialPlace = addPlace(prefixString + "innerInit");
+			precondition = new DataStatePreConditionTranslation(this.context, node.getPreCondition(), name + "pre",
+					getInitialPlace(), innerInitialPlace);
+		} else {
+			innerInitialPlace = getInitialPlace();
+			precondition = null;
+		}
 
-		precondition = new DataStatePreConditionTranslation(this.context, node.getPreCondition(), name + "pre",
-				getInitialPlace(), innerInitialPlace);
-		postcondition = new DataStatePostConditionTranslation(this.context, node.getPreCondition(),
-				node.getPostCondition(), name + "post", innerFinalPlace, getFinalPlace());
+		// Only add postcondition overhead if necessary
+		if (!node.getPostCondition().getConditionSets().isEmpty()) {
+			innerFinalPlace = addPlace(prefixString + "innerFinal");
+			postcondition = new DataStatePostConditionTranslation(this.context, node.getPreCondition(),
+					node.getPostCondition(), name + "post", innerFinalPlace, getFinalPlace());
+		} else {
+			innerFinalPlace = getFinalPlace();
+			postcondition = null;
+		}
 	}
 
 	public Place getInnerInitialPlace() {

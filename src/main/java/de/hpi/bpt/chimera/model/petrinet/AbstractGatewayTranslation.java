@@ -19,9 +19,8 @@ public abstract class AbstractGatewayTranslation extends AbstractControlNodeTran
 		if (isSplit()) {
 			return getInputPlaces().iterator().next();
 		} else {
-			log.error("This exclusive gateway (" + getPrefixString()
+			throw new RuntimeException("This exclusive gateway (" + getPrefixString()
 					+ ") is not a split and therefore does not have a single initial place");
-			return null;
 		}
 	}
 
@@ -30,9 +29,8 @@ public abstract class AbstractGatewayTranslation extends AbstractControlNodeTran
 		if (isJoin()) {
 			return getOutputPlaces().iterator().next();
 		} else {
-			log.error("This exclusive gateway (" + getPrefixString()
+			throw new RuntimeException("This exclusive gateway (" + getPrefixString()
 					+ ") is not a join and therefore does not have a single final place");
-			return null;
 		}
 	}
 
