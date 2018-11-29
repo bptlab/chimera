@@ -15,7 +15,7 @@ mailtask.mail.username=$CHIMERA_MAIL_USER
 mailtask.mail.password=$CHIMERA_MAIL_PASSWORD
 
 # connection to event processing platform Unicorn
-unicorn.url=$UNICORN_URL
+unicorn.url=http://unicorn:8080
 unicorn.path.deploy=$UNICORN_DEPLOY_PATH
 # REST endpoints of Unicorn
 unicorn.path.eventtype=/webapi/REST/EventType
@@ -23,7 +23,7 @@ unicorn.path.event=/webapi/REST/Event
 unicorn.path.query.rest=/webapi/REST/EventQuery/REST
 unicorn.path.query.queue=/webapi/REST/EventQuery/Queue
 # URL of deployed Chimera instance needed for callbacks from Unicorn
-chimera.url=$CHIMERA_URL
+chimera.url=http://chimera:8080
 chimera.path.deploy=$CHIMERA_DEPLOY_PATH
 
 # version of the API
