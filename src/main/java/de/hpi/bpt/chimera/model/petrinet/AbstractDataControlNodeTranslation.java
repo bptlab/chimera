@@ -6,8 +6,8 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractControl
 
 	protected final Place innerInitialPlace;
 	protected final Place innerFinalPlace;
-	protected DataStateConditionTranslation precondition;
-	protected DataStateConditionTranslation postcondition;
+	protected DataStatePreConditionTranslation precondition;
+	protected DataStatePostConditionTranslation postcondition;
 
 	public AbstractDataControlNodeTranslation(TranslationContext translationContext, AbstractDataControlNode node,
 			String name) {
@@ -18,10 +18,10 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractControl
 		innerInitialPlace = addPlace(prefixString + "innerInit");
 		innerFinalPlace = addPlace(prefixString + "innerFinal");
 
-		precondition = new DataStateConditionTranslation(this.context, node.getPreCondition(), name + "pre",
+		precondition = new DataStatePreConditionTranslation(this.context, node.getPreCondition(), name + "pre",
 				getInitialPlace(), innerInitialPlace);
-		postcondition = new DataStateConditionTranslation(this.context, node.getPostCondition(), name + "post",
-				innerFinalPlace, getFinalPlace());
+		postcondition = new DataStatePostConditionTranslation(this.context, node.getPreCondition(),
+				node.getPostCondition(), name + "post", innerFinalPlace, getFinalPlace());
 	}
 
 	public Place getInnerInitialPlace() {

@@ -7,16 +7,20 @@ public class ConditionSetTranslation extends AbstractTranslation {
 
 	private final Transition conditionSetTransition;
 
-	public ConditionSetTranslation(TranslationContext translationContext, ConditionSet conditionSet, String name) {
+	public ConditionSetTranslation(TranslationContext translationContext, ConditionSet preConditionSet,
+			ConditionSet postConditionSet, String name) {
 		super(translationContext, name);
 
 		final String prefixString = this.context.getPrefixString();
 
 		conditionSetTransition = addTransition(prefixString);
 
-		for (AtomicDataStateCondition atomicDataStateCondition : conditionSet.getConditions()) {
+		for (AtomicDataStateCondition atomicDataStateCondition : preConditionSet.getConditions()) {
 			Place placeForDataState = getPlaceForDataState(atomicDataStateCondition);
 			conditionSetTransition.addInputPlace(placeForDataState);
+		}
+		for (AtomicDataStateCondition atomicDataStateCondition : postConditionSet.getConditions()) {
+			Place placeForDataState = getPlaceForDataState(atomicDataStateCondition);
 			conditionSetTransition.addOutputPlace(placeForDataState);
 		}
 	}

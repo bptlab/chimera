@@ -15,7 +15,7 @@ public class CaseModelTranslation {
 	private TranslationContext translationContext;
 	private final Map<String, FragmentTranslation> fragmentTranslationsByName = new HashMap<>();
 	private final Map<String, DataClassTranslation> dataClassTranslationsByName = new HashMap<>();
-	private DataStateConditionTranslation terminationConditionTranslation;
+	private DataStatePreConditionTranslation terminationConditionTranslation;
 
 	private Place initialPlace;
 	private Place finalPlace;
@@ -68,7 +68,7 @@ public class CaseModelTranslation {
 
 		fragmentInitializationTransition.addOutputPlace(pseudoFragmentPlace);
 
-		terminationConditionTranslation = new DataStateConditionTranslation(this.translationContext,
+		terminationConditionTranslation = new DataStatePreConditionTranslation(this.translationContext,
 				terminationCondition, "terminationCondition", pseudoFragmentPlace, this.finalPlace);
 	}
 
