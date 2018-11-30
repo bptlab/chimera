@@ -128,13 +128,15 @@ public class CaseModelPetriNetRepresentationJaxBean {
 
 	private void getClusterDotOutput(StringBuilder builder, Cluster cluster, int indentationLevel) {
 
+		int innerIndentationLevel = indentationLevel + 1;
+
 		// root cluster has no subgraph
 		if (indentationLevel > 0) {
 			builder.append(indent(indentationLevel));
 			builder.append("subgraph cluster_" + cluster.getName() + " {\n");
+			builder.append(indent(innerIndentationLevel));
+			builder.append("label=\"" + cluster.getName() + "\";\n");
 		}
-
-		int innerIndentationLevel = indentationLevel + 1;
 
 		// nested clusters
 		for (Cluster childCluster : cluster.getChildren()) {

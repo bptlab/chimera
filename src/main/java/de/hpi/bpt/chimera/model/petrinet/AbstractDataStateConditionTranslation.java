@@ -1,6 +1,8 @@
 package de.hpi.bpt.chimera.model.petrinet;
 
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 public abstract class AbstractDataStateConditionTranslation extends AbstractTranslation {
 
@@ -15,10 +17,14 @@ public abstract class AbstractDataStateConditionTranslation extends AbstractTran
 	}
 
 	protected Place getPlaceForDataState(AtomicDataStateCondition atomicDataStateCondition) {
+		return getPlaceForDataState(atomicDataStateCondition.getDataClass(),
+				atomicDataStateCondition.getObjectLifecycleState());
+	}
+
+	protected Place getPlaceForDataState(DataClass dataClass, ObjectLifecycleState olcState) {
 		DataClassTranslation dataClassTranslation = this.context.getCaseModelTranslation()
-				.getDataClassTranslationsByName().get(atomicDataStateCondition.getDataClassName());
-		Place place = dataClassTranslation.getOlcStatePlacesByName()
-				.get(atomicDataStateCondition.getObjectLifecycleState().getName());
+				.getDataClassTranslationsByName().get(dataClass.getName());
+		Place place = dataClassTranslation.getOlcStatePlacesByName().get(olcState.getName());
 		return place;
 	}
 }

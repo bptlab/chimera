@@ -2,7 +2,7 @@ package de.hpi.bpt.chimera.model.petrinet;
 
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
-public abstract class AbstractDataControlNodeTranslation extends AbstractControlNodeTranslation {
+public abstract class AbstractDataControlNodeTranslation extends AbstractSequentialControlNodeTranslation {
 
 	protected final Place innerInitialPlace;
 	protected final Place innerFinalPlace;
