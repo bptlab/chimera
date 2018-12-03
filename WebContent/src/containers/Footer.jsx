@@ -18,7 +18,7 @@ const Footer = () => (
       </div>
       &bull;
       <div>
-        <a className="" href="">
+        <a className="" href="https://github.com/bptlab/chimera/wiki">
           Privacy Policy
         </a>
         &nbsp;
@@ -26,7 +26,7 @@ const Footer = () => (
           Wiki
         </a>
         &nbsp;
-        <a className="" href="">
+        <a className="" href="https://github.com/bptlab/chimera/wiki">
           User Guide
         </a>
       </div>

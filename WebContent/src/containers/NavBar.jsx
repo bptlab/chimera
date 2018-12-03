@@ -7,15 +7,14 @@ class NavBar extends Component {
       "//" +
       window.location.hostname +
       (window.location.port && ":" + window.location.port) +
-      "/" +
-      process.env.REACT_APP_ROUTER_BASE
+      (process.env.REACT_APP_ROUTER_BASE || "")
     );
   };
 
   CaseModelBreadCrump = casemodel => {
     if (casemodel) {
       return (
-        <li className="breadcrumb-item fixed-top">
+        <li className="breadcrumb-item">
           <a
             aria-current="page"
             href={this.url() + "/casemodels/" + casemodel.id}

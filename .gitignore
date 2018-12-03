@@ -16,4 +16,5 @@ config.properties
 config_template.properties
 mysql_schema_version.txt
 WebContent/node_modules/*
+WebContent/package-lock.json
 build/

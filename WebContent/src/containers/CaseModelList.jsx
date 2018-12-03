@@ -2,35 +2,38 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { getCaseModels } from "../API";
 import ExpandableOverview from "../components/ExpandableOverview";
-import SearchField from "../components/SearchField"
+import SearchField from "../components/SearchField";
 
 class CaseModelList extends Component {
   state = {
     casemodels: [],
-    displayedCasemodels : [],
-    filterString: "",
+    displayedCasemodels: [],
+    filterString: ""
   };
 
-  filterCasemodels(casemodels, filterString){
-    let filteredCasemodels = casemodels.filter(casemodel => casemodel.name.includes(filterString));
+  filterCasemodels(casemodels, filterString) {
+    let filteredCasemodels = casemodels.filter(casemodel =>
+      casemodel.name.includes(filterString)
+    );
     this.setState({
       displayedCasemodels: filteredCasemodels,
-      filterString: filterString,
+      filterString: filterString
     });
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     this.filterCasemodels(nextProps.casemodels, this.state.filterString);
   }
 
   render() {
     return (
       <React.Fragment>
-        <SearchField searchHandler={filterString => {
-          this.filterCasemodels(this.props.casemodels, filterString);
-        }}/>
+        <SearchField
+          searchHandler={filterString => {
+            this.filterCasemodels(this.props.casemodels, filterString);
+          }}
+        />
         <main className="main-container">
           <div className="container">
             {this.state.displayedCasemodels.map((cm, idx) => {
