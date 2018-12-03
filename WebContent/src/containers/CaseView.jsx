@@ -7,11 +7,13 @@ import {
   terminateActivity,
   closeCase,
   getAvailableActivityInput,
-  getAvailableActivityOutput
+  getAvailableActivityOutput,
+  getFragments
 } from "../API";
 import NavBar from "./NavBar";
 import BeginActivityModal from "../modals/BeginActivityModal";
 import TerminateActivityModal from "../modals/TerminateActivityModal";
+import BpmnFragment from "../components/BpmnFragment";
 
 class CaseView extends Component {
   // TODO: return cmId
@@ -20,7 +22,8 @@ class CaseView extends Component {
       id: "",
       casemodel: {
         id: "",
-        name: ""
+        name: "",
+        fragments: []
       },
       name: "",
       terminated: false,
@@ -40,7 +43,9 @@ class CaseView extends Component {
 
   componentDidMount = async () => {
     const { cmId, caseId } = this.props.match.params;
-    const caze = await getCase(cmId, caseId);
+    let caze = await getCase(cmId, caseId);
+    const fragments = await getFragments(cmId);
+    caze.casemodel = { fragments };
     this.setState({ caze });
   };
 
@@ -229,9 +234,8 @@ class CaseView extends Component {
             <h5>Deployed on {caze.instantiation}</h5>
             <h5>Open activities</h5>
             {caze.activities.ready.map((a, idx) => (
-              <div>
+              <div key={idx}>
                 <button
-                  key={idx}
                   className="btn"
                   data-toggle="modal"
                   data-target="#beginActivityModal"
@@ -256,6 +260,14 @@ class CaseView extends Component {
               </div>
             ))}
           </div>
+          {caze.casemodel.fragments.map((xml, idx) => (
+            <BpmnFragment
+              style={{ height: 1000 }}
+              key={idx}
+              id={"bpmnViewer_" + idx}
+              xml={xml}
+            />
+          ))}
         </main>
       </React.Fragment>
     );

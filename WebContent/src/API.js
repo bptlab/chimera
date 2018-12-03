@@ -11,9 +11,8 @@ async function getApiUrl() {
   const organizations = response["organizations"].filter(function(org) {
     return org.name === "Default";
   });
-  console.log(organizations);
+
   const orgId = organizations[0].id;
-  console.log(orgId);
   API_URL = `${URL}/${orgId}/casemodels`;
   return API_URL;
 }
@@ -103,6 +102,12 @@ export async function terminateActivity(
 export async function closeCase(cmId, caseId) {
   const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/terminate`;
   await getData(URL, "POST");
+}
+
+export async function getFragments(cmId) {
+  const URL = `${await getApiUrl()}/${cmId}/xml`;
+  const response = await getData(URL);
+  return response["bpmn"];
 }
 
 async function getData(url, method = "GET", body = null) {
