@@ -1,20 +1,9 @@
 package de.hpi.bpt.chimera.model.petrinet;
 
-public abstract class AbstractPetriNetNode {
+public interface AbstractPetriNetNode {
 
-	private final String name;
-	private final TranslationContext context;
+	public String getName();
 
-	AbstractPetriNetNode(TranslationContext context, String name) {
-		this.context = context;
-		this.name = name;
-	}
+	public TranslationContext getContext();
 
-	public String getName() {
-		return name;
-	}
-
-	public TranslationContext getContext() {
-		return context;
-	}
 }

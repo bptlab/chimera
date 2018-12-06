@@ -16,18 +16,18 @@ public abstract class AbstractTranslation {
 	}
 
 	// Replace everything non-alphanumeric with a ''
-	private String sanitizeName(String name) {
+	public String sanitizeName(String name) {
 		return name.replaceAll("[^a-zA-Z0-9]", "");
 	}
 
 	protected Place addPlace(String name) {
-		Place newPlace = new Place(this.context, name);
+		Place newPlace = new PlaceReference(this.context, name);
 		getPetriNet().addPlace(newPlace);
 		return newPlace;
 	}
 
 	protected Transition addTransition(String name) {
-		Transition newTransition = new Transition(this.context, name);
+		Transition newTransition = new TransitionReference(this.context, name);
 		getPetriNet().addTransition(newTransition);
 		return newTransition;
 	}

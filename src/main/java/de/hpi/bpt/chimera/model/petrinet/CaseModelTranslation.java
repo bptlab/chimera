@@ -26,12 +26,14 @@ public class CaseModelTranslation {
 		petriNet = new PetriNet();
 		translationContext = new TranslationContext(this);
 
-		initialPlace = petriNet.addPlace(new Place(translationContext, "init"));
+		initialPlace = petriNet.addPlace(new PlaceReference(translationContext, "init"));
 		initialPlace.setNumTokens(1);
-		finalPlace = petriNet.addPlace(new Place(translationContext, "final"));
+		initialPlace.setSignificant(true);
+		finalPlace = petriNet.addPlace(new PlaceReference(translationContext, "final"));
+		finalPlace.setSignificant(true);
 
 		fragmentInitializationTransition = petriNet
-				.addTransition(new Transition(translationContext, "fragmentInitialization"));
+				.addTransition(new TransitionReference(translationContext, "fragmentInitialization"));
 		fragmentInitializationTransition.addInputPlace(initialPlace);
 
 		for (DataClass dataClass : caseModel.getDataModel().getDataClasses()) {
@@ -43,6 +45,9 @@ public class CaseModelTranslation {
 		}
 
 		translateTerminationCondition(caseModel.getTerminationCondition());
+
+		System.out.println("Translated case model " + caseModel.getName() + ". Resulting Petri net has "
+				+ petriNet.getPlaces().size() + " places and " + petriNet.getTransitions().size() + " transitions.");
 	}
 
 	private void translateFragment(Fragment fragment) {
@@ -54,8 +59,9 @@ public class CaseModelTranslation {
 		fragmentInitializationTransition.addOutputPlace(fragmentTranslation.getInitialPlace());
 
 		// Fragment re-initialization on fragment termination
-		Transition fragmentReInit = new Transition(translationContext, "reInitializeFragment-" + fragment.getId(),
-				fragmentTranslation.getFinalPlace(), fragmentTranslation.getInitialPlace());
+		Transition fragmentReInit = new TransitionReference(translationContext,
+				"reInitializeFragment-" + fragment.getId(), fragmentTranslation.getFinalPlace(),
+				fragmentTranslation.getInitialPlace());
 		petriNet.addTransition(fragmentReInit);
 	}
 
@@ -64,7 +70,8 @@ public class CaseModelTranslation {
 	}
 
 	private void translateTerminationCondition(TerminationCondition terminationCondition) {
-		Place pseudoFragmentPlace = petriNet.addPlace(new Place(this.translationContext, "terminationConditionPre"));
+		Place pseudoFragmentPlace = petriNet
+				.addPlace(new PlaceReference(this.translationContext, "terminationConditionPre"));
 
 		fragmentInitializationTransition.addOutputPlace(pseudoFragmentPlace);
 

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hpi.bpt.chimera.model.fragment.Fragment;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
@@ -17,6 +16,7 @@ public class FragmentTranslation extends AbstractTranslation {
 	protected final Place finalPlace;
 
 	private final Map<String, AbstractControlNodeTranslation> controlNodeTranslationsById = new HashMap<>();
+	private final Map<String, SequenceFlowTranslation> sequenceFlowTranslationsById = new HashMap<>();
 
 	public FragmentTranslation(TranslationContext translationContext, Fragment fragment) {
 		super(translationContext, fragment.getName());
@@ -53,11 +53,13 @@ public class FragmentTranslation extends AbstractTranslation {
 		AbstractControlNodeTranslation startEventTranslation = controlNodeTranslationsById
 				.get(bpmnFragment.getStartEvent().getId());
 		initialPlace = startEventTranslation.getInitialPlace();
+		initialPlace.setSignificant(true);
 
 		// Connect end event
 		AbstractControlNodeTranslation endEventTranslation = controlNodeTranslationsById
 				.get(bpmnFragment.getEndEvent().getId());
 		finalPlace = endEventTranslation.getFinalPlace();
+		finalPlace.setSignificant(true);
 	}
 
 	private void translateActivity(AbstractActivity activity) {
@@ -81,49 +83,14 @@ public class FragmentTranslation extends AbstractTranslation {
 	}
 
 	private void translateEventGateway(AbstractGateway gateway) {
+		// Event gateway is treated as exclusive gateway
 		translateExclusiveGateway(gateway);
 	}
 
 	private void translateSequenceFlow(SequenceFlowAssociation flowAssociation) {
-		final AbstractControlNode sourceNode = flowAssociation.getSourceRef();
-		final AbstractControlNode targetNode = flowAssociation.getTargetRef();
-
-		final String sourceId = flowAssociation.getSourceRef().getId();
-		final String targetId = flowAssociation.getTargetRef().getId();
-
-		AbstractControlNodeTranslation sourceTranslation = controlNodeTranslationsById.get(sourceId);
-		AbstractControlNodeTranslation targetTranslation = controlNodeTranslationsById.get(targetId);
-
-		if (sourceTranslation == null) {
-			controlNodeTranslationsById.keySet().stream().forEach(id -> System.out.println(id));
-			throw new RuntimeException("cannot find source: " + sourceId);
-		}
-		if (targetTranslation == null) {
-			controlNodeTranslationsById.keySet().stream().forEach(id -> System.out.println(id));
-			throw new RuntimeException("cannot find target: " + targetId);
-		}
-
-		Place inputPlace;
-		Place outputPlace;
-		if (sourceNode instanceof AbstractGateway) {
-			int gatewayOutgoingFlowIndex = sourceNode.getOutgoingSequenceFlows().indexOf(flowAssociation);
-			inputPlace = ((AbstractGatewayTranslation) sourceTranslation).getOutputPlaces()
-					.get(gatewayOutgoingFlowIndex);
-		} else {
-			inputPlace = sourceTranslation.getFinalPlace();
-		}
-
-		if (targetNode instanceof AbstractGateway) {
-			int gatewayIncomingFlowIndex = targetNode.getIncomingSequenceFlows().indexOf(flowAssociation);
-			outputPlace = ((AbstractGatewayTranslation) targetTranslation).getInputPlaces()
-					.get(gatewayIncomingFlowIndex);
-		} else {
-			outputPlace = targetTranslation.getInitialPlace();
-		}
-
-		final String transitionName = sourceTranslation.getPrefixString() + "to_" + targetTranslation.getPrefixString();
-
-		addTransition(transitionName, inputPlace, outputPlace);
+		SequenceFlowTranslation sequenceFlowTranslation = new SequenceFlowTranslation(context, flowAssociation,
+				controlNodeTranslationsById);
+		sequenceFlowTranslationsById.put(flowAssociation.getId(), sequenceFlowTranslation);
 	}
 
 	public Place getInitialPlace() {

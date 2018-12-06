@@ -20,8 +20,9 @@ public class DataClassTranslation extends AbstractTranslation {
 
 		// Every state gets one place
 		for (ObjectLifecycleState olcState : dataClass.getObjectLifecycle().getObjectLifecycleStates()) {
-			olcStatePlacesByName.put(olcState.getName(),
-					addPlace("s_" + dataClass.getName() + "[" + olcState.getName() + "]"));
+			Place olcStatePlace = addPlace("s_" + dataClass.getName() + "[" + olcState.getName() + "]");
+			olcStatePlace.setSignificant(true);
+			olcStatePlacesByName.put(olcState.getName(), olcStatePlace);
 		}
 
 		// Data objects are singletons
@@ -38,6 +39,7 @@ public class DataClassTranslation extends AbstractTranslation {
 		// Semaphore to synchronize access
 		semaphore = addPlace("s_" + dataClass.getName());
 		semaphore.setNumTokens(1);
+		semaphore.setSignificant(true);
 	}
 
 	public Map<String, Place> getOlcStatePlacesByName() {

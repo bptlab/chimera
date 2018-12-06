@@ -1,37 +1,14 @@
 package de.hpi.bpt.chimera.model.petrinet;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-public class Transition extends AbstractPetriNetNode {
-	private final List<Place> inputPlaces = new ArrayList<>();
-	private final List<Place> outputPlaces = new ArrayList<>();
+public interface Transition extends AbstractPetriNetNode {
 
-	public Transition(TranslationContext context, String name) {
-		super(context, name);
-	}
+	public Transition addInputPlace(Place inputPlace);
 
-	public Transition(TranslationContext context, String name, Place inputPlace, Place outputPlace) {
-		this(context, name);
-		addInputPlace(inputPlace);
-		addOutputPlace(outputPlace);
-	}
+	public Transition addOutputPlace(Place outputPlace);
 
-	public Transition addInputPlace(Place inputPlace) {
-		inputPlaces.add(inputPlace);
-		return this;
-	}
+	public Collection<Place> getInputPlaces();
 
-	public Transition addOutputPlace(Place outputPlace) {
-		outputPlaces.add(outputPlace);
-		return this;
-	}
-
-	public final List<Place> getInputPlaces() {
-		return inputPlaces;
-	}
-
-	public final List<Place> getOutputPlaces() {
-		return outputPlaces;
-	}
+	public Collection<Place> getOutputPlaces();
 }

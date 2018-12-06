@@ -16,7 +16,7 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractSequent
 		final String prefixString = this.context.getPrefixString();
 
 		// Only add precondition overhead if necessary
-		if (!node.getPreCondition().getConditionSets().isEmpty()) {
+		if (!node.getPreCondition().getConditionSets().isEmpty() || !TranslationContext.isOptimizeTranslation()) {
 			innerInitialPlace = addPlace(prefixString + "innerInit");
 			precondition = new DataStatePreConditionTranslation(this.context, node.getPreCondition(), name + "pre",
 					getInitialPlace(), innerInitialPlace);
@@ -26,7 +26,7 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractSequent
 		}
 
 		// Only add postcondition overhead if necessary
-		if (!node.getPostCondition().getConditionSets().isEmpty()) {
+		if (!node.getPostCondition().getConditionSets().isEmpty() || !TranslationContext.isOptimizeTranslation()) {
 			innerFinalPlace = addPlace(prefixString + "innerFinal");
 			postcondition = new DataStatePostConditionTranslation(this.context, node.getPreCondition(),
 					node.getPostCondition(), name + "post", innerFinalPlace, getFinalPlace());

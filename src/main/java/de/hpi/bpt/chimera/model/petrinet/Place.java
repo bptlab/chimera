@@ -1,17 +1,12 @@
 package de.hpi.bpt.chimera.model.petrinet;
 
-public class Place extends AbstractPetriNetNode {
-	private int numTokens = 0;
+public interface Place extends AbstractPetriNetNode {
 
-	public Place(TranslationContext context, String name) {
-		super(context, name);
-	}
+	public int getNumTokens();
 
-	public int getNumTokens() {
-		return numTokens;
-	}
+	public void setNumTokens(int numTokens);
 
-	public void setNumTokens(int numTokens) {
-		this.numTokens = numTokens;
-	}
+	public boolean isSignificant();
+
+	public void setSignificant(boolean isSignificant);
 }

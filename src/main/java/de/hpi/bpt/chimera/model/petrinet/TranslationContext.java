@@ -8,6 +8,8 @@ public class TranslationContext {
 	private final CaseModelTranslation caseModelTranslation;
 	private final List<String> prefixes;
 
+	private static final boolean optimizeTranslation = true;
+
 	public TranslationContext(CaseModelTranslation caseModelTranslation) {
 		this(caseModelTranslation, Collections.emptyList());
 	}
@@ -38,5 +40,9 @@ public class TranslationContext {
 
 	public List<String> getPrefixes() {
 		return prefixes;
+	}
+
+	public static boolean isOptimizeTranslation() {
+		return optimizeTranslation;
 	}
 }
