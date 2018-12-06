@@ -65,6 +65,10 @@ public class DataStatePostConditionTranslation extends AbstractDataStateConditio
 					if (readOnlyDataClassesWithState.containsKey(atomicDataStateCondition.getDataClass())) {
 						readOnlyDataClassesWithState.remove(atomicDataStateCondition.getDataClass());
 					}
+
+					// Produce semaphore token
+					Place placeForSemaphore = getPlaceForDataSemaphore(atomicDataStateCondition.getDataClass());
+					conditionSetTransition.addOutputPlace(placeForSemaphore);
 				}
 
 				// restore state for read-only data objects

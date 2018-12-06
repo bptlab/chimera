@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A transition in a Petri net.
+ */
 public class TransitionImpl implements Transition {
 
 	private final TranslationContext context;

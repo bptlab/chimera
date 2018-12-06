@@ -1,10 +1,9 @@
 package de.hpi.bpt.chimera.rest.beans.casemodel;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -25,8 +24,8 @@ public class CaseModelPetriNetRepresentationJaxBean {
 	private static class Cluster {
 		private final String name;
 		private final Map<String, Cluster> childrenByName = new HashMap<>();
-		private final List<Place> places = new ArrayList<>();
-		private final List<Transition> transitions = new ArrayList<>();
+		private final Collection<Place> places = new HashSet<>();
+		private final Collection<Transition> transitions = new HashSet<>();
 
 		public Cluster(String name) {
 			this.name = name;
@@ -36,7 +35,7 @@ public class CaseModelPetriNetRepresentationJaxBean {
 			return name;
 		}
 
-		public List<Place> getPlaces() {
+		public Collection<Place> getPlaces() {
 			return places;
 		}
 
@@ -44,7 +43,7 @@ public class CaseModelPetriNetRepresentationJaxBean {
 			places.add(p);
 		}
 
-		public List<Transition> getTransitions() {
+		public Collection<Transition> getTransitions() {
 			return transitions;
 		}
 
@@ -76,18 +75,19 @@ public class CaseModelPetriNetRepresentationJaxBean {
 	public String getLolaOutput() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PLACE\n");
-		builder.append(petriNet.getPlaces().stream().map(place -> place.getName()).collect(Collectors.joining(", ")));
+		builder.append(petriNet.getPlaces().stream().distinct().map(place -> place.getName())
+				.collect(Collectors.joining(", ")));
 		builder.append(";\n\n");
 		builder.append("MARKING\n");
-		builder.append(petriNet.getPlaces().stream().filter(place -> place.getNumTokens() > 0)
+		builder.append(petriNet.getPlaces().stream().distinct().filter(place -> place.getNumTokens() > 0)
 				.map(place -> place.getName() + ":" + place.getNumTokens()).collect(Collectors.joining(", ")));
 		builder.append(";\n\n");
-		builder.append(petriNet.getTransitions().stream().map(transition -> {
+		builder.append(petriNet.getTransitions().stream().distinct().map(transition -> {
 			return "TRANSITION " + transition.getName() + "\n" + "  CONSUME "
-					+ transition.getInputPlaces().stream().map(place -> place.getName())
+					+ transition.getInputPlaces().stream().distinct().map(place -> place.getName())
 							.collect(Collectors.joining(", "))
-					+ ";\n" + "  PRODUCE " + transition.getOutputPlaces().stream().map(place -> place.getName())
-							.collect(Collectors.joining(", "))
+					+ ";\n" + "  PRODUCE " + transition.getOutputPlaces().stream().distinct()
+							.map(place -> place.getName()).collect(Collectors.joining(", "))
 					+ ";\n";
 		}).collect(Collectors.joining("\n")));
 		return builder.toString();

@@ -1,5 +1,8 @@
 package de.hpi.bpt.chimera.model.petrinet;
 
+/**
+ * A place in a Petri net.
+ */
 public class PlaceImpl implements Place {
 
 	private final TranslationContext context;

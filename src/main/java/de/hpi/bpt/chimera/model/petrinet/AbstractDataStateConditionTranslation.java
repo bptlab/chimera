@@ -27,4 +27,10 @@ public abstract class AbstractDataStateConditionTranslation extends AbstractTran
 		Place place = dataClassTranslation.getOlcStatePlacesByName().get(olcState.getName());
 		return place;
 	}
+
+	protected Place getPlaceForDataSemaphore(DataClass dataClass) {
+		DataClassTranslation dataClassTranslation = this.context.getCaseModelTranslation()
+				.getDataClassTranslationsByName().get(dataClass.getName());
+		return dataClassTranslation.getSemaphore();
+	}
 }

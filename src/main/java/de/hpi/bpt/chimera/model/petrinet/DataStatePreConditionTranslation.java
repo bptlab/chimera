@@ -1,13 +1,17 @@
 package de.hpi.bpt.chimera.model.petrinet;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
 
 public class DataStatePreConditionTranslation extends AbstractDataStateConditionTranslation {
 
 	public DataStatePreConditionTranslation(TranslationContext translationContext, DataStateCondition preCondition,
-			String name, Place initialPlace, Place finalPlace) {
+			DataStateCondition postCondition, String name, Place initialPlace, Place finalPlace) {
 		super(translationContext, name, initialPlace, finalPlace);
 
 		final String prefixString = this.context.getPrefixString();
@@ -17,6 +21,9 @@ public class DataStatePreConditionTranslation extends AbstractDataStateCondition
 		} else {
 			int conditionId = 1;
 			for (ConditionSet preConditionSet : preCondition.getConditionSets()) {
+				Set<DataClass> writtenDataClasses = postCondition.getConditionSets().stream()
+						.flatMap(postConditionSet -> postConditionSet.getConditions().stream())
+						.map(AtomicDataStateCondition::getDataClass).collect(Collectors.toSet());
 
 				Transition conditionSetTransition = addTransition(prefixString + "cs_" + Integer.toString(conditionId));
 
@@ -26,6 +33,12 @@ public class DataStatePreConditionTranslation extends AbstractDataStateCondition
 					conditionSetTransition.addInputPlace(placeForDataState);
 					// write back
 					conditionSetTransition.addOutputPlace(placeForDataState);
+
+					// consume mutex if data object will be modified
+					if (writtenDataClasses.contains(atomicDataStateCondition.getDataClass())) {
+						Place placeForSemaphore = getPlaceForDataSemaphore(atomicDataStateCondition.getDataClass());
+						conditionSetTransition.addInputPlace(placeForSemaphore);
+					}
 				}
 
 				conditionSetTransition.addInputPlace(initialPlace);

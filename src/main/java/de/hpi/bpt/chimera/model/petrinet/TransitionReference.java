@@ -2,6 +2,9 @@ package de.hpi.bpt.chimera.model.petrinet;
 
 import java.util.Collection;
 
+/**
+ * A modifiable reference to a transition in a Petri net.
+ */
 public class TransitionReference implements Transition {
 
 	private TransitionImpl impl;
