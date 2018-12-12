@@ -16,6 +16,11 @@ import TerminateActivityModal from "../modals/TerminateActivityModal";
 import BpmnFragment from "../components/BpmnFragment";
 import DataObject from "../components/DataObject";
 import ViewDataObjectModal from "../modals/ViewDataObjectModal";
+import {
+  ShowLogButton,
+  AbortCaseButton,
+  CloseCaseButton
+} from "../components/case/Actions";
 
 class CaseView extends Component {
   // TODO: return cmId
@@ -114,17 +119,6 @@ class CaseView extends Component {
         selectedActivityForTermination: activity,
         terminationValues
       });
-    }
-  };
-
-  closeCaseButton = () => {
-    const { canTerminate } = this.state.caze;
-    if (canTerminate) {
-      return (
-        <button className="btn btn-danger" onClick={this.handleCloseCase}>
-          Close Case
-        </button>
-      );
     }
   };
 
@@ -246,45 +240,82 @@ class CaseView extends Component {
           {this.viewDataObjectModal()}
 
           <div className="container">
-            <h1>{caze.name}</h1>
-            <h5>{caze.id}</h5>
-            <h5>{caze.terminated ? "Terminated" : "Active"}</h5>
-            {this.closeCaseButton()}
-            <h5>Deployed on {caze.instantiation}</h5>
+            <div className="row">
+              <div className="col">
+                <h1>{caze.name}</h1>
+                <h5>Status: {caze.terminated ? "Terminated" : "Active"}</h5>
+                <h5>Started: {caze.instantiation}</h5>
+              </div>
+              <div className="col-2">
+                <div className="mb-2">
+                  <ShowLogButton caze={caze} />
+                </div>
+                <div className="mb-2">
+                  <AbortCaseButton caze={caze} />
+                </div>
+                <div>
+                  <CloseCaseButton
+                    caze={caze}
+                    handleCloseCase={this.handleCloseCase}
+                  />
+                </div>
+              </div>
+            </div>
+            <hr />
             <h5>Data Objects</h5>
-            {caze.dataObjects.map((d, idx) => (
-              <DataObject
-                key={idx}
-                dataObject={d}
-                handleClick={this.selectDataObjectForView}
-              />
-            ))}
-            <h5>Open activities</h5>
-            {caze.activities.ready.map((a, idx) => (
-              <div key={idx}>
-                <button
-                  className="btn"
-                  data-toggle="modal"
-                  data-target="#beginActivityModal"
-                  onClick={() => this.selectActivityForBegin(a)}
-                >
-                  {a.label}
-                </button>
+
+            {caze.dataObjects.length > 0 ? (
+              <div className="row">
+                {caze.dataObjects.map((d, idx) => (
+                  <div style={{ display: "inline-block" }} className="ml-2">
+                    <DataObject
+                      key={idx}
+                      dataObject={d}
+                      handleClick={this.selectDataObjectForView}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-            <h5>Running activities</h5>
-            {caze.activities.running.map((a, idx) => (
-              <div key={idx}>
-                <button
-                  className="btn"
-                  data-toggle="modal"
-                  data-target="#terminateActivityModal"
-                  onClick={() => this.selectActivityForTermination(a)}
-                >
-                  {a.label}
-                </button>
+            ) : (
+              <p>No existing Data Objects</p>
+            )}
+            <hr />
+            <div className="row">
+              <div className="col-4">
+                <h5>Open activities</h5>
+                <div className="">
+                  {caze.activities.ready.map((a, idx) => (
+                    <div key={idx} className="mb-2">
+                      <button
+                        className="btn"
+                        data-toggle="modal"
+                        data-target="#beginActivityModal"
+                        onClick={() => this.selectActivityForBegin(a)}
+                      >
+                        {a.label}
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+              <div className="col-4">
+                <h5>Running activities</h5>
+                <div className="">
+                  {caze.activities.running.map((a, idx) => (
+                    <div key={idx} className="mb-2">
+                      <button
+                        className="btn"
+                        data-toggle="modal"
+                        data-target="#terminateActivityModal"
+                        onClick={() => this.selectActivityForTermination(a)}
+                      >
+                        {a.label}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
           {caze.casemodel.fragments.map((xml, idx) => (
             <BpmnFragment
