@@ -193,6 +193,7 @@ public class CaseModelPetriNetRepresentationJaxBean {
 		StringBuilder builder = new StringBuilder();
 		builder.append("digraph G {\n");
 		builder.append(indent(1)).append("rankdir=LR;\n");
+		builder.append(indent(1)).append("splines=ortho;\n");
 
 		// Clusters
 		getClusterDotOutput(builder, rootCluster, 0);

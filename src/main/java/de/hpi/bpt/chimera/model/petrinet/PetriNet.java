@@ -1,11 +1,12 @@
 package de.hpi.bpt.chimera.model.petrinet;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class PetriNet {
-	private Collection<Place> places = new HashSet<>();
-	private Collection<Transition> transitions = new HashSet<>();
+	private Collection<Place> places = new ArrayList<>();
+	private Collection<Transition> transitions = new ArrayList<>();
 
 	public Place addPlace(Place newPlace) {
 		places.add(newPlace);
@@ -13,7 +14,7 @@ public class PetriNet {
 	}
 
 	public Collection<Place> getPlaces() {
-		return places;
+		return places.stream().distinct().collect(Collectors.toList());
 	}
 
 	public Transition addTransition(Transition newTransition) {
@@ -22,6 +23,6 @@ public class PetriNet {
 	}
 
 	public Collection<Transition> getTransitions() {
-		return transitions;
+		return transitions.stream().distinct().collect(Collectors.toList());
 	}
 }
