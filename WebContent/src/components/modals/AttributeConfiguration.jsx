@@ -18,6 +18,9 @@ class AttributeConfiguration extends Component {
 
   render() {
     const { attributes } = this.props;
+    if (attributes.length == 0) {
+      return <p>No attribute configuration</p>;
+    }
     return (
       <div>
         {attributes.map((attribute, idx) => (

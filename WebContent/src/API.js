@@ -69,6 +69,8 @@ export async function getCase(cmId, caseId) {
     ready: response2.activities,
     running: response3.activities
   };
+  const response4 = await getData(`${URL}/dataobjects`);
+  response.dataObjects = response4.dataobjects;
   return response;
 }
 

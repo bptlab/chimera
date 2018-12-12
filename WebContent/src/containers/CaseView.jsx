@@ -14,6 +14,8 @@ import NavBar from "./NavBar";
 import BeginActivityModal from "../modals/BeginActivityModal";
 import TerminateActivityModal from "../modals/TerminateActivityModal";
 import BpmnFragment from "../components/BpmnFragment";
+import DataObject from "../components/DataObject";
+import ViewDataObjectModal from "../modals/ViewDataObjectModal";
 
 class CaseView extends Component {
   // TODO: return cmId
@@ -38,7 +40,13 @@ class CaseView extends Component {
     selectedActivityForBegin: { id: "", label: "" },
     dataObjectsForBegin: {},
     selectedActivityForTermination: { id: "", label: "" },
-    terminationValues: {}
+    terminationValues: {},
+    selectedDataObjectForView: {
+      dataclass: "",
+      state: "",
+      locked: false,
+      attributes: []
+    }
   };
 
   componentDidMount = async () => {
@@ -212,6 +220,15 @@ class CaseView extends Component {
     this.componentDidMount();
   };
 
+  viewDataObjectModal = () => {
+    const { selectedDataObjectForView } = this.state;
+    return <ViewDataObjectModal dataObject={selectedDataObjectForView} />;
+  };
+
+  selectDataObjectForView = selectedDataObjectForView => {
+    this.setState({ selectedDataObjectForView });
+  };
+
   render() {
     const { caze } = this.state;
 
@@ -226,12 +243,22 @@ class CaseView extends Component {
 
           {this.terminateActivityModal()}
 
+          {this.viewDataObjectModal()}
+
           <div className="container">
             <h1>{caze.name}</h1>
             <h5>{caze.id}</h5>
             <h5>{caze.terminated ? "Terminated" : "Active"}</h5>
             {this.closeCaseButton()}
             <h5>Deployed on {caze.instantiation}</h5>
+            <h5>Data Objects</h5>
+            {caze.dataObjects.map((d, idx) => (
+              <DataObject
+                key={idx}
+                dataObject={d}
+                handleClick={this.selectDataObjectForView}
+              />
+            ))}
             <h5>Open activities</h5>
             {caze.activities.ready.map((a, idx) => (
               <div key={idx}>
@@ -247,9 +274,8 @@ class CaseView extends Component {
             ))}
             <h5>Running activities</h5>
             {caze.activities.running.map((a, idx) => (
-              <div>
+              <div key={idx}>
                 <button
-                  key={idx}
                   className="btn"
                   data-toggle="modal"
                   data-target="#terminateActivityModal"
