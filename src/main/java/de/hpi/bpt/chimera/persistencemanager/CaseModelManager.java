@@ -1,27 +1,21 @@
 package de.hpi.bpt.chimera.persistencemanager;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.log4j.Logger;
-import org.json.JSONException;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
+import org.apache.log4j.Logger;
+import org.json.JSONException;
+
+import java.util.*;
 
 public class CaseModelManager {
 	private static Logger log = Logger.getLogger(CaseModelManager.class);
 
 	private static boolean isInstantiated = false;
-	private static Map<String, CaseModel> caseModels = new ConcurrentHashMap<>();
+	private static Map<String, CaseModel> caseModels = Collections.synchronizedMap(new LinkedHashMap());;
 
 	private CaseModelManager() {
 	}

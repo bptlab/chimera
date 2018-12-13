@@ -1,10 +1,6 @@
 package de.hpi.bpt.chimera.usermanagement;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -53,9 +49,9 @@ public class Organization {
 	private Map<String, MemberDetails> userIdToMemberDetails;
 
 	public Organization() {
-		this.owners = new HashMap<>();
-		this.members = new HashMap<>();
-		this.caseModels = new HashMap<>();
+		this.owners = new LinkedHashMap<>();
+		this.members = new LinkedHashMap<>();
+		this.caseModels = new LinkedHashMap<>();
 		this.roles = new ArrayList<>();
 		this.userIdToMemberDetails = new HashMap<>();
 	}

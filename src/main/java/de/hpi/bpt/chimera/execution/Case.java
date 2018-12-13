@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.execution;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -46,7 +46,7 @@ public class Case {
 		this.instantiation = new java.sql.Timestamp(date.getTime());
 		this.name = caseName;
 		this.caseExecutioner = caseExecutioner;
-		this.fragmentInstances = new HashMap<>();
+		this.fragmentInstances = new LinkedHashMap<>();
 		instantiate(caseModel);
 	}
 

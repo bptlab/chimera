@@ -37,6 +37,7 @@ public class CaseModel {
 	private String name;
 	private int versionNumber;
 	private Date deployment;
+	private String description;
 	@OneToOne(cascade = CascadeType.ALL)
 	private DataModel dataModel;
 	@OneToMany(cascade = CascadeType.ALL)
@@ -186,5 +187,13 @@ public class CaseModel {
 
 	public void setAllowRoles(List<MemberRole> allowedRoles) {
 		this.allowedRoles = allowedRoles;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

@@ -1,22 +1,16 @@
 package de.hpi.bpt.chimera.usermanagement;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.apache.log4j.Logger;
-
-import de.hpi.bpt.chimera.execution.ExecutionService;
-import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.exception.IllegalOrganizationIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
+import org.apache.log4j.Logger;
+
+import java.util.*;
 
 public class OrganizationManager {
 	private static Logger log = Logger.getLogger(OrganizationManager.class);
-	private static Map<String, Organization> organizations = new HashMap<>();
+	private static Map<String, Organization> organizations = new LinkedHashMap<>();
 	private static Organization defaultOrganization;
 
 	private static final String DEFAULT_ORG_NAME = "Default";
@@ -53,7 +47,8 @@ public class OrganizationManager {
 	}
 
 	/**
-	 * Receive an {@link Organization} by its id.
+	 * Receive an {@link Organization} by its id. If the id is {@code default}
+	 * receive the default organization.
 	 * 
 	 * @param orgId
 	 *            - id of the organization
@@ -62,6 +57,10 @@ public class OrganizationManager {
 	 *             if the id is not assigned.
 	 */
 	public static Organization getOrganizationById(String orgId) {
+		if (orgId.equals("default")) {
+			return defaultOrganization;
+		}
+
 		if (organizations.containsKey(orgId)) {
 			return organizations.get(orgId);
 		}
@@ -143,7 +142,6 @@ public class OrganizationManager {
 			}
 		}
 
-		caseModels.sort(Comparator.comparing(CaseModel::getDeployment));
 		return caseModels;
 	}
 

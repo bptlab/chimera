@@ -1,20 +1,5 @@
 package de.hpi.bpt.chimera.execution;
 
-import java.util.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
-import de.hpi.bpt.chimera.rest.beans.activity.DataAttributeValue;
-import de.hpi.bpt.chimera.rest.beans.activity.DataUpdate;
-import org.apache.log4j.Logger;
-
 import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
@@ -29,15 +14,23 @@ import de.hpi.bpt.chimera.execution.data.ObjectLifecycleTransition;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalControlNodeInstanceTypeException;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.rest.beans.activity.DataAttributeValue;
+import de.hpi.bpt.chimera.rest.beans.activity.DataUpdate;
 import de.hpi.bpt.chimera.rest.beans.activity.UpdateDataObjectJaxBean;
 import de.hpi.bpt.chimera.rest.beans.history.ActivityLog;
 import de.hpi.bpt.chimera.rest.beans.history.DataAttributeLog;
 import de.hpi.bpt.chimera.rest.beans.history.DataObjectLog;
 import de.hpi.bpt.chimera.rest.beans.history.LogEntryTransportationBean;
+import org.apache.log4j.Logger;
+
+import javax.persistence.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class CaseExecutioner {
@@ -82,7 +75,7 @@ public class CaseExecutioner {
 		this.caze = new Case(caseName, caseModel, this);
 		this.dataManager = new DataManager(caseModel.getDataModel(), this);
 
-		this.registeredEventInstanceIdToReceiveBehavior = new HashMap<>();
+		this.registeredEventInstanceIdToReceiveBehavior = new LinkedHashMap<>();
 		this.terminated = false;
 	}
 
@@ -623,5 +616,16 @@ public class CaseExecutioner {
 
 	public Date getInstantiation() {
 		return getCase().getInstantiation();
+	}
+
+	/**
+	 *
+	 * @return all activity instances of a case that are not terminated.
+	 */
+	public List<AbstractActivityInstance> getActivities() {
+		return caze.getFragmentInstances().values().stream()
+				.map(FragmentInstance::getActivActivityInstances)
+				.flatMap(Collection::stream)
+				.collect(Collectors.toList());
 	}
 }

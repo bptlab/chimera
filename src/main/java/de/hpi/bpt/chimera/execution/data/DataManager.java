@@ -1,14 +1,7 @@
 package de.hpi.bpt.chimera.execution.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -18,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -66,7 +58,7 @@ public class DataManager {
 	public DataManager(DataModel dataModel, CaseExecutioner caseExecutioner) {
 		this.setDataModel(dataModel);
 		this.setCaseExecutioner(caseExecutioner);
-		this.dataObjectIdToDataObject = new HashMap<>();
+		this.dataObjectIdToDataObject = new LinkedHashMap<>();
 	}
 
 	/**

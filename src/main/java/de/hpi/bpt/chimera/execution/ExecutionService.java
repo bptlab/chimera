@@ -1,20 +1,14 @@
 package de.hpi.bpt.chimera.execution;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
-
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseIdException;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
+import org.apache.log4j.Logger;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * I manage all running cases and provide access to their {@link CaseExecutioner}s.
@@ -25,11 +19,11 @@ public final class ExecutionService {
 	/**
 	 * Map of CaseModelId to a list of {@link CaseExecutioner}s.
 	 */
-	private static Map<String, List<CaseExecutioner>> caseModelIdToCaseExecutions = new ConcurrentHashMap<>();
+	private static Map<String, List<CaseExecutioner>> caseModelIdToCaseExecutions = Collections.synchronizedMap(new LinkedHashMap());
 	/**
 	 * Map of CaseId to their {@link CaseExecutioner}. These are the active cases stored in memory.
 	 */
-	private static Map<String, CaseExecutioner> cases = new ConcurrentHashMap<>();
+	private static Map<String, CaseExecutioner> cases = Collections.synchronizedMap(new LinkedHashMap());
 
 	// Do not instantiate 
 	private ExecutionService() {

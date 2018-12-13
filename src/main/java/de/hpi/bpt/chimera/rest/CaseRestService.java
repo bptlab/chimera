@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import de.hpi.bpt.chimera.rest.beans.caze.CaseDetailsJaxBean;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
@@ -64,8 +65,6 @@ public class CaseRestService extends AbstractRestService {
 
 		if (!filterString.isEmpty())
 			caseExecutions = caseExecutions.stream().filter(instance -> instance.getCase().getName().contains(filterString)).collect(Collectors.toList());
-
-		caseExecutions.sort((e1, e2) -> e1.getCase().getInstantiation().compareTo(e2.getCase().getInstantiation()));
 
 		JSONObject result = new JSONObject(new MultipleCasesJaxBean(caseExecutions));
 
@@ -136,11 +135,11 @@ public class CaseRestService extends AbstractRestService {
 		responses = {
 			@ApiResponse(
 				responseCode = "200", description = "Successfully requested the case.",
-				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CaseOverviewJaxBean.class)))})
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = CaseDetailsJaxBean.class)))})
 	public Response receiveCase(@Context UriInfo uriInfo, @PathParam("organizationId") String orgId, @PathParam("casemodelId") String cmId, @PathParam("caseId") String caseId) {
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 
-		JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
+		JSONObject result = new JSONObject(new CaseDetailsJaxBean(caseExecutioner));
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 

@@ -67,6 +67,12 @@ public class CaseModelParser {
 			
 			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"), parserHelper);
 			caseModel.setFragments(fragments);
+
+			if (caseModelJson.has("description")) {
+				caseModel.setDescription(caseModelJson.getString("description"));
+			} else {
+				caseModel.setDescription("");
+			}
 		} catch (JSONException | IllegalArgumentException e) {
 			log.error("Error", e);
 			throw new IllegalCaseModelException("Invalid CaseModel: " + e.getMessage());

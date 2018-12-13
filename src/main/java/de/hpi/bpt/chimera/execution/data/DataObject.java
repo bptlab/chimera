@@ -2,7 +2,7 @@ package de.hpi.bpt.chimera.execution.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -45,12 +45,6 @@ public class DataObject {
 		// at runtime.
 	}
 
-
-	/**
-	 * 
-	 * @param dataNode
-	 * @param caseExecutioner
-	 */
 	public DataObject(AtomicDataStateCondition condition, DataManager dataManager) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.setDataManger(dataManager);
@@ -66,7 +60,7 @@ public class DataObject {
 	 * @param dataClass
 	 */
 	private void instantiateDataAttributes(DataClass dataClass) {
-		dataAttributeInstanceIdToInstance = new HashMap<>();
+		dataAttributeInstanceIdToInstance = new LinkedHashMap<>();
 		for (DataAttribute attribute : dataClass.getDataAttributes()) {
 			DataAttributeInstance attributeInstance = new DataAttributeInstance(attribute, this);
 			dataAttributeInstanceIdToInstance.put(attributeInstance.getId(), attributeInstance);
