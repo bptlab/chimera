@@ -1,10 +1,9 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import OrganizationView from "../containers/OrganizationView";
 import CaseModelView from "../containers/CaseModelView";
 import CaseView from "../containers/CaseView";
-import NotFound from "./NotFound";
 
 const Routes = () => (
   <Switch>
@@ -12,7 +11,7 @@ const Routes = () => (
     <Route exact path="/casemodels/:cmId" component={CaseModelView} />
     <Route exact path="/casemodels/:cmId/cases/:caseId" component={CaseView} />
     <Route exact path="/swagger" />
-    <Route path="*" component={NotFound} />
+    <Redirect from="*" to={"/casemodels"} />
   </Switch>
 );
 

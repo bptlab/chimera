@@ -15,15 +15,17 @@ class OrganizationView extends Component {
   };
 
   componentDidMount = async () => {
-    let organization = await getOrganization();
-    let roles = await getRoles();
-    let members = organization.members.map(
+    const organization = await getOrganization();
+    const roles = await getRoles();
+    const { casemodels } = organization;
+    const members = organization.members.map(
       member => member.name + " (" + member.email + ")"
     );
+
     this.setState({
-      casemodels: organization.casemodels,
-      roles: roles,
-      members: members
+      casemodels,
+      roles,
+      members
     });
   };
 

@@ -7,8 +7,7 @@ import {
   terminateActivity,
   closeCase,
   getAvailableActivityInput,
-  getAvailableActivityOutput,
-  getFragments
+  getAvailableActivityOutput
 } from "../API";
 import NavBar from "./NavBar";
 import BeginActivityModal from "../modals/BeginActivityModal";
@@ -40,7 +39,7 @@ class CaseView extends Component {
         ready: [],
         running: []
       },
-      dataObjects: []
+      dataobjects: []
     },
     selectedActivityForBegin: { id: "", label: "" },
     dataObjectsForBegin: {},
@@ -57,8 +56,6 @@ class CaseView extends Component {
   componentDidMount = async () => {
     const { cmId, caseId } = this.props.match.params;
     let caze = await getCase(cmId, caseId);
-    const fragments = await getFragments(cmId);
-    caze.casemodel = { fragments };
     this.setState({ caze });
   };
 
@@ -264,12 +261,15 @@ class CaseView extends Component {
             <hr />
             <h5>Data Objects</h5>
 
-            {caze.dataObjects.length > 0 ? (
+            {caze.dataobjects.length > 0 ? (
               <div className="row">
-                {caze.dataObjects.map((d, idx) => (
-                  <div style={{ display: "inline-block" }} className="ml-2">
+                {caze.dataobjects.map((d, idx) => (
+                  <div
+                    key={idx}
+                    style={{ display: "inline-block" }}
+                    className="ml-2"
+                  >
                     <DataObject
-                      key={idx}
                       dataObject={d}
                       handleClick={this.selectDataObjectForView}
                     />
@@ -316,15 +316,16 @@ class CaseView extends Component {
                 </div>
               </div>
             </div>
+            <hr />
+            {caze.casemodel.fragments.map((f, idx) => (
+              <BpmnFragment
+                style={{ height: 1000 }}
+                key={idx}
+                id={"bpmnViewer_" + idx}
+                xml={f.bpmn}
+              />
+            ))}
           </div>
-          {caze.casemodel.fragments.map((xml, idx) => (
-            <BpmnFragment
-              style={{ height: 1000 }}
-              key={idx}
-              id={"bpmnViewer_" + idx}
-              xml={xml}
-            />
-          ))}
         </main>
       </React.Fragment>
     );

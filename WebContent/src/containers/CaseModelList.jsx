@@ -38,7 +38,9 @@ class CaseModelList extends Component {
           <div className="container">
             {this.state.displayedCasemodels.map((cm, idx) => {
               const casemodelOverviewHeader = (
-                <Link to={"casemodels/" + cm.id}>{cm.name}</Link>
+                <Link to={"casemodels/" + cm.id}>
+                  {cm.name} ({cm.modelversion})
+                </Link>
               );
               return (
                 <ExpandableOverview
@@ -46,8 +48,14 @@ class CaseModelList extends Component {
                   cm={cm}
                   idx={idx}
                   header={casemodelOverviewHeader}
-                  body={"cm.description"}
-                />
+                >
+                  {cm.description ? (
+                    <p style={{ wordWrap: "break-word" }}>
+                      Description: {cm.description}
+                    </p>
+                  ) : null}
+                  {cm.deployment}
+                </ExpandableOverview>
               );
             })}
           </div>

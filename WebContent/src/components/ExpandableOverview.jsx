@@ -19,7 +19,7 @@ class ExpandableOverview extends Component {
   // <div className="card-footer">Panel Footer</div>
 
   render() {
-    const { idx, header, body } = this.props;
+    const { idx, header, children } = this.props;
     const style = {
       marginLeft: "30px"
     };
@@ -28,7 +28,7 @@ class ExpandableOverview extends Component {
     ) : (
       <div style={style} className="card">
         <div id={"collapse" + idx} className="card-collapse">
-          <div className="card-body">{body}</div>
+          <div className="card-body">{children}</div>
         </div>
       </div>
     );

@@ -20,9 +20,8 @@ class CaseModelDetails extends Component {
   handleDeleteCaseModelSubmit = async () => {
     const { id } = this.state;
     await deleteCaseModel(id);
-    window.location = `${window.location.origin}/${
-      process.env.REACT_APP_ROUTER_BASE
-    }/casemodels`;
+    window.location = `${window.location.origin}${process.env
+      .REACT_APP_ROUTER_BASE || ""}/casemodels`;
   };
 
   // start a case and change the window location
@@ -30,10 +29,8 @@ class CaseModelDetails extends Component {
     const { id } = this.state;
     const response = await startCase(id, name);
     const caseId = response.id;
-
-    window.location = `${window.location.origin}/${
-      process.env.REACT_APP_ROUTER_BASE
-    }/casemodels/${id}/cases/${caseId}`;
+    window.location = `${window.location.origin}${process.env
+      .REACT_APP_ROUTER_BASE || ""}/casemodels/${id}/cases/${caseId}`;
   };
 
   startCase = async casemodel => {};
@@ -51,23 +48,38 @@ class CaseModelDetails extends Component {
           name={casemodel.name}
         />
         <h1>{casemodel.name}</h1>
-        <h5>{casemodel.description}</h5>
-        <h5>Deployed on {casemodel.deployment}</h5>
-        <h5>Version: {casemodel.modelversion}</h5>
-        <button
-          className="btn btn-danger"
-          data-toggle="modal"
-          data-target="#deleteCaseModelModal"
-        >
-          <i className="fa fa-trash-o" /> Delete Casemodel
-        </button>
-        <button
-          className="btn btn-primary"
-          data-toggle="modal"
-          data-target="#newCaseNameModal"
-        >
-          New Case
-        </button>
+        <div className="row">
+          <div className="col-10">
+            <h5>Description:</h5>
+            <p style={{ wordWrap: "break-word" }}>
+              {casemodel.description
+                ? casemodel.description
+                : "No description available."}
+            </p>
+            <h5>Deployed: {casemodel.deployment}</h5>
+            <h5>Version: {casemodel.modelversion}</h5>
+          </div>
+          <div className="col-2">
+            <div className="mb-2">
+              <button
+                className="btn btn-danger"
+                data-toggle="modal"
+                data-target="#deleteCaseModelModal"
+              >
+                <i className="fa fa-trash-o" /> Delete
+              </button>
+            </div>
+            <div>
+              <button
+                className="btn btn-primary"
+                data-toggle="modal"
+                data-target="#newCaseNameModal"
+              >
+                New Case
+              </button>
+            </div>
+          </div>
+        </div>
       </main>
     );
   }
@@ -91,6 +103,7 @@ class CaseModelView extends Component {
         <NavBar casemodel={casemodel} />
         <div className="container">
           <CaseModelDetails casemodel={casemodel} />
+          <hr />
           <h4>Cases ({casemodel.cases.length})</h4>
           {casemodel.cases.map((c, idx) => (
             <ExpandableOverview
@@ -99,16 +112,15 @@ class CaseModelView extends Component {
               header={
                 <Link to={casemodel.id + "/cases/" + c.id}>{c.name}</Link>
               }
-              body={
-                <div>
-                  <h6>{c.terminated ? "Terminated" : "Running"}</h6>
-                  <h6>
-                    {c.canTerminate ? "can terminate" : "cannot terminate"}
-                  </h6>
-                  <h6>{c.instantiation}</h6>
-                </div>
-              }
-            />
+            >
+              <p>Status: {c.terminated ? "Terminated" : "Running"}</p>
+
+              <p>
+                Termination:{" "}
+                {c.canTerminate ? "can terminate" : "cannot terminate"}
+              </p>
+              <p>Instantiation: {c.instantiation}</p>
+            </ExpandableOverview>
           ))}
         </div>
       </React.Fragment>

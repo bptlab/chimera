@@ -1,27 +1,11 @@
 const URL = "http://localhost:8080/Chimera/api/v3/organizations";
 
-let API_URL;
-
-async function getApiUrl() {
-  if (API_URL) {
-    return API_URL;
-  }
-
-  const response = await getData(`${URL}`);
-  const organizations = response["organizations"].filter(function(org) {
-    return org.name === "Default";
-  });
-
-  const orgId = organizations[0].id;
-  API_URL = `${URL}/${orgId}/casemodels`;
-  return API_URL;
+function getOrganizationApiUrl() {
+  return `${URL}/default`;
 }
 
-//Think about making the API_URL without the /casemodels so that we do not need this convenient function
-async function getOrganizationApiUrl() {
-  //return API_URL without /casemodels in the end
-  let api_url = await getApiUrl();
-  return await api_url.substr(0, api_url.length - 11);
+function getApiUrl() {
+  return `${URL}/default/casemodels`;
 }
 
 export async function getCaseModel(cmId) {
@@ -36,13 +20,6 @@ export async function startCase(cmId, name) {
   const payload = { name: name };
   const response = await getData(URL, method, payload);
   return response;
-}
-
-//@depricated
-export async function getCaseModels() {
-  const URL = `${await getApiUrl()}`;
-  const response = await getData(`${URL}`);
-  return response["casemodels"];
 }
 
 export async function getOrganization() {
@@ -63,14 +40,6 @@ export async function deleteCaseModel(cmId) {
 export async function getCase(cmId, caseId) {
   const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}`;
   let response = await getData(URL);
-  const response2 = await getData(`${URL}/activities?state=ready`);
-  const response3 = await getData(`${URL}/activities?state=running`);
-  response.activities = {
-    ready: response2.activities,
-    running: response3.activities
-  };
-  const response4 = await getData(`${URL}/dataobjects`);
-  response.dataObjects = response4.dataobjects;
   return response;
 }
 
@@ -104,12 +73,6 @@ export async function terminateActivity(
 export async function closeCase(cmId, caseId) {
   const URL = `${await getApiUrl()}/${cmId}/cases/${caseId}/terminate`;
   await getData(URL, "POST");
-}
-
-export async function getFragments(cmId) {
-  const URL = `${await getApiUrl()}/${cmId}/xml`;
-  const response = await getData(URL);
-  return response["bpmn"];
 }
 
 async function getData(url, method = "GET", body = null) {
