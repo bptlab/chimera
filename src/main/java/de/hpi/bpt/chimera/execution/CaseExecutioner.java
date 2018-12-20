@@ -614,7 +614,7 @@ public class CaseExecutioner {
 		return registeredEventInstanceIdToReceiveBehavior;
 	}
 
-	public Date getInstantiation() {
+	public Long getInstantiation() {
 		return getCase().getInstantiation();
 	}
 

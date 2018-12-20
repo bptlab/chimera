@@ -42,7 +42,7 @@ public class StateTransitionLog {
 			stateTransition.setLabel(logEntry.getLabel());
 			stateTransition.setNewValue(logEntry.getNewValue());
 			stateTransition.setOldValue(JSONObject.NULL);
-			stateTransition.setTimeStamp(logEntry.getTimeStamp());
+			stateTransition.setTimeStamp(new Date(logEntry.getTimeStamp()));
 			transitions.add(stateTransition);
 		}
 		transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));
@@ -73,7 +73,7 @@ public class StateTransitionLog {
 			stateTransition.setLabel(logEntry.getLabel());
 			stateTransition.setNewValue(logEntry.getNewValue());
 			stateTransition.setOldValue(JSONObject.NULL);
-			stateTransition.setTimeStamp(logEntry.getTimeStamp());
+			stateTransition.setTimeStamp(new Date(logEntry.getTimeStamp()));
 			transitions.add(stateTransition);
 		}
 		transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));

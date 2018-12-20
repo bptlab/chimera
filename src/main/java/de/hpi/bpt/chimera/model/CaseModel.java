@@ -36,7 +36,7 @@ public class CaseModel {
 	private int dbId;
 	private String name;
 	private int versionNumber;
-	private Date deployment;
+	private Long deployment;
 	private String description;
 	@OneToOne(cascade = CascadeType.ALL)
 	private DataModel dataModel;
@@ -54,8 +54,7 @@ public class CaseModel {
 
 	public CaseModel() {
 		setId(UUID.randomUUID().toString().replace("-", ""));
-		Date date = new Date();
-		setDeployment(new java.sql.Timestamp(date.getTime()));
+		setDeployment(System.currentTimeMillis());
 	}
 
 	public void deployed() {
@@ -165,11 +164,11 @@ public class CaseModel {
 		return contentXmlStrings;
 	}
 
-	public Date getDeployment() {
+	public Long getDeployment() {
 		return deployment;
 	}
 
-	public void setDeployment(Date deployment) {
+	public void setDeployment(Long deployment) {
 		this.deployment = deployment;
 	}
 

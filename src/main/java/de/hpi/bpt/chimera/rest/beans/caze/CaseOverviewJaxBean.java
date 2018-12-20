@@ -11,7 +11,7 @@ public class CaseOverviewJaxBean {
 	private String id;
 	private String name;
 	private boolean terminated;
-	private Date instantiation;
+	private Long instantiation;
 	private boolean canTerminate;
 
 	public CaseOverviewJaxBean(CaseExecutioner caseExecutioner) {
@@ -46,11 +46,11 @@ public class CaseOverviewJaxBean {
 		this.terminated = terminated;
 	}
 
-	public Date getInstantiation() {
+	public Long getInstantiation() {
 		return instantiation;
 	}
 
-	public void setInstantiation(Date instantiation) {
+	public void setInstantiation(Long instantiation) {
 		this.instantiation = instantiation;
 	}
 

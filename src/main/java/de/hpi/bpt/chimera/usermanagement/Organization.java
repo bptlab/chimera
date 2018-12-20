@@ -26,7 +26,7 @@ public class Organization {
 	@OneToMany
 	@JoinTable(name = "Organization_Owners")
 	@MapKey(name = "id")
-	private Map<String, User> owners;
+	private Map<String, User> owners = new LinkedHashMap<>();
 
 	// TODO: theoretically it is possible to put a CascadeType.MERGE here and it
 	// should not be necessary to save Users extra because every User is in the
@@ -34,11 +34,11 @@ public class Organization {
 	@ManyToMany
 	@JoinTable(name = "Organization_Members")
 	@MapKey(name = "id")
-	private Map<String, User> members;
+	private Map<String, User> members = new LinkedHashMap<>();
 
 	@OneToMany
 	@MapKey(name = "cmId")
-	private Map<String, CaseModel> caseModels;
+	private Map<String, CaseModel> caseModels = new LinkedHashMap<>();
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "Organization_AvailableRoles")
@@ -49,9 +49,6 @@ public class Organization {
 	private Map<String, MemberDetails> userIdToMemberDetails;
 
 	public Organization() {
-		this.owners = new LinkedHashMap<>();
-		this.members = new LinkedHashMap<>();
-		this.caseModels = new LinkedHashMap<>();
 		this.roles = new ArrayList<>();
 		this.userIdToMemberDetails = new HashMap<>();
 	}

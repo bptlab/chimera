@@ -203,9 +203,7 @@ public final class ExecutionService {
 			return new ArrayList<>();
 		}
 		log.info(String.format("Successfully requested all Case-Informations of CaseModel-Id: %s", cmId));
-		return caseModelIdToCaseExecutions.get(cmId).stream()
-				.sorted(Comparator.comparing(CaseExecutioner::getInstantiation))
-				.collect(Collectors.toList());
+		return caseModelIdToCaseExecutions.get(cmId);
 	}
 
 	/**

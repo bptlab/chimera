@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 
 import { getCaseModel, startCase, deleteCaseModel } from "../API";
 import NavBar from "./NavBar";
-import ExpandableOverview from "../components/ExpandableOverview";
+import CaseList from "../components/CaseList";
 import NewCaseNameModal from "../modals/NewCaseModal";
 import DeleteCaseModelModal from "../modals/DeleteCaseModelModal";
-
 class CaseModelDetails extends Component {
   state = {
     id: ""
@@ -93,7 +91,11 @@ class CaseModelView extends Component {
 
   componentDidMount = async () => {
     const { cmId } = this.props.match.params;
-    const casemodel = await getCaseModel(cmId);
+    var casemodel = await getCaseModel(cmId);
+    casemodel.cases.map(caze => {
+      caze.instantiation = new Date(caze.instantiation);
+      return caze;
+    });
     this.setState({ casemodel });
   };
 
@@ -106,23 +108,7 @@ class CaseModelView extends Component {
           <CaseModelDetails casemodel={casemodel} />
           <hr />
           <h4>Cases ({casemodel.cases.length})</h4>
-          {casemodel.cases.map((c, idx) => (
-            <ExpandableOverview
-              key={idx}
-              idx={idx}
-              header={
-                <Link to={casemodel.id + "/cases/" + c.id}>{c.name}</Link>
-              }
-            >
-              <p>Status: {c.terminated ? "Terminated" : "Running"}</p>
-
-              <p>
-                Termination:{" "}
-                {c.canTerminate ? "can terminate" : "cannot terminate"}
-              </p>
-              <p>Instantiation: {c.instantiation}</p>
-            </ExpandableOverview>
-          ))}
+          <CaseList cmId={casemodel.id} cases={casemodel.cases} />
         </div>
       </React.Fragment>
     );

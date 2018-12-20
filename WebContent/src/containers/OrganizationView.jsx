@@ -17,7 +17,11 @@ class OrganizationView extends Component {
   componentDidMount = async () => {
     const organization = await getOrganization();
     const roles = await getRoles();
-    const { casemodels } = organization;
+    var { casemodels } = organization;
+    casemodels.map(cm => {
+      cm.deployment = new Date(cm.deployment);
+      return cm;
+    });
     const members = organization.members.map(
       member => member.name + " (" + member.email + ")"
     );

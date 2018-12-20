@@ -57,8 +57,7 @@ class ExpandableOverview extends Component {
 
 ExpandableOverview.propTypes = {
   idx: PropTypes.number.isRequired,
-  header: PropTypes.any.isRequired,
-  body: PropTypes.any.isRequired
+  header: PropTypes.any.isRequired
 };
 
 export default ExpandableOverview;

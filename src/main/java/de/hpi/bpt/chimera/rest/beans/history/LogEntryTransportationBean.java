@@ -30,14 +30,13 @@ public abstract class LogEntryTransportationBean {
 
 	// TODO: think about cause
 	private String label;
-	private Date timeStamp;
+	private Long timeStamp;
 	private String oldValue;
 	private String newValue;
 	private String objectReferenceId;
 
 	public LogEntryTransportationBean() {
-		Date date = new Date();
-		this.timeStamp = new java.sql.Timestamp(date.getTime());
+		this.timeStamp = System.currentTimeMillis();
 	}
 
 	public void appendToTrace(Node traceElement) {
@@ -57,7 +56,7 @@ public abstract class LogEntryTransportationBean {
 		Document doc = traceElement.getOwnerDocument();
 		Element timestampXml = doc.createElement("timestamp");
 		timestampXml.setAttribute("key", "timestamp");
-		timestampXml.setAttribute("value", timeStamp.toString());
+		timestampXml.setAttribute("value", new Date(timeStamp).toString());
 		traceElement.appendChild(timestampXml);
 	}
 
@@ -117,7 +116,7 @@ public abstract class LogEntryTransportationBean {
 		this.label = label;
 	}
 
-	public Date getTimeStamp() {
+	public Long getTimeStamp() {
 		return timeStamp;
 	}
 

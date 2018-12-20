@@ -12,7 +12,7 @@ public class CaseModelOverviewJaxBean {
 	private String name;
 	private String description;
 	private int modelversion;
-	private Date deployment;
+	private Long deployment;
 
 	public CaseModelOverviewJaxBean(CaseModel cm) {
 		setId(cm.getId());
@@ -55,11 +55,11 @@ public class CaseModelOverviewJaxBean {
 		this.modelversion = modelversion;
 	}
 
-	public Date getDeployment() {
+	public Long getDeployment() {
 		return deployment;
 	}
 
-	public void setDeployment(Date deployment) {
+	public void setDeployment(Long deployment) {
 		this.deployment = deployment;
 	}
 }

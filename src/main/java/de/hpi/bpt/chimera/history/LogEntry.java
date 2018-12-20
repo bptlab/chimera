@@ -25,7 +25,7 @@ public class LogEntry {
 	int dbId;
 
 	private int id;
-	private Date timeStamp;
+	private long timeStamp;
 	private LogType type;
 	private String newValue;
 	private String label;
@@ -54,7 +54,7 @@ public class LogEntry {
 		// at runtime.
 	}
 
-	public LogEntry(int id, Date timeStamp, LogType type, String newValue, String label, int scenarioInstanceId, int loggedId, int cause) {
+	public LogEntry(int id, long timeStamp, LogType type, String newValue, String label, int scenarioInstanceId, int loggedId, int cause) {
 		this.id = id;
 		this.timeStamp = timeStamp;
 		this.type = type;
@@ -84,7 +84,7 @@ public class LogEntry {
 		Document doc = traceElement.getOwnerDocument();
 		Element timestampXml = doc.createElement("timestamp");
 		timestampXml.setAttribute("key", "timestamp");
-		timestampXml.setAttribute("value", timeStamp.toString());
+		timestampXml.setAttribute("value", new Date(timeStamp).toString());
 		traceElement.appendChild(timestampXml);
 	}
 
@@ -156,11 +156,11 @@ public class LogEntry {
 		this.id = id;
 	}
 
-	public Date getTimeStamp() {
+	public long getTimeStamp() {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(Date timeStamp) {
+	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 
