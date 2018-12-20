@@ -7,7 +7,7 @@ class NavBar extends Component {
       "//" +
       window.location.hostname +
       (window.location.port && ":" + window.location.port) +
-      (process.env.REACT_APP_ROUTER_BASE || "")
+      ("/" + process.env.REACT_APP_ROUTER_BASE || "")
     );
   };
 

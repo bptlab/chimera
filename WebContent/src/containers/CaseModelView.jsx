@@ -20,8 +20,8 @@ class CaseModelDetails extends Component {
   handleDeleteCaseModelSubmit = async () => {
     const { id } = this.state;
     await deleteCaseModel(id);
-    window.location = `${window.location.origin}${process.env
-      .REACT_APP_ROUTER_BASE || ""}/casemodels`;
+    window.location = `${window.location.origin}${"/" +
+      process.env.REACT_APP_ROUTER_BASE || ""}/casemodels`;
   };
 
   // start a case and change the window location
@@ -29,8 +29,9 @@ class CaseModelDetails extends Component {
     const { id } = this.state;
     const response = await startCase(id, name);
     const caseId = response.id;
-    window.location = `${window.location.origin}${process.env
-      .REACT_APP_ROUTER_BASE || ""}/casemodels/${id}/cases/${caseId}`;
+    window.location = `${window.location.origin}${"/" +
+      process.env.REACT_APP_ROUTER_BASE ||
+      ""}/casemodels/${id}/cases/${caseId}`;
   };
 
   startCase = async casemodel => {};
