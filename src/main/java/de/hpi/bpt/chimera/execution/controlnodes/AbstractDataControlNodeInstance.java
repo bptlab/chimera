@@ -206,7 +206,7 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 	 *         referenced data object state or data attribute value
 	 */
 	public String replaceVariableExpressions(String toReplace) {
-		Pattern p = Pattern.compile("#(\\w+)(?:\\.(\\w+))?\\b");
+		Pattern p = Pattern.compile("#(.+)(?:\\.(\\w+))?\\b");
 		Matcher m = p.matcher(toReplace);
 		if (!m.find()) { // no variable used in input, end recursion
 			return toReplace;
