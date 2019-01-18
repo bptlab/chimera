@@ -3,7 +3,7 @@
         <div class="panel-heading">
             Data Object States
         </div>
-        <div class="panel-body">
+        <div class="panel-body" style="overflow: auto">
             <div class="pull-left">
                 <table class="table table-striped">
                     <thead>
@@ -12,6 +12,7 @@
                         <th>Dataclass</th>
                         <th>State</th>
                         <th>Locked</th>
+                        <th>Inspect</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -19,7 +20,11 @@
                         <td>{{dataobject['id']}}</td>
                         <td>{{dataobject['dataclass']}}</td>
                         <td>{{dataobject['state']}}</td>
-                        <td>{{dataobject['locked']}}
+                        <td>{{dataobject['locked']}}</td>
+                        <td><a type="button" data-toggle="modal"
+                               ng-click=""
+                               data-target="{{'#modalInspectDataobject' + dataobject['id']}}"><i
+                                class="fa fa-search"></i></a></td>
                     </tr>
                     </tbody>
                 </table>
