@@ -74,6 +74,7 @@ public abstract class AbstractEventInstance extends AbstractDataControlNodeInsta
 
 	@Override
 	public void skip() {
+		getDataManager().unlockDataObjects(this.getSelectedDataObjects());
 		behavior.skip();
 		setState(State.SKIPPED);
 	}
