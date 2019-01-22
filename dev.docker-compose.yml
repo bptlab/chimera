@@ -17,6 +17,22 @@ services:
         env_file:
             - host.env
 
+    unicorn:
+        image: bptlab/unicorn:smile
+        ports:
+            - 8090:8080
+        volumes:
+            - ./server-config.xml:/usr/local/tomcat/conf/server-template.xml
+        environment:
+            - UNICORN_DB_HOST=database
+            - UNICORN_DB_PORT=3306
+            - UNICORN_DB_USER=root
+            - UNICORN_DB_PASSWORD=root
+            - UNICORN_DB_DEV_DB=eap_development
+            - UNICORN_DB_TEST_DB=eap_testing
+        env_file:
+        - host.env
+
     database:
         image: mysql:5.7
         volumes:
