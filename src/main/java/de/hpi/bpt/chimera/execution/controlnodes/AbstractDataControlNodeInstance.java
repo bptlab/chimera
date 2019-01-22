@@ -254,6 +254,55 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 		return replaceVariableExpressions(replacedFirstOccurrence);
 	}
 
+	public String replaceVariableExpressionsInEvents(String toReplace) {
+		Pattern p = Pattern.compile("#(\\w+)(?:\\.(\\w+))?\\b");
+		Matcher m = p.matcher(toReplace);
+		if (!m.find()) { // no variable used in input, end recursion
+			return toReplace;
+		}
+		final int attributeNameGroup = 2;
+		final int dataClassNameGroup = 1;
+		String dataClassName = m.group(dataClassNameGroup);
+		Optional<String> attrName = Optional.ofNullable(m.group(attributeNameGroup));
+		Optional<DataObject> foundDO = getDataManager().getDataObjects().stream().filter(d -> dataClassName.equals(d.getDataClass().getName())).findFirst();
+		if (!foundDO.isPresent()) { // no DO found for data class referenced in
+			// variable expression
+			log.error(String.format("None of the selected data objects of the task '%s' matches the data class '%s' referenced in the variable expression %s.", getControlNode().getName(), dataClassName, m.group()));
+			// replace first match and recursive call to replace other potential
+			// variable expressions
+			String replacedFirstOccurrence = m.replaceFirst("<not found>");
+			return replaceVariableExpressionsInEvents(replacedFirstOccurrence);
+		}
+		if (!attrName.isPresent()) { // no attribute referenced -> replace
+			// "#DataClass" with its state
+			// replace first match and recursive call to replace other potential
+			// variable expressions
+			String replacedFirstOccurrence = m.replaceFirst(foundDO.get().getObjectLifecycleState().getName());
+			return replaceVariableExpressionsInEvents(replacedFirstOccurrence);
+		}
+		Optional<DataAttributeInstance> foundDAI = foundDO.get().getDataAttributeInstances().stream().filter(dai -> attrName.get().equals(dai.getDataAttribute().getName())).findFirst();
+		if (!foundDAI.isPresent()) { // no DAI found for attribute referenced in
+			// variable expression
+			log.error(String.format("The found data object of class '%s' does not have a attribute with name '%s' specified in the variable expression %s.", dataClassName, attrName.get(), m.group()));
+			// replace first match and recursive call to replace other potential
+			// variable expressions
+			String replacedFirstOccurrence = m.replaceFirst("<not found>");
+			return replaceVariableExpressionsInEvents(replacedFirstOccurrence);
+		}
+		Object value = foundDAI.get().getValue();
+		if (value == null) { // attribute value is null
+			log.error(String.format("The attribute value of the variable expression '%s' is 'null'.", m.group()));
+			// replace first match and recursive call to replace other potential
+			// variable expressions
+			String replacedFirstOccurrence = m.replaceFirst("<value is 'null'>");
+			return replaceVariableExpressionsInEvents(replacedFirstOccurrence);
+		}
+		// replace first match and recursive call to replace other potential
+		// variable expressions
+		String replacedFirstOccurrence = m.replaceFirst(value.toString());
+		return replaceVariableExpressionsInEvents(replacedFirstOccurrence);
+	}
+
 	@Override
 	public AbstractDataControlNode getControlNode() {
 		return (AbstractDataControlNode) super.getControlNode();
