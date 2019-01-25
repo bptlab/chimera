@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.compliance.ComplianceChecker;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
@@ -213,6 +214,42 @@ public class ScenarioRestService extends AbstractRestService {
 
 			return Response.ok().type(MediaType.TEXT_PLAIN).entity(result).build();
 		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
+					.entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	/**
+	 * TODO: get compliance checking result
+	 *
+	 * @param scenarioId The Id of the scenario used inside the database.
+	 * @param uri        Request URI
+	 * @return TODO return stuff
+	 */
+	@GET
+	@Path("scenario/{scenarioId}/compliance/{query}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response getPetriNetDotRepresentation(@Context UriInfo uri, @PathParam("scenarioId") String cmId,
+			@PathParam("query") String query) {
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
+
+			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
+					cm);
+			String petriNetInLolaFormat = petriNetRepresentationJaxBean.getLolaOutput();
+
+			// Send to LOLA
+			ComplianceChecker complianceChecker = new ComplianceChecker();
+			String result = complianceChecker.queryLola(petriNetInLolaFormat, query);
+
+			return Response.ok().type(MediaType.TEXT_PLAIN).entity(result).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
+					.entity(buildError(e.getMessage())).build();
+		} catch (Exception e) {
+			// TODO remove once querying LOLA doesn't throw
+			System.out.println("damn son");
+			e.printStackTrace();
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
 					.entity(buildError(e.getMessage())).build();
 		}
