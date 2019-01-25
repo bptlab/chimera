@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
@@ -77,8 +76,7 @@ public class CaseModelTranslation {
 		fragmentInitializationTransition.addOutputPlace(pseudoFragmentPlace);
 
 		terminationConditionTranslation = new DataStatePreConditionTranslation(this.translationContext,
-				terminationCondition, new DataStateCondition(), "terminationCondition", pseudoFragmentPlace,
-				this.finalPlace);
+				terminationCondition, "terminationCondition", pseudoFragmentPlace, this.finalPlace);
 	}
 
 	public PetriNet getPetriNet() {

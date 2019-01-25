@@ -11,7 +11,6 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 public class DataClassTranslation extends AbstractTranslation {
 
 	private final Map<String, Place> olcStatePlacesByName = new HashMap<>();
-	private final Place semaphore;
 
 	public DataClassTranslation(TranslationContext translationContext, DataClass dataClass) {
 		super(translationContext, dataClass.getName());
@@ -35,18 +34,9 @@ public class DataClassTranslation extends AbstractTranslation {
 		} else {
 			throw new IllegalStateNameException(initialStateName);
 		}
-
-		// Semaphore to synchronize access
-		semaphore = addPlace("s_" + dataClass.getName());
-		semaphore.setNumTokens(1);
-		semaphore.setSignificant(true);
 	}
 
 	public Map<String, Place> getOlcStatePlacesByName() {
 		return olcStatePlacesByName;
-	}
-
-	public Place getSemaphore() {
-		return semaphore;
 	}
 }

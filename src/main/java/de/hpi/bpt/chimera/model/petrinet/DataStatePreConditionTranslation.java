@@ -1,34 +1,29 @@
 package de.hpi.bpt.chimera.model.petrinet;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
 
 public class DataStatePreConditionTranslation extends AbstractDataStateConditionTranslation {
 
 	final DataStateCondition preCondition;
-	final DataStateCondition postCondition;
-	Set<DataClass> writtenDataClasses;
+	final Place initialPlace;
+	final Place finalPlace;
 
 	public DataStatePreConditionTranslation(TranslationContext translationContext, DataStateCondition preCondition,
-			DataStateCondition postCondition, String name, Place initialPlace, Place finalPlace) {
+			String name, Place initialPlace, Place finalPlace) {
 		super(translationContext, name, initialPlace, finalPlace);
 
 		this.preCondition = preCondition;
-		this.postCondition = postCondition;
+
+		this.initialPlace = initialPlace;
+		this.finalPlace = finalPlace;
 
 		final String prefixString = this.context.getPrefixString();
 
 		if (preCondition.getConditionSets().isEmpty()) {
 			addTransition(prefixString + "cs_1", initialPlace, finalPlace);
 		} else {
-			writtenDataClasses = postCondition.getConditionSets().stream()
-					.flatMap(postConditionSet -> postConditionSet.getConditions().stream())
-					.map(AtomicDataStateCondition::getDataClass).collect(Collectors.toSet());
 			int conditionSetId = 1;
 			for (ConditionSet preConditionSet : preCondition.getConditionSets()) {
 				Transition conditionSetTransition = translatePreConditionSet(preConditionSet, conditionSetId);
@@ -43,16 +38,9 @@ public class DataStatePreConditionTranslation extends AbstractDataStateCondition
 
 		for (AtomicDataStateCondition atomicDataStateCondition : preConditionSet.getConditions()) {
 			Place placeForDataState = getPlaceForDataState(atomicDataStateCondition);
-			// read
+			// read and write back
 			conditionSetTransition.addInputPlace(placeForDataState);
-			// write back
 			conditionSetTransition.addOutputPlace(placeForDataState);
-
-			// consume mutex if data object will be modified
-			if (writtenDataClasses.contains(atomicDataStateCondition.getDataClass())) {
-				Place placeForSemaphore = getPlaceForDataSemaphore(atomicDataStateCondition.getDataClass());
-				conditionSetTransition.addInputPlace(placeForSemaphore);
-			}
 		}
 
 		conditionSetTransition.addInputPlace(initialPlace);

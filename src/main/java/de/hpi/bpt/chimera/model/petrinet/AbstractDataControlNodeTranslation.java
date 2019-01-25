@@ -6,8 +6,8 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractSequent
 
 	protected final Place innerInitialPlace;
 	protected final Place innerFinalPlace;
-	protected final DataStatePreConditionTranslation precondition;
-	protected final DataStatePostConditionTranslation postcondition;
+	protected final DataStatePreConditionTranslation preconditionTranslation;
+	protected final IoRelationTranslation ioRelationTranslation;
 
 	public AbstractDataControlNodeTranslation(TranslationContext translationContext, AbstractDataControlNode node,
 			String name) {
@@ -15,24 +15,28 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractSequent
 
 		final String prefixString = this.context.getPrefixString();
 
-		// Only add precondition overhead if necessary
-		if (!node.getPreCondition().getConditionSets().isEmpty() || !TranslationContext.isOptimizeTranslation()) {
+		// Is an io-relation needed?
+		if (!node.getPostCondition().getConditionSets().isEmpty() || !TranslationContext.isOptimizeTranslation()) {
 			innerInitialPlace = addPlace(prefixString + "innerInit");
-			precondition = new DataStatePreConditionTranslation(this.context, node.getPreCondition(),
-					node.getPostCondition(), name + "pre", getInitialPlace(), innerInitialPlace);
+			innerFinalPlace = addPlace(prefixString + "innerFinal");
+			ioRelationTranslation = new IoRelationTranslation(this.context, node.getPreCondition(),
+					node.getPostCondition(), name, initialPlace, innerInitialPlace, innerFinalPlace, finalPlace);
+			preconditionTranslation = null;
+
+			// Is a precondition needed?
+		} else if (!node.getPreCondition().getConditionSets().isEmpty()
+				|| !TranslationContext.isOptimizeTranslation()) {
+			innerInitialPlace = addPlace(prefixString + "innerInit");
+			preconditionTranslation = new DataStatePreConditionTranslation(this.context, node.getPreCondition(),
+					name + "pre", getInitialPlace(), innerInitialPlace);
+
+			innerFinalPlace = getFinalPlace();
+			ioRelationTranslation = null;
 		} else {
 			innerInitialPlace = getInitialPlace();
-			precondition = null;
-		}
-
-		// Only add postcondition overhead if necessary
-		if (!node.getPostCondition().getConditionSets().isEmpty() || !TranslationContext.isOptimizeTranslation()) {
-			innerFinalPlace = addPlace(prefixString + "innerFinal");
-			postcondition = new DataStatePostConditionTranslation(this.context, node.getPreCondition(),
-					node.getPostCondition(), name + "post", innerFinalPlace, getFinalPlace());
-		} else {
+			preconditionTranslation = null;
 			innerFinalPlace = getFinalPlace();
-			postcondition = null;
+			ioRelationTranslation = null;
 		}
 	}
 
