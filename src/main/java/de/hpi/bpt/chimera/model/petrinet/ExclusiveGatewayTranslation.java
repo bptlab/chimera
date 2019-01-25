@@ -8,24 +8,22 @@ public class ExclusiveGatewayTranslation extends AbstractGatewayTranslation {
 	public ExclusiveGatewayTranslation(TranslationContext translationContext, AbstractGateway gateway) {
 		super(translationContext, gateway);
 
-		final String prefixString = this.context.getPrefixString();
-
 		for (SequenceFlowAssociation incomingSequenceFlow : gateway.getIncomingSequenceFlows()) {
-			inputPlaces.add(addPlace(prefixString + "from_" + incomingSequenceFlow.getSourceRef().getId()));
+			inputPlaces.add(addPlace("from_" + incomingSequenceFlow.getSourceRef().getId()));
 		}
 		for (SequenceFlowAssociation outgoingSequenceFlow : gateway.getOutgoingSequenceFlows()) {
-			outputPlaces.add(addPlace(prefixString + "to_" + outgoingSequenceFlow.getTargetRef().getId()));
+			outputPlaces.add(addPlace("to_" + outgoingSequenceFlow.getTargetRef().getId()));
 		}
 
 		assert (getInputPlaces().size() == 1 || getOutputPlaces().size() == 1);
 
 		if (isSplit()) {
 			for (Place outputPlace : getOutputPlaces()) {
-				addTransition(prefixString + outputPlace.getName(), getInitialPlace(), outputPlace);
+				addTransition("exclusiveSplit_" + outputPlace.getName(), getInitialPlace(), outputPlace);
 			}
 		} else {
 			for (Place inputPlace : getInputPlaces()) {
-				addTransition(prefixString + inputPlace.getName(), inputPlace, getFinalPlace());
+				addTransition("exclusiveJoin_" + inputPlace.getName(), inputPlace, getFinalPlace());
 			}
 		}
 	}

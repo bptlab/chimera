@@ -7,9 +7,7 @@ public class EventTranslation extends AbstractDataControlNodeTranslation {
 	public EventTranslation(TranslationContext translationContext, AbstractEvent event) {
 		super(translationContext, event, event.getId());
 
-		final String prefixString = this.context.getPrefixString();
-
-		addTransition(prefixString, getInnerInitialPlace(), getInnerFinalPlace());
+		addTransition(event.getId(), getInnerInitialPlace(), getInnerFinalPlace());
 	}
 
 }

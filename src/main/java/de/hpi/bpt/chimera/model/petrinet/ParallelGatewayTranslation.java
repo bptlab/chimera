@@ -7,24 +7,24 @@ public class ParallelGatewayTranslation extends AbstractGatewayTranslation {
 	public ParallelGatewayTranslation(TranslationContext translationContext, AbstractGateway gateway) {
 		super(translationContext, gateway);
 
-		final String prefixString = this.context.getPrefixString();
-
 		for (SequenceFlowAssociation incomingSequenceFlow : gateway.getIncomingSequenceFlows()) {
-			inputPlaces.add(addPlace(prefixString + "from_" + incomingSequenceFlow.getSourceRef().getId()));
+			inputPlaces.add(addPlace("from_" + incomingSequenceFlow.getSourceRef().getId()));
 		}
 		for (SequenceFlowAssociation outgoingSequenceFlow : gateway.getOutgoingSequenceFlows()) {
-			outputPlaces.add(addPlace(prefixString + "to_" + outgoingSequenceFlow.getTargetRef().getId()));
+			outputPlaces.add(addPlace("to_" + outgoingSequenceFlow.getTargetRef().getId()));
 		}
 
 		assert (getInputPlaces().size() == 1 || getOutputPlaces().size() == 1);
 
-		Transition transition = addTransition(prefixString);
+		Transition transition;
 		if (isSplit()) {
+			transition = addTransition("parallelSplit");
 			transition.addInputPlace(getInitialPlace());
 			for (Place outputPlace : getOutputPlaces()) {
 				transition.addOutputPlace(outputPlace);
 			}
 		} else {
+			transition = addTransition("parallelJoin");
 			transition.addOutputPlace(getFinalPlace());
 			for (Place inputPlace : getInputPlaces()) {
 				transition.addInputPlace(inputPlace);

@@ -77,4 +77,9 @@ public class PlaceReference implements Place {
 	public TranslationContext getContext() {
 		return impl.getContext();
 	}
+
+	@Override
+	public int getId() {
+		return impl.getId();
+	}
 }

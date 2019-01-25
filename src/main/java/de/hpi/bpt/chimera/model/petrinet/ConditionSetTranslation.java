@@ -11,9 +11,7 @@ public class ConditionSetTranslation extends AbstractTranslation {
 			ConditionSet postConditionSet, String name) {
 		super(translationContext, name);
 
-		final String prefixString = this.context.getPrefixString();
-
-		conditionSetTransition = addTransition(prefixString);
+		conditionSetTransition = addTransition(name);
 
 		for (AtomicDataStateCondition atomicDataStateCondition : preConditionSet.getConditions()) {
 			Place placeForDataState = getPlaceForDataState(atomicDataStateCondition);

@@ -102,9 +102,7 @@ public class CaseModelPetriNetRepresentationJaxBean {
 	}
 
 	private String formatPlace(Place p, int indentationLevel) {
-		// return indent(indentationLevel) + "\"" + p.getName() + "\" [label=\"\",
-		// xlabel=\"" + p.getName() + "\"];\n";
-		return indent(indentationLevel) + "\"" + p.getName() + "\";\n";
+		return indent(indentationLevel) + "\"" + p.getPrefixedIdString() + "\" [label=\"" + p.getName() + "\"];\n";
 	}
 
 	private String getTransitionFormat(int indentationLevel) {
@@ -115,19 +113,17 @@ public class CaseModelPetriNetRepresentationJaxBean {
 		String s = "";
 		for (Place ip : t.getInputPlaces()) {
 			s += indent(indentationLevel);
-			s += "\"" + ip.getName() + "\" -> \"" + t.getName() + "\";\n";
+			s += "\"" + ip.getPrefixedIdString() + "\" -> \"" + t.getPrefixedIdString() + "\";\n";
 		}
 		for (Place op : t.getOutputPlaces()) {
 			s += indent(indentationLevel);
-			s += "\"" + t.getName() + "\" -> \"" + op.getName() + "\";\n";
+			s += "\"" + t.getPrefixedIdString() + "\" -> \"" + op.getPrefixedIdString() + "\";\n";
 		}
 		return s;
 	}
 
 	private String formatTransition(Transition t, int indentationLevel) {
-		// return indent(indentationLevel) + "\"" + t.getName() + "\" [label=\"\",
-		// xlabel=\"" + t.getName() + "\"];\n";
-		return indent(indentationLevel) + "\"" + t.getName() + "\";\n";
+		return indent(indentationLevel) + "\"" + t.getPrefixedIdString() + "\" [label=\"" + t.getName() + "\"];\n";
 	}
 
 	private void getClusterDotOutput(StringBuilder builder, Cluster cluster, int indentationLevel) {

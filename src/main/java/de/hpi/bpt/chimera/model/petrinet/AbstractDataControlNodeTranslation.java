@@ -13,12 +13,10 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractSequent
 			String name) {
 		super(translationContext, name);
 
-		final String prefixString = this.context.getPrefixString();
-
 		// Is an io-relation needed?
 		if (!node.getPostCondition().getConditionSets().isEmpty() || !TranslationContext.isOptimizeTranslation()) {
-			innerInitialPlace = addPlace(prefixString + "innerInit");
-			innerFinalPlace = addPlace(prefixString + "innerFinal");
+			innerInitialPlace = addPlace("innerInit");
+			innerFinalPlace = addPlace("innerFinal");
 			ioRelationTranslation = new IoRelationTranslation(this.context, node.getPreCondition(),
 					node.getPostCondition(), name, initialPlace, innerInitialPlace, innerFinalPlace, finalPlace);
 			preconditionTranslation = null;
@@ -26,7 +24,7 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractSequent
 			// Is a precondition needed?
 		} else if (!node.getPreCondition().getConditionSets().isEmpty()
 				|| !TranslationContext.isOptimizeTranslation()) {
-			innerInitialPlace = addPlace(prefixString + "innerInit");
+			innerInitialPlace = addPlace("innerInit");
 			preconditionTranslation = new DataStatePreConditionTranslation(this.context, node.getPreCondition(),
 					name + "pre", getInitialPlace(), innerInitialPlace);
 

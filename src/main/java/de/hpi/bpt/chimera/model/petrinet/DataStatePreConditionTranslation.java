@@ -19,10 +19,8 @@ public class DataStatePreConditionTranslation extends AbstractDataStateCondition
 		this.initialPlace = initialPlace;
 		this.finalPlace = finalPlace;
 
-		final String prefixString = this.context.getPrefixString();
-
 		if (preCondition.getConditionSets().isEmpty()) {
-			addTransition(prefixString + "cs_1", initialPlace, finalPlace);
+			addTransition("cs_1", initialPlace, finalPlace);
 		} else {
 			int conditionSetId = 1;
 			for (ConditionSet preConditionSet : preCondition.getConditionSets()) {
@@ -33,8 +31,7 @@ public class DataStatePreConditionTranslation extends AbstractDataStateCondition
 	}
 
 	private Transition translatePreConditionSet(ConditionSet preConditionSet, int conditionSetId) {
-		Transition conditionSetTransition = addTransition(
-				this.context.getPrefixString() + "cs_" + Integer.toString(conditionSetId));
+		Transition conditionSetTransition = addTransition("cs_" + Integer.toString(conditionSetId));
 
 		for (AtomicDataStateCondition atomicDataStateCondition : preConditionSet.getConditions()) {
 			Place placeForDataState = getPlaceForDataState(atomicDataStateCondition);

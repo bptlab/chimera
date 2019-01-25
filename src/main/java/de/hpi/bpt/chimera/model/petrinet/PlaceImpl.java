@@ -3,7 +3,7 @@ package de.hpi.bpt.chimera.model.petrinet;
 /**
  * A place in a Petri net.
  */
-public class PlaceImpl implements Place {
+public class PlaceImpl extends EntityWithId implements Place {
 
 	private final TranslationContext context;
 	private final String name;

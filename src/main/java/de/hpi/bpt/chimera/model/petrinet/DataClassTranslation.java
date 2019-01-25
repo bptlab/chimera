@@ -15,11 +15,9 @@ public class DataClassTranslation extends AbstractTranslation {
 	public DataClassTranslation(TranslationContext translationContext, DataClass dataClass) {
 		super(translationContext, dataClass.getName());
 
-		final String prefixString = this.context.getPrefixString();
-
 		// Every state gets one place
 		for (ObjectLifecycleState olcState : dataClass.getObjectLifecycle().getObjectLifecycleStates()) {
-			Place olcStatePlace = addPlace("s_" + dataClass.getName() + "[" + olcState.getName() + "]");
+			Place olcStatePlace = addPlace(dataClass.getName() + "[" + olcState.getName() + "]");
 			olcStatePlace.setSignificant(true);
 			olcStatePlacesByName.put(olcState.getName(), olcStatePlace);
 		}

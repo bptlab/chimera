@@ -8,10 +8,8 @@ public abstract class AbstractSequentialControlNodeTranslation extends AbstractC
 	public AbstractSequentialControlNodeTranslation(TranslationContext translationContext, String name) {
 		super(translationContext, name);
 
-		final String prefixString = this.context.getPrefixString();
-
-		initialPlace = addPlace(prefixString + "init");
-		finalPlace = addPlace(prefixString + "final");
+		initialPlace = addPlace("init");
+		finalPlace = addPlace("final");
 	}
 
 	@Override

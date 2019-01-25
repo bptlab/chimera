@@ -16,8 +16,6 @@ public class SequenceFlowTranslation extends AbstractTranslation {
 
 		this.controlNodeTranslationsById = controlNodeTranslationsById;
 
-		final String prefixString = this.context.getPrefixString();
-
 		final AbstractControlNode sourceNode = flowAssociation.getSourceRef();
 		final AbstractControlNode targetNode = flowAssociation.getTargetRef();
 
@@ -43,8 +41,7 @@ public class SequenceFlowTranslation extends AbstractTranslation {
 		if (!sequenceFlowInputPlace.isSignificant() && !sequenceFlowOutputPlace.isSignificant()
 				&& TranslationContext.isOptimizeTranslation()) {
 
-			final String fusedPlaceName = "s_" + sourceTranslation.getPrefixString() + "to_"
-					+ targetTranslation.getPrefixString();
+			final String fusedPlaceName = sourceTranslation.getName() + "_to_" + targetTranslation.getName();
 
 			// Create new fused place
 			Place fusedPlace = addPlace(fusedPlaceName);
@@ -57,8 +54,7 @@ public class SequenceFlowTranslation extends AbstractTranslation {
 
 		} else {
 			// If fusing is not possible, create new transition
-			final String transitionName = sourceTranslation.getPrefixString() + "to_"
-					+ targetTranslation.getPrefixString();
+			final String transitionName = sourceTranslation.getName() + "_to_" + targetTranslation.getName();
 			addTransition(transitionName, sequenceFlowInputPlace, sequenceFlowOutputPlace);
 		}
 	}

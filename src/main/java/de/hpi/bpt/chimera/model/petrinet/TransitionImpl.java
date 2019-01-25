@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * A transition in a Petri net.
  */
-public class TransitionImpl implements Transition {
+public class TransitionImpl extends EntityWithId implements Transition {
 
 	private final TranslationContext context;
 	private final String name;
