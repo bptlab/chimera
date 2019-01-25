@@ -102,7 +102,7 @@ public class CaseModelPetriNetRepresentationJaxBean {
 	}
 
 	private String formatPlace(Place p, int indentationLevel) {
-		return indent(indentationLevel) + "\"" + p.getName() + "\";\n";
+		return indent(indentationLevel) + "\"" + p.getName() + "\" [label=\"\", xlabel=\"" + p.getName() + "\"];\n";
 	}
 
 	private String getTransitionFormat(int indentationLevel) {
@@ -123,7 +123,7 @@ public class CaseModelPetriNetRepresentationJaxBean {
 	}
 
 	private String formatTransition(Transition t, int indentationLevel) {
-		return indent(indentationLevel) + "\"" + t.getName() + "\";\n";
+		return indent(indentationLevel) + "\"" + t.getName() + "\" [label=\"\", xlabel=\"" + t.getName() + "\"];\n";
 	}
 
 	private void getClusterDotOutput(StringBuilder builder, Cluster cluster, int indentationLevel) {
