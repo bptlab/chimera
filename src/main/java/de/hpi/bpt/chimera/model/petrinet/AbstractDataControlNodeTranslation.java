@@ -9,9 +9,8 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractSequent
 	protected final DataStatePreConditionTranslation preconditionTranslation;
 	protected final IoRelationTranslation ioRelationTranslation;
 
-	public AbstractDataControlNodeTranslation(TranslationContext translationContext, AbstractDataControlNode node,
-			String name) {
-		super(translationContext, name);
+	public AbstractDataControlNodeTranslation(TranslationContext translationContext, AbstractDataControlNode node) {
+		super(translationContext, node);
 
 		// Is an io-relation needed?
 		if (!node.getPostCondition().getConditionSets().isEmpty() || !TranslationContext.isOptimizeTranslation()) {

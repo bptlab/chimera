@@ -11,7 +11,7 @@ public abstract class AbstractGatewayTranslation extends AbstractControlNodeTran
 	protected final List<Place> outputPlaces = new ArrayList<>();
 
 	public AbstractGatewayTranslation(TranslationContext translationContext, AbstractGateway gateway) {
-		super(translationContext, gateway.getId());
+		super(translationContext, gateway);
 	}
 
 	@Override
