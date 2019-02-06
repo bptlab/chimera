@@ -44,13 +44,7 @@ public class SequenceFlowTranslation extends AbstractTranslation {
 			final String fusedPlaceName = sourceTranslation.getName() + "_to_" + targetTranslation.getName();
 
 			// Create new fused place
-			Place fusedPlace = addPlace(fusedPlaceName);
-			((PlaceReference) sequenceFlowInputPlace).setImpl(((PlaceReference) fusedPlace).getImpl());
-			((PlaceReference) sequenceFlowOutputPlace).setImpl(((PlaceReference) fusedPlace).getImpl());
-
-			// Remove old lingering places from petri net
-			getPetriNet().getPlaces().remove(sequenceFlowInputPlace);
-			getPetriNet().getPlaces().remove(sequenceFlowOutputPlace);
+			fusePlaces(sequenceFlowInputPlace, sequenceFlowOutputPlace, fusedPlaceName);
 
 		} else {
 			// If fusing is not possible, create new transition

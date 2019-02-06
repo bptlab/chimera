@@ -8,12 +8,14 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.AbstractGateway;
 
 public class FragmentTranslation extends AbstractTranslation {
 	private final Fragment fragment;
-	protected final Place initialPlace;
-	protected final Place finalPlace;
+
+	protected Place initialPlace;
+	protected Place finalPlace;
 
 	private final Map<String, AbstractControlNodeTranslation> controlNodeTranslationsById = new HashMap<>();
 	private final Map<String, SequenceFlowTranslation> sequenceFlowTranslationsById = new HashMap<>();
@@ -49,11 +51,7 @@ public class FragmentTranslation extends AbstractTranslation {
 			translateSequenceFlow(flowAssociation);
 		}
 
-		// Connect start event
-		AbstractControlNodeTranslation startEventTranslation = controlNodeTranslationsById
-				.get(bpmnFragment.getStartEvent().getId());
-		initialPlace = startEventTranslation.getInitialPlace();
-		initialPlace.setSignificant(true);
+		translateStartEvent(bpmnFragment.getStartEvent());
 
 		// Connect end event
 		AbstractControlNodeTranslation endEventTranslation = controlNodeTranslationsById
@@ -91,6 +89,25 @@ public class FragmentTranslation extends AbstractTranslation {
 		SequenceFlowTranslation sequenceFlowTranslation = new SequenceFlowTranslation(context, flowAssociation,
 				controlNodeTranslationsById);
 		sequenceFlowTranslationsById.put(flowAssociation.getId(), sequenceFlowTranslation);
+	}
+
+	private void translateStartEvent(StartEvent startEvent) {
+		// Connect start event
+		AbstractControlNodeTranslation startEventTranslation = controlNodeTranslationsById.get(startEvent.getId());
+		Place startEventInitialPlace = startEventTranslation.getInitialPlace();
+
+		initialPlace = startEventInitialPlace;
+		initialPlace.setSignificant(true);
+
+		// If there is a fragment pre-condition, add it before the start event
+		if (fragment.getFragmentPreCondition() != null) {
+			Place fragmentInitialPlace = addPlace(fragment.getName() + "_init");
+			DataStatePreConditionTranslation preConditionTranslation = new DataStatePreConditionTranslation(context,
+					fragment.getFragmentPreCondition(), fragment.getName() + "_pre", fragmentInitialPlace,
+					startEventInitialPlace);
+			initialPlace = fragmentInitialPlace;
+		}
+
 	}
 
 	public Place getInitialPlace() {

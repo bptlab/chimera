@@ -39,6 +39,21 @@ public abstract class AbstractTranslation {
 		return newTransition;
 	}
 
+	protected void fusePlaces(Place p1, Place p2, String fusedPlaceName) {
+		// Create new fused place
+		Place fusedPlace = addPlace(fusedPlaceName);
+		System.out.println(
+				"merging " + p1.getPrefixedIdString() + " and " + p2.getPrefixedIdString() + " into " + fusedPlaceName);
+		((PlaceReference) p1).setImpl(((PlaceReference) fusedPlace).getImpl());
+		((PlaceReference) p2).setImpl(((PlaceReference) fusedPlace).getImpl());
+
+		// Remove old lingering places from petri net
+		getPetriNet().getPlaces().remove(p1);
+		getPetriNet().getPlaces().remove(p2);
+
+		assert (getPetriNet().getPlaces().contains(fusedPlace));
+	}
+
 	public String getName() {
 		return name;
 	}

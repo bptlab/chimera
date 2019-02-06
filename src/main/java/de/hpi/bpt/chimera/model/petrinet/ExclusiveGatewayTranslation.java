@@ -18,8 +18,23 @@ public class ExclusiveGatewayTranslation extends AbstractGatewayTranslation {
 		assert (getInputPlaces().size() == 1 || getOutputPlaces().size() == 1);
 
 		if (isSplit()) {
-			for (Place outputPlace : getOutputPlaces()) {
-				addTransition("exclusiveSplit_" + outputPlace.getName(), getInitialPlace(), outputPlace);
+			if (getOutputPlaces().stream().noneMatch(p -> p.isSignificant())) {
+				// connect following nodes (transitions) directly to this gateway's input place
+				Place inputPlace = getInputPlaces().iterator().next();
+				for (Place outputPlace : getOutputPlaces()) {
+					assert (this.context.getCaseModelTranslation().getPetriNet().getPlaces().contains(inputPlace));
+					System.out.println("merging " + outputPlace.getPrefixedIdString() + " into "
+							+ inputPlace.getPrefixedIdString());
+					((PlaceReference) outputPlace).setImpl(((PlaceReference) inputPlace).getImpl());
+					inputPlace.setSignificant(true);
+				}
+			} else {
+				// Fallback "traditional" translation
+				// TODO this has the drawback of enabling deadlocks
+				// (picking an outgoing branch that will never be data-enabled)!
+				for (Place outputPlace : getOutputPlaces()) {
+					addTransition("exclusiveSplit_" + outputPlace.getName(), getInitialPlace(), outputPlace);
+				}
 			}
 		} else {
 			for (Place inputPlace : getInputPlaces()) {
