@@ -8,6 +8,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.AbstractActivity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.AbstractGateway;
 
@@ -15,7 +16,6 @@ public class FragmentTranslation extends AbstractTranslation {
 	private final Fragment fragment;
 
 	protected Place initialPlace;
-	protected Place finalPlace;
 
 	private final Map<String, AbstractControlNodeTranslation> controlNodeTranslationsById = new HashMap<>();
 	private final Map<String, SequenceFlowTranslation> sequenceFlowTranslationsById = new HashMap<>();
@@ -51,13 +51,11 @@ public class FragmentTranslation extends AbstractTranslation {
 			translateSequenceFlow(flowAssociation);
 		}
 
+		// Connect start event, translate pre-condition and fragment re-initialization
 		translateStartEvent(bpmnFragment.getStartEvent());
 
 		// Connect end event
-		AbstractControlNodeTranslation endEventTranslation = controlNodeTranslationsById
-				.get(bpmnFragment.getEndEvent().getId());
-		finalPlace = endEventTranslation.getFinalPlace();
-		finalPlace.setSignificant(true);
+		translateEndEvent(bpmnFragment.getEndEvent());
 	}
 
 	private void translateActivity(AbstractActivity activity) {
@@ -93,14 +91,15 @@ public class FragmentTranslation extends AbstractTranslation {
 
 	private void translateStartEvent(StartEvent startEvent) {
 		// Connect start event
-		AbstractControlNodeTranslation startEventTranslation = controlNodeTranslationsById.get(startEvent.getId());
+		EventTranslation startEventTranslation = (EventTranslation) controlNodeTranslationsById.get(startEvent.getId());
 		Place startEventInitialPlace = startEventTranslation.getInitialPlace();
 
 		initialPlace = startEventInitialPlace;
 		initialPlace.setSignificant(true);
 
 		// If there is a fragment pre-condition, add it before the start event
-		if (fragment.getFragmentPreCondition() != null) {
+		if (fragment.getFragmentPreCondition() != null
+				&& !fragment.getFragmentPreCondition().getConditionSets().isEmpty()) {
 			Place fragmentInitialPlace = addPlace(fragment.getName() + "_init");
 			DataStatePreConditionTranslation preConditionTranslation = new DataStatePreConditionTranslation(context,
 					fragment.getFragmentPreCondition(), fragment.getName() + "_pre", fragmentInitialPlace,
@@ -108,13 +107,25 @@ public class FragmentTranslation extends AbstractTranslation {
 			initialPlace = fragmentInitialPlace;
 		}
 
+		// Re-initialization after fragment started
+		Transition startEventTransition = startEventTranslation.getEventTransition();
+		startEventTransition.addOutputPlace(initialPlace);
+	}
+
+	private void translateEndEvent(EndEvent endEvent) {
+		EventTranslation endEventTranslation = (EventTranslation) controlNodeTranslationsById.get(endEvent.getId());
+		Transition endEventTransition = endEventTranslation.getEventTransition();
+		final Place finalPlace = endEventTranslation.getFinalPlace();
+
+		// Disconnect final place (transition just consumes the token)
+		endEventTransition.getOutputPlaces().remove(finalPlace);
+		assert (getPetriNet().getTransitions().stream().noneMatch(t -> t.getInputPlaces().contains(finalPlace)));
+		assert (getPetriNet().getTransitions().stream().noneMatch(t -> t.getOutputPlaces().contains(finalPlace)));
+		getPetriNet().getPlaces().remove(finalPlace);
+		// TODO the end event translation still has a reference to the final place...
 	}
 
 	public Place getInitialPlace() {
 		return initialPlace;
-	}
-
-	public Place getFinalPlace() {
-		return finalPlace;
 	}
 }
