@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.compliance.ComplianceChecker;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.petrinet.PetriNet;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.rest.RestInterface;
@@ -236,11 +237,13 @@ public class ScenarioRestService extends AbstractRestService {
 
 			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
 					cm);
-			String petriNetInLolaFormat = petriNetRepresentationJaxBean.getLolaOutput();
+			PetriNet petriNet = petriNetRepresentationJaxBean.getPetriNet();
+			String petriNetAsLolaFile = petriNetRepresentationJaxBean.getLolaOutput();
 
 			// Send to LOLA
 			ComplianceChecker complianceChecker = new ComplianceChecker();
-			String result = complianceChecker.queryLola(petriNetInLolaFormat, query);
+			String processedQuery = complianceChecker.replaceQueryIdentifiers(petriNet, query);
+			String result = complianceChecker.queryLola(petriNetAsLolaFile, processedQuery);
 
 			return Response.ok().type(MediaType.TEXT_PLAIN).entity(result).build();
 		} catch (IllegalArgumentException e) {
