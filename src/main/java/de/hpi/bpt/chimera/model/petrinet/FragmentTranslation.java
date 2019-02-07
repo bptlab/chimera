@@ -20,6 +20,9 @@ public class FragmentTranslation extends AbstractTranslation {
 	private final Map<String, AbstractControlNodeTranslation> controlNodeTranslationsById = new HashMap<>();
 	private final Map<String, SequenceFlowTranslation> sequenceFlowTranslationsById = new HashMap<>();
 
+	// Limit the number of times a fragment can be instantiated
+	protected static final int reInitPoolSize = 10;
+
 	public FragmentTranslation(TranslationContext translationContext, Fragment fragment) {
 		super(translationContext, fragment.getName());
 		this.fragment = fragment;
@@ -108,12 +111,19 @@ public class FragmentTranslation extends AbstractTranslation {
 		}
 
 		// Re-initialization after fragment started
-		translateReInitialization(startEventTranslation);
-	}
-
-	private void translateReInitialization(EventTranslation startEventTranslation) {
 		Transition startEventTransition = startEventTranslation.getEventTransition();
-		startEventTransition.addOutputPlace(initialPlace);
+		Place reInitMutexPlace = addPlace(fragment.getName() + "_reInitReady");
+		startEventTransition.addOutputPlace(reInitMutexPlace);
+
+		Place reInitPoolPlace = addPlace(fragment.getName() + "_reInitPool");
+		reInitPoolPlace.setSignificant(true);
+		reInitPoolPlace.setNumTokens(reInitPoolSize);
+
+		Transition reInitTransition = addTransition(fragment.getName() + "_reInit");
+		reInitTransition.addInputPlace(reInitMutexPlace);
+		reInitTransition.addInputPlace(reInitPoolPlace);
+		reInitTransition.addOutputPlace(initialPlace);
+
 	}
 
 	private void translateEndEvent(EndEvent endEvent) {
