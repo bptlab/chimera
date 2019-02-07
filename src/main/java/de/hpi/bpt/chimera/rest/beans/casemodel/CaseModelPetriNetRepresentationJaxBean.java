@@ -75,19 +75,20 @@ public class CaseModelPetriNetRepresentationJaxBean {
 	public String getLolaOutput() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PLACE\n");
-		builder.append(petriNet.getPlaces().stream().distinct().map(place -> place.getName())
+		builder.append(petriNet.getPlaces().stream().distinct().map(place -> place.getPrefixedIdString())
 				.collect(Collectors.joining(", ")));
 		builder.append(";\n\n");
 		builder.append("MARKING\n");
 		builder.append(petriNet.getPlaces().stream().distinct().filter(place -> place.getNumTokens() > 0)
-				.map(place -> place.getName() + ":" + place.getNumTokens()).collect(Collectors.joining(", ")));
+				.map(place -> place.getPrefixedIdString() + ":" + place.getNumTokens())
+				.collect(Collectors.joining(", ")));
 		builder.append(";\n\n");
 		builder.append(petriNet.getTransitions().stream().distinct().map(transition -> {
-			return "TRANSITION " + transition.getName() + "\n" + "  CONSUME "
-					+ transition.getInputPlaces().stream().distinct().map(place -> place.getName())
+			return "TRANSITION " + transition.getPrefixedIdString() + "\n" + "  CONSUME "
+					+ transition.getInputPlaces().stream().distinct().map(place -> place.getPrefixedIdString())
 							.collect(Collectors.joining(", "))
 					+ ";\n" + "  PRODUCE " + transition.getOutputPlaces().stream().distinct()
-							.map(place -> place.getName()).collect(Collectors.joining(", "))
+							.map(place -> place.getPrefixedIdString()).collect(Collectors.joining(", "))
 					+ ";\n";
 		}).collect(Collectors.joining("\n")));
 		return builder.toString();

@@ -3,14 +3,14 @@ package de.hpi.bpt.chimera.compliance;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.net.ssl.HttpsURLConnection;
-
+import de.hpi.bpt.chimera.model.petrinet.AbstractTranslation;
 import de.hpi.bpt.chimera.model.petrinet.PetriNet;
 import de.hpi.bpt.chimera.model.petrinet.Place;
 import de.hpi.bpt.chimera.model.petrinet.Transition;
@@ -18,13 +18,13 @@ import de.hpi.bpt.chimera.model.petrinet.Transition;
 public class ComplianceChecker {
 
 	private static final String USER_AGENT = "Mozilla/5.0";
-	private static final String LOLA_URL_BASE = "https://bpt-lab.org/lola/lola.php";
+	private static final String LOLA_URL_BASE = "http://lola-webservice/lola.php";
 
 	public String queryLola(String lolaFile, String query) throws Exception {
 
 		String url = LOLA_URL_BASE;
 		URL obj = new URL(url);
-		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
 		// add request header
 		con.setRequestMethod("POST");
@@ -69,8 +69,8 @@ public class ComplianceChecker {
 			Matcher termMatcher = termPattern.matcher(query);
 			if (termMatcher.find()) {
 				assert (termMatcher.groupCount() == 1);
-				String matchedTermGroup = termMatcher.group(1); // 0 is complete string
-				System.out.println("Matched group '" + matchedTermGroup + "'");
+				final String matchedTermGroup = termMatcher.group(1); // 0 is complete string
+				System.out.println("Matched term '" + matchedTermGroup + "'");
 
 				Matcher dataObjectStateMatcher = dataObjectStatePattern.matcher(matchedTermGroup);
 				if (dataObjectStateMatcher.find()) {
@@ -91,9 +91,13 @@ public class ComplianceChecker {
 					}
 				} else {
 					System.out.println("could not find any data objects");
+
+					final String sanitizedTermGroup = AbstractTranslation.sanitizeName(matchedTermGroup);
+					System.out.println("sanitized name is '" + sanitizedTermGroup + "'");
+
 					// TODO match to activity (or something else?)
 					Collection<Transition> matchingTransitions = petriNet.getTransitions().stream()
-							.filter(t -> t.getName().equals(matchedTermGroup)).collect(Collectors.toList());
+							.filter(t -> t.getName().equals(sanitizedTermGroup)).collect(Collectors.toList());
 					if (!matchingTransitions.isEmpty()) {
 						assert (matchingTransitions.size() == 1);
 						Transition referredTransition = matchingTransitions.iterator().next();
@@ -102,7 +106,7 @@ public class ComplianceChecker {
 						query = termMatcher.replaceFirst(outputPlace.getPrefixedIdString());
 						queryChanged = true;
 					} else {
-						System.out.println("Cannot find transition for " + matchedTermGroup);
+						System.out.println("Cannot find transition for " + sanitizedTermGroup);
 					}
 				}
 			} else {

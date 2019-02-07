@@ -8,6 +8,10 @@ public class PetriNet {
 	private Collection<Place> places = new ArrayList<>();
 	private Collection<Transition> transitions = new ArrayList<>();
 
+	public PetriNet() {
+		EntityWithId.resetIdCounter();
+	}
+
 	public Place addPlace(Place newPlace) {
 		places.add(newPlace);
 		return newPlace;

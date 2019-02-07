@@ -8,6 +8,7 @@ public class ActivityTranslation extends AbstractDataControlNodeTranslation {
 		super(translationContext, activity);
 
 		String name = activity.getName().isEmpty() ? activity.getId() : activity.getName();
+		name = sanitizeName(name);
 
 		addTransition(name, getInnerInitialPlace(), getInnerFinalPlace());
 	}

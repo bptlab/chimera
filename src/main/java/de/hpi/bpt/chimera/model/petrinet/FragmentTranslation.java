@@ -108,6 +108,10 @@ public class FragmentTranslation extends AbstractTranslation {
 		}
 
 		// Re-initialization after fragment started
+		translateReInitialization(startEventTranslation);
+	}
+
+	private void translateReInitialization(EventTranslation startEventTranslation) {
 		Transition startEventTransition = startEventTranslation.getEventTransition();
 		startEventTransition.addOutputPlace(initialPlace);
 	}

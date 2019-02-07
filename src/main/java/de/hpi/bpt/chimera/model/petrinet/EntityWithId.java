@@ -13,4 +13,8 @@ public class EntityWithId {
 		return id;
 	}
 
+	public static void resetIdCounter() {
+		idCounter = 0;
+	}
+
 }
