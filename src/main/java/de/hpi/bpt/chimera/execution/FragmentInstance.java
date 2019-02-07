@@ -321,8 +321,7 @@ public class FragmentInstance {
 		Map<String, ExclusiveGatewayInstance> gateways = this.getExecutingExclusiveGateways();
 		for (ExclusiveGatewayInstance gateway : gateways.values()) {
 			if (gateway.containsControlNodeInFollowing(controlNodeInstance.getControlNode())) {
-				// log.info(String.format("skipping alternatives for the
-				// following Gateway: %s", gateway.getId()));
+				log.info(String.format("skipping alternatives for the following Gateway: %s", gateway.getId()));
 				gateway.skipAlternativeBranches(controlNodeInstance.getControlNode());
 			}
 		}

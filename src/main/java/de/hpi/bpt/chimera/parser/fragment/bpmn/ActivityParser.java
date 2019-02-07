@@ -12,6 +12,7 @@ import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.BpmnUserTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.SendTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.Task;
+import de.hpi.bpt.chimera.validation.NameValidation;
 
 public class ActivityParser {
 	private static final Logger log = Logger.getLogger(ActivityParser.class);
@@ -60,6 +61,8 @@ public class ActivityParser {
 		for (Task xmlTask : fragXmlWrap.getTasks()) {
 			HumanTask activity = new HumanTask();
 			ControlNodeParserHelper.parseDataControlNode(activity, xmlTask, sfResolver, dfResolver);
+			NameValidation.validateName(activity.getName());
+			
 			activity.setRole(xmlTask.getRole());
 			activityList.add(activity);
 		}
@@ -72,6 +75,8 @@ public class ActivityParser {
 		for (SendTask xmlSendTask : fragXmlWrap.getSendTasks()) {
 			EmailActivity mailActivity = new EmailActivity();
 			ControlNodeParserHelper.parseDataControlNode(mailActivity, xmlSendTask, sfResolver, dfResolver);
+			NameValidation.validateName(mailActivity.getName());
+			
 			mailActivityList.add(mailActivity);
 		}
 		return mailActivityList;
@@ -83,7 +88,8 @@ public class ActivityParser {
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.WebServiceTask xmlWebTask : fragXmlWrap.getWebServiceTasks()) {
 			WebServiceTask webServiceTask = new WebServiceTask();
 			ControlNodeParserHelper.parseDataControlNode(webServiceTask, xmlWebTask, sfResolver, dfResolver);
-
+			NameValidation.validateName(webServiceTask.getName());
+			
 			webServiceTask.setWebServiceUrl(xmlWebTask.getWebServiceUrl());
 			webServiceTask.setWebServiceMethod(xmlWebTask.getWebServiceMethod());
 			webServiceTask.setWebServiceBody(xmlWebTask.getWebServiceBody());
@@ -100,6 +106,7 @@ public class ActivityParser {
 		for (BpmnUserTask xmlTask : fragXmlWrap.getUserTasks()) {
 			UserTask userTask = new UserTask();
 			ControlNodeParserHelper.parseDataControlNode(userTask, xmlTask, sfResolver, dfResolver);
+			NameValidation.validateName(userTask.getName());
 			userTask.setRole(xmlTask.getRole());
 			activityList.add(userTask);
 		}
@@ -112,6 +119,7 @@ public class ActivityParser {
 		for (BpmnManualTask xmlTask : fragXmlWrap.getManualTasks()) {
 			ManualTask manualTask = new ManualTask();
 			ControlNodeParserHelper.parseDataControlNode(manualTask, xmlTask, sfResolver, dfResolver);
+			NameValidation.validateName(manualTask.getName());
 			manualTask.setRole(xmlTask.getRole());
 			activityList.add(manualTask);
 		}
