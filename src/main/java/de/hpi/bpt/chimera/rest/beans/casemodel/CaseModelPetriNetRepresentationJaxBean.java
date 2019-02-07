@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.petrinet.CaseModelTranslation;
 import de.hpi.bpt.chimera.model.petrinet.PetriNet;
 import de.hpi.bpt.chimera.model.petrinet.Place;
@@ -63,7 +65,8 @@ public class CaseModelPetriNetRepresentationJaxBean {
 		}
 	}
 
-	public CaseModelPetriNetRepresentationJaxBean(CaseModel cm) {
+	public CaseModelPetriNetRepresentationJaxBean(CaseModel cm, DataClass caseClass,
+			ObjectLifecycleState caseClassInitialState) {
 		setId(cm.getId());
 		setName(cm.getName());
 
@@ -74,23 +77,27 @@ public class CaseModelPetriNetRepresentationJaxBean {
 
 	public String getLolaOutput() {
 		StringBuilder builder = new StringBuilder();
+
 		builder.append("PLACE\n");
 		builder.append(petriNet.getPlaces().stream().distinct().map(place -> place.getPrefixedIdString())
 				.collect(Collectors.joining(", ")));
 		builder.append(";\n\n");
+
 		builder.append("MARKING\n");
 		builder.append(petriNet.getPlaces().stream().distinct().filter(place -> place.getNumTokens() > 0)
 				.map(place -> place.getPrefixedIdString() + ":" + place.getNumTokens())
 				.collect(Collectors.joining(", ")));
 		builder.append(";\n\n");
-		builder.append(petriNet.getTransitions().stream().distinct().map(transition -> {
-			return "TRANSITION " + transition.getPrefixedIdString() + "\n" + "  CONSUME "
-					+ transition.getInputPlaces().stream().distinct().map(place -> place.getPrefixedIdString())
-							.collect(Collectors.joining(", "))
-					+ ";\n" + "  PRODUCE " + transition.getOutputPlaces().stream().distinct()
-							.map(place -> place.getPrefixedIdString()).collect(Collectors.joining(", "))
-					+ ";\n";
-		}).collect(Collectors.joining("\n")));
+
+		for (Transition transition : petriNet.getTransitions()) {
+			builder.append("TRANSITION " + transition.getPrefixedIdString() + "\n").append("  CONSUME ")
+					.append(transition.getInputPlaces().stream().distinct().map(place -> place.getPrefixedIdString())
+							.collect(Collectors.joining(", ")))
+					.append(";\n").append("  PRODUCE ").append(transition.getOutputPlaces().stream().distinct()
+							.map(place -> place.getPrefixedIdString()).collect(Collectors.joining(", ")))
+					.append(";\n").append("\n");
+		}
+
 		return builder.toString();
 	}
 

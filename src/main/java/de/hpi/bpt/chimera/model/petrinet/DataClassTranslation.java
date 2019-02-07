@@ -28,7 +28,7 @@ public class DataClassTranslation extends AbstractTranslation {
 		Optional<ObjectLifecycleState> initialState = dataClass.getObjectLifecycle().getObjectLifecycleStates().stream()
 				.filter(olcState -> olcState.getName().equals(initialStateName)).findFirst();
 		if (initialState.isPresent()) {
-			olcStatePlacesByName.get(initialStateName).setNumTokens(1);
+			// olcStatePlacesByName.get(initialStateName).setNumTokens(1);
 		} else {
 			throw new IllegalStateNameException(initialStateName);
 		}
