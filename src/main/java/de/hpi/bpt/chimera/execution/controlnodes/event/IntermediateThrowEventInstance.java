@@ -28,4 +28,13 @@ public class IntermediateThrowEventInstance extends AbstractEventInstance {
 	public IntermediateThrowEvent getControlNode() {
 		return (IntermediateThrowEvent) super.getControlNode();
 	}
+
+	/**
+	 * @return true if the IntermediateCatchEventInstance is in the correct
+	 *         state and is allowed to begin automatically.
+	 */
+	@Override
+	public boolean canBeginAutomatically() {
+		return canBegin() && hasAutomaticBegin();
+	}
 }
