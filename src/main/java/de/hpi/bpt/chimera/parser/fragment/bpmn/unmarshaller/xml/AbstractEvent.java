@@ -18,6 +18,9 @@ public class AbstractEvent extends AbstractDataControlNode {
 	@XmlElement(name = "bpmn:messageEventDefinition")
 	private MessageDefinition messageDefinition;
 
+	@XmlElement(name = "bpmn:signalEventDefinition")
+	private SignalDefinition signalDefinition;
+
 	public String getEventQuery() {
 		return this.eventQuery;
 	}
@@ -30,6 +33,8 @@ public class AbstractEvent extends AbstractDataControlNode {
 		return messageDefinition;
 	}
 
+	public SignalDefinition getSignalDefinition() { return signalDefinition; }
+
 	public boolean hasTimerDefinition() {
 		return timerDefinition != null;
 	}
@@ -37,4 +42,6 @@ public class AbstractEvent extends AbstractDataControlNode {
 	public boolean hasMessageDefiniton() {
 		return messageDefinition != null;
 	}
+
+	public boolean hasSignalDefinition() { return signalDefinition != null; }
 }

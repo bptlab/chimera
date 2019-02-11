@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.execution.controlnodes;
 
 import de.hpi.bpt.chimera.execution.controlnodes.activity.*;
+import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.*;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.*;
 import org.apache.log4j.Logger;
 
@@ -11,10 +12,6 @@ import de.hpi.bpt.chimera.execution.controlnodes.event.EndEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateThrowEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.StartEventInstance;
-import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.EventBehavior;
-import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
-import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageSendEventBehavior;
-import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.TimerEventBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.AbstractGatewayInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.EventBasedGatewayInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.gateway.ExclusiveGatewayInstance;
@@ -113,6 +110,13 @@ public class ControlNodeInstanceFactory {
 			break;
 		case MESSAGE_RECEIVE:
 			eventInstance.setBehavior(new MessageReceiveEventBehavior(eventInstance));
+			break;
+		case SIGNAL_SEND:
+			eventInstance.setBehavior(new SignalSendEventBehavior(eventInstance));
+			break;
+		case SIGNAL_RECEIVE:
+			// eventInstance.setBehavior(new SignalReceiveEventBehavior(eventInstance));
+			/* TODO: Currently not implemented */
 			break;
 		case TIMER:
 			eventInstance.setBehavior(new TimerEventBehavior(eventInstance));
