@@ -1,6 +1,5 @@
 package de.hpi.bpt.chimera.model.datamodel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,16 +10,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class DataModel {
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
 	private int versionNumber;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataClass> dataModelClasses;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	private DataClass caseClass;
 
 	public int getVersionNumber() {
 		return versionNumber;
@@ -68,7 +71,7 @@ public class DataModel {
 //			}
 //		}
 //		return dataClasses;
-		
+
 		return dataModelClasses;
 	}
 
@@ -83,5 +86,13 @@ public class DataModel {
 			nameToDataClass.put(dataClass.getName(), dataClass);
 		}
 		return nameToDataClass;
+	}
+
+	public DataClass getCaseClass() {
+		return caseClass;
+	}
+
+	public void setCaseClass(DataClass caseClass) {
+		this.caseClass = caseClass;
 	}
 }
