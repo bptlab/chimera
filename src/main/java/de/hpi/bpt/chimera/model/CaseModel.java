@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
@@ -32,7 +33,7 @@ public class CaseModel {
 	public static final Logger log = Logger.getLogger(CaseModel.class);
 	@Id
 	private String cmId;
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	private String name;
 	private int versionNumber;
@@ -60,6 +61,7 @@ public class CaseModel {
 	public void deployed() {
 
 	}
+
 	/**
 	 * Persists a the CaseModel to the database using the Java Persistence API
 	 * "EclipseLink".
@@ -73,18 +75,19 @@ public class CaseModel {
 	}
 
 	/**
-	 * Return the activity with the given Id. Throws an exception when there is
-	 * no or there are more than one activities with that Id.
+	 * Return the activity with the given Id. Throws an exception when there is no
+	 * or there are more than one activities with that Id.
 	 * 
-	 * @param controlNodeId
-	 *            the Id to identify the Activity
+	 * @param controlNodeId the Id to identify the Activity
 	 * @return the found activity
 	 */
-	public AbstractActivity getActivityById(String controlNodeId){
+	public AbstractActivity getActivityById(String controlNodeId) {
 		// creates a list of all activities of all fragments and filters these
 		// list for the given Id.
 		// all activities that have the given Id are stored in result
-		List<AbstractActivity> result = this.getFragments().stream().map(fragment -> fragment.getBpmnFragment().getActivities()).flatMap(List::stream).filter(activity -> activity.getId().equals(controlNodeId)).collect(Collectors.toList());
+		List<AbstractActivity> result = this.getFragments().stream()
+				.map(fragment -> fragment.getBpmnFragment().getActivities()).flatMap(List::stream)
+				.filter(activity -> activity.getId().equals(controlNodeId)).collect(Collectors.toList());
 		// there should exact 1 activity with the given Id
 		if (result.size() != 1) {
 			throw new IllegalArgumentException(String.format("There is no activity with id: %s", controlNodeId));
@@ -151,8 +154,7 @@ public class CaseModel {
 	}
 
 	/**
-	 * Receive the bpmn-represantion for all {@link Fragment}s of the case
-	 * model.
+	 * Receive the bpmn-represantion for all {@link Fragment}s of the case model.
 	 * 
 	 * @return bpmn-representation of all fragments as strings
 	 */

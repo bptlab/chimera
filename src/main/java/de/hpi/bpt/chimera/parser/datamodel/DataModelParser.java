@@ -2,15 +2,16 @@ package de.hpi.bpt.chimera.parser.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.hpi.bpt.chimera.validation.NameValidation;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
+import de.hpi.bpt.chimera.validation.NameValidation;
 
 public class DataModelParser {
 	private static final Logger log = Logger.getLogger((DataModelParser.class).getName());
@@ -32,6 +33,16 @@ public class DataModelParser {
 
 			List<DataClass> dataModelClasses = getDataModelClasses(datamodelJson.getJSONArray("dataclasses"));
 			dataModel.setDataModelClasses(dataModelClasses);
+
+			String caseClassName = datamodelJson.getString("caseclass");
+			Optional<DataClass> caseClass = dataModelClasses.stream().filter(dc -> dc.getName().equals(caseClassName))
+					.findFirst();
+			if (caseClass.isPresent()) {
+				dataModel.setCaseClass(caseClass.get());
+			} else {
+				throw new JSONException("Referenced case class does not exist");
+			}
+
 		} catch (JSONException e) {
 			log.error(e);
 			throw new JSONException("Invalid DataModel->" + e.getMessage());
