@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
@@ -25,6 +26,8 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 			DataStateCondition postCondition, String name, Place initialPlace, Place innerInitialPlace,
 			Place innerFinalPlace, Place finalPlace) {
 		super(translationContext, name, initialPlace, finalPlace);
+
+		checkIoRelations(preCondition, postCondition);
 
 		this.preCondition = preCondition;
 		this.postCondition = postCondition;
@@ -111,6 +114,34 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 			preConditionSetTransition.addInputPlace(initialPlace);
 			preConditionSetTransition.addOutputPlace(innerInitialPlace);
 			preConditionId++;
+		}
+	}
+
+	private void checkIoRelations(DataStateCondition preCondition, DataStateCondition postCondition) {
+		Map<DataClass, Map<ObjectLifecycleState, Set<ObjectLifecycleState>>> stateChangesByClass = new HashMap<>();
+
+		for (ConditionSet postConditionSet : postCondition.getConditionSets()) {
+			for (AtomicDataStateCondition atomicPostCondition : postConditionSet.getConditions()) {
+
+				// The case class is a singleton, there must not be new instantiations
+				if (this.context.getCaseModelTranslation().getCaseModel().getDataModel().getCaseClass()
+						.equals(atomicPostCondition.getDataClass())) {
+					// Assert that there is a matching pre-condition, i.e. this is just a state
+					// change and not an instantiation.
+					assert (preCondition.getConditionSets().stream().flatMap(cs -> cs.getConditions().stream())
+							.anyMatch(adsc -> adsc.getDataClass().equals(atomicPostCondition.getDataClass())));
+				}
+
+				// OLC state changes have to be legal
+				for (ConditionSet preConditionSet : preCondition.getConditionSets()) {
+					for (AtomicDataStateCondition atomicPreCondition : preConditionSet.getConditions()) {
+						if (atomicPreCondition.getDataClass().equals(atomicPostCondition.getDataClass())) {
+							assert (atomicPostCondition.getObjectLifecycleState()
+									.isSuccessorOf(atomicPreCondition.getObjectLifecycleState()));
+						}
+					}
+				}
+			}
 		}
 	}
 }

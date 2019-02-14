@@ -88,4 +88,8 @@ public class CaseModelTranslation {
 	public Map<String, DataClassTranslation> getDataClassTranslationsByName() {
 		return dataClassTranslationsByName;
 	}
+
+	public CaseModel getCaseModel() {
+		return caseModel;
+	}
 }

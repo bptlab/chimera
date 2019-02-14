@@ -1,7 +1,6 @@
 package de.hpi.bpt.chimera.rest.v2;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -24,8 +23,6 @@ import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.compliance.ComplianceChecker;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.petrinet.PetriNet;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
@@ -233,27 +230,13 @@ public class ScenarioRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/compliance/{query}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response getPetriNetDotRepresentation(@Context UriInfo uri, @PathParam("scenarioId") String cmId,
-			@PathParam("query") String query, @QueryParam("caseClass") String caseClassName,
-			@QueryParam("caseClassInitialState") String caseClassInitialStateName) {
+	public Response getComplianceCheckResult(@Context UriInfo uri, @PathParam("scenarioId") String cmId,
+			@PathParam("query") String query) {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-			Optional<DataClass> caseClass = cm.getDataModel().getDataClasses().stream()
-					.filter(dc -> dc.getName().equals(caseClassName)).findFirst();
-			if (!caseClass.isPresent()) {
-				throw new IllegalArgumentException("This scenario does not contain this data class.");
-			}
-
-			Optional<ObjectLifecycleState> caseClassInitialState = caseClass.get().getObjectLifecycle()
-					.getObjectLifecycleStates().stream()
-					.filter(olcState -> olcState.getName().equals(caseClassInitialStateName)).findFirst();
-			if (!caseClassInitialState.isPresent()) {
-				throw new IllegalArgumentException("The case class does not have this OLC state.");
-			}
-
 			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
-					cm, caseClass.get(), caseClassInitialState.get());
+					cm);
 			PetriNet petriNet = petriNetRepresentationJaxBean.getPetriNet();
 			String petriNetAsLolaFile = petriNetRepresentationJaxBean.getLolaOutput();
 
@@ -261,6 +244,13 @@ public class ScenarioRestService extends AbstractRestService {
 			ComplianceChecker complianceChecker = new ComplianceChecker();
 			String processedQuery = complianceChecker.replaceQueryIdentifiers(petriNet, query);
 			String result = complianceChecker.queryLola(petriNetAsLolaFile, processedQuery);
+
+			String witnessPath = complianceChecker.extractWitnessPath(result, petriNet);
+			if (!witnessPath.isEmpty()) {
+				result += "\nwitness path:\n" + witnessPath + "\n";
+			} else {
+				result += "\nno witness path :(\n";
+			}
 
 			return Response.ok().type(MediaType.TEXT_PLAIN).entity(result).build();
 		} catch (IllegalArgumentException e) {

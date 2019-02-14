@@ -6,10 +6,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import de.hpi.bpt.chimera.model.petrinet.AbstractPetriNetNode;
 import de.hpi.bpt.chimera.model.petrinet.AbstractTranslation;
 import de.hpi.bpt.chimera.model.petrinet.PetriNet;
 import de.hpi.bpt.chimera.model.petrinet.Place;
@@ -49,11 +51,52 @@ public class ComplianceChecker {
 		StringBuffer response = new StringBuffer();
 
 		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
+			response.append(inputLine + "\n");
 		}
 		in.close();
 
 		return response.toString();
+	}
+
+	public String extractWitnessPath(String lolaResponse, PetriNet petriNet) {
+
+		Pattern witnessPathPattern = Pattern.compile("custom_check_witness_path = '([^']+)';");
+		Pattern stepPattern = Pattern.compile("([pt]_[0-9]+)");
+
+		String witnessPathOutput = "";
+
+		Matcher witnessPathMatcher = witnessPathPattern.matcher(lolaResponse);
+		if (!witnessPathMatcher.find()) {
+			return "";
+		}
+
+		assert (witnessPathMatcher.groupCount() == 1);
+		final String matchedWitnessPath = witnessPathMatcher.group(1);
+
+		Matcher stepMatcher = stepPattern.matcher(matchedWitnessPath);
+		while (stepMatcher.find()) {
+			assert (stepMatcher.groupCount() > 0);
+			final String step = stepMatcher.group(1);
+
+			AbstractPetriNetNode petriNetNode;
+			if (step.startsWith("t_")) {
+				Optional<Transition> stepTransition = petriNet.getTransitions().stream()
+						.filter(p -> p.getPrefixedIdString().equals(step)).findFirst();
+				assert (stepTransition.isPresent());
+				petriNetNode = stepTransition.get();
+			} else if (step.startsWith("p_")) {
+				Optional<Place> stepPlace = petriNet.getPlaces().stream()
+						.filter(p -> p.getPrefixedIdString().equals(step)).findFirst();
+				assert (stepPlace.isPresent());
+				petriNetNode = stepPlace.get();
+			} else {
+				throw new RuntimeException("Witness path element must start with 't_' or 'p_', but is '" + step + "'");
+			}
+
+			witnessPathOutput += petriNetNode.getContext().getPrefixes().stream().collect(Collectors.joining("/"))
+					+ "\n";
+		}
+		return witnessPathOutput;
 	}
 
 	public String replaceQueryIdentifiers(PetriNet petriNet, String query) {

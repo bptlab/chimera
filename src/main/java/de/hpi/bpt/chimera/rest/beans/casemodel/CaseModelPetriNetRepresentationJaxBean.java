@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.petrinet.CaseModelTranslation;
 import de.hpi.bpt.chimera.model.petrinet.PetriNet;
 import de.hpi.bpt.chimera.model.petrinet.Place;
@@ -65,8 +63,7 @@ public class CaseModelPetriNetRepresentationJaxBean {
 		}
 	}
 
-	public CaseModelPetriNetRepresentationJaxBean(CaseModel cm, DataClass caseClass,
-			ObjectLifecycleState caseClassInitialState) {
+	public CaseModelPetriNetRepresentationJaxBean(CaseModel cm) {
 		setId(cm.getId());
 		setName(cm.getName());
 

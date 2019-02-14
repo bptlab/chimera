@@ -22,7 +22,7 @@ public class FragmentTranslation extends AbstractTranslation {
 
 	// Limit the number of times a fragment can be instantiated.
 	// A negative number disables the limit.
-	protected static final int reInitPoolSize = 10;
+	protected static final int reInitPoolSize = 0;
 
 	public FragmentTranslation(TranslationContext translationContext, Fragment fragment) {
 		super(translationContext, fragment.getName());
