@@ -36,9 +36,14 @@ public class CaseModelTranslation {
 				.addTransition(new TransitionReference(translationContext, "fragmentInitialization"));
 		fragmentInitializationTransition.addInputPlace(initialPlace);
 
+		// Translate data classes
 		for (DataClass dataClass : caseModel.getDataModel().getDataClasses()) {
 			translateDataClass(dataClass);
 		}
+
+		// Initialize case class with one token
+		DataClass caseClass = caseModel.getDataModel().getCaseClass();
+		dataClassTranslationsByName.get(caseClass.getName()).getOlcStatePlacesByName().get("init").setNumTokens(1);
 
 		for (Fragment fragment : caseModel.getFragments()) {
 			translateFragment(fragment);

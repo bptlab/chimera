@@ -22,8 +22,7 @@ public class DataClassTranslation extends AbstractTranslation {
 			olcStatePlacesByName.put(olcState.getName(), olcStatePlace);
 		}
 
-		// Data objects are singletons
-		// There has to be an "initial" state with 1 initial token
+		// There has to be an "initial" state
 		final String initialStateName = "init";
 		Optional<ObjectLifecycleState> initialState = dataClass.getObjectLifecycle().getObjectLifecycleStates().stream()
 				.filter(olcState -> olcState.getName().equals(initialStateName)).findFirst();
