@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.execution;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -16,6 +17,9 @@ import org.apache.log4j.Logger;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 
 @Entity(name = "ChimeraCase")
@@ -30,6 +34,7 @@ public class Case {
 	private Map<String, FragmentInstance> fragmentInstances;
 
 	private static Logger log = Logger.getLogger(Case.class);
+	private DataClass caseClass;
 
 	/**
 	 * for JPA only
@@ -38,7 +43,6 @@ public class Case {
 		// JPA needs an empty constructor to instantiate objects of this class
 		// at runtime.
 	}
-
 
 	public Case(String caseName, CaseModel caseModel, CaseExecutioner caseExecutioner) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
@@ -59,15 +63,31 @@ public class Case {
 		for (Fragment fragment : caseModel.getFragments()) {
 			instantiateFragment(fragment);
 		}
+
+		caseClass = caseModel.getDataModel().getCaseClass();
+		assert (caseClass != null);
+		ObjectLifecycleState initialOlcState = caseClass.getObjectLifecycle().getInitialObjectLifecycleState();
+		if (initialOlcState == null) {
+			Optional<ObjectLifecycleState> initState = caseClass.getObjectLifecycle().getObjectLifecycleStates()
+					.stream().filter(olcState -> olcState.getName().equals("init")).findFirst();
+			assert (initState.isPresent());
+			initialOlcState = initState.get();
+		}
+		assert (initialOlcState != null);
+		System.out.println("case executioner: ");
+		System.out.println(caseExecutioner);
+		System.out.println("data manager: ");
+		System.out.println(caseExecutioner.getDataManager());
+
+		caseExecutioner.getDataManager().createDataObject(new AtomicDataStateCondition(caseClass, initialOlcState));
 	}
 
 	/**
 	 * Create an instance for a specific fragment.
 	 * 
-	 * @param fragment
-	 *            - that will be instantiated.
-	 * @return the newly created fragment instance if there the instantiation
-	 *         was allowed otherwise {@code null}.
+	 * @param fragment - that will be instantiated.
+	 * @return the newly created fragment instance if there the instantiation was
+	 *         allowed otherwise {@code null}.
 	 */
 	public synchronized FragmentInstance instantiateFragment(Fragment fragment) {
 		if (isInstantiable(fragment)) {
@@ -75,7 +95,8 @@ public class Case {
 			fragmentInstances.put(fragmentInstance.getId(), fragmentInstance);
 			return fragmentInstance;
 		} else {
-			log.warn("No instances of fragment %s because the maximum amount of concurrent running instances of this fragment has been reached.");
+			log.warn(
+					"No instances of fragment %s because the maximum amount of concurrent running instances of this fragment has been reached.");
 		}
 		return null;
 	}
@@ -84,8 +105,7 @@ public class Case {
 	 * Instantiate a specific fragment and enable it if the instantiation was
 	 * successful.
 	 * 
-	 * @param fragment
-	 *            - that will be instantiated.
+	 * @param fragment - that will be instantiated.
 	 * @see #instantiateFragment(Fragment) instantiateFragment
 	 */
 	public synchronized void instantiateFragmentAndEnableInstance(Fragment fragment) {
@@ -96,12 +116,11 @@ public class Case {
 	}
 
 	/**
-	 * Check whether a new instantiation of a fragment can be created. Therefore
-	 * it must be defined that the fragment has no bound or there are exists
-	 * less instantiation than the defined limit.
+	 * Check whether a new instantiation of a fragment can be created. Therefore it
+	 * must be defined that the fragment has no bound or there are exists less
+	 * instantiation than the defined limit.
 	 * 
-	 * @param fragment
-	 *            - to check
+	 * @param fragment - to check
 	 * @return true if another instantiation is possible.
 	 * @see {@link Fragment}
 	 */
@@ -110,8 +129,7 @@ public class Case {
 			return true;
 		}
 		long existingInstancesAmount = getFragmentInstances().values().stream()
-										.filter(f -> f.getFragment().equals(fragment))
-										.count();
+				.filter(f -> f.getFragment().equals(fragment)).count();
 		return existingInstancesAmount < fragment.getInstantiationLimit();
 	}
 
@@ -125,9 +143,8 @@ public class Case {
 	public void terminateFragmentInstance(FragmentInstance fragmentInstance) {
 		String fragmentInstanceId = fragmentInstance.getId();
 		if (fragmentInstances.containsKey(fragmentInstanceId)) {
-			fragmentInstance.getControlNodeInstances().stream()
-				.filter(c -> !c.getState().equals(State.TERMINATED))
-				.forEach(ControlNodeInstance::skip);
+			fragmentInstance.getControlNodeInstances().stream().filter(c -> !c.getState().equals(State.TERMINATED))
+					.forEach(ControlNodeInstance::skip);
 			fragmentInstance.getControlNodeIdToInstance().clear();
 			fragmentInstance.getControlNodeInstanceIdToInstance().clear();
 			fragmentInstance.setState(FragmentState.TERMINATED);
@@ -168,11 +185,9 @@ public class Case {
 		this.caseExecutioner = caseExecutioner;
 	}
 
-
 	public Date getInstantiation() {
 		return instantiation;
 	}
-
 
 	public void setInstantiation(Date instantiation) {
 		this.instantiation = instantiation;

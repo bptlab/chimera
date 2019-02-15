@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,7 +47,7 @@ public class CaseExecutioner {
 	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "caseExecutioner")
@@ -74,15 +75,14 @@ public class CaseExecutioner {
 		// at runtime.
 	}
 
-
 	public CaseExecutioner(CaseModel caseModel, String caseName) {
 		this.activityLogs = new ArrayList<>();
 		this.dataObjectLogs = new ArrayList<>();
 		this.dataAttributeLogs = new ArrayList<>();
 		this.terminated = false;
 		this.caseModel = caseModel;
-		this.caze = new Case(caseName, caseModel, this);
 		this.dataManager = new DataManager(caseModel.getDataModel(), this);
+		this.caze = new Case(caseName, caseModel, this);
 
 		this.registeredEventInstanceIdToReceiveBehavior = new HashMap<>();
 		this.terminated = false;
@@ -98,8 +98,8 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Get all ActivityInstances in all Fragment Instances that are in a
-	 * specific State.
+	 * Get all ActivityInstances in all Fragment Instances that are in a specific
+	 * State.
 	 * 
 	 * @param state
 	 * @return Collection of ActivityInstances
@@ -118,17 +118,16 @@ public class CaseExecutioner {
 
 	/**
 	 * Begin an {@link AbstractDataControlNodeInstance} if it is in the correct
-	 * state for begin. Therefore lock all {@link DataObject}s that are used by
-	 * the AbstractDataControlNodeInstance and set them for the
+	 * state for begin. Therefore lock all {@link DataObject}s that are used by the
+	 * AbstractDataControlNodeInstance and set them for the
 	 * AbstractDataControlNodeInstance.
 	 * 
-	 * @param instance
-	 *            - AbstractDataControlNodeInstance that shall begin
-	 * @param selectedDataObjects-
-	 *            list of {@code ids } of DataObjects that are used by the
-	 *            AbstractActivityInstance
+	 * @param instance - AbstractDataControlNodeInstance that shall begin
+	 * @param          selectedDataObjects- list of {@code ids } of DataObjects that
+	 *                 are used by the AbstractActivityInstance
 	 */
-	synchronized public void beginDataControlNodeInstance(AbstractDataControlNodeInstance instance, List<DataObject> selectedDataObjects) {
+	synchronized public void beginDataControlNodeInstance(AbstractDataControlNodeInstance instance,
+			List<DataObject> selectedDataObjects) {
 		try {
 			if (!instance.canBegin()) {
 				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot begin");
@@ -147,18 +146,18 @@ public class CaseExecutioner {
 
 	/**
 	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
-	 * transitions of the DataObjects that result from the
-	 * {@link DataStateCondition PostCondition}. Therefore the post condition
-	 * needs to be unique. If the post condition is not unique,
+	 * transitions of the DataObjects that result from the {@link DataStateCondition
+	 * PostCondition}. Therefore the post condition needs to be unique. If the post
+	 * condition is not unique,
 	 * {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map)
 	 * terminateDataControlNodeInstance} needs to be used. For additionally
-	 * specifying the values for the DataAttributeInstances of the used
-	 * DataObjects use
+	 * specifying the values for the DataAttributeInstances of the used DataObjects
+	 * use
 	 * {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
 	 * terminateDataControlNodeInstance}.
 	 * 
-	 * @param controlNodeInstance
-	 *            - AbstractDataControlNodeInstance that shall terminate
+	 * @param controlNodeInstance - AbstractDataControlNodeInstance that shall
+	 *                            terminate
 	 * 
 	 * @see {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
 	 *      terminateDataControlNodeInstance}
@@ -177,7 +176,8 @@ public class CaseExecutioner {
 
 			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions = new HashMap<>();
 			if (controlNodeInstance.getControlNode().hasPostCondition()) {
-				dataClassToStateTransitions = controlNodeInstance.getControlNode().getPostCondition().getConditionSets().get(0).getDataClassToObjectLifecycleState();
+				dataClassToStateTransitions = controlNodeInstance.getControlNode().getPostCondition().getConditionSets()
+						.get(0).getDataClassToObjectLifecycleState();
 			}
 
 			terminateDataControlNodeInstance(controlNodeInstance, dataClassToStateTransitions, new HashMap<>());
@@ -189,22 +189,23 @@ public class CaseExecutioner {
 	/**
 	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
 	 * transitions of the DataObjects specified by
-	 * {@code dataClassToStateTransition}. For additionally specifying the
-	 * values for the DataAttributeInstances of the used DataObjects use
+	 * {@code dataClassToStateTransition}. For additionally specifying the values
+	 * for the DataAttributeInstances of the used DataObjects use
 	 * {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
 	 * terminateDataControlNodeInstance}.
 	 * 
-	 * @param controlNodeInstance
-	 *            - AbstractDataControlNodeInstance that shall terminate
-	 * @param dataClassToStateTransitions
-	 *            - Map from DataClass to an ObjectLifecycleState of the
-	 *            DataClass to define the new State for the DataObject with the
-	 *            referred DataClass
+	 * @param controlNodeInstance         - AbstractDataControlNodeInstance that
+	 *                                    shall terminate
+	 * @param dataClassToStateTransitions - Map from DataClass to an
+	 *                                    ObjectLifecycleState of the DataClass to
+	 *                                    define the new State for the DataObject
+	 *                                    with the referred DataClass
 	 * 
 	 * @see {@link #terminateDataControlNodeInstance(AbstractDataControlNodeInstance, Map, Map)
 	 *      terminateDataControlNodeInstance}
 	 */
-	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
+	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance,
+			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions) {
 		try {
 			terminateDataControlNodeInstance(controlNodeInstance, dataClassToStateTransitions, new HashMap<>());
 		} catch (IllegalArgumentException e) {
@@ -215,65 +216,24 @@ public class CaseExecutioner {
 	/**
 	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
 	 * transitions of the DataObjects specified by
-	 * {@code dataClassToStateTransition}. After the transitions of the
-	 * DataObjects change the values of those DataAttributeInstances specified
-	 * by rawDataAttributeValues.
+	 * {@code dataClassToStateTransition}. After the transitions of the DataObjects
+	 * change the values of those DataAttributeInstances specified by
+	 * rawDataAttributeValues.
 	 * 
-	 * @param controlNodeInstance
-	 *            - AbstractDataControlNodeInstance that shall terminate
-	 * @param dataClassToStateTransitions
-	 *            - Map from DataClass to an ObjectLifecycleState of the
-	 *            DataClass to define the new State for the DataObject with the
-	 *            referred DataClass
-	 * @param rawDataAttributeValues
-	 *            - Map from name of DataClass to a Map from DataAttribute name
-	 *            to new DataAttributeInstance value
+	 * @param controlNodeInstance         - AbstractDataControlNodeInstance that
+	 *                                    shall terminate
+	 * @param dataClassToStateTransitions - Map from DataClass to an
+	 *                                    ObjectLifecycleState of the DataClass to
+	 *                                    define the new State for the DataObject
+	 *                                    with the referred DataClass
+	 * @param rawDataAttributeValues      - Map from name of DataClass to a Map from
+	 *                                    DataAttribute name to new
+	 *                                    DataAttributeInstance value
 	 */
 	@Deprecated
-	synchronized public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions, Map<String, Map<String, Object>> rawDataAttributeValues) {
-		try {
-			// check whether activity instance can terminate
-			if (!controlNodeInstance.canTerminate()) {
-				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
-				log.error(e.getMessage());
-				throw e;
-			}
-			
-			List<DataObject> boundDataObjects = controlNodeInstance.getSelectedDataObjects();
-			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
-			// modify bound DOs 
-			if (! postCondition.isEmpty()) {
-				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
-				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
-				controlNodeInstance.setOutputDataObjects(usedDataObjects);
-			}
-			// set bound DOs free
-			dataManager.unlockDataObjects(boundDataObjects);
-			controlNodeInstance.terminate();
-		} catch (IllegalArgumentException e) {
-			throw e;
-		}
-	}
-	
-	/**
-	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
-	 * transitions of the DataObjects specified by
-	 * {@code dataClassToStateTransition}. After the transitions of the
-	 * DataObjects change the values of those DataAttributeInstances specified
-	 * by rawDataAttributeValues.
-	 * 
-	 * @param controlNodeInstance
-	 *            - AbstractDataControlNodeInstance that shall terminate
-	 * @param objectLifecycleTransitions
-	 *            - List of DataClass and ObjectLifecycleState of the DataClass
-	 *            to define the new State for the DataObject with the referred
-	 *            DataClass
-	 * @param rawDataAttributeValues
-	 *            - Map from name of DataClass to a Map from DataAttribute name
-	 *            to new DataAttributeInstance value
-	 */
-	// TODO: think about whether ids should be used instead of names
-	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance, List<ObjectLifecycleTransition> objectLifecycleTransitions, List<UpdateDataObjectJaxBean> rawDataAttributeValues) {
+	synchronized public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance,
+			Map<DataClass, ObjectLifecycleState> dataClassToStateTransitions,
+			Map<String, Map<String, Object>> rawDataAttributeValues) {
 		try {
 			// check whether activity instance can terminate
 			if (!controlNodeInstance.canTerminate()) {
@@ -286,7 +246,54 @@ public class CaseExecutioner {
 			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
 			// modify bound DOs
 			if (!postCondition.isEmpty()) {
-				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, objectLifecycleTransitions);
+				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects,
+						dataClassToStateTransitions);
+				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+				controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			}
+			// set bound DOs free
+			dataManager.unlockDataObjects(boundDataObjects);
+			controlNodeInstance.terminate();
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
+	 * transitions of the DataObjects specified by
+	 * {@code dataClassToStateTransition}. After the transitions of the DataObjects
+	 * change the values of those DataAttributeInstances specified by
+	 * rawDataAttributeValues.
+	 * 
+	 * @param controlNodeInstance        - AbstractDataControlNodeInstance that
+	 *                                   shall terminate
+	 * @param objectLifecycleTransitions - List of DataClass and
+	 *                                   ObjectLifecycleState of the DataClass to
+	 *                                   define the new State for the DataObject
+	 *                                   with the referred DataClass
+	 * @param rawDataAttributeValues     - Map from name of DataClass to a Map from
+	 *                                   DataAttribute name to new
+	 *                                   DataAttributeInstance value
+	 */
+	// TODO: think about whether ids should be used instead of names
+	public void terminateDataControlNodeInstance(AbstractDataControlNodeInstance controlNodeInstance,
+			List<ObjectLifecycleTransition> objectLifecycleTransitions,
+			List<UpdateDataObjectJaxBean> rawDataAttributeValues) {
+		try {
+			// check whether activity instance can terminate
+			if (!controlNodeInstance.canTerminate()) {
+				IllegalArgumentException e = new IllegalArgumentException("DataControlNodeInstance cannot terminate");
+				log.error(e.getMessage());
+				throw e;
+			}
+
+			List<DataObject> boundDataObjects = controlNodeInstance.getSelectedDataObjects();
+			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
+			// modify bound DOs
+			if (!postCondition.isEmpty()) {
+				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects,
+						objectLifecycleTransitions);
 				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
 				controlNodeInstance.setOutputDataObjects(usedDataObjects);
 			}
@@ -304,21 +311,16 @@ public class CaseExecutioner {
 	synchronized public void updateDataFlow() {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
 			fragmentInstance.checkDataFlow();
-			fragmentInstance.getActivActivityInstances()
-				.forEach(AbstractActivityInstance::checkDataFlow);
+			fragmentInstance.getActivActivityInstances().forEach(AbstractActivityInstance::checkDataFlow);
 		}
 	}
 
-
 	/**
-	 * Get an ControlNodeInstance over all FragmentInstances of the Case by an
-	 * id.
+	 * Get an ControlNodeInstance over all FragmentInstances of the Case by an id.
 	 * 
-	 * @param instanceId
-	 *            - id of the ControlNodeInstance
+	 * @param instanceId - id of the ControlNodeInstance
 	 * @return the associated ControlNodeInstance if controlNodeId is assigned.
-	 * @throws IllegalControlNodeInstanceIdException
-	 *             if instanceId is not assigned.
+	 * @throws IllegalControlNodeInstanceIdException if instanceId is not assigned.
 	 */
 	public ControlNodeInstance getControlNodeInstance(String instanceId) {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
@@ -335,20 +337,21 @@ public class CaseExecutioner {
 	/**
 	 * Get a specific ActivityInstance by an id.
 	 * 
-	 * @param activityInstanceId
-	 *            - Id of the ActivityInstance.
+	 * @param activityInstanceId - Id of the ActivityInstance.
 	 * @return the associated AbstractActivityInstance
-	 * @throws IllegalControlNodeInstanceIdException
-	 *             if controlNodeId is not assigned.
-	 * @throws IllegalControlNodeInstanceTypeException
-	 *             if associated ControlNodeInstance is not an ActivityInstance.
+	 * @throws IllegalControlNodeInstanceIdException   if controlNodeId is not
+	 *                                                 assigned.
+	 * @throws IllegalControlNodeInstanceTypeException if associated
+	 *                                                 ControlNodeInstance is not an
+	 *                                                 ActivityInstance.
 	 */
 	public AbstractActivityInstance getActivityInstance(String activityInstanceId) {
 		try {
 			ControlNodeInstance nodeInstance = getControlNodeInstance(activityInstanceId);
 
 			if (!(nodeInstance instanceof AbstractActivityInstance)) {
-				IllegalControlNodeInstanceTypeException e = new IllegalControlNodeInstanceTypeException(nodeInstance, AbstractActivityInstance.class);
+				IllegalControlNodeInstanceTypeException e = new IllegalControlNodeInstanceTypeException(nodeInstance,
+						AbstractActivityInstance.class);
 				log.error(e.getMessage());
 				throw e;
 			}
@@ -361,8 +364,8 @@ public class CaseExecutioner {
 
 	/**
 	 * Checks whether the Case can be terminated by testing if the
-	 * TerminationCondition is fulfilled. In addition a Case can only be
-	 * terminated once.
+	 * TerminationCondition is fulfilled. In addition a Case can only be terminated
+	 * once.
 	 * 
 	 * @return true if the Case can be terminated.
 	 */
@@ -375,8 +378,7 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Terminate the Case. Only possible if the TerminationCondition is
-	 * fulfilled.
+	 * Terminate the Case. Only possible if the TerminationCondition is fulfilled.
 	 * 
 	 * @see #canTerminate()
 	 */
@@ -385,10 +387,8 @@ public class CaseExecutioner {
 		if (canTerminate()) {
 			// set all ControlNodeInstances to state Skipped, so no further
 			// controlflow is possible.
-			getCase().getFragmentInstances().values().stream()
-				.map(FragmentInstance::getControlNodeInstances)
-				.flatMap(List::stream)
-				.forEach(ControlNodeInstance::skip);
+			getCase().getFragmentInstances().values().stream().map(FragmentInstance::getControlNodeInstances)
+					.flatMap(List::stream).forEach(ControlNodeInstance::skip);
 			log.info("Terminating the Case" + this.getCase().getName() + ". All ControlNodeInstances are skipped.");
 
 			EventDispatcher.deregisterReceiveEventsOfCase(this.getCase());
@@ -400,16 +400,14 @@ public class CaseExecutioner {
 	// LOGGING
 	/**
 	 * Log the transition of the {@link State} of an
-	 * {@link AbstractActivityInstance}. Therefore only log certain
-	 * {@link State} transitions.
+	 * {@link AbstractActivityInstance}. Therefore only log certain {@link State}
+	 * transitions.
 	 * 
-	 * @param activityInstance
-	 *            - that shall be logged
-	 * @param newState
-	 *            - of the ActivityInstance
+	 * @param activityInstance - that shall be logged
+	 * @param newState         - of the ActivityInstance
 	 */
 	synchronized public void logActivityTransition(AbstractActivityInstance activityInstance, State newState) {
-		List<State> stateable = new ArrayList<>( Arrays.asList(State.INIT, State.RUNNING, State.TERMINATED) );
+		List<State> stateable = new ArrayList<>(Arrays.asList(State.INIT, State.RUNNING, State.TERMINATED));
 		if (stateable.contains(newState)) {
 			ActivityLog activityLog = new ActivityLog(activityInstance, activityInstance.getState(), newState);
 			activityLogs.add(activityLog);
@@ -422,20 +420,22 @@ public class CaseExecutioner {
 	 * Log the transition of an {@link ObjectLifecycleState} of an
 	 * {@link DataObject}.
 	 * 
-	 * @param dataObjectInstance
-	 *            - that shall be logged
-	 * @param newObjectLifecycleState
-	 *            - of the DataObject
+	 * @param dataObjectInstance      - that shall be logged
+	 * @param newObjectLifecycleState - of the DataObject
 	 */
-	synchronized public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState newObjectLifecycleState) {
-		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance, dataObjectInstance.getObjectLifecycleState(), newObjectLifecycleState);
+	synchronized public void logDataObjectTransition(DataObject dataObjectInstance,
+			ObjectLifecycleState newObjectLifecycleState) {
+		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance,
+				dataObjectInstance.getObjectLifecycleState(), newObjectLifecycleState);
 		dataObjectLogs.add(dataObjectLog);
 		// TODO: think about necessary
 		sortLogs(dataObjectLogs);
 	}
 
-	synchronized public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState oldObjectLifecycleState, ObjectLifecycleState newObjectLifecycleState) {
-		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance, oldObjectLifecycleState, newObjectLifecycleState);
+	synchronized public void logDataObjectTransition(DataObject dataObjectInstance,
+			ObjectLifecycleState oldObjectLifecycleState, ObjectLifecycleState newObjectLifecycleState) {
+		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance, oldObjectLifecycleState,
+				newObjectLifecycleState);
 		dataObjectLogs.add(dataObjectLog);
 		// TODO: think about necessary
 		sortLogs(dataObjectLogs);
@@ -444,24 +444,22 @@ public class CaseExecutioner {
 	/**
 	 * Log the transition of the value of an {@link DataAttributeInstance}.
 	 * 
-	 * @param dataAttributeInstance
-	 *            - that shall be logged
-	 * @param newValue
-	 *            - of the DataAttributeInstance
+	 * @param dataAttributeInstance - that shall be logged
+	 * @param newValue              - of the DataAttributeInstance
 	 */
 	synchronized public void logDataAttributeTransition(DataAttributeInstance dataAttributeInstance, Object newValue) {
-		DataAttributeLog dataAttributeLog = new DataAttributeLog(dataAttributeInstance, dataAttributeInstance.getValue(), newValue);
+		DataAttributeLog dataAttributeLog = new DataAttributeLog(dataAttributeInstance,
+				dataAttributeInstance.getValue(), newValue);
 		dataAttributeLogs.add(dataAttributeLog);
 		// TODO: think about necessary
 		sortLogs(dataAttributeLogs);
 	}
 
 	/**
-	 * Sort the LogEntries descending by time which means the newest LogEntry
-	 * comes first.
+	 * Sort the LogEntries descending by time which means the newest LogEntry comes
+	 * first.
 	 * 
-	 * @param logEntryTransportationBeans
-	 *            - that shall be sorted
+	 * @param logEntryTransportationBeans - that shall be sorted
 	 */
 	synchronized private void sortLogs(List<? extends LogEntryTransportationBean> logEntryTransportationBeans) {
 		logEntryTransportationBeans.sort((l1, l2) -> l2.getTimeStamp().compareTo(l1.getTimeStamp()));
@@ -469,11 +467,11 @@ public class CaseExecutioner {
 
 	/**
 	 * Store the {@link MessageReceiveEventBehavior} of an
-	 * {@link AbstractEventInstance} that has previously been registered at
-	 * Unicorn by the message receive behavior of the event instance.
+	 * {@link AbstractEventInstance} that has previously been registered at Unicorn
+	 * by the message receive behavior of the event instance.
 	 * 
-	 * @param receiveBehavior
-	 *            - MessageReceiveEventBehavior of the registered EventInstance
+	 * @param receiveBehavior - MessageReceiveEventBehavior of the registered
+	 *                        EventInstance
 	 */
 	synchronized public void addRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
 		String instanceId = receiveBehavior.getEventInstance().getId();
@@ -484,12 +482,11 @@ public class CaseExecutioner {
 
 	/**
 	 * Remove the {@link MessageReceiveEventBehavior} of an
-	 * {@link AbstractEventInstance} that has previously been registered at
-	 * Unicorn by the message receive behavior of the event instance.
+	 * {@link AbstractEventInstance} that has previously been registered at Unicorn
+	 * by the message receive behavior of the event instance.
 	 * 
-	 * @param receiveBehavior
-	 *            - MessageReceiveEventBehavior of the EventInstance to be
-	 *            de-registered
+	 * @param receiveBehavior - MessageReceiveEventBehavior of the EventInstance to
+	 *                        be de-registered
 	 */
 	synchronized public void removeRegisteredEventBehavior(MessageReceiveEventBehavior receiveBehavior) {
 		String instanceId = receiveBehavior.getEventInstance().getId();
@@ -500,15 +497,12 @@ public class CaseExecutioner {
 
 	/**
 	 * Receive the {@link MessageReceiveEventBehavior} of an
-	 * {@link AbstractEventInstance} that has previously been registered at
-	 * Unicorn by the Id of the event instance.
+	 * {@link AbstractEventInstance} that has previously been registered at Unicorn
+	 * by the Id of the event instance.
 	 * 
-	 * @param eventInstanceId
-	 *            - Id of the registered event
-	 * @return MessageReceiveEventBehavior of the specified registered
-	 *         EventInstance
-	 * @throws IllegalArgumentException
-	 *             if the Id is not assigned
+	 * @param eventInstanceId - Id of the registered event
+	 * @return MessageReceiveEventBehavior of the specified registered EventInstance
+	 * @throws IllegalArgumentException if the Id is not assigned
 	 */
 	public MessageReceiveEventBehavior getRegisteredEventBehavior(String eventInstanceId) {
 		if (registeredEventInstanceIdToReceiveBehavior.containsKey(eventInstanceId)) {
