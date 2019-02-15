@@ -243,13 +243,24 @@ public class ScenarioRestService extends AbstractRestService {
 			// Send to LOLA
 			ComplianceChecker complianceChecker = new ComplianceChecker();
 			String processedQuery = complianceChecker.replaceQueryIdentifiers(petriNet, query);
+
+			// Get result
 			String result = complianceChecker.queryLola(petriNetAsLolaFile, processedQuery);
 
+			// Get witness path
 			String witnessPath = complianceChecker.extractWitnessPath(result, petriNet);
 			if (!witnessPath.isEmpty()) {
 				result += "\nwitness path:\n" + witnessPath + "\n";
 			} else {
 				result += "\nno witness path :(\n";
+			}
+
+			// Get witness state
+			String witnessState = complianceChecker.extractWitnessState(result, petriNet);
+			if (!witnessState.isEmpty()) {
+				result += "\nwitness state (places with tokens):\n" + witnessState + "\n";
+			} else {
+				result += "\nno witness state :(\n";
 			}
 
 			return Response.ok().type(MediaType.TEXT_PLAIN).entity(result).build();

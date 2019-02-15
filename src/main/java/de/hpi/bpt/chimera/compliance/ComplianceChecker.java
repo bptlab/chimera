@@ -59,44 +59,57 @@ public class ComplianceChecker {
 	}
 
 	public String extractWitnessPath(String lolaResponse, PetriNet petriNet) {
-
 		Pattern witnessPathPattern = Pattern.compile("custom_check_witness_path = '([^']+)';");
 		Pattern stepPattern = Pattern.compile("([pt]_[0-9]+)");
+		return extractWitnessElements(lolaResponse, witnessPathPattern, stepPattern, petriNet);
+	}
 
-		String witnessPathOutput = "";
+	public String extractWitnessState(String lolaResponse, PetriNet petriNet) {
+		Pattern witnessStatePattern = Pattern.compile("custom_check_witness_state = '([^']+)';");
+		Pattern stepPattern = Pattern.compile("([pt]_[0-9]+)");
+		return extractWitnessElements(lolaResponse, witnessStatePattern, stepPattern, petriNet);
+	}
 
-		Matcher witnessPathMatcher = witnessPathPattern.matcher(lolaResponse);
-		if (!witnessPathMatcher.find()) {
+	public String extractWitnessElements(String lolaResponse, Pattern enclosingPattern, Pattern elementPattern,
+			PetriNet petriNet) {
+
+		String witnessElementsOutput = "";
+
+		Matcher enclosingMatcher = enclosingPattern.matcher(lolaResponse);
+		if (!enclosingMatcher.find()) {
 			return "";
 		}
 
-		assert (witnessPathMatcher.groupCount() == 1);
-		final String matchedWitnessPath = witnessPathMatcher.group(1);
+		assert (enclosingMatcher.groupCount() == 1);
+		final String matchedWitnessGroupContent = enclosingMatcher.group(1);
 
-		Matcher stepMatcher = stepPattern.matcher(matchedWitnessPath);
+		Matcher stepMatcher = elementPattern.matcher(matchedWitnessGroupContent);
 		while (stepMatcher.find()) {
 			assert (stepMatcher.groupCount() > 0);
 			final String step = stepMatcher.group(1);
-
-			AbstractPetriNetNode petriNetNode;
-			if (step.startsWith("t_")) {
-				Optional<Transition> stepTransition = petriNet.getTransitions().stream()
-						.filter(p -> p.getPrefixedIdString().equals(step)).findFirst();
-				assert (stepTransition.isPresent());
-				petriNetNode = stepTransition.get();
-			} else if (step.startsWith("p_")) {
-				Optional<Place> stepPlace = petriNet.getPlaces().stream()
-						.filter(p -> p.getPrefixedIdString().equals(step)).findFirst();
-				assert (stepPlace.isPresent());
-				petriNetNode = stepPlace.get();
-			} else {
-				throw new RuntimeException("Witness path element must start with 't_' or 'p_', but is '" + step + "'");
-			}
-
-			witnessPathOutput += petriNetNode.getContext().getPrefixes().stream().collect(Collectors.joining("/"))
-					+ "\n";
+			witnessElementsOutput += getWitnessElementName(step, petriNet);
 		}
-		return witnessPathOutput;
+		return witnessElementsOutput;
+	}
+
+	String getWitnessElementName(String witnessStep, PetriNet petriNet) {
+		AbstractPetriNetNode petriNetNode;
+		if (witnessStep.startsWith("t_")) {
+			Optional<Transition> stepTransition = petriNet.getTransitions().stream()
+					.filter(p -> p.getPrefixedIdString().equals(witnessStep)).findFirst();
+			assert (stepTransition.isPresent());
+			petriNetNode = stepTransition.get();
+		} else if (witnessStep.startsWith("p_")) {
+			Optional<Place> stepPlace = petriNet.getPlaces().stream()
+					.filter(p -> p.getPrefixedIdString().equals(witnessStep)).findFirst();
+			assert (stepPlace.isPresent());
+			petriNetNode = stepPlace.get();
+		} else {
+			throw new RuntimeException("Witness element must start with 't_' or 'p_', but is '" + witnessStep + "'");
+		}
+
+		return petriNetNode.getContext().getPrefixes().stream().collect(Collectors.joining("/")) + "/"
+				+ petriNetNode.getName() + "\n";
 	}
 
 	public String replaceQueryIdentifiers(PetriNet petriNet, String query) {
