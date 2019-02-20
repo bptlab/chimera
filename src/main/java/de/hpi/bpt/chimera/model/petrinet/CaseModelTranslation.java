@@ -17,8 +17,8 @@ public class CaseModelTranslation {
 	private final Map<String, DataClassTranslation> dataClassTranslationsByName = new HashMap<>();
 	private DataStatePreConditionTranslation terminationConditionTranslation;
 
-	private Place initialPlace;
-	private Place finalPlace;
+	private final Place initialPlace;
+	private final Place finalPlace;
 	private Transition fragmentInitializationTransition;
 
 	public CaseModelTranslation(CaseModel caseModel) {
@@ -27,23 +27,18 @@ public class CaseModelTranslation {
 		translationContext = new TranslationContext(this);
 
 		initialPlace = petriNet.addPlace(new PlaceReference(translationContext, "init"));
-		initialPlace.setNumTokens(1);
-		initialPlace.setSignificant(true);
+		getInitialPlace().setSignificant(true);
 		finalPlace = petriNet.addPlace(new PlaceReference(translationContext, "final"));
-		finalPlace.setSignificant(true);
+		getFinalPlace().setSignificant(true);
 
 		fragmentInitializationTransition = petriNet
 				.addTransition(new TransitionReference(translationContext, "fragmentInitialization"));
-		fragmentInitializationTransition.addInputPlace(initialPlace);
+		fragmentInitializationTransition.addInputPlace(getInitialPlace());
 
 		// Translate data classes
 		for (DataClass dataClass : caseModel.getDataModel().getDataClasses()) {
 			translateDataClass(dataClass);
 		}
-
-		// Initialize case class with one token
-		DataClass caseClass = caseModel.getDataModel().getCaseClass();
-		dataClassTranslationsByName.get(caseClass.getName()).getOlcStatePlacesByName().get("init").setNumTokens(1);
 
 		for (Fragment fragment : caseModel.getFragments()) {
 			translateFragment(fragment);
@@ -58,7 +53,7 @@ public class CaseModelTranslation {
 	private void translateFragment(Fragment fragment) {
 		// Inner fragment translation
 		FragmentTranslation fragmentTranslation = new FragmentTranslation(translationContext, fragment);
-		fragmentTranslationsByName.put(fragment.getName(), fragmentTranslation);
+		getFragmentTranslationsByName().put(fragment.getName(), fragmentTranslation);
 
 		// Fragment initialization
 		fragmentInitializationTransition.addOutputPlace(fragmentTranslation.getInitialPlace());
@@ -83,7 +78,7 @@ public class CaseModelTranslation {
 		fragmentInitializationTransition.addOutputPlace(pseudoFragmentPlace);
 
 		terminationConditionTranslation = new DataStatePreConditionTranslation(this.translationContext,
-				terminationCondition, "terminationCondition", pseudoFragmentPlace, this.finalPlace);
+				terminationCondition, "terminationCondition", pseudoFragmentPlace, this.getFinalPlace());
 	}
 
 	public PetriNet getPetriNet() {
@@ -96,5 +91,17 @@ public class CaseModelTranslation {
 
 	public CaseModel getCaseModel() {
 		return caseModel;
+	}
+
+	public Place getInitialPlace() {
+		return initialPlace;
+	}
+
+	public Place getFinalPlace() {
+		return finalPlace;
+	}
+
+	public Map<String, FragmentTranslation> getFragmentTranslationsByName() {
+		return fragmentTranslationsByName;
 	}
 }

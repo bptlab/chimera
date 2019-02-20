@@ -59,6 +59,11 @@ public class PlaceReference implements Place {
 	}
 
 	@Override
+	public void addTokens(int numTokens) {
+		impl.addTokens(numTokens);
+	}
+
+	@Override
 	public boolean isSignificant() {
 		return impl.isSignificant();
 	}

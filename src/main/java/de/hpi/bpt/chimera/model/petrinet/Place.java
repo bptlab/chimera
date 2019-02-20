@@ -11,6 +11,8 @@ public interface Place extends AbstractPetriNetNode {
 
 	public void setNumTokens(int numTokens);
 
+	public void addTokens(int numTokens);
+
 	public boolean isSignificant();
 
 	public void setSignificant(boolean isSignificant);

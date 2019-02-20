@@ -95,7 +95,7 @@ public class FragmentTranslation extends AbstractTranslation {
 
 	private void translateStartEvent(StartEvent startEvent) {
 		// Connect start event
-		EventTranslation startEventTranslation = (EventTranslation) controlNodeTranslationsById.get(startEvent.getId());
+		EventTranslation startEventTranslation = getStartEventTranslation();
 		Place startEventInitialPlace = startEventTranslation.getInitialPlace();
 
 		initialPlace = startEventInitialPlace;
@@ -145,5 +145,9 @@ public class FragmentTranslation extends AbstractTranslation {
 
 	public Place getInitialPlace() {
 		return initialPlace;
+	}
+
+	public EventTranslation getStartEventTranslation() {
+		return (EventTranslation) controlNodeTranslationsById.get(fragment.getBpmnFragment().getStartEvent().getId());
 	}
 }

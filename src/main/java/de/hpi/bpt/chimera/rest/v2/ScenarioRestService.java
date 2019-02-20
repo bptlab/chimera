@@ -186,6 +186,8 @@ public class ScenarioRestService extends AbstractRestService {
 
 			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
 					cm);
+			petriNetRepresentationJaxBean.addMarkingForInitialState();
+
 			String result = petriNetRepresentationJaxBean.getLolaOutput();
 
 			return Response.ok().type(MediaType.TEXT_PLAIN).entity(result).build();

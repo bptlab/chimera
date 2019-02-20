@@ -28,6 +28,11 @@ public class PlaceImpl extends EntityWithId implements Place {
 	}
 
 	@Override
+	public void addTokens(int numTokens) {
+		this.numTokens += numTokens;
+	}
+
+	@Override
 	public boolean isSignificant() {
 		return isSignificant;
 	}
