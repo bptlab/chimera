@@ -9,6 +9,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstan
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.model.petrinet.ActivityTranslation;
 import de.hpi.bpt.chimera.model.petrinet.CaseModelTranslation;
 import de.hpi.bpt.chimera.model.petrinet.DataClassTranslation;
 import de.hpi.bpt.chimera.model.petrinet.FragmentTranslation;
@@ -59,12 +60,16 @@ public class PetriNetCaseInstanceMarker extends AbstractPetriNetMarker {
 	private void addMarkingForFragmentInstance(FragmentInstance fragmentInstance) {
 
 		switch (fragmentInstance.getState()) {
+		case TERMINATED:
+			System.out.println("Skipping fragment " + fragmentInstance.getFragment().getName() + " in state "
+					+ fragmentInstance.getState());
+			break;
 		case CREATED:
 		case DISABLED:
-		case TERMINATED:
-			return;
+			getFragmentTranslation(fragmentInstance).getInitialPlace().addTokens(1);
+			break;
 		case ENABLED:
-			addMarkingForEnabledFragment(fragmentInstance);
+			getFragmentTranslation(fragmentInstance).getStartEventTranslation().getInnerInitialPlace().addTokens(1);
 			break;
 		case ACTIVE:
 			for (AbstractActivityInstance activityInstance : fragmentInstance.getActivActivityInstances()) {
@@ -74,32 +79,41 @@ public class PetriNetCaseInstanceMarker extends AbstractPetriNetMarker {
 		}
 	}
 
-	private void addMarkingForEnabledFragment(FragmentInstance fragmentInstance) {
-		FragmentTranslation fragmentTranslation = caseModelTranslation.getFragmentTranslationsByName()
-				.get(fragmentInstance.getFragment().getName());
-		Place initialPlace = fragmentTranslation.getInitialPlace();
-		initialPlace.addTokens(1);
-	}
-
 	private void addMarkingForActivityInstance(AbstractActivityInstance activityInstance) {
 		switch (activityInstance.getState()) {
 		case CANCEL:
+		case EXECUTING:
+			// EXECUTING is only for gateways
 		case INIT:
 		case REGISTERED:
 		case SKIPPED:
 		case TERMINATED:
-			return;
+			System.out.println("Skipping activity " + activityInstance.getControlNode().getName() + " in state "
+					+ activityInstance.getState());
+			break;
 		case CONTROLFLOW_ENABLED:
+			getActivityTranslation(activityInstance).getInitialPlace().addTokens(1);
 			break;
 		case DATAFLOW_ENABLED:
-			break;
-		case EXECUTING:
+			getActivityTranslation(activityInstance).getInitialPlace().addTokens(1);
 			break;
 		case READY:
+			getActivityTranslation(activityInstance).getInnerInitialPlace().addTokens(1);
 			break;
 		case RUNNING:
+			getActivityTranslation(activityInstance).getInnerFinalPlace().addTokens(1);
 			break;
 		}
+	}
+
+	private FragmentTranslation getFragmentTranslation(FragmentInstance fragmentInstance) {
+		return caseModelTranslation.getFragmentTranslationsByName().get(fragmentInstance.getFragment().getName());
+	}
+
+	private ActivityTranslation getActivityTranslation(AbstractActivityInstance activityInstance) {
+		FragmentTranslation fragmentTranslation = getFragmentTranslation(activityInstance.getFragmentInstance());
+		return (ActivityTranslation) fragmentTranslation.getControlNodeTranslationsById()
+				.get(activityInstance.getControlNode().getId());
 	}
 
 }

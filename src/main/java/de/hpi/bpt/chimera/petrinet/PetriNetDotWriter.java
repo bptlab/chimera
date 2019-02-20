@@ -54,8 +54,12 @@ public class PetriNetDotWriter extends AbstractPetriNetWriter {
 	}
 
 	private String formatPlace(Place p, int indentationLevel) {
-		return indent(indentationLevel) + "\"" + p.getPrefixedIdString() + "\" [label=\"" + p.getName() + "\n"
-				+ p.getPrefixedIdString() + "\"];\n";
+		String output = indent(indentationLevel);
+		output += "\"" + p.getPrefixedIdString() + "\"";
+		output += "[label=\"" + p.getName() + "\\n" + p.getPrefixedIdString();
+		output += p.getNumTokens() > 0 ? "\\n" + String.valueOf(p.getNumTokens()) + " token(s)" : "";
+		output += "\"];\n";
+		return output;
 	}
 
 	private String getTransitionFormat(int indentationLevel) {
@@ -76,7 +80,7 @@ public class PetriNetDotWriter extends AbstractPetriNetWriter {
 	}
 
 	private String formatTransition(Transition t, int indentationLevel) {
-		return indent(indentationLevel) + "\"" + t.getPrefixedIdString() + "\" [label=\"" + t.getName() + "\n"
+		return indent(indentationLevel) + "\"" + t.getPrefixedIdString() + "\" [label=\"" + t.getName() + "\\n"
 				+ t.getPrefixedIdString() + "\"];\n";
 	}
 

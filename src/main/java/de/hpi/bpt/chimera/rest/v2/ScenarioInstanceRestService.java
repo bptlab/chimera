@@ -297,7 +297,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/petrinet-lola")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response getPetriNetLolaRepresentation(@PathParam("scenarioId") String cmId,
 			@PathParam("instanceId") String caseId) {
 		try {
@@ -311,7 +311,28 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 
 			return Response.ok(result, MediaType.TEXT_PLAIN).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON)
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
+					.entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	@GET
+	@Path("scenario/{scenarioId}/instance/{instanceId}/petrinet-dot")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response getPetriNetDotRepresentation(@PathParam("scenarioId") String cmId,
+			@PathParam("instanceId") String caseId) {
+		try {
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+
+			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
+					caseExecutioner.getCaseModel());
+			petriNetRepresentationJaxBean.addMarkingForInstance(caseExecutioner.getCase());
+
+			String result = petriNetRepresentationJaxBean.getDotOutput();
+
+			return Response.ok(result, MediaType.TEXT_PLAIN).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
 					.entity(buildError(e.getMessage())).build();
 		}
 	}

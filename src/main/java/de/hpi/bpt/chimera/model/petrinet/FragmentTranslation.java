@@ -64,22 +64,22 @@ public class FragmentTranslation extends AbstractTranslation {
 
 	private void translateActivity(AbstractActivity activity) {
 		ActivityTranslation activityTranslation = new ActivityTranslation(context, activity);
-		controlNodeTranslationsById.put(activity.getId(), activityTranslation);
+		getControlNodeTranslationsById().put(activity.getId(), activityTranslation);
 	}
 
 	private void translateEvent(AbstractEvent event) {
 		EventTranslation eventTranslation = new EventTranslation(context, event);
-		controlNodeTranslationsById.put(event.getId(), eventTranslation);
+		getControlNodeTranslationsById().put(event.getId(), eventTranslation);
 	}
 
 	private void translateExclusiveGateway(AbstractGateway gateway) {
 		AbstractGatewayTranslation gatewayTranslation = new ExclusiveGatewayTranslation(context, gateway);
-		controlNodeTranslationsById.put(gateway.getId(), gatewayTranslation);
+		getControlNodeTranslationsById().put(gateway.getId(), gatewayTranslation);
 	}
 
 	private void translateParallelGateway(AbstractGateway gateway) {
 		AbstractGatewayTranslation gatewayTranslation = new ParallelGatewayTranslation(context, gateway);
-		controlNodeTranslationsById.put(gateway.getId(), gatewayTranslation);
+		getControlNodeTranslationsById().put(gateway.getId(), gatewayTranslation);
 	}
 
 	private void translateEventGateway(AbstractGateway gateway) {
@@ -89,7 +89,7 @@ public class FragmentTranslation extends AbstractTranslation {
 
 	private void translateSequenceFlow(SequenceFlowAssociation flowAssociation) {
 		SequenceFlowTranslation sequenceFlowTranslation = new SequenceFlowTranslation(context, flowAssociation,
-				controlNodeTranslationsById);
+				getControlNodeTranslationsById());
 		sequenceFlowTranslationsById.put(flowAssociation.getId(), sequenceFlowTranslation);
 	}
 
@@ -131,7 +131,7 @@ public class FragmentTranslation extends AbstractTranslation {
 	}
 
 	private void translateEndEvent(EndEvent endEvent) {
-		EventTranslation endEventTranslation = (EventTranslation) controlNodeTranslationsById.get(endEvent.getId());
+		EventTranslation endEventTranslation = (EventTranslation) getControlNodeTranslationsById().get(endEvent.getId());
 		Transition endEventTransition = endEventTranslation.getEventTransition();
 		final Place finalPlace = endEventTranslation.getFinalPlace();
 
@@ -148,6 +148,10 @@ public class FragmentTranslation extends AbstractTranslation {
 	}
 
 	public EventTranslation getStartEventTranslation() {
-		return (EventTranslation) controlNodeTranslationsById.get(fragment.getBpmnFragment().getStartEvent().getId());
+		return (EventTranslation) getControlNodeTranslationsById().get(fragment.getBpmnFragment().getStartEvent().getId());
+	}
+
+	public Map<String, AbstractControlNodeTranslation> getControlNodeTranslationsById() {
+		return controlNodeTranslationsById;
 	}
 }
