@@ -1,12 +1,16 @@
 package de.hpi.bpt.chimera.petrinet;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
+import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.petrinet.ActivityTranslation;
@@ -80,6 +84,9 @@ public class PetriNetCaseInstanceMarker extends AbstractPetriNetMarker {
 	}
 
 	private void addMarkingForActivityInstance(AbstractActivityInstance activityInstance) {
+
+		ActivityTranslation activityTranslation = getActivityTranslation(activityInstance);
+
 		switch (activityInstance.getState()) {
 		case CANCEL:
 		case EXECUTING:
@@ -92,17 +99,36 @@ public class PetriNetCaseInstanceMarker extends AbstractPetriNetMarker {
 					+ activityInstance.getState());
 			break;
 		case CONTROLFLOW_ENABLED:
-			getActivityTranslation(activityInstance).getInitialPlace().addTokens(1);
+			activityTranslation.getInitialPlace().addTokens(1);
 			break;
 		case DATAFLOW_ENABLED:
-			getActivityTranslation(activityInstance).getInitialPlace().addTokens(1);
+			activityTranslation.getInitialPlace().addTokens(1);
 			break;
 		case READY:
-			getActivityTranslation(activityInstance).getInnerInitialPlace().addTokens(1);
+			activityTranslation.getInnerInitialPlace().addTokens(1);
 			break;
 		case RUNNING:
-			getActivityTranslation(activityInstance).getInnerFinalPlace().addTokens(1);
+			activityTranslation.getInnerFinalPlace().addTokens(1);
 			break;
+		}
+
+		if (!activityInstance.getControlNode().getPreCondition().isEmpty()) {
+			List<DataObject> selectedDataObjects = activityInstance.getSelectedDataObjects();
+			List<AtomicDataStateCondition> selectedDataStateConditions = selectedDataObjects.stream()
+					.map(d -> d.getCondition()).collect(Collectors.toList());
+
+			boolean isBindPlaceFound = false;
+			for (ConditionSet conditionSet : activityInstance.getControlNode().getPreCondition().getConditionSets()) {
+				if (conditionSet.isFulfilled(selectedDataStateConditions)) {
+					activityTranslation.getIoRelationTranslation().getDataObjectBindPlaceByConditionSet()
+							.get(conditionSet).addTokens(1);
+					isBindPlaceFound = true;
+					break;
+				}
+			}
+			assert (isBindPlaceFound);
+
+			// TODO find matching condition set
 		}
 	}
 

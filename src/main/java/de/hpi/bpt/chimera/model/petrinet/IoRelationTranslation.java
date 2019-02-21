@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
@@ -20,7 +21,7 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 	final Place innerInitialPlace;
 	final Place innerFinalPlace;
 
-	final Map<ConditionSet, Place> dataObjectBindPlaceByConditionSet = new HashMap<>();
+	private final Map<ConditionSet, Place> dataObjectBindPlaceByConditionSet = new HashMap<>();
 
 	public IoRelationTranslation(TranslationContext translationContext, DataStateCondition preCondition,
 			DataStateCondition postCondition, String name, Place initialPlace, Place innerInitialPlace,
@@ -61,7 +62,11 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 
 			// Bind data objects (one place per condition set representing all bound data
 			// objects for this condition set)
-			Place dataObjectBindPlace = addPlace("io_" + Integer.toString(postConditionId) + "_bind");
+			String boundDataObjectNames = preConditionSet.getConditions().stream()
+					.map(adc -> adc.getDataClass().getName() + "[" + adc.getObjectLifecycleState().getName() + "]")
+					.collect(Collectors.joining("_"));
+			Place dataObjectBindPlace = addPlace(
+					"io_" + Integer.toString(postConditionId) + "_bind_" + boundDataObjectNames);
 			dataObjectBindPlaceByConditionSet.put(preConditionSet, dataObjectBindPlace);
 			preConditionSetTransition.addOutputPlace(dataObjectBindPlace);
 
@@ -143,5 +148,9 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 				}
 			}
 		}
+	}
+
+	public Map<ConditionSet, Place> getDataObjectBindPlaceByConditionSet() {
+		return dataObjectBindPlaceByConditionSet;
 	}
 }

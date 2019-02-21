@@ -4,6 +4,10 @@ import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 
+/**
+ * Non-binding pre-condition. If data objects should be bound, use an
+ * {@link IoRelationTranslation}!
+ */
 public class DataStatePreConditionTranslation extends AbstractDataStateConditionTranslation {
 
 	final DataStateCondition preCondition;

@@ -6,29 +6,32 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractSequent
 
 	protected final Place innerInitialPlace;
 	protected final Place innerFinalPlace;
-	protected final DataStatePreConditionTranslation preconditionTranslation;
-	protected final IoRelationTranslation ioRelationTranslation;
+	private final DataStatePreConditionTranslation preconditionTranslation;
+	private final IoRelationTranslation ioRelationTranslation;
 
 	public AbstractDataControlNodeTranslation(TranslationContext translationContext, AbstractDataControlNode node) {
 		super(translationContext, node);
 
 		// Is an io-relation needed?
-		if (!node.getPostCondition().getConditionSets().isEmpty() || !TranslationContext.isOptimizeTranslation()) {
+		if (!node.getPreCondition().getConditionSets().isEmpty()
+				|| !node.getPostCondition().getConditionSets().isEmpty()
+				|| !TranslationContext.isOptimizeTranslation()) {
 			innerInitialPlace = addPlace("innerInit");
 			innerFinalPlace = addPlace("innerFinal");
 			ioRelationTranslation = new IoRelationTranslation(this.context, node.getPreCondition(),
 					node.getPostCondition(), name, initialPlace, innerInitialPlace, innerFinalPlace, finalPlace);
 			preconditionTranslation = null;
 
-			// Is a precondition needed?
-		} else if (!node.getPreCondition().getConditionSets().isEmpty()
-				|| !TranslationContext.isOptimizeTranslation()) {
-			innerInitialPlace = addPlace("innerInit");
-			preconditionTranslation = new DataStatePreConditionTranslation(this.context, node.getPreCondition(),
-					name + "pre", getInitialPlace(), innerInitialPlace);
-
-			innerFinalPlace = getFinalPlace();
-			ioRelationTranslation = null;
+//			// Is a precondition needed?
+//		} else if (!node.getPreCondition().getConditionSets().isEmpty()
+//				|| !TranslationContext.isOptimizeTranslation()) {
+//			innerInitialPlace = addPlace("innerInit");
+//			ioRelationTranslation = new IoRelationTranslation(this.context, node.getPreCondition(), new DataStateCondition(), name + "_pre", getInitialPlace(), innerInitialPlace, innerFinalPlace, innerFinalPlace)
+//			preconditionTranslation = new DataStatePreConditionTranslation(this.context, node.getPreCondition(),
+//					name + "pre", getInitialPlace(), innerInitialPlace);
+//
+//			innerFinalPlace = getFinalPlace();
+//			ioRelationTranslation = null;
 		} else {
 			innerInitialPlace = getInitialPlace();
 			preconditionTranslation = null;
@@ -43,5 +46,13 @@ public abstract class AbstractDataControlNodeTranslation extends AbstractSequent
 
 	public Place getInnerFinalPlace() {
 		return innerFinalPlace;
+	}
+
+	public IoRelationTranslation getIoRelationTranslation() {
+		return ioRelationTranslation;
+	}
+
+	public DataStatePreConditionTranslation getPreconditionTranslation() {
+		return preconditionTranslation;
 	}
 }
