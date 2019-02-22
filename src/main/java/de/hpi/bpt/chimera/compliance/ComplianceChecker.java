@@ -124,7 +124,6 @@ public class ComplianceChecker {
 
 			Matcher termMatcher = termPattern.matcher(query);
 			if (termMatcher.find()) {
-				assert (termMatcher.groupCount() == 1);
 				final String matchedTermGroup = termMatcher.group(1); // 0 is complete string
 				System.out.println("Matched term '" + matchedTermGroup + "'");
 
@@ -138,12 +137,16 @@ public class ComplianceChecker {
 					Collection<Place> matchingPlaces = petriNet.getPlaces().stream()
 							.filter(p -> p.getName().equals(matchedTermGroup)).collect(Collectors.toList());
 					if (!matchingPlaces.isEmpty()) {
-						assert (matchingPlaces.size() == 1);
+						if (matchingPlaces.size() != 1) {
+							throw new RuntimeException(
+									"Found more than one matching place with name " + matchedTermGroup);
+						}
 						Place referredPlace = matchingPlaces.iterator().next();
 						query = termMatcher.replaceFirst(referredPlace.getPrefixedIdString());
 						queryChanged = true;
 					} else {
 						System.out.println("Cannot find place for " + matchedTermGroup);
+						throw new RuntimeException("Cannot find place for " + matchedTermGroup);
 					}
 				} else {
 					System.out.println("could not find any data objects");
@@ -163,6 +166,7 @@ public class ComplianceChecker {
 						queryChanged = true;
 					} else {
 						System.out.println("Cannot find transition for " + sanitizedTermGroup);
+						throw new RuntimeException("Cannot find transition for " + sanitizedTermGroup);
 					}
 				}
 			} else {

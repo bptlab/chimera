@@ -92,7 +92,9 @@ public class CaseExecutioner {
 	 * Start the Case by starting all {@link FragmentInstance}s.
 	 */
 	synchronized public void startCase() {
+		System.out.println("Starting case");
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
+			System.out.println("enabling fragment " + fragmentInstance.getFragment().getName());
 			fragmentInstance.enable();
 		}
 	}

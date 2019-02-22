@@ -4,8 +4,6 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
@@ -27,7 +25,6 @@ public abstract class ControlNodeInstance implements Behaving {
 	private FragmentInstance fragmentInstance;
 	private State state;
 
-
 	/**
 	 * for JPA only
 	 */
@@ -35,7 +32,6 @@ public abstract class ControlNodeInstance implements Behaving {
 		// JPA needs an empty constructor to instantiate objects of this class
 		// at runtime.
 	}
-
 
 	public ControlNodeInstance(AbstractControlNode controlNode, FragmentInstance fragmentInstance) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
@@ -65,6 +61,8 @@ public abstract class ControlNodeInstance implements Behaving {
 	}
 
 	public void setState(State state) {
+		System.out.println(this.getControlNode().getName() + " (" + this.getControlNode().getId() + ") state "
+				+ this.state + " -> " + state);
 		this.state = state;
 	}
 
@@ -72,6 +70,7 @@ public abstract class ControlNodeInstance implements Behaving {
 		return state;
 	}
 
+	@Override
 	public void skip() {
 		this.setState(State.SKIPPED);
 	}

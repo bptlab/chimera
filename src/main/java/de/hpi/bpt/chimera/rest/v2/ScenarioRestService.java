@@ -213,6 +213,8 @@ public class ScenarioRestService extends AbstractRestService {
 
 			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
 					cm);
+			petriNetRepresentationJaxBean.addMarkingForInitialState();
+
 			String result = petriNetRepresentationJaxBean.getDotOutput();
 
 			return Response.ok().type(MediaType.TEXT_PLAIN).entity(result).build();
@@ -239,6 +241,7 @@ public class ScenarioRestService extends AbstractRestService {
 
 			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
 					cm);
+			petriNetRepresentationJaxBean.addMarkingForInitialState();
 			PetriNet petriNet = petriNetRepresentationJaxBean.getPetriNet();
 			String petriNetAsLolaFile = petriNetRepresentationJaxBean.getLolaOutput();
 

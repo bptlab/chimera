@@ -21,9 +21,13 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.compliance.ComplianceChecker;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
+import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.petrinet.PetriNet;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.rest.RestInterface;
 import de.hpi.bpt.chimera.rest.beans.casemodel.CaseModelPetriNetRepresentationJaxBean;
@@ -332,6 +336,57 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 
 			return Response.ok(result, MediaType.TEXT_PLAIN).build();
 		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
+					.entity(buildError(e.getMessage())).build();
+		}
+	}
+
+	@GET
+	@Path("scenario/{scenarioId}/instance/{instanceId}/compliance/{query}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response getComplianceCheckResult(@Context UriInfo uri, @PathParam("scenarioId") String cmId,
+			@PathParam("instanceId") String caseId, @PathParam("query") String query) {
+		try {
+			CaseModel cm = CaseModelManager.getCaseModel(cmId);
+			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+
+			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
+					cm);
+			petriNetRepresentationJaxBean.addMarkingForInstance(caseExecutioner.getCase());
+			PetriNet petriNet = petriNetRepresentationJaxBean.getPetriNet();
+			String petriNetAsLolaFile = petriNetRepresentationJaxBean.getLolaOutput();
+
+			// Send to LOLA
+			ComplianceChecker complianceChecker = new ComplianceChecker();
+			String processedQuery = complianceChecker.replaceQueryIdentifiers(petriNet, query);
+
+			// Get result
+			String result = complianceChecker.queryLola(petriNetAsLolaFile, processedQuery);
+
+			// Get witness path
+			String witnessPath = complianceChecker.extractWitnessPath(result, petriNet);
+			if (!witnessPath.isEmpty()) {
+				result += "\nwitness path:\n" + witnessPath + "\n";
+			} else {
+				result += "\nno witness path :(\n";
+			}
+
+			// Get witness state
+			String witnessState = complianceChecker.extractWitnessState(result, petriNet);
+			if (!witnessState.isEmpty()) {
+				result += "\nwitness state (places with tokens):\n" + witnessState + "\n";
+			} else {
+				result += "\nno witness state :(\n";
+			}
+
+			return Response.ok().type(MediaType.TEXT_PLAIN).entity(result).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
+					.entity(buildError(e.getMessage())).build();
+		} catch (Exception e) {
+			// TODO remove once querying LOLA doesn't throw
+			System.out.println("damn son");
+			e.printStackTrace();
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
 					.entity(buildError(e.getMessage())).build();
 		}

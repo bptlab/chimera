@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
+import de.hpi.bpt.chimera.execution.controlnodes.gateway.ExclusiveGatewayInstance;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataObject;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
@@ -56,13 +57,12 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 
 	/**
 	 * Enables the incoming control flow of the DataControlNodeInstance. Any
-	 * previously selected DataObjects are cleared. If state is INIT, it is set
-	 * to CONTROLFLOW_ENABLED. If data preconditions are fulfilled (or state is
-	 * already DATAFLOW_ENABLED), state is set to READY. If an
-	 * DataControlNodeInstance that is allow to begin automatically is READY, it
-	 * is started. However, if it is the first ActivityInstance in the
-	 * FragmentInstance, which means the FragmentInstance has not started yet,
-	 * it can not begin automatically.
+	 * previously selected DataObjects are cleared. If state is INIT, it is set to
+	 * CONTROLFLOW_ENABLED. If data preconditions are fulfilled (or state is already
+	 * DATAFLOW_ENABLED), state is set to READY. If an DataControlNodeInstance that
+	 * is allow to begin automatically is READY, it is started. However, if it is
+	 * the first ActivityInstance in the FragmentInstance, which means the
+	 * FragmentInstance has not started yet, it can not begin automatically.
 	 */
 	@Override
 	public void enableControlFlow() {
@@ -75,7 +75,8 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 		}
 		if (canBeginAutomatically()) {
 			// automatically select data objects, input set must be unique
-			assert getControlNode().hasUniquePreCondition() : "For automatic execution tasks need an unique pre-condition";
+			assert getControlNode()
+					.hasUniquePreCondition() : "For automatic execution tasks need an unique pre-condition";
 			List<ConditionSet> conditionSets = getControlNode().getPreCondition().getConditionSets();
 			ConditionSet inputSet = new ConditionSet();
 			if (!conditionSets.isEmpty()) {
@@ -93,15 +94,16 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 	}
 
 	public boolean isDataFlowEnabled() {
-		return getState().equals(State.DATAFLOW_ENABLED) || getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions());
+		return getState().equals(State.DATAFLOW_ENABLED)
+				|| getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions());
 	}
 
-	
 	/**
 	 * Used for updating the DataFlow of the ActivityInstance.
 	 */
 	public void checkDataFlow() {
-		if (getFragmentInstance().isExecutable() && getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
+		if (getFragmentInstance().isExecutable()
+				&& getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
 			enableDataFlow();
 		} else {
 			disableDataFlow();
@@ -125,15 +127,16 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 	}
 
 	/**
-	 * Tries to set the flag for automatic execution of this activity instance
-	 * to {@literal true}. This fails if the activity has multiple input or
-	 * output sets which would require user choice. Gateways themselves take
-	 * care to forbid automatic execution of their successor activities,
+	 * Tries to set the flag for automatic execution of this activity instance to
+	 * {@literal true}. This fails if the activity has multiple input or output sets
+	 * which would require user choice. Gateways themselves take care to forbid
+	 * automatic execution of their successor activities,
 	 * 
 	 * @see {@link ExclusiveGatewayInstance}.
 	 */
 	public void allowAutomaticExecution() {
-		if (getControlNode().hasUniquePostCondition() && getControlNode().hasUniquePreCondition() && getControlNode().isAutomatic()) {
+		if (getControlNode().hasUniquePostCondition() && getControlNode().hasUniquePreCondition()
+				&& getControlNode().isAutomatic()) {
 			hasAutomaticBegin = true;
 		} else {
 			log.warn("Tasks with more than one input or output set cannot be executed automatically.");
@@ -142,10 +145,10 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 	}
 
 	/**
-	 * Sets the flag for automatic execution of this activity to
-	 * {@literal false}. This is used by exclusive gateways to prevent that the
-	 * branch starting with the automatic activity is always taken. In this
-	 * case, the automatic activity has to be started manually by the user.
+	 * Sets the flag for automatic execution of this activity to {@literal false}.
+	 * This is used by exclusive gateways to prevent that the branch starting with
+	 * the automatic activity is always taken. In this case, the automatic activity
+	 * has to be started manually by the user.
 	 */
 	public void forbidAutomaticStart() {
 		hasAutomaticBegin = false;
@@ -153,19 +156,18 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 
 	/**
 	 * @return true if the DataControlNodeInstance is in the correct state, is
-	 *         allowed to begin automatically and the corresponding
-	 *         FragmentInstance is already started. However,
-	 *         {@link IntermediateCatchEventInstance} can also begin
-	 *         automatically if the FragmentInstance has not started yet because
-	 *         they need to be registered.
+	 *         allowed to begin automatically and the corresponding FragmentInstance
+	 *         is already started. However, {@link IntermediateCatchEventInstance}
+	 *         can also begin automatically if the FragmentInstance has not started
+	 *         yet because they need to be registered.
 	 */
 	public boolean canBeginAutomatically() {
 		return canBegin() && hasAutomaticBegin() && getFragmentInstance().isActive();
 	}
 
 	/**
-	 * A data control node instance can only begin if it is in State READY and
-	 * the fragment instance allows execution.
+	 * A data control node instance can only begin if it is in State READY and the
+	 * fragment instance allows execution.
 	 */
 	public boolean canBegin() {
 		return getState().equals(State.READY) && getFragmentInstance().isExecutable();
@@ -173,39 +175,40 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 
 	/**
 	 * 
-	 * @return whether the data control node instance should be able to
-	 *         terminate.
+	 * @return whether the data control node instance should be able to terminate.
 	 */
 	public abstract boolean canTerminate();
 
 	/**
-	 * If the input string contains a variable expression, i.e.
-	 * {@code #DataClass} or {@code #DataClass.attributeName}, this method tries
-	 * to find a {@link DataObject} of this data class among the selected data
-	 * objects. In the first case ({@code #DataClass}) the variable expression
-	 * is replaced with the current state of the found data object (or "<not
-	 * found>" if no such data object was found). In the second case
-	 * ({@code #DataClass.attributeName}) the attribute instances of the found
-	 * data object are searched for one that matches {@code attributeName}. If
-	 * such attribute instance is found, its value is used to replace the
-	 * variable expression in the input string. Otherwise, it is replaced with
-	 * "<not found>".
+	 * If the input string contains a variable expression, i.e. {@code #DataClass}
+	 * or {@code #DataClass.attributeName}, this method tries to find a
+	 * {@link DataObject} of this data class among the selected data objects. In the
+	 * first case ({@code #DataClass}) the variable expression is replaced with the
+	 * current state of the found data object (or "<not found>" if no such data
+	 * object was found). In the second case ({@code #DataClass.attributeName}) the
+	 * attribute instances of the found data object are searched for one that
+	 * matches {@code attributeName}. If such attribute instance is found, its value
+	 * is used to replace the variable expression in the input string. Otherwise, it
+	 * is replaced with "<not found>".
 	 * 
-	 * If the input string contains multiple variable expression the first one
-	 * is replaced and the method calls itself recursively with the resulting
-	 * string. The recursion ends, when the input no longer contains any
-	 * variable expressions.
+	 * If the input string contains multiple variable expression the first one is
+	 * replaced and the method calls itself recursively with the resulting string.
+	 * The recursion ends, when the input no longer contains any variable
+	 * expressions.
 	 * 
-	 * If the input string does not contain a variable expression, it is
-	 * returned unchanged.
+	 * If the input string does not contain a variable expression, it is returned
+	 * unchanged.
 	 * 
-	 * @param toReplace
-	 *            - the input string which might contain variable expressions
-	 *            {@code #DataClass} or {@code #DataClass.attributeName}
+	 * @param toReplace - the input string which might contain variable expressions
+	 *                  {@code #DataClass} or {@code #DataClass.attributeName}
 	 * @return the input string with the variable expression replaced by the
 	 *         referenced data object state or data attribute value
 	 */
 	public String replaceVariableExpressions(String toReplace) {
+		System.out.println("replaceVariableExpressions " + toReplace);
+		if (toReplace == null) {
+			return toReplace;
+		}
 		Pattern p = Pattern.compile("#(\\w+)(?:\\.(\\w+))?\\b");
 		Matcher m = p.matcher(toReplace);
 		if (!m.find()) { // no variable used in input, end recursion
@@ -215,10 +218,13 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 		final int dataClassNameGroup = 1;
 		String dataClassName = m.group(dataClassNameGroup);
 		Optional<String> attrName = Optional.ofNullable(m.group(attributeNameGroup));
-		Optional<DataObject> foundDO = getSelectedDataObjects().stream().filter(d -> dataClassName.equals(d.getDataClass().getName())).findFirst();
+		Optional<DataObject> foundDO = getSelectedDataObjects().stream()
+				.filter(d -> dataClassName.equals(d.getDataClass().getName())).findFirst();
 		if (!foundDO.isPresent()) { // no DO found for data class referenced in
 			// variable expression
-			log.error(String.format("None of the selected data objects of the task '%s' matches the data class '%s' referenced in the variable expression %s.", getControlNode().getName(), dataClassName, m.group()));
+			log.error(String.format(
+					"None of the selected data objects of the task '%s' matches the data class '%s' referenced in the variable expression %s.",
+					getControlNode().getName(), dataClassName, m.group()));
 			// replace first match and recursive call to replace other potential
 			// variable expressions
 			String replacedFirstOccurrence = m.replaceFirst("<not found>");
@@ -231,10 +237,13 @@ public abstract class AbstractDataControlNodeInstance extends ControlNodeInstanc
 			String replacedFirstOccurrence = m.replaceFirst(foundDO.get().getObjectLifecycleState().getName());
 			return replaceVariableExpressions(replacedFirstOccurrence);
 		}
-		Optional<DataAttributeInstance> foundDAI = foundDO.get().getDataAttributeInstances().stream().filter(dai -> attrName.get().equals(dai.getDataAttribute().getName())).findFirst();
+		Optional<DataAttributeInstance> foundDAI = foundDO.get().getDataAttributeInstances().stream()
+				.filter(dai -> attrName.get().equals(dai.getDataAttribute().getName())).findFirst();
 		if (!foundDAI.isPresent()) { // no DAI found for attribute referenced in
 			// variable expression
-			log.error(String.format("The found data object of class '%s' does not have a attribute with name '%s' specified in the variable expression %s.", dataClassName, attrName.get(), m.group()));
+			log.error(String.format(
+					"The found data object of class '%s' does not have a attribute with name '%s' specified in the variable expression %s.",
+					dataClassName, attrName.get(), m.group()));
 			// replace first match and recursive call to replace other potential
 			// variable expressions
 			String replacedFirstOccurrence = m.replaceFirst("<not found>");

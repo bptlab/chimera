@@ -73,7 +73,10 @@ public class Case {
 		if (initialOlcState == null) {
 			Optional<ObjectLifecycleState> initState = caseClass.getObjectLifecycle().getObjectLifecycleStates()
 					.stream().filter(olcState -> olcState.getName().equals("init")).findFirst();
-			if (initState.isPresent()) {
+			if (!initState.isPresent()) {
+				System.out.println("Case class has no 'init' state. Available states: ");
+				caseClass.getObjectLifecycle().getObjectLifecycleStates().stream()
+						.forEach(state -> System.out.println(state.getName()));
 				throw new RuntimeException("The case class has no 'init' state.");
 			}
 			initialOlcState = initState.get();
