@@ -38,8 +38,7 @@ public class SequenceFlowResolver {
 	}
 
 	/**
-	 * Resolves the incoming SequenceFlows for a certain ControlNode and sets
-	 * them.
+	 * Resolves the incoming SequenceFlows for a certain ControlNode and sets them.
 	 * 
 	 * @param incomingSequenceFlows
 	 * @param controlNode
@@ -57,8 +56,7 @@ public class SequenceFlowResolver {
 	}
 
 	/**
-	 * Resolves the outgoing SequenceFlows for a certain ControlNode and sets
-	 * them.
+	 * Resolves the outgoing SequenceFlows for a certain ControlNode and sets them.
 	 * 
 	 * @param outgoingSequenceFlows
 	 * @param controlNode
@@ -88,7 +86,11 @@ public class SequenceFlowResolver {
 			if (entry.getValue().getSourceRef() != null && entry.getValue().getTargetRef() != null) {
 				sfaList.add(entry.getValue());
 			} else {
-				throw new UnresolvedSequenceFlowException("there is at least one Sequence Flow Association which ins't attached to a Controlnode on both sides - id: " + entry.getKey());
+				System.out.println("source ref: " + entry.getValue().getSourceRef());
+				System.out.println("target ref: " + entry.getValue().getTargetRef());
+				throw new UnresolvedSequenceFlowException(
+						"there is at least one Sequence Flow Association which ins't attached to a Controlnode on both sides - id: "
+								+ entry.getKey());
 			}
 		}
 

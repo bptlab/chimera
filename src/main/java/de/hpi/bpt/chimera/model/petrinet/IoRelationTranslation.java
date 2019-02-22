@@ -44,7 +44,6 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 			preConditionSets = new ArrayList<ConditionSet>();
 			preConditionSets.add(new ConditionSet());
 		}
-		assert (!preConditionSets.isEmpty());
 
 		// We need at least one post-ConditionSet, even if it does not contain any
 		// conditions
@@ -52,7 +51,6 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 			postConditionSets = new ArrayList<ConditionSet>();
 			postConditionSets.add(new ConditionSet());
 		}
-		assert (!postConditionSets.isEmpty());
 
 		int preConditionId = 1;
 		int postConditionId = 1;
@@ -133,17 +131,36 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 						.equals(atomicPostCondition.getDataClass())) {
 					// Assert that there is a matching pre-condition, i.e. this is just a state
 					// change and not an instantiation.
-					assert (preCondition.getConditionSets().stream().flatMap(cs -> cs.getConditions().stream())
-							.anyMatch(adsc -> adsc.getDataClass().equals(atomicPostCondition.getDataClass())));
+					if (!preCondition.getConditionSets().stream().flatMap(cs -> cs.getConditions().stream())
+							.anyMatch(adsc -> adsc.getDataClass().equals(atomicPostCondition.getDataClass()))) {
+						throw new RuntimeException("Tried to instantiate the case class.");
+					}
 				}
 
 				// OLC state changes have to be legal
 				for (ConditionSet preConditionSet : preCondition.getConditionSets()) {
 					for (AtomicDataStateCondition atomicPreCondition : preConditionSet.getConditions()) {
 						if (atomicPreCondition.getDataClass().equals(atomicPostCondition.getDataClass())) {
-							assert (atomicPostCondition.getObjectLifecycleState()
-									.isSuccessorOf(atomicPreCondition.getObjectLifecycleState()));
+							if (!atomicPostCondition.getObjectLifecycleState()
+									.isSuccessorOf(atomicPreCondition.getObjectLifecycleState())) {
+								throw new RuntimeException(
+										"Illegal state change " + atomicPreCondition.getObjectLifecycleState().getName()
+												+ " -> " + atomicPostCondition.getObjectLifecycleState().getName()
+												+ " for data class " + atomicPreCondition.getDataClass().getName());
+							}
 						}
+					}
+				}
+
+				// Data object creations can only happen in initial states (those without
+				// predecessors)
+				if (preCondition.getConditionSets().stream()
+						.flatMap(conditionSet -> conditionSet.getConditions().stream()).noneMatch(adsc -> adsc
+								.getDataClass().getName().equals(atomicPostCondition.getDataClass().getName()))) {
+					if (!atomicPostCondition.getObjectLifecycleState().getPredecessors().isEmpty()) {
+						throw new RuntimeException("Tried to instantiate data object "
+								+ atomicPostCondition.getDataClass().getName() + " in non-initial state "
+								+ atomicPostCondition.getObjectLifecycleState().getName());
 					}
 				}
 			}

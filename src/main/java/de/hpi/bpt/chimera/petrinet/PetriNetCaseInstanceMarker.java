@@ -127,8 +127,6 @@ public class PetriNetCaseInstanceMarker extends AbstractPetriNetMarker {
 				}
 			}
 			assert (isBindPlaceFound);
-
-			// TODO find matching condition set
 		}
 	}
 

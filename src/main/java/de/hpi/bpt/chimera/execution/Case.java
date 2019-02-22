@@ -64,21 +64,23 @@ public class Case {
 			instantiateFragment(fragment);
 		}
 
+		// Instantiate case class
 		caseClass = caseModel.getDataModel().getCaseClass();
-		assert (caseClass != null);
+		if (caseClass == null) {
+			throw new RuntimeException("There is not case class to instantiate.");
+		}
 		ObjectLifecycleState initialOlcState = caseClass.getObjectLifecycle().getInitialObjectLifecycleState();
 		if (initialOlcState == null) {
 			Optional<ObjectLifecycleState> initState = caseClass.getObjectLifecycle().getObjectLifecycleStates()
 					.stream().filter(olcState -> olcState.getName().equals("init")).findFirst();
-			assert (initState.isPresent());
+			if (initState.isPresent()) {
+				throw new RuntimeException("The case class has no 'init' state.");
+			}
 			initialOlcState = initState.get();
 		}
-		assert (initialOlcState != null);
-		System.out.println("case executioner: ");
-		System.out.println(caseExecutioner);
-		System.out.println("data manager: ");
-		System.out.println(caseExecutioner.getDataManager());
-
+		if (initialOlcState == null) {
+			throw new RuntimeException("There is no initial state for the case class.");
+		}
 		caseExecutioner.getDataManager().createDataObject(new AtomicDataStateCondition(caseClass, initialOlcState));
 	}
 
