@@ -17,8 +17,9 @@ public class PetriNetCaseInitialMarker extends AbstractPetriNetMarker {
 
 		// Initialize case class with one token
 		DataClass caseClass = caseModelTranslation.getCaseModel().getDataModel().getCaseClass();
+		String initialStateName = caseClass.getObjectLifecycle().getInitialState().getName();
 		caseModelTranslation.getDataClassTranslationsByName().get(caseClass.getName()).getOlcStatePlacesByName()
-				.get("init").setNumTokens(1);
+				.get(initialStateName).setNumTokens(1);
 
 		// TODO fragment re-initialization pools?
 	}

@@ -21,17 +21,16 @@ public class ObjectLifecycleParser {
 
 	private ObjectLifecycleParser() {
 	}
-	
+
 	/**
-	 * Parse ObjectLifecycle out of olcJson. In addition validate
-	 * ObjectLifecycle.
+	 * Parse ObjectLifecycle out of olcJson. In addition validate ObjectLifecycle.
 	 * 
 	 * @param olcJson
 	 * @return ObjectLifecycle
 	 */
 	public static ObjectLifecycle parseObjectLifecylce(JSONObject olcJson) {
 		ObjectLifecycle objectLifecycle = new ObjectLifecycle();
-		
+
 		try {
 			Map<String, ObjectLifecycleState> mapIdToState = getMapIdToState(olcJson.getJSONArray("state"));
 			NameValidation.validateNameFrequency(new ArrayList<>(mapIdToState.values()));
@@ -42,6 +41,7 @@ public class ObjectLifecycleParser {
 				ObjectLifecycleValidation.validateSequenceFlow(mapIdToState, sequenceFlows);
 			}
 			List<ObjectLifecycleState> olcStates = parseOlcStates(mapIdToState, sequenceFlows);
+			ObjectLifecycleValidation.validateInitialState(olcStates);
 			objectLifecycle.setObjectLifecycleStates(olcStates);
 
 		} catch (JSONException | IllegalArgumentException e) {
@@ -107,17 +107,16 @@ public class ObjectLifecycleParser {
 	}
 
 	/**
-	 * Converts the State-ids stored in SequenceFlows into the referring states
-	 * with mapIdToState and add successor and predecessor which you get from
+	 * Converts the State-ids stored in SequenceFlows into the referring states with
+	 * mapIdToState and add successor and predecessor which you get from
 	 * SequenceFlow to referring state.
 	 * 
-	 * @param mapIdToState
-	 *            parsed by getMapIdToState
-	 * @param sequenceFlows
-	 *            parsed by parseSequenceFlow
+	 * @param mapIdToState  parsed by getMapIdToState
+	 * @param sequenceFlows parsed by parseSequenceFlow
 	 * @return List of ObjectLifecycleStates
 	 */
-	private static List<ObjectLifecycleState> parseOlcStates(Map<String, ObjectLifecycleState> mapIdToState, List<SequenceFlow> sequenceFlows) {
+	private static List<ObjectLifecycleState> parseOlcStates(Map<String, ObjectLifecycleState> mapIdToState,
+			List<SequenceFlow> sequenceFlows) {
 		for (SequenceFlow sequenceFlow : sequenceFlows) {
 			ObjectLifecycleState sourceState = mapIdToState.get(sequenceFlow.getSource());
 			ObjectLifecycleState targetState = mapIdToState.get(sequenceFlow.getTarget());

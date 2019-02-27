@@ -157,7 +157,10 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 				if (preCondition.getConditionSets().stream()
 						.flatMap(conditionSet -> conditionSet.getConditions().stream()).noneMatch(adsc -> adsc
 								.getDataClass().getName().equals(atomicPostCondition.getDataClass().getName()))) {
-					if (!atomicPostCondition.getObjectLifecycleState().getPredecessors().isEmpty()) {
+					String postConditionStateName = atomicPostCondition.getObjectLifecycleState().getName();
+					String olcInitialStateName = atomicPostCondition.getDataClass().getObjectLifecycle()
+							.getInitialState().getName();
+					if (!postConditionStateName.equals(olcInitialStateName)) {
 						throw new RuntimeException("Tried to instantiate data object "
 								+ atomicPostCondition.getDataClass().getName() + " in non-initial state "
 								+ atomicPostCondition.getObjectLifecycleState().getName());

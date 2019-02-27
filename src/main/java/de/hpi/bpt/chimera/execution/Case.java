@@ -3,7 +3,6 @@ package de.hpi.bpt.chimera.execution;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -69,18 +68,7 @@ public class Case {
 		if (caseClass == null) {
 			throw new RuntimeException("There is not case class to instantiate.");
 		}
-		ObjectLifecycleState initialOlcState = caseClass.getObjectLifecycle().getInitialObjectLifecycleState();
-		if (initialOlcState == null) {
-			Optional<ObjectLifecycleState> initState = caseClass.getObjectLifecycle().getObjectLifecycleStates()
-					.stream().filter(olcState -> olcState.getName().equals("init")).findFirst();
-			if (!initState.isPresent()) {
-				System.out.println("Case class has no 'init' state. Available states: ");
-				caseClass.getObjectLifecycle().getObjectLifecycleStates().stream()
-						.forEach(state -> System.out.println(state.getName()));
-				throw new RuntimeException("The case class has no 'init' state.");
-			}
-			initialOlcState = initState.get();
-		}
+		ObjectLifecycleState initialOlcState = caseClass.getObjectLifecycle().getInitialState();
 		if (initialOlcState == null) {
 			throw new RuntimeException("There is no initial state for the case class.");
 		}
