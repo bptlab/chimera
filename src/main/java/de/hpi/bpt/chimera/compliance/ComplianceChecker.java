@@ -2,14 +2,19 @@ package de.hpi.bpt.chimera.compliance;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.petrinet.AbstractPetriNetNode;
 import de.hpi.bpt.chimera.model.petrinet.AbstractTranslation;
@@ -41,12 +46,17 @@ public class ComplianceChecker {
 		wr.flush();
 		wr.close();
 
-		// int responseCode = con.getResponseCode();
-		// System.out.println("\nSending 'POST' request to URL : " + url);
-		// System.out.println("Post parameters : " + urlParameters);
-		// System.out.println("Response Code : " + responseCode);
+		BufferedReader in;
+		int responseCode = con.getResponseCode();
+		System.out.println("LoLA response code " + responseCode);
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		try {
+			in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		} catch (IOException e) {
+			System.out.println("Reading error stream");
+			in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+		}
+
 		String inputLine;
 		StringBuffer response = new StringBuffer();
 
@@ -58,19 +68,57 @@ public class ComplianceChecker {
 		return response.toString();
 	}
 
-	public String extractWitnessPath(String lolaResponse, PetriNet petriNet) {
+	public String processLolaResult(String lolaResponse, PetriNet petriNet) {
+		JSONObject parsedJsonObject = new JSONObject(lolaResponse);
+
+		if (!parsedJsonObject.has("checks")) {
+			return lolaResponse;
+		}
+		JSONObject checks = parsedJsonObject.getJSONObject("checks");
+
+		@SuppressWarnings("unchecked")
+		Set<String> keySet = checks.keySet();
+
+		keySet.stream().forEach(key -> checks.put(key, processLolaCheckResult(checks.getJSONObject(key), petriNet)));
+
+		return parsedJsonObject.toString();
+	}
+
+	protected JSONObject processLolaCheckResult(JSONObject checkResult, PetriNet petriNet) {
+		if (checkResult.has("witness_path")) {
+			JSONArray witnessPath = checkResult.getJSONArray("witness_path");
+			for (int i = 0; i < witnessPath.length(); i++) {
+				witnessPath.put(i, getWitnessElementName(witnessPath.getString(i), petriNet));
+			}
+		}
+		if (checkResult.has("witness_state")) {
+			JSONObject witnessState = checkResult.getJSONObject("witness_state");
+
+			@SuppressWarnings("unchecked")
+			Set<String> keySet = witnessState.keySet();
+
+			JSONObject processedWitnessState = new JSONObject();
+
+			keySet.stream().forEach(
+					key -> processedWitnessState.put(getWitnessElementName(key, petriNet), witnessState.getInt(key)));
+			checkResult.put("witness_state", processedWitnessState);
+		}
+		return checkResult;
+	}
+
+	protected String extractWitnessPath(String lolaResponse, PetriNet petriNet) {
 		Pattern witnessPathPattern = Pattern.compile("custom_check_witness_path = '([^']+)';");
 		Pattern stepPattern = Pattern.compile("([pt]_[0-9]+)");
 		return extractWitnessElements(lolaResponse, witnessPathPattern, stepPattern, petriNet);
 	}
 
-	public String extractWitnessState(String lolaResponse, PetriNet petriNet) {
+	protected String extractWitnessState(String lolaResponse, PetriNet petriNet) {
 		Pattern witnessStatePattern = Pattern.compile("custom_check_witness_state = '([^']+)';");
 		Pattern stepPattern = Pattern.compile("([pt]_[0-9]+)");
 		return extractWitnessElements(lolaResponse, witnessStatePattern, stepPattern, petriNet);
 	}
 
-	public String extractWitnessElements(String lolaResponse, Pattern enclosingPattern, Pattern elementPattern,
+	protected String extractWitnessElements(String lolaResponse, Pattern enclosingPattern, Pattern elementPattern,
 			PetriNet petriNet) {
 
 		String witnessElementsOutput = "";
@@ -92,7 +140,7 @@ public class ComplianceChecker {
 		return witnessElementsOutput;
 	}
 
-	String getWitnessElementName(String witnessStep, PetriNet petriNet) {
+	protected String getWitnessElementName(String witnessStep, PetriNet petriNet) {
 		AbstractPetriNetNode petriNetNode;
 		if (witnessStep.startsWith("t_")) {
 			Optional<Transition> stepTransition = petriNet.getTransitions().stream()

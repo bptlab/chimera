@@ -361,33 +361,18 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			String processedQuery = complianceChecker.replaceQueryIdentifiers(petriNet, query);
 
 			// Get result
-			String result = complianceChecker.queryLola(petriNetAsLolaFile, processedQuery);
+			String lolaResponse = complianceChecker.queryLola(petriNetAsLolaFile, processedQuery);
 
-			// Get witness path
-			String witnessPath = complianceChecker.extractWitnessPath(result, petriNet);
-			if (!witnessPath.isEmpty()) {
-				result += "\nwitness path:\n" + witnessPath + "\n";
-			} else {
-				result += "\nno witness path :(\n";
-			}
+			String result = complianceChecker.processLolaResult(lolaResponse, petriNet);
 
-			// Get witness state
-			String witnessState = complianceChecker.extractWitnessState(result, petriNet);
-			if (!witnessState.isEmpty()) {
-				result += "\nwitness state (places with tokens):\n" + witnessState + "\n";
-			} else {
-				result += "\nno witness state :(\n";
-			}
-
-			return Response.ok().type(MediaType.TEXT_PLAIN).entity(result).build();
+			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result).build();
 		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON)
 					.entity(buildError(e.getMessage())).build();
 		} catch (Exception e) {
 			// TODO remove once querying LOLA doesn't throw
-			System.out.println("damn son");
 			e.printStackTrace();
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN)
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON)
 					.entity(buildError(e.getMessage())).build();
 		}
 	}
