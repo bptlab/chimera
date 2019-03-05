@@ -17,6 +17,7 @@ import javax.persistence.OneToOne;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
@@ -238,18 +239,33 @@ public class CaseExecutioner {
 				log.error(e.getMessage());
 				throw e;
 			}
-			
-			List<DataObject> boundDataObjects = controlNodeInstance.getSelectedDataObjects();
+
 			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
-			// modify bound DOs 
-			if (! postCondition.isEmpty()) {
-				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
-				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
-				controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			List<DataObject> boundDataObjects;
+			if (controlNodeInstance instanceof IntermediateCatchEventInstance){
+				boundDataObjects = getDataManager().getDataObjects();
+				dataManager.lockDataObjects(boundDataObjects);
+				if (! postCondition.isEmpty()) {
+					List<DataObject> usedDataObjects = dataManager.getDataObjectsToBeModifiedByMessageReceiveEvent(boundDataObjects, dataClassToStateTransitions);
+					dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+					controlNodeInstance.setOutputDataObjects(usedDataObjects);
+				}
+				// set bound DOs free
+				// TODO locking und unlocking anschauen, hier schon unlocken ergibt wenig Sinn, da später noch verändert? allerdings ist alles locken auch keine tolle Variante
+				dataManager.unlockDataObjects(boundDataObjects);
+				controlNodeInstance.terminate();
+			} else {
+				boundDataObjects = controlNodeInstance.getSelectedDataObjects();
+				// modify bound DOs
+				if (! postCondition.isEmpty()) {
+					List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
+					dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+					controlNodeInstance.setOutputDataObjects(usedDataObjects);
+				}
+				// set bound DOs free
+				dataManager.unlockDataObjects(boundDataObjects);
+				controlNodeInstance.terminate();
 			}
-			// set bound DOs free
-			dataManager.unlockDataObjects(boundDataObjects);
-			controlNodeInstance.terminate();
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}

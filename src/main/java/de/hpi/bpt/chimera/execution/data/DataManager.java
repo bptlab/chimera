@@ -199,6 +199,32 @@ public class DataManager {
 		return transitionedDataObjects;
 	}
 
+	public List<DataObject> getDataObjectsToBeModifiedByMessageReceiveEvent (List<DataObject> availableDataObjects, Map<DataClass, ObjectLifecycleState> dataObjectsToModify) {
+		List<DataObject> transitionedDataObjects = new ArrayList<>();
+		List<DataClass> classesToHandle = new ArrayList<>(dataObjectsToModify.keySet());
+		for (DataObject dataObject : availableDataObjects) {
+			DataClass dataClass = dataObject.getDataClass();
+			if (!dataObjectsToModify.containsKey(dataClass)) { // no transition requested, DO only read
+				continue;
+			}
+			if (dataObjectsToModify.get(dataClass) != dataObject.getObjectLifecycleState()) { // DO-State is different, a new DO will be created
+				// TODO kann man DOs nur in einem Zustand ohne eingehende Kanten erstellen?!?
+				continue;
+			}
+			transitionedDataObjects.add(dataObject);
+			classesToHandle.remove(dataClass);
+		}
+
+		// create new DataObjects for the yet unhandled data classes
+		for (DataClass dataClass : classesToHandle) {
+			ObjectLifecycleState olcState = dataObjectsToModify.get(dataClass);
+			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
+			DataObject dataObject = createDataObject(condition);
+			transitionedDataObjects.add(dataObject);
+		}
+		return transitionedDataObjects;
+	}
+
 	/**
 	 * Handle the transitions and new creations of DataObject that shell make a
 	 * transition specified in {@code dataClassToStateTransitions}. Therefore
