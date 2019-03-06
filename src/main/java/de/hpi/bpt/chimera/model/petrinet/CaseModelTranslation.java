@@ -40,6 +40,7 @@ public class CaseModelTranslation {
 			translateDataClass(dataClass);
 		}
 
+		// Translate fragments
 		for (Fragment fragment : caseModel.getFragments()) {
 			translateFragment(fragment);
 		}
@@ -50,21 +51,13 @@ public class CaseModelTranslation {
 				+ petriNet.getPlaces().size() + " places and " + petriNet.getTransitions().size() + " transitions.");
 	}
 
-	private void translateFragment(Fragment fragment) {
+	public void translateFragment(Fragment fragment) {
 		// Inner fragment translation
 		FragmentTranslation fragmentTranslation = new FragmentTranslation(translationContext, fragment);
 		getFragmentTranslationsByName().put(fragment.getName(), fragmentTranslation);
 
 		// Fragment initialization
 		fragmentInitializationTransition.addOutputPlace(fragmentTranslation.getInitialPlace());
-
-		/*
-		 * // Fragment re-initialization on fragment termination Transition
-		 * fragmentReInit = new TransitionReference(translationContext,
-		 * "reInitializeFragment-" + fragment.getId(),
-		 * fragmentTranslation.getFinalPlace(), fragmentTranslation.getInitialPlace());
-		 * petriNet.addTransition(fragmentReInit);
-		 */
 	}
 
 	private void translateDataClass(DataClass dataClass) {

@@ -1,6 +1,8 @@
 package de.hpi.bpt.chimera.rest.v2;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -26,7 +28,10 @@ import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.execution.exception.IllegalCaseModelIdException;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.petrinet.PetriNet;
+import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
+import de.hpi.bpt.chimera.parser.fragment.FragmentParser;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
 import de.hpi.bpt.chimera.rest.RestInterface;
@@ -341,18 +346,47 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 		}
 	}
 
-	@GET
+	@POST
 	@Path("scenario/{scenarioId}/instance/{instanceId}/compliance/{query}")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getComplianceCheckResult(@Context UriInfo uri, @PathParam("scenarioId") String cmId,
-			@PathParam("instanceId") String caseId, @PathParam("query") String query) {
+			@PathParam("instanceId") String caseId, @PathParam("query") String query, String serializedCaseModel) {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 
+			// Translate case model
 			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
 					cm);
+
+			// Add marking for this case instance
 			petriNetRepresentationJaxBean.addMarkingForInstance(caseExecutioner.getCase());
+
+			// If provided, add new fragments to case model translation (only transient!)
+			if (serializedCaseModel != null && !serializedCaseModel.isEmpty()) {
+
+				System.out.println("Adding transient fragments");
+
+				JSONObject caseModelJson = new JSONObject(serializedCaseModel);
+				JSONArray jsonFragments = caseModelJson.getJSONArray("fragments");
+				Map<String, JSONObject> fragmentJsonByName = new HashMap<>();
+				for (int i = 0; i < jsonFragments.length(); i++) {
+					JSONObject fragmentJson = jsonFragments.getJSONObject(i);
+					fragmentJsonByName.put(fragmentJson.getString("name"), fragmentJson);
+				}
+				// Remove all fragments that are already part of the case model
+				cm.getFragments().stream().forEach(fragment -> fragmentJsonByName.remove(fragment.getName()));
+
+				// Add fragments to petri net
+				for (JSONObject newFragmentJson : fragmentJsonByName.values()) {
+					System.out.println("New fragment: " + newFragmentJson.getString("name"));
+
+					Fragment newFragment = FragmentParser.parseFragment(newFragmentJson,
+							new CaseModelParserHelper(cm.getDataModel()));
+					petriNetRepresentationJaxBean.addFragmentToPetriNet(newFragment);
+				}
+			}
+
 			PetriNet petriNet = petriNetRepresentationJaxBean.getPetriNet();
 			String petriNetAsLolaFile = petriNetRepresentationJaxBean.getLolaOutput();
 
@@ -366,9 +400,6 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			String result = complianceChecker.processLolaResult(lolaResponse, petriNet);
 
 			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result).build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON)
-					.entity(buildError(e.getMessage())).build();
 		} catch (Exception e) {
 			// TODO remove once querying LOLA doesn't throw
 			e.printStackTrace();

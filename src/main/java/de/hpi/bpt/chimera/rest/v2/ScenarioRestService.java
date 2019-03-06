@@ -147,36 +147,6 @@ public class ScenarioRestService extends AbstractRestService {
 		}
 	}
 
-	/**
-	 * TODO: get petri net representation
-	 *
-	 * @param scenarioId The Id of the scenario used inside the database.
-	 * @param uri        Request URI
-	 * @return TODO return stuff
-	 */
-	@GET
-	@Path("scenario/{scenarioId}/petrinet")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPetriNetRepresentation(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
-		try {
-			CaseModel cm = CaseModelManager.getCaseModel(cmId);
-
-			JSONObject result = new JSONObject(new CaseModelPetriNetRepresentationJaxBean(cm));
-
-			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON)
-					.entity(buildError(e.getMessage())).build();
-		}
-	}
-
-	/**
-	 * TODO: get petri net representation in LOLA format
-	 *
-	 * @param scenarioId The Id of the scenario used inside the database.
-	 * @param uri        Request URI
-	 * @return TODO return stuff
-	 */
 	@GET
 	@Path("scenario/{scenarioId}/petrinet-lola")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -197,13 +167,6 @@ public class ScenarioRestService extends AbstractRestService {
 		}
 	}
 
-	/**
-	 * TODO: get petri net representation in dot / graphviz format
-	 *
-	 * @param scenarioId The Id of the scenario used inside the database.
-	 * @param uri        Request URI
-	 * @return TODO return stuff
-	 */
 	@GET
 	@Path("scenario/{scenarioId}/petrinet-dot")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -224,13 +187,6 @@ public class ScenarioRestService extends AbstractRestService {
 		}
 	}
 
-	/**
-	 * TODO: get compliance checking result
-	 *
-	 * @param scenarioId The Id of the scenario used inside the database.
-	 * @param uri        Request URI
-	 * @return TODO return stuff
-	 */
 	@GET
 	@Path("scenario/{scenarioId}/compliance/{query}")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -255,12 +211,7 @@ public class ScenarioRestService extends AbstractRestService {
 			String result = complianceChecker.processLolaResult(lolaResponse, petriNet);
 
 			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result).build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON)
-					.entity(buildError(e.getMessage())).build();
 		} catch (Exception e) {
-			// TODO remove once querying LOLA doesn't throw
-			System.out.println("damn son");
 			e.printStackTrace();
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON)
 					.entity(buildError(e.getMessage())).build();
