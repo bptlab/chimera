@@ -242,17 +242,14 @@ public class CaseExecutioner {
 
 			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
 			List<DataObject> boundDataObjects;
-			if (controlNodeInstance instanceof IntermediateCatchEventInstance){
+			if (controlNodeInstance instanceof AbstractEventInstance && ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior){
 				boundDataObjects = getDataManager().getDataObjects();
-				dataManager.lockDataObjects(boundDataObjects);
 				if (! postCondition.isEmpty()) {
 					List<DataObject> usedDataObjects = dataManager.getDataObjectsToBeModifiedByMessageReceiveEvent(boundDataObjects, dataClassToStateTransitions);
+					dataManager.lockDataObjects(usedDataObjects);
 					dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
 					controlNodeInstance.setOutputDataObjects(usedDataObjects);
 				}
-				// set bound DOs free
-				// TODO locking und unlocking anschauen, hier schon unlocken ergibt wenig Sinn, da später noch verändert? allerdings ist alles locken auch keine tolle Variante
-				dataManager.unlockDataObjects(boundDataObjects);
 				controlNodeInstance.terminate();
 			} else {
 				boundDataObjects = controlNodeInstance.getSelectedDataObjects();

@@ -23,14 +23,9 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bpt.chimera.execution.exception.*;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
-import de.hpi.bpt.chimera.execution.exception.IllegalDataClassNameException;
-import de.hpi.bpt.chimera.execution.exception.IllegalDataObjectIdException;
-import de.hpi.bpt.chimera.execution.exception.IllegalDataObjectLockException;
-import de.hpi.bpt.chimera.execution.exception.IllegalDataObjectUnlockException;
-import de.hpi.bpt.chimera.execution.exception.IllegalObjectLifecycleStateNameException;
-import de.hpi.bpt.chimera.execution.exception.IllegalObjectLifecycleStateSuccessorException;
 import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
@@ -81,6 +76,23 @@ public class DataManager {
 		DataObject dataObject = new DataObject(condition, this);
 		dataObjectIdToDataObject.put(dataObject.getId(), dataObject);
 		return dataObject;
+	}
+
+	/**
+	 * Create new DataObjects of the classes in
+	 * @param classesToHandle being in the state specified in
+	 * @param dataObjectsToModify .
+	 * @return a List of the createdDataObjects
+	 */
+	public List <DataObject> createDataObjects(List <DataClass> classesToHandle, Map<DataClass, ObjectLifecycleState> dataObjectsToModify) {
+		List <DataObject> createdDataObjects = new ArrayList();
+		for (DataClass dataClass : classesToHandle) {
+			ObjectLifecycleState olcState = dataObjectsToModify.get(dataClass);
+			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
+			DataObject dataObject = createDataObject(condition);
+			createdDataObjects.add(dataObject);
+		}
+		return createdDataObjects;
 	}
 
 	/**
@@ -190,39 +202,40 @@ public class DataManager {
 		}
 
 		// create new DataObjects for the yet unhandled data classes
-		for (DataClass dataClass : classesToHandle) { 
-			ObjectLifecycleState olcState = dataClassToStateTransitions.get(dataClass);
-			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
-			DataObject dataObject = createDataObject(condition);
-			transitionedDataObjects.add(dataObject);
-		}
+		transitionedDataObjects.addAll(createDataObjects(classesToHandle, dataClassToStateTransitions));
+
 		return transitionedDataObjects;
 	}
 
 	public List<DataObject> getDataObjectsToBeModifiedByMessageReceiveEvent (List<DataObject> availableDataObjects, Map<DataClass, ObjectLifecycleState> dataObjectsToModify) {
-		List<DataObject> transitionedDataObjects = new ArrayList<>();
+		List<DataObject> processedDataObjects = new ArrayList<>();
 		List<DataClass> classesToHandle = new ArrayList<>(dataObjectsToModify.keySet());
 		for (DataObject dataObject : availableDataObjects) {
 			DataClass dataClass = dataObject.getDataClass();
+			ObjectLifecycleState targetState = dataObjectsToModify.get(dataClass);
 			if (!dataObjectsToModify.containsKey(dataClass)) { // no transition requested, DO only read
 				continue;
 			}
-			if (dataObjectsToModify.get(dataClass) != dataObject.getObjectLifecycleState()) { // DO-State is different, a new DO will be created
-				// TODO kann man DOs nur in einem Zustand ohne eingehende Kanten erstellen?!?
-				continue;
+			// first check whether the targetState is the current state
+			// if not, and the targetState is not an initial state, an exception will be thrown, else a new DO will be created
+			if (targetState != dataObject.getObjectLifecycleState()) {
+				if(targetState.isInitialState()) {
+					continue;
+				}
+				else {
+					IllegalDataObjectCreationException e = new IllegalDataObjectCreationException(dataClass, targetState);
+					log.error(e.getMessage());
+					throw e;
+				}
 			}
-			transitionedDataObjects.add(dataObject);
+			processedDataObjects.add(dataObject);
 			classesToHandle.remove(dataClass);
 		}
 
 		// create new DataObjects for the yet unhandled data classes
-		for (DataClass dataClass : classesToHandle) {
-			ObjectLifecycleState olcState = dataObjectsToModify.get(dataClass);
-			AtomicDataStateCondition condition = new AtomicDataStateCondition(dataClass, olcState);
-			DataObject dataObject = createDataObject(condition);
-			transitionedDataObjects.add(dataObject);
-		}
-		return transitionedDataObjects;
+		processedDataObjects.addAll(createDataObjects(classesToHandle, dataObjectsToModify));
+
+		return processedDataObjects;
 	}
 
 	/**
