@@ -115,8 +115,7 @@ public class ControlNodeInstanceFactory {
 			eventInstance.setBehavior(new SignalSendEventBehavior(eventInstance));
 			break;
 		case SIGNAL_RECEIVE:
-			// eventInstance.setBehavior(new SignalReceiveEventBehavior(eventInstance));
-			/* TODO: Currently not implemented */
+			eventInstance.setBehavior(new SignalReceiveBehavior(eventInstance));
 			break;
 		case TIMER:
 			eventInstance.setBehavior(new TimerEventBehavior(eventInstance));

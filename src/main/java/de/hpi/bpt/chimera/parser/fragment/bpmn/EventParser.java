@@ -83,8 +83,10 @@ public class EventParser {
 				event.setSpecialBehavior(SpecialBehavior.SIGNAL_SEND);
 			} else if (event instanceof StartEvent || event instanceof IntermediateCatchEvent || event instanceof BoundaryEvent) {
 				// Is catching Event
-				/* TODO: Currently not implemented; Could have same semantics as Message Receive Event */
 				event.setSpecialBehavior(SpecialBehavior.SIGNAL_RECEIVE);
+				MessageReceiveDefinition receiveDefinition = new MessageReceiveDefinition();
+				receiveDefinition.setEventQuerry(xmlEvent.getEventQuery());
+				event.setSpecialEventDefinition(receiveDefinition);
 			}
 		} else if (xmlEvent.hasMessageDefiniton()) {
 			// Message Event
