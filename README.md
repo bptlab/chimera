@@ -32,7 +32,7 @@ The following software is necessary to build and run Chimera:
    1. Build the source code using Maven: `mvn install -Ddb.user=USER_NAME -Ddb.password=PASSWORD -Ddb.schema=SCHEMA_NAME -Ddb.test.schema=TEST_SCHEMA_NAME` Replace *USER_NAME*, *PASSWORD*, *SCHEMA_NAME*, and *TEST_SCHEMA_NAME* with the values from the previous steps.
    1. Check whether the configuration file `config.properties` was copied to the main directory and whether the variables (`mysql.username`, `mysql.password` etc.) have been replaced correctly.
    1. Deploy the created war file `target/Chimera.war` to Tomcat by copying it to the webapps folder in your Tomcat installation.
-      * Alternatively, use `mvn tomcat7:deploy-DskipTests` from the command line to automatically deploy the war file. Note however, that you need to configure your Tomcat credentials as described in [this article](http://www.mkyong.com/maven/how-to-deploy-maven-based-war-file-to-tomcat/).
+      * Alternatively, use `mvn tomcat7:deploy -DskipTests` from the command line to automatically deploy the war file. Note however, that you need to configure your Tomcat credentials as described in [this article](http://www.mkyong.com/maven/how-to-deploy-maven-based-war-file-to-tomcat/).
    1. Start your Tomcat application server and visit http://localhost:8080/Chimera in your browser, replacing the default port 8080 with the one you configured in Tomcat. You should now be able to see the Chimera frontend.
 
 ## Creating & Deploying Case Models
