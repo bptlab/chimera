@@ -1,6 +1,8 @@
 package de.hpi.bpt.chimera.rest.v2;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -17,6 +19,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.ExecutionService;
+import de.hpi.bpt.chimera.model.fragment.Fragment;
+import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
+import de.hpi.bpt.chimera.parser.fragment.FragmentParser;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -187,17 +194,21 @@ public class ScenarioRestService extends AbstractRestService {
 		}
 	}
 
-	@GET
+	@POST
 	@Path("scenario/{scenarioId}/compliance/{query}")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getComplianceCheckResult(@Context UriInfo uri, @PathParam("scenarioId") String cmId,
-			@PathParam("query") String query) {
+											 @PathParam("query") String query, String serializedCaseModel) {
 		try {
 			CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
+			// Translate case model
 			CaseModelPetriNetRepresentationJaxBean petriNetRepresentationJaxBean = new CaseModelPetriNetRepresentationJaxBean(
 					cm);
+
+			// Add initial marking
 			petriNetRepresentationJaxBean.addMarkingForInitialState();
+
 			PetriNet petriNet = petriNetRepresentationJaxBean.getPetriNet();
 			String petriNetAsLolaFile = petriNetRepresentationJaxBean.getLolaOutput();
 
@@ -212,12 +223,12 @@ public class ScenarioRestService extends AbstractRestService {
 
 			return Response.ok().type(MediaType.APPLICATION_JSON).entity(result).build();
 		} catch (Exception e) {
+			// TODO remove once querying LOLA doesn't throw
 			e.printStackTrace();
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON)
 					.entity(buildError(e.getMessage())).build();
 		}
 	}
-
 	/**
 	 * This method provides information about the termination condition. Of the
 	 * specified Scenario. The termination condition is a set of sets of conditions.
