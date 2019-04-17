@@ -20,7 +20,7 @@ The following software is necessary to build and run Chimera:
 
    * `Java 8 JDK` available from [Oracle](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). Make sure that the environment variable `JAVA_HOME` points to your JDK folder (e.g. like [this](http://www.wikihow.com/Set-Java-Home)).
    * `Apache Tomcat 7` or newer, available [here](https://tomcat.apache.org/download-70.cgi).
-   * `MySQL 5.7 Server`, available [here](http://dev.mysql.com/downloads/mysql/). For your convenience, you can download the [installer](https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.23.0.msi) (direct link) and install MySQL Server, MySQL Notifier, MySQL Workbench, and Connector/J. 
+   * `MySQL 5.7 Server`, available [here](https://dev.mysql.com/downloads/mysql/5.7.html#downloads). For your convenience, you can download the [installer](https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.23.0.msi) (direct link) and install MySQL Server, MySQL Notifier, MySQL Workbench, and Connector/J. 
    * `git`, available [here](https://git-scm.com/downloads), to access the code repositories.
    * `Apache Maven 3`, available [here](http://maven.apache.org/install.html).
 
