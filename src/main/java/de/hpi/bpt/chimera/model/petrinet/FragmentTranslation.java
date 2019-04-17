@@ -16,13 +16,14 @@ public class FragmentTranslation extends AbstractTranslation {
 	private final Fragment fragment;
 
 	protected Place initialPlace;
+	protected Place finalPlace;
 
 	private final Map<String, AbstractControlNodeTranslation> controlNodeTranslationsById = new HashMap<>();
 	private final Map<String, SequenceFlowTranslation> sequenceFlowTranslationsById = new HashMap<>();
 
 	// Limit the number of times a fragment can be instantiated.
 	// A negative number disables the limit.
-	protected static final int reInitPoolSize = 0;
+	protected static final int reInitPoolSize = 20;
 
 	public FragmentTranslation(TranslationContext translationContext, Fragment fragment) {
 		super(translationContext, fragment.getName());
@@ -60,6 +61,8 @@ public class FragmentTranslation extends AbstractTranslation {
 
 		// Connect end event
 		translateEndEvent(bpmnFragment.getEndEvent());
+
+		translateReInitialization();
 	}
 
 	private void translateActivity(AbstractActivity activity) {
@@ -111,13 +114,38 @@ public class FragmentTranslation extends AbstractTranslation {
 			initialPlace = fragmentInitialPlace;
 		}
 
+	}
+
+	private void translateEndEvent(EndEvent endEvent) {
+		EventTranslation endEventTranslation = (EventTranslation) getControlNodeTranslationsById()
+				.get(endEvent.getId());
+		Transition endEventTransition = endEventTranslation.getEventTransition();
+		finalPlace = endEventTranslation.getFinalPlace();
+
+		/*
+		// Disconnect final place (transition just consumes the token)
+		endEventTransition.getOutputPlaces().remove(finalPlace);
+		assert (getPetriNet().getTransitions().stream().noneMatch(t -> t.getInputPlaces().contains(finalPlace)));
+		assert (getPetriNet().getTransitions().stream().noneMatch(t -> t.getOutputPlaces().contains(finalPlace)));
+		getPetriNet().getPlaces().remove(finalPlace);
+		// TODO the end event translation still has a reference to the final place...
+		*/
+	}
+
+	private void translateReInitialization() {
+
+		Transition reInitTransition = addTransition(fragment.getName() + "_reInit");
+
+		/*
 		// Re-initialization after fragment started
 		Transition startEventTransition = startEventTranslation.getEventTransition();
 		Place reInitMutexPlace = addPlace(fragment.getName() + "_reInitReady");
 		startEventTransition.addOutputPlace(reInitMutexPlace);
-
-		Transition reInitTransition = addTransition(fragment.getName() + "_reInit");
 		reInitTransition.addInputPlace(reInitMutexPlace);
+		*/
+
+		// Re-initialization after fragment ended (only one instance at a time)
+		reInitTransition.addInputPlace(finalPlace);
 		reInitTransition.addOutputPlace(initialPlace);
 
 		// Re-initialization pool limits number of re-initializations
@@ -127,20 +155,6 @@ public class FragmentTranslation extends AbstractTranslation {
 			reInitPoolPlace.setNumTokens(reInitPoolSize);
 			reInitTransition.addInputPlace(reInitPoolPlace);
 		}
-
-	}
-
-	private void translateEndEvent(EndEvent endEvent) {
-		EventTranslation endEventTranslation = (EventTranslation) getControlNodeTranslationsById().get(endEvent.getId());
-		Transition endEventTransition = endEventTranslation.getEventTransition();
-		final Place finalPlace = endEventTranslation.getFinalPlace();
-
-		// Disconnect final place (transition just consumes the token)
-		endEventTransition.getOutputPlaces().remove(finalPlace);
-		assert (getPetriNet().getTransitions().stream().noneMatch(t -> t.getInputPlaces().contains(finalPlace)));
-		assert (getPetriNet().getTransitions().stream().noneMatch(t -> t.getOutputPlaces().contains(finalPlace)));
-		getPetriNet().getPlaces().remove(finalPlace);
-		// TODO the end event translation still has a reference to the final place...
 	}
 
 	public Place getInitialPlace() {
@@ -148,7 +162,8 @@ public class FragmentTranslation extends AbstractTranslation {
 	}
 
 	public EventTranslation getStartEventTranslation() {
-		return (EventTranslation) getControlNodeTranslationsById().get(fragment.getBpmnFragment().getStartEvent().getId());
+		return (EventTranslation) getControlNodeTranslationsById()
+				.get(fragment.getBpmnFragment().getStartEvent().getId());
 	}
 
 	public Map<String, AbstractControlNodeTranslation> getControlNodeTranslationsById() {
