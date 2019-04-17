@@ -56,13 +56,14 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 		int postConditionId = 1;
 		for (ConditionSet preConditionSet : preConditionSets) {
 
-			Transition preConditionSetTransition = addTransition("i_" + Integer.toString(preConditionId));
-
 			// Bind data objects (one place per condition set representing all bound data
 			// objects for this condition set)
 			String boundDataObjectNames = preConditionSet.getConditions().stream()
 					.map(adc -> adc.getDataClass().getName() + "[" + adc.getObjectLifecycleState().getName() + "]")
 					.collect(Collectors.joining("_"));
+
+			Transition preConditionSetTransition = addTransition("i_" + boundDataObjectNames);
+
 			Place dataObjectBindPlace = addPlace(
 					"io_" + Integer.toString(postConditionId) + "_bind_" + boundDataObjectNames);
 			dataObjectBindPlaceByConditionSet.put(preConditionSet, dataObjectBindPlace);
@@ -83,7 +84,11 @@ public class IoRelationTranslation extends AbstractDataStateConditionTranslation
 			// For each combination of pre-condition sets and post-condition sets...
 			for (ConditionSet postConditionSet : postConditionSets) {
 
-				Transition postConditionSetTransition = addTransition("o_" + Integer.toString(postConditionId));
+				String releasedDataObjectNames = postConditionSet.getConditions().stream()
+						.map(adc -> adc.getDataClass().getName() + "[" + adc.getObjectLifecycleState().getName() + "]")
+						.collect(Collectors.joining("_"));
+
+				Transition postConditionSetTransition = addTransition("o_" + releasedDataObjectNames);
 
 				// Unbind data objects (consume token of pre-condition set)
 				postConditionSetTransition.addInputPlace(dataObjectBindPlace);

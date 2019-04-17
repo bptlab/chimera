@@ -11,6 +11,7 @@ public class TransitionImpl extends EntityWithId implements Transition {
 
 	private final TranslationContext context;
 	private final String name;
+	private Fairness fairness = Fairness.NONE;
 	private final Set<Place> inputPlaces = new HashSet<>();
 	private final Set<Place> outputPlaces = new HashSet<>();
 
@@ -55,5 +56,15 @@ public class TransitionImpl extends EntityWithId implements Transition {
 	@Override
 	public TranslationContext getContext() {
 		return context;
+	}
+
+	@Override
+	public Fairness getFairness() {
+		return fairness;
+	}
+
+	@Override
+	public void setFairness(Fairness fairness) {
+		this.fairness = fairness;
 	}
 }

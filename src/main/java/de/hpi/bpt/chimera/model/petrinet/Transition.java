@@ -4,6 +4,10 @@ import java.util.Collection;
 
 public interface Transition extends AbstractPetriNetNode {
 
+	enum Fairness {
+		NONE, STRONG, WEAK
+	}
+
 	@Override
 	default String getPrefixedIdString() {
 		return "t_" + String.valueOf(getId());
@@ -16,4 +20,8 @@ public interface Transition extends AbstractPetriNetNode {
 	public Collection<Place> getInputPlaces();
 
 	public Collection<Place> getOutputPlaces();
+
+	public Fairness getFairness();
+
+	public void setFairness(Fairness fairness);
 }

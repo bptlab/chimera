@@ -63,4 +63,14 @@ public class TransitionReference implements Transition {
 	public int getId() {
 		return impl.getId();
 	}
+
+	@Override
+	public Fairness getFairness() {
+		return impl.getFairness();
+	}
+
+	@Override
+	public void setFairness(Fairness fairness) {
+		impl.setFairness(fairness);
+	}
 }

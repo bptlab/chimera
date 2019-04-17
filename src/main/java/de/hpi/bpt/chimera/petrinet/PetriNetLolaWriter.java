@@ -24,16 +24,37 @@ public class PetriNetLolaWriter extends AbstractPetriNetWriter {
 		builder.append(";\n\n");
 
 		for (Transition transition : petriNet.getTransitions()) {
-			builder.append("TRANSITION " + transition.getPrefixedIdString() + "\n").append("  CONSUME ")
-					.append(transition.getInputPlaces().stream().distinct().map(place -> place.getPrefixedIdString())
-							.collect(Collectors.joining(", ")))
-					.append(";\n").append("  PRODUCE ").append(transition.getOutputPlaces().stream().distinct()
-							.map(place -> place.getPrefixedIdString()).collect(Collectors.joining(", ")))
-					.append(";\n").append("\n");
+			builder.append(formatTransition(transition));
 		}
 
 		return builder.toString();
 
+	}
+
+	private String formatTransition(Transition transition) {
+		StringBuilder builder = new StringBuilder();
+		String fairnessAssumption = getFairnessString(transition);
+
+		builder.append("TRANSITION ").append(transition.getPrefixedIdString()).append(" ").append(fairnessAssumption)
+				.append("\n").append("  CONSUME ")
+				.append(transition.getInputPlaces().stream().distinct().map(place -> place.getPrefixedIdString())
+						.collect(Collectors.joining(", ")))
+				.append(";\n").append("  PRODUCE ").append(transition.getOutputPlaces().stream().distinct()
+						.map(place -> place.getPrefixedIdString()).collect(Collectors.joining(", ")))
+				.append(";\n").append("\n");
+		return builder.toString();
+	}
+
+	private String getFairnessString(Transition transition) {
+		switch (transition.getFairness()) {
+		case STRONG:
+			return "STRONG FAIR";
+		case WEAK:
+			return "WEAK FAIR";
+		case NONE:
+		default:
+			return "";
+		}
 	}
 
 }
