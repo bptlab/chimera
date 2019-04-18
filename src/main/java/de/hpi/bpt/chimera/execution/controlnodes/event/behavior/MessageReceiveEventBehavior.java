@@ -77,7 +77,7 @@ public class MessageReceiveEventBehavior extends EventBehavior {
 			AtomicDataStateCondition condition = dataObject.getCondition();
 			Map<DataAttribute, String> dataAttributeToJsonPath = getEventInstance().getControlNode().getJsonPathMapping().get(condition);
 			DataAttributeInstanceWriter.writeDataAttributeInstancesFromJson(dataObject, dataAttributeToJsonPath, eventJson);
-			getEventInstance().getDataManager().unlockDataObjects(getEventInstance().getOutputDataObjects());
+			//getEventInstance().getDataManager().unlockDataObjects(getEventInstance().getOutputDataObjects());
 		}
 	}
 

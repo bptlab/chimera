@@ -239,20 +239,33 @@ public class CaseExecutioner {
 				log.error(e.getMessage());
 				throw e;
 			}
+			System.out.println(rawDataAttributeValues);
 
 			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
 			List<DataObject> boundDataObjects;
-			if (controlNodeInstance instanceof AbstractEventInstance && ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior){
+			if (controlNodeInstance instanceof AbstractEventInstance && ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior) {
 				boundDataObjects = getDataManager().getDataObjects();
-				if (! postCondition.isEmpty()) {
-					List<DataObject> usedDataObjects = dataManager.getDataObjectsToBeModifiedByMessageReceiveEvent(boundDataObjects, dataClassToStateTransitions);
+			} else {
+				boundDataObjects = controlNodeInstance.getSelectedDataObjects();
+			}
+			if (!postCondition.isEmpty()) {
+				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
+				//dataManager.lockDataObjects(usedDataObjects);
+				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
+				controlNodeInstance.setOutputDataObjects(usedDataObjects);
+			}
+			//dataManager.unlockDataObjects(boundDataObjects);
+			controlNodeInstance.terminate();
+
+				/*if (! postCondition.isEmpty()) {
+					List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
 					dataManager.lockDataObjects(usedDataObjects);
 					dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
 					controlNodeInstance.setOutputDataObjects(usedDataObjects);
 				}
 				controlNodeInstance.terminate();
 			} else {
-				boundDataObjects = controlNodeInstance.getSelectedDataObjects();
+				//boundDataObjects = controlNodeInstance.getSelectedDataObjects();
 				// modify bound DOs
 				if (! postCondition.isEmpty()) {
 					List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
@@ -262,7 +275,7 @@ public class CaseExecutioner {
 				// set bound DOs free
 				dataManager.unlockDataObjects(boundDataObjects);
 				controlNodeInstance.terminate();
-			}
+			}*/
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}

@@ -95,6 +95,7 @@ public abstract class AbstractActivityInstance extends AbstractDataControlNodeIn
 			return;
 		}
 		attachedBoundaryEventInstances.forEach(BoundaryEventInstance::skip);
+		getDataManager().unlockDataObjects(getSelectedDataObjects());
 
 		setState(State.TERMINATED);
 		getCaseExecutioner().updateDataFlow();
