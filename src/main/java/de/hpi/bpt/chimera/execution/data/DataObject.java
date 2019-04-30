@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -133,6 +134,10 @@ public class DataObject {
 	public List<DataAttributeInstance> getDataAttributeInstances() {
 		Collection<DataAttributeInstance> dataAttributeInstances = dataAttributeInstanceIdToInstance.values();
 		return new ArrayList<>(dataAttributeInstances);
+	}
+
+	public List<DataAttributeInstance> getNonEmptyDataAttributeInstances() {
+		return dataAttributeInstanceIdToInstance.values().stream().filter(daInstance -> daInstance.getValue() != null).collect(Collectors.toList());
 	}
 
 	public DataAttributeInstance getDataAttributeInstanceByName(String name) {

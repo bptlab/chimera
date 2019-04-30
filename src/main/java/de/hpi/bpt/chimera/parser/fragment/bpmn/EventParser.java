@@ -71,14 +71,30 @@ public class EventParser {
 		event.setSpecialBehavior(SpecialBehavior.NONE);
 
 		if (xmlEvent.hasTimerDefinition()) {
+			// Timer Event
 			event.setSpecialBehavior(SpecialBehavior.TIMER);
 			TimerDefinition timerDefiniton = new TimerDefinition();
 			timerDefiniton.setTimerDuration(xmlEvent.getTimerDefinition().getTimerDuration());
 			event.setSpecialEventDefinition(timerDefiniton);
-		} else if (xmlEvent.hasMessageDefiniton() || event instanceof IntermediateThrowEvent) {
+		} else if (xmlEvent.hasSignalDefinition()) {
+			// Signal Event
 			if (event instanceof EndEvent || event instanceof IntermediateThrowEvent) {
+				// Is throwing Event
+				event.setSpecialBehavior(SpecialBehavior.SIGNAL_SEND);
+			} else if (event instanceof StartEvent || event instanceof IntermediateCatchEvent || event instanceof BoundaryEvent) {
+				// Is catching Event
+				event.setSpecialBehavior(SpecialBehavior.SIGNAL_RECEIVE);
+				MessageReceiveDefinition receiveDefinition = new MessageReceiveDefinition();
+				receiveDefinition.setEventQuerry(xmlEvent.getEventQuery());
+				event.setSpecialEventDefinition(receiveDefinition);
+			}
+		} else if (xmlEvent.hasMessageDefiniton()) {
+			// Message Event
+			if (event instanceof EndEvent || event instanceof IntermediateThrowEvent) {
+				// Is throwing Event
 				event.setSpecialBehavior(SpecialBehavior.MESSAGE_SEND);
 			} else if (event instanceof StartEvent || event instanceof IntermediateCatchEvent || event instanceof BoundaryEvent) {
+				// Is catching Event
 				event.setSpecialBehavior(SpecialBehavior.MESSAGE_RECEIVE);
 				MessageReceiveDefinition receiveDefinition = new MessageReceiveDefinition();
 				receiveDefinition.setEventQuerry(xmlEvent.getEventQuery());
