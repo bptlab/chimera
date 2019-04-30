@@ -22,11 +22,11 @@ public class FragmentValidator {
 
 	private Fragment fragment;
 
-	private final List<SpecialBehavior> allowedStartEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.NONE, SpecialBehavior.MESSAGE_RECEIVE));
-	private final List<SpecialBehavior> allowedEndEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.NONE, SpecialBehavior.MESSAGE_SEND));
-	private final List<SpecialBehavior> allowedThrowEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_SEND));
-	private final List<SpecialBehavior> allowedCatchEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_RECEIVE, SpecialBehavior.TIMER));
-	private final List<SpecialBehavior> allowedBoundaryEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_RECEIVE, SpecialBehavior.TIMER));
+	private final List<SpecialBehavior> allowedStartEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.NONE, SpecialBehavior.MESSAGE_RECEIVE, SpecialBehavior.SIGNAL_RECEIVE));
+	private final List<SpecialBehavior> allowedEndEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.NONE, SpecialBehavior.MESSAGE_SEND, SpecialBehavior.SIGNAL_SEND));
+	private final List<SpecialBehavior> allowedThrowEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_SEND, SpecialBehavior.SIGNAL_SEND));
+	private final List<SpecialBehavior> allowedCatchEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_RECEIVE, SpecialBehavior.SIGNAL_RECEIVE, SpecialBehavior.TIMER));
+	private final List<SpecialBehavior> allowedBoundaryEventBehavior = new ArrayList<>(Arrays.asList(SpecialBehavior.MESSAGE_RECEIVE, SpecialBehavior.SIGNAL_RECEIVE, SpecialBehavior.TIMER));
 
 	public FragmentValidator(Fragment fragment) {
 		this.fragment = fragment;
@@ -128,7 +128,7 @@ public class FragmentValidator {
 				throw new IllegalArgumentException(String.format("A BoundaryEvent cannot have the type %s", behavior.toString()));
 			}
 			if (event instanceof IntermediateThrowEvent && !allowedThrowEventBehavior.contains(behavior)) {
-				throw new IllegalArgumentException(String.format("An IntermediateCatchEvent cannot have the type %s", behavior.toString()));
+				throw new IllegalArgumentException(String.format("An IntermediateThrowEvent cannot have the type %s", behavior.toString()));
 			}
 		}
 	}

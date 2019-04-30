@@ -2,6 +2,8 @@ package de.hpi.bpt.chimera.rest.v2;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -38,6 +40,7 @@ import de.hpi.bpt.chimera.rest.beans.event.ReceiveEventJaxBean;
 @Path("eventdispatcher/")
 public class EventRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(EventRestService.class);
+	private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 	/**
 	 * This method notifies that a certain event instance received Event was
@@ -58,24 +61,27 @@ public class EventRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
 	public Response receiveEvent(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("requestKey") String requestId, String eventJson) {
+        log.info("Receiving an event...");
+	    executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+                    MessageReceiveEventBehavior receiveBehavior = caseExecutioner.getRegisteredEventBehavior(requestId);
+                    if (eventJson.isEmpty() || "{}".equals(eventJson)) {
+                        receiveBehavior.setEventJson("");
+                    } else {
+                        receiveBehavior.setEventJson(eventJson);
+                    }
 
-		log.info("Receiving an event...");
-		try {
-			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
-			MessageReceiveEventBehavior receiveBehavior = caseExecutioner.getRegisteredEventBehavior(requestId);
-			if (eventJson.isEmpty() || "{}".equals(eventJson)) {
-				receiveBehavior.setEventJson("");
-			} else {
-				receiveBehavior.setEventJson(eventJson);
-			}
-
-			AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
-			caseExecutioner.terminateDataControlNodeInstance(eventInstance);
-			SseNotifier.notifyRefresh();
-		} catch (Exception e) {
-			log.error("Error while processing a received event", e);
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(e.getMessage())).build();
-		}
+                    AbstractEventInstance eventInstance = receiveBehavior.getEventInstance();
+                    caseExecutioner.terminateDataControlNodeInstance(eventInstance);
+                    SseNotifier.notifyRefresh();
+                } catch (Exception e) {
+                    log.error("Error while processing a received event", e);
+                }
+            }
+        });
 		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Event received.\"}").build();
 	}
 
