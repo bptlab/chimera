@@ -24,6 +24,7 @@ import de.hpi.bpt.chimera.execution.controlnodes.State;
 import de.hpi.bpt.chimera.execution.controlnodes.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.AbstractEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.MessageReceiveEventBehavior;
+import de.hpi.bpt.chimera.execution.controlnodes.event.behavior.SignalReceiveBehavior;
 import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.execution.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.data.DataManager;
@@ -239,43 +240,24 @@ public class CaseExecutioner {
 				log.error(e.getMessage());
 				throw e;
 			}
-			System.out.println(rawDataAttributeValues);
 
 			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
 			List<DataObject> boundDataObjects;
-			if (controlNodeInstance instanceof AbstractEventInstance && ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior) {
-				boundDataObjects = getDataManager().getDataObjects();
+			if (controlNodeInstance instanceof AbstractEventInstance && (((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior || ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof SignalReceiveBehavior)) {
+				boundDataObjects = dataManager.getDataObjects();
+				dataManager.lockDataObjects(boundDataObjects);
 			} else {
 				boundDataObjects = controlNodeInstance.getSelectedDataObjects();
 			}
+
 			if (!postCondition.isEmpty()) {
 				List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
-				//dataManager.lockDataObjects(usedDataObjects);
 				dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
 				controlNodeInstance.setOutputDataObjects(usedDataObjects);
 			}
-			//dataManager.unlockDataObjects(boundDataObjects);
+			dataManager.unlockDataObjects(boundDataObjects);
 			controlNodeInstance.terminate();
 
-				/*if (! postCondition.isEmpty()) {
-					List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
-					dataManager.lockDataObjects(usedDataObjects);
-					dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
-					controlNodeInstance.setOutputDataObjects(usedDataObjects);
-				}
-				controlNodeInstance.terminate();
-			} else {
-				//boundDataObjects = controlNodeInstance.getSelectedDataObjects();
-				// modify bound DOs
-				if (! postCondition.isEmpty()) {
-					List<DataObject> usedDataObjects = dataManager.handleDataObjectTransitions(boundDataObjects, dataClassToStateTransitions);
-					dataManager.setDataAttributeValuesByNames(rawDataAttributeValues, usedDataObjects);
-					controlNodeInstance.setOutputDataObjects(usedDataObjects);
-				}
-				// set bound DOs free
-				dataManager.unlockDataObjects(boundDataObjects);
-				controlNodeInstance.terminate();
-			}*/
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
