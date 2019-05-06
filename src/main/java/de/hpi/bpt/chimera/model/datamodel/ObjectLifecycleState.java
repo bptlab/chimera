@@ -80,4 +80,11 @@ public class ObjectLifecycleState implements Nameable, Listable {
 	public void addPredecessor(ObjectLifecycleState predecessor) {
 		predecessors.add(predecessor);
 	}
+
+	public Boolean isInitialState() {
+		if (this.predecessors.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
 }

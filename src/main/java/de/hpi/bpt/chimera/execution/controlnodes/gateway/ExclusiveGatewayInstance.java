@@ -185,37 +185,43 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 
 	/**
 	 * Evaluates Conditions for the control flow of an XOR gateway.
+	 * If there is only one outgoing transition the following controlnode can be started automatically.
 	 */
 	public void evaluateConditions() {
 		// Map<AbstractControlNode, String> conditions =
 		// this.getControlNode().getOutgoingSequenceFlows().stream().collect(Collectors.toMap(item
 		// -> item.getTargetRef(), item -> item.getCondition()));
 		List<SequenceFlowAssociation> associations = this.getControlNode().getOutgoingSequenceFlows().stream().collect(Collectors.toList());
-		// Map<Integer, String> conditions =
-		// this.getDbControlFlow().getConditions(getControlNodeId());
-		AbstractControlNode controlNode;
-		AbstractControlNode defaultControlNode = null;
-		String condition;
-		Set<AbstractControlNode> toEnable = new HashSet<>();
-		for (SequenceFlowAssociation association : associations) {
-			controlNode = association.getTargetRef();
-			condition = association.getCondition();
-			if ("DEFAULT".equals(condition)) {
-				defaultControlNode = controlNode;
-			} else if (evaluateCondition(condition)) { // condition true or
-														// empty
-				toEnable.add(controlNode);
+		if (associations.size() == 1) {
+			AbstractControlNode controlNode = associations.get(0).getTargetRef();
+			this.getFragmentInstance().createControlNodeInstance(controlNode).enableControlFlow();
+		} else {
+			// Map<Integer, String> conditions =
+			// this.getDbControlFlow().getConditions(getControlNodeId());
+			AbstractControlNode controlNode;
+			AbstractControlNode defaultControlNode = null;
+			String condition;
+			Set<AbstractControlNode> toEnable = new HashSet<>();
+			for (SequenceFlowAssociation association : associations) {
+				controlNode = association.getTargetRef();
+				condition = association.getCondition();
+				if ("DEFAULT".equals(condition)) {
+					defaultControlNode = controlNode;
+				} else if (evaluateCondition(condition)) { // condition true or
+					// empty
+					toEnable.add(controlNode);
+				}
 			}
-		}
-		if (toEnable.isEmpty() && defaultControlNode != null) {
-			toEnable.add(defaultControlNode);
-		}	
-		for (AbstractControlNode node : toEnable) {
-			ControlNodeInstance controlNodeInstance = this.getFragmentInstance().createControlNodeInstance(node);
-			if (AbstractActivityInstance.class.isInstance(controlNodeInstance)) {
-				((AbstractActivityInstance) controlNodeInstance).forbidAutomaticStart();
+			if (toEnable.isEmpty() && defaultControlNode != null) {
+				toEnable.add(defaultControlNode);
 			}
-			controlNodeInstance.enableControlFlow();
+			for (AbstractControlNode node : toEnable) {
+				ControlNodeInstance controlNodeInstance = this.getFragmentInstance().createControlNodeInstance(node);
+				if (AbstractActivityInstance.class.isInstance(controlNodeInstance)) {
+					((AbstractActivityInstance) controlNodeInstance).forbidAutomaticStart();
+				}
+				controlNodeInstance.enableControlFlow();
+			}
 		}
 	}
 
