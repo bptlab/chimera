@@ -70,7 +70,7 @@ public class FragmentInstance {
 	}
 
 	/**
-	 * Start the Case by creating an Instance of the StartEvent and enable the
+	 * Start the Fragment by creating an Instance of the StartEvent and enable the
 	 * ControlFlow of that Instance.
 	 */
 	public void enable() {
