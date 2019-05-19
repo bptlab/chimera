@@ -64,6 +64,13 @@ public final class FragmentParser {
 			} else {
 				fragment.setPolicy(FragmentInstantiationPolicy.SEQUENTIAL);
 			}
+
+			if (fragmentJson.has("automaticActivation")) {
+				boolean automaticActivation = fragmentJson.getBoolean("automaticActivation");
+				fragment.setAutomaticActivation(automaticActivation);
+			} else {
+				fragment.setAutomaticActivation(false);
+			}
 			parseBound(fragmentJson, fragment);
 
 			BpmnFragment bmpnFragment = BpmnXmlFragmentParser.parseBpmnXmlFragment(contentXML, parserHelper);
