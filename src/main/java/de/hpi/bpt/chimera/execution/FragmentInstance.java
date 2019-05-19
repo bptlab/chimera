@@ -83,6 +83,9 @@ public class FragmentInstance {
 			return;
 		}
 		setState(FragmentState.ENABLED);
+		if(fragment.hasAutomaticActivation()) {
+			activate();
+		}
 		StartEvent startEvent = fragment.getBpmnFragment().getStartEvent();
 		StartEventInstance startEventInstance = (StartEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(startEvent, this);
 		addControlNodeInstance(startEventInstance);
