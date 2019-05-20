@@ -70,7 +70,7 @@ public class FragmentInstance {
 	}
 
 	/**
-	 * Start the Case by creating an Instance of the StartEvent and enable the
+	 * Start the Fragment by creating an Instance of the StartEvent and enable the
 	 * ControlFlow of that Instance.
 	 */
 	public void enable() {
@@ -83,6 +83,9 @@ public class FragmentInstance {
 			return;
 		}
 		setState(FragmentState.ENABLED);
+		if(fragment.hasAutomaticActivation()) {
+			activate();
+		}
 		StartEvent startEvent = fragment.getBpmnFragment().getStartEvent();
 		StartEventInstance startEventInstance = (StartEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(startEvent, this);
 		addControlNodeInstance(startEventInstance);
