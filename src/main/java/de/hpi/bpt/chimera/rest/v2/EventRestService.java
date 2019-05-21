@@ -96,27 +96,28 @@ public class EventRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/casestart/{requestKey}")
 	public Response startCase(@PathParam("scenarioId") String cmId, @PathParam("requestKey") String requestKey, String eventJson) {
-
 		log.info("An Event started a Case via REST-Interface.");
+		executorService.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					CaseModel cm = CaseModelManager.getCaseModel(cmId);
+					Optional<CaseStartTrigger> caseStartTrigger = cm.getStartCaseTrigger().stream().filter(c -> c.getId().equals(requestKey)).findFirst();
+					if (!caseStartTrigger.isPresent()) {
+						String message = String.format("The case start trigger id: %s is not assigned", requestKey);
+						log.error(message);
+					}
 
-		try {
-			CaseModel cm = CaseModelManager.getCaseModel(cmId);
-			Optional<CaseStartTrigger> caseStartTrigger = cm.getStartCaseTrigger().stream().filter(c -> c.getId().equals(requestKey)).findFirst();
-			if (!caseStartTrigger.isPresent()) {
-				String message = String.format("The case start trigger id: %s is not assigned", requestKey);
-				log.error(message);
-				return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildError(message)).build();
+					CaseExecutioner caseExecutioner = ExecutionService.createCaseExecutioner(cm, "Automatically Created Case");
+
+					CaseStarter caseStarter = new CaseStarter(caseStartTrigger.get());
+					caseStarter.startCase(eventJson, caseExecutioner);
+					SseNotifier.notifyRefresh();
+				} catch(IllegalCaseModelIdException e) {
+					log.error("Could not start case from query", e);
+				}
 			}
-
-			CaseExecutioner caseExecutioner = ExecutionService.createCaseExecutioner(cm, "Automatically Created Case");
-
-			CaseStarter caseStarter = new CaseStarter(caseStartTrigger.get());
-			caseStarter.startCase(eventJson, caseExecutioner);
-			SseNotifier.notifyRefresh();
-		} catch (IllegalCaseModelIdException e) {
-			log.error("Could not start case from query", e);
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
-		}
+		});
 		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"Event received.\"}").build();
 	}
 
