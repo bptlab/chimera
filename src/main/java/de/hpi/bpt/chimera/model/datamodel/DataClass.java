@@ -25,6 +25,7 @@ public class DataClass implements Nameable, Listable {
 
 	// Only when the DataClass is EventType
 	private boolean isEventType;
+	private boolean isDBClassType;
 	private String timestampName;
 
 	@OneToMany(cascade = CascadeType.ALL)
@@ -64,6 +65,14 @@ public class DataClass implements Nameable, Listable {
 			nameToObjectLifecycleState.put(objectLifecycleState.getName(), objectLifecycleState);
 		}
 		return nameToObjectLifecycleState;
+	}
+
+	public boolean isDBClass() {
+		return isDBClassType;
+	}
+
+	public void setDBClass(boolean isDBClass) {
+		this.isDBClassType = isDBClass;
 	}
 
 	@Override

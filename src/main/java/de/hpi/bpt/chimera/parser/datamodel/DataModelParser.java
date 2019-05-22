@@ -53,11 +53,16 @@ public class DataModelParser {
 		for (int i = 0; i < arraySize; i++) {
 			JSONObject classJson = classJsonArray.getJSONObject(i);
 
-			// TODO: rework parsing of event class
+			// TODO: rework parsing of event class and db class
 			try {
-				if (classJson.getBoolean("is_event")) {
+				if (classJson.getBoolean("is_event") || classJson.getBoolean("is_DBClass")) {
 					DataClass eventClass = DataModelClassParser.parseDataClass(classJson);
-					eventClass.setEvent(true);
+					if(classJson.getBoolean("is_event")) {
+						eventClass.setEvent(true);
+					}
+					if(classJson.getBoolean("is_DBClass")) {
+						eventClass.setDBClass(true);
+					}
 					dataModelClasses.add(eventClass);
 				} else {
 					dataModelClasses.add(DataModelClassParser.parseDataClass(classJson));
