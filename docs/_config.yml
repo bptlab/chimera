@@ -5,4 +5,4 @@ baseurl: "/chimera" # the subpath of your site, e.g. /blog
 markdown: kramdown
 theme: jekyll-theme-minimal
 
-logo: media/chimera_logo.png
+logo: media\chimera_logo.png
