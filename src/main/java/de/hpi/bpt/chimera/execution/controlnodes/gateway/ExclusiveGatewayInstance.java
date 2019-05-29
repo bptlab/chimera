@@ -4,18 +4,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
@@ -30,7 +25,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.EventBasedGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
-
+ 
 /**
  * This class represents an ExclusiveGateway. It provides methods and functions
  * for the incoming and outgoing controlflow logic as well as functions for
@@ -42,10 +37,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	private static Logger log = Logger.getLogger(ExclusiveGatewayInstance.class);
 
-	// ToDo isn't persisted and leads to errors. Probably we have to defined a
-	// type which stores the
-	// second List, because List<List<>> isn't possible
-	private List<List<String>> branches = new ArrayList<>();
+	private List<ControlflowBranch> branches = new ArrayList<>();
 
 	/**
 	 * for JPA only
@@ -66,7 +58,9 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	 */
 	private void initializeBranches() {
 		for (AbstractControlNode node : this.getControlNode().getOutgoingControlNodes()) {
-			branches.add(expandBranch(node));
+			ControlflowBranch branch = new ControlflowBranch();
+			branch.branch = expandBranch(node);
+			branches.add(branch);
 		}
 	}
 
@@ -99,10 +93,9 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	 *            The ControlNode on the ongoing branch. (the begun activity)
 	 */
 	public void skipAlternativeBranches(AbstractControlNode ongoingNode) {
-		for (List<String> branch : branches) {
-			if (!branch.contains(ongoingNode.getId())) {
-				// log.info("skipping a branch");
-				skipBranch(branch);
+		for (ControlflowBranch branch : branches) {
+			if (!branch.branch.contains(ongoingNode.getId())) {
+				skipBranch(branch.branch);
 			}
 		}
 		this.terminate();
@@ -121,8 +114,6 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 			ControlNodeInstance node = this.getFragmentInstance().getControlNodeInstanceById(toSkip);
 			if (node != null) {
 				node.skip();
-				// log.info(String.format("skipping the ControlNode with the id:
-				// %s", node.getControlNode().getId()));
 			}
 		}
 	}
@@ -136,7 +127,7 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	 * @return true when the Controlnode is in following, false otherwise
 	 */
 	public boolean containsControlNodeInFollowing(AbstractControlNode controlNode) {
-		List<String> allFollowing = branches.stream().flatMap(Collection::stream).collect(Collectors.toList());
+		List<String> allFollowing = branches.stream().flatMap(branch -> branch.branch.stream()).collect(Collectors.toList());
 		return allFollowing.contains(controlNode.getId());
 	}
 

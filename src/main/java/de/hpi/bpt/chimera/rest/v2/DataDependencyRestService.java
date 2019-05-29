@@ -10,7 +10,6 @@ import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.rest.AbstractRestService;
-import de.hpi.bpt.chimera.rest.beans.datamodel.DataAttributeJaxBean;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataAttributeJaxBeanOld;
 import de.hpi.bpt.chimera.rest.beans.datamodel.DataObjectJaxBean;
 
@@ -26,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -106,10 +106,11 @@ public class DataDependencyRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/output")
 	public Response getOutputDataObjects(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
+		// TODO: rework this whole concept in v3
 		try {
 			CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-
+			
 			Map<DataClass, List<ObjectLifecycleState>> possibleDataClassToObjectLifecycleStates = getPossibleObjectLifecycleTransitions(activityInstance);
 			JSONObject result = new JSONObject();
 			for (Map.Entry<DataClass, List<ObjectLifecycleState>> doToOlc : possibleDataClassToObjectLifecycleStates.entrySet()) {
@@ -130,6 +131,9 @@ public class DataDependencyRestService extends AbstractRestService {
 			// data object
 			for (DataObject workingItem : activityInstance.getSelectedDataObjects()) {
 				DataClass dataClass = workingItem.getDataClass();
+				if (!possibleDataClassToObjectLifecycleStates.containsKey(dataClass)) {
+					continue;
+				}
 				List<DataAttributeJaxBeanOld> attributes = workingItem.getDataAttributeInstances().stream().map(DataAttributeJaxBeanOld::new).collect(Collectors.toList());
 				JSONArray attributeConfiguration = new JSONArray(attributes);
 				JSONObject output = result.getJSONObject(dataClass.getName());
@@ -152,16 +156,38 @@ public class DataDependencyRestService extends AbstractRestService {
 	 * @return
 	 */
 	private Map<DataClass, List<ObjectLifecycleState>> getPossibleObjectLifecycleTransitions(AbstractActivityInstance activityInstance) {
-		Map<DataClass, List<ObjectLifecycleState>> possibleTransitions = activityInstance.getControlNode().getPostCondition().getDataClassToObjectLifecycleStates();
+		Map<DataClass, List<ObjectLifecycleState>> availableTransitions = activityInstance.getControlNode().getPostCondition().getDataClassToObjectLifecycleStates();
+		Set<DataClass> inputDataClasses = activityInstance.getControlNode().getPreCondition().getDataClassToObjectLifecycleStates().keySet();
+		
+		Map<DataClass, List<ObjectLifecycleState>> possibleTransitions = new HashMap<>();
 		List<DataObject> workingItems = activityInstance.getSelectedDataObjects();
 
-		for (DataObject dataObject : workingItems) {
-			DataClass dataClass = dataObject.getDataClass();
-			ObjectLifecycleState olcState = dataObject.getObjectLifecycleState();
+		// Add those transitions that have a dataclass that does not occur in the input set or that have a dataobject with a predecessor concerning the olc-state
+		for (Map.Entry<DataClass, List<ObjectLifecycleState>> availableTransition : availableTransitions.entrySet()) {
+			DataClass dataClass = availableTransition.getKey();
+			List<ObjectLifecycleState> olcStates = availableTransition.getValue();
+			
+			if (!inputDataClasses.contains(dataClass)) {
+				possibleTransitions.put(dataClass, olcStates);
+				continue;
+			}
+			
+			
+			for (ObjectLifecycleState availableOlcState : olcStates) {
+				for (DataObject dataObject : workingItems) {
+					ObjectLifecycleState dataObjectOlcState = dataObject.getObjectLifecycleState();
 
-			possibleTransitions.get(dataClass).removeIf(x -> !x.isSuccessorOf(olcState));
+					if (!availableOlcState.isSuccessorOf(dataObjectOlcState)) {
+						continue;
+					}
+					if (!possibleTransitions.containsKey(dataClass)) {
+						possibleTransitions.put(dataClass, new ArrayList<>());
+					}
+					possibleTransitions.get(dataClass).add(availableOlcState);
+				}
+			}
 		}
-
+		
 		return possibleTransitions;
 	}
 }

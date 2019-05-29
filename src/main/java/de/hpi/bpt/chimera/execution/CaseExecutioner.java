@@ -138,7 +138,7 @@ public class CaseExecutioner {
 			dataManager.lockDataObjects(selectedDataObjects);
 			instance.setSelectedDataObjects(selectedDataObjects);
 			// TODO: has this to be before lock?
-			instance.getFragmentInstance().skipAlternativeControlNodes(instance);
+			// instance.getFragmentInstance().skipAlternativeControlNodes(instance);
 			instance.begin();
 		} catch (IllegalArgumentException e) {
 			throw e;

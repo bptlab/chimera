@@ -246,10 +246,10 @@
 		<db.test.url>${db.url.root}${db.test.schema}</db.test.url>
 		<db.user>chimera</db.user>
 		<db.password>chimera</db.password>
-		<unicorn.url>localhost:8080</unicorn.url>
+		<unicorn.url>http://localhost:8080</unicorn.url>
 		<eclipseLinkDdlGeneration>create-or-extend-tables</eclipseLinkDdlGeneration>
-		<unicorn.deploy.path>Unicorn-unicorn_BP15_dev</unicorn.deploy.path>
-		<chimera.url>localhost:8080</chimera.url>
+		<unicorn.deploy.path>/Unicorn-unicorn_BP15_dev</unicorn.deploy.path>
+		<chimera.url>http://localhost:8080</chimera.url>
 		<chimera.deploy.path>/${project.name}</chimera.deploy.path>
 		<powermock.version>1.6.1</powermock.version>
 		<jersey.version>2.17</jersey.version>
