@@ -17,7 +17,7 @@ public abstract class AbstractTranslation {
 
 	// Replace everything non-alphanumeric with a ''
 	public static String sanitizeName(String name) {
-		return name.replaceAll("[^a-zA-Z0-9]", "");
+		return name.replaceAll("[^a-zA-Z0-9 \\-]", "");
 	}
 
 	protected Place addPlace(String name) {
