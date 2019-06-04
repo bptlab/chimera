@@ -266,7 +266,6 @@ public class CaseExecutioner {
 			throw e;
 		}
 	}
-
 	
 	/**
 	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the
