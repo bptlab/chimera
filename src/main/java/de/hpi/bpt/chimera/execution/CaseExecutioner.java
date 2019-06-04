@@ -247,7 +247,8 @@ public class CaseExecutioner {
 			if (controlNodeInstance instanceof AbstractEventInstance &&
 					(((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior ||
 					 ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof SignalReceiveBehavior)) {
-				boundDataObjects = dataManager.getDataObjects();
+
+				boundDataObjects = dataManager.getModifiableDataObjects(postCondition.getAtomicDataStateConditions());
 				dataManager.lockDataObjects(boundDataObjects);
 			} else {
 				boundDataObjects = controlNodeInstance.getSelectedDataObjects();

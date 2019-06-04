@@ -511,6 +511,29 @@ public class DataManager {
 				.filter(d -> !d.isLocked())
 				.collect(Collectors.toSet());
 	}
+
+	/**
+	 * Get all Dataobjects of Dataclasses that are in the post condition and that are in a
+	 * predecessor state of the required state.
+	 * If there is more then one Dataobject of the same class in the same state, all of them
+	 * will be returned.
+	 */
+
+	public List<DataObject> getModifiableDataObjects(Set<AtomicDataStateCondition> conditions) {
+		List<DataObject> modifiableDataObjects = new ArrayList<>();
+
+		List<ObjectLifecycleState> possibleStates = conditions.stream().map(AtomicDataStateCondition::getObjectLifecycleState).collect(Collectors.toList());
+
+		for (DataObject dataObject : getAvailableDataObjects()) {
+			AtomicDataStateCondition objectCondition = dataObject.getCondition();
+			for (ObjectLifecycleState state : possibleStates) {
+				if(state.getPredecessors().contains(objectCondition.getObjectLifecycleState())) {
+					modifiableDataObjects.add(dataObject);
+				}
+			}
+		}
+		return modifiableDataObjects;
+	}
 	
 	// GETTER & SETTER
 	public DataModel getDataModel() {
