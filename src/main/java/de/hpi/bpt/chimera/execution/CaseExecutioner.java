@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
@@ -243,7 +244,9 @@ public class CaseExecutioner {
 
 			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
 			List<DataObject> boundDataObjects;
-			if (controlNodeInstance instanceof AbstractEventInstance && (((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior || ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof SignalReceiveBehavior)) {
+			if (controlNodeInstance instanceof AbstractEventInstance &&
+					(((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior ||
+					 ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof SignalReceiveBehavior)) {
 				boundDataObjects = dataManager.getDataObjects();
 				dataManager.lockDataObjects(boundDataObjects);
 			} else {
@@ -262,6 +265,7 @@ public class CaseExecutioner {
 			throw e;
 		}
 	}
+
 	
 	/**
 	 * Terminate an {@link DataControlNodeInstance}. Therefore handle the

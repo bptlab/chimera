@@ -159,7 +159,7 @@ public class DataManager {
 	}
 
 	/**
-	 * Handle the transitions and new creations of DataObject that shell make a
+	 * Handle the transitions and new creations of DataObjects that shall make a
 	 * transition specified in {@code dataClassToStateTransitions}. Therefore
 	 * validate if the DataClasses of these DataObjects exist in
 	 * {@code dataClassToStateTransitions} and if the the referred
@@ -188,7 +188,7 @@ public class DataManager {
 			// check whether OLC allows transition
 			ObjectLifecycleState oldOlcState = dataObject.getObjectLifecycleState();
 			ObjectLifecycleState newOlcState = dataClassToStateTransitions.get(dataClass);
-			/*if (!newOlcState.isSuccessorOf(oldOlcState)) { // invalid transition -> throw exception
+			if (!newOlcState.isSuccessorOf(oldOlcState)) { // invalid transition -> throw exception
 				IllegalObjectLifecycleStateSuccessorException e = new IllegalObjectLifecycleStateSuccessorException(dataClass, oldOlcState, newOlcState);
 				log.error(e.getMessage());
 				throw e;
@@ -198,19 +198,7 @@ public class DataManager {
 				transitionedDataObjects.add(dataObject);
 				// transition made, remove the data class from the unhandled list
 				classesToHandle.remove(dataClass);
-			}*/
-			if (newOlcState.isSuccessorOf(oldOlcState)) {
-				dataObject.makeObjectLifecycleTransition(newOlcState);
-				transitionedDataObjects.add(dataObject);
-				classesToHandle.remove(dataClass);
-			} else if (newOlcState.isInitialState()) {
-				continue;
-			} else {
-				IllegalObjectLifecycleStateSuccessorException e = new IllegalObjectLifecycleStateSuccessorException(dataClass, oldOlcState, newOlcState);
-				log.error(e.getMessage());
-				throw e;
 			}
-
 		}
 
 		// create new DataObjects for the yet unhandled data classes
@@ -218,42 +206,6 @@ public class DataManager {
 
 		return transitionedDataObjects;
 	}
-
-	/*public List<DataObject> getDataObjectsToBeModifiedByMessageReceiveEvent (List<DataObject> availableDataObjects, Map<DataClass, ObjectLifecycleState> dataObjectsToModify) {
-		List<DataObject> processedDataObjects = new ArrayList<>();
-		List<DataClass> classesToHandle = new ArrayList<>(dataObjectsToModify.keySet());
-		for (DataObject dataObject : availableDataObjects) {
-			DataClass dataClass = dataObject.getDataClass();
-			ObjectLifecycleState currentState = dataObject.getObjectLifecycleState();
-			ObjectLifecycleState targetState = dataObjectsToModify.get(dataClass);
-			if (!dataObjectsToModify.containsKey(dataClass)) { // no transition requested, DO only read
-				continue;
-			}
-			// first check whether the targetState is the current state
-			// if not and the targetState is not an initial state an exception will be thrown
-			// else a new DO will be created
-			if (targetState != currentState) {
-				if(targetState.isSuccessorOf(currentState)) {
-					dataObject.makeObjectLifecycleTransition(targetState);
-				}
-				else if(targetState.isInitialState()) {
-					continue;
-				}
-				else {
-					IllegalDataObjectCreationException e = new IllegalDataObjectCreationException(dataClass, targetState);
-					log.error(e.getMessage());
-					throw e;
-				}
-			}
-			processedDataObjects.add(dataObject);
-			classesToHandle.remove(dataClass);
-		}
-
-		// create new DataObjects for the yet unhandled data classes
-		processedDataObjects.addAll(createDataObjects(classesToHandle, dataObjectsToModify));
-
-		return processedDataObjects;
-	}*/
 
 	/**
 	 * Handle the transitions and new creations of DataObject that shell make a

@@ -72,6 +72,8 @@ public class FragmentInstance {
 	/**
 	 * Start the Fragment by creating an Instance of the StartEvent and enable the
 	 * ControlFlow of that Instance.
+	 * If automaticActivation is true, the fragment is also activated so that following
+	 * controlnodes can be executed automatically.
 	 */
 	public void enable() {
 		if (!state.equals(FragmentState.CREATED)) {
