@@ -146,7 +146,7 @@ public class EventDispatcher {
 	private static String insertAttributesIntoQueryString(MessageReceiveEventBehavior receiveBehavior) {
 		MessageReceiveDefinition messageDefinition = receiveBehavior.getMessageDefinition();
 		String queryString = messageDefinition.getEventQuerry();
-		return receiveBehavior.getEventInstance().replaceVariableExpressionsInEvents(queryString);
+		return receiveBehavior.getEventInstance().replaceVariableExpressions(queryString);
 	}
 
 	/**

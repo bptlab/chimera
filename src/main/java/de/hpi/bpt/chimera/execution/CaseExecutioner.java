@@ -17,7 +17,6 @@ import javax.persistence.OneToOne;
 
 import org.apache.log4j.Logger;
 
-import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;
@@ -243,8 +242,11 @@ public class CaseExecutioner {
 
 			DataStateCondition postCondition = controlNodeInstance.getControlNode().getPostCondition();
 			List<DataObject> boundDataObjects;
-			if (controlNodeInstance instanceof AbstractEventInstance && (((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior || ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof SignalReceiveBehavior)) {
-				boundDataObjects = dataManager.getDataObjects();
+			if (controlNodeInstance instanceof AbstractEventInstance &&
+					(((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof MessageReceiveEventBehavior ||
+					 ((AbstractEventInstance) controlNodeInstance).getBehavior() instanceof SignalReceiveBehavior)) {
+
+				boundDataObjects = dataManager.getModifiableDataObjects(postCondition.getAtomicDataStateConditions());
 				dataManager.lockDataObjects(boundDataObjects);
 			} else {
 				boundDataObjects = controlNodeInstance.getSelectedDataObjects();
