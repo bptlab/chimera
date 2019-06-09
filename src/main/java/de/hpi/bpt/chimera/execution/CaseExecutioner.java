@@ -15,10 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import de.hpi.bpt.chimera.model.condition.AtomicDataStateCondition;
 import org.apache.log4j.Logger;
 
-import de.hpi.bpt.chimera.execution.controlnodes.event.IntermediateCatchEventInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.controlnodes.State;

@@ -513,9 +513,9 @@ public class DataManager {
 	}
 
 	/**
-	 * Get all Dataobjects of Dataclasses that are in the post condition and that are in a
+	 * Get all DataObjects of Dataclasses that are part of the given (post)condition and in a
 	 * predecessor state of the required state.
-	 * If there is more then one Dataobject of the same class in the same state, all of them
+	 * If there is more then one DataObject of the same class in the same state, all of them
 	 * will be returned.
 	 */
 
