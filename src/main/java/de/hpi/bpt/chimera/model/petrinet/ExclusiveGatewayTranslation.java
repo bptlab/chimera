@@ -19,11 +19,13 @@ public class ExclusiveGatewayTranslation extends AbstractGatewayTranslation {
 
 		if (isSplit()) {
 			for (Place outputPlace : getOutputPlaces()) {
-				addTransition("exclusiveSplit_" + outputPlace.getName(), getInitialPlace(), outputPlace);
+				Transition t = addTransition("exclusiveSplit_" + outputPlace.getName(), getInitialPlace(), outputPlace);
+				// TODO FIXME this does not work in LoLA.
+				//t.setFairness(Transition.Fairness.STRONG);
 			}
 		} else {
 			for (Place inputPlace : getInputPlaces()) {
-				addTransition("exclusiveJoin_" + inputPlace.getName(), inputPlace, getFinalPlace());
+				Transition t = addTransition("exclusiveJoin_" + inputPlace.getName(), inputPlace, getFinalPlace());
 			}
 		}
 	}

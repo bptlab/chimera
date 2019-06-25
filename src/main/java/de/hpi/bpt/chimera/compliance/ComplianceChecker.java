@@ -146,18 +146,19 @@ public class ComplianceChecker {
 			Optional<Transition> stepTransition = petriNet.getTransitions().stream()
 					.filter(p -> p.getPrefixedIdString().equals(witnessStep)).findFirst();
 			assert (stepTransition.isPresent());
-			petriNetNode = stepTransition.get();
+			return stepTransition.get().getContext().getPrefixes().stream().collect(Collectors.joining("/")) + "/"
+					+ stepTransition.get().getName() + "\n";
 		} else if (witnessStep.startsWith("p_")) {
 			Optional<Place> stepPlace = petriNet.getPlaces().stream()
 					.filter(p -> p.getPrefixedIdString().equals(witnessStep)).findFirst();
 			assert (stepPlace.isPresent());
-			petriNetNode = stepPlace.get();
+			return stepPlace.get().getContext().getPrefixes().stream().collect(Collectors.joining("/")) + "/"
+					+ stepPlace.get().getName() + "\n";
+		} else if (witnessStep.startsWith("===")) {
+			return witnessStep;
 		} else {
-			throw new RuntimeException("Witness element must start with 't_' or 'p_', but is '" + witnessStep + "'");
+			throw new RuntimeException("Witness element must start with 't_', 'p_' or '===' but is '" + witnessStep + "'");
 		}
-
-		return petriNetNode.getContext().getPrefixes().stream().collect(Collectors.joining("/")) + "/"
-				+ petriNetNode.getName() + "\n";
 	}
 
 	public String replaceQueryIdentifiers(PetriNet petriNet, String query) {

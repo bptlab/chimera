@@ -91,7 +91,7 @@ public class PetriNetDotWriter extends AbstractPetriNetWriter {
 		// root cluster has no subgraph
 		if (indentationLevel > 0) {
 			builder.append(indent(indentationLevel));
-			builder.append("subgraph cluster_" + cluster.getName() + " {\n");
+			builder.append("subgraph \"cluster_" + cluster.getName() + "\" {\n");
 			builder.append(indent(innerIndentationLevel));
 			builder.append("label=\"" + cluster.getName() + "\";\n");
 		}
