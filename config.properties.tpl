@@ -23,7 +23,11 @@ unicorn.path.event=/webapi/REST/Event
 unicorn.path.query.rest=/webapi/REST/EventQuery/REST
 unicorn.path.query.queue=/webapi/REST/EventQuery/Queue
 # URL of deployed Chimera instance needed for callbacks from Unicorn
+<<<<<<< HEAD
 chimera.url=$CHIMERA_URL
+=======
+chimera.url=http://chimera:8080
+>>>>>>> edae2f2... Fix broken stuff. Sorry 😇
 chimera.path.deploy=$CHIMERA_DEPLOY_PATH
 
 # version of the API
