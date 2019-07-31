@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.DBRegistrant;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,10 +75,13 @@ public class CaseModelParser {
 			throw e;
 		}
 
-		// register the EventTypes at Unicorn
+		// register the EventTypes at Unicorn and Database
 		for (DataClass dataClass : caseModel.getDataModel().getDataClasses()) {
 			if (dataClass.isEvent()) {
 				EventRegistrant.registerEventType(dataClass);
+			}
+			if (dataClass.isDBClass()) {
+				DBRegistrant.registerDBType(dataClass);
 			}
 		}
 

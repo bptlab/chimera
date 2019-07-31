@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import de.hpi.bpt.chimera.execution.controlnodes.event.eventhandling.DBRegistrant;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.controlnodes.AbstractDataControlNodeInstance;
@@ -259,6 +260,7 @@ public class CaseExecutioner {
 			}
 			dataManager.unlockDataObjects(boundDataObjects);
 			controlNodeInstance.terminate();
+			DBRegistrant.processDataObjectsForInsertion(controlNodeInstance.getOutputDataObjects());
 
 		} catch (IllegalArgumentException e) {
 			throw e;
