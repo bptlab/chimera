@@ -25,6 +25,8 @@ public class FragmentXmlWrapper {
 		return this.bpmnProcessXml.getTasks();
 	}
 
+	public List<ResourceTask> getResourceTasks(){ return this.bpmnProcessXml.getResourceTasks(); }
+
 	public List<BoundaryEvent> getBoundaryEvents() {
 		return this.bpmnProcessXml.getBoundaryEvents();
 	}
@@ -95,6 +97,7 @@ public class FragmentXmlWrapper {
 		allActivities.addAll(this.bpmnProcessXml.getWebServiceTasks());
 		allActivities.addAll(this.bpmnProcessXml.getSendTasks());
 		allActivities.addAll(this.bpmnProcessXml.getEmptyActivities());
+		allActivities.addAll(this.bpmnProcessXml.getResourceTasks());
 		return (List<AbstractDataControlNode>) allActivities;
 	}
 

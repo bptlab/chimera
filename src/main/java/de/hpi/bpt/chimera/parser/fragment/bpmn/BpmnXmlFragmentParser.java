@@ -20,9 +20,9 @@ public final class BpmnXmlFragmentParser {
 	 * all the Sequence- and Dataflows are parsed and stored. Then all
 	 * Activities, Events and Datanodes are parsed using the former parsed
 	 * Sequence- and Dataflows. So in Activities, Events, Datanodes aren't
-	 * separated from their "Flows" any more. In the end a BpmFragment data
-	 * structure is built up, where every Activiy/Event/Datanode has a reference
-	 * to its incoming and and outgoing Sequence- or Dataflows and therby a
+	 * separated from their "Flows" any more. In the end a BpmnFragment data
+	 * structure is built up, where every Activity/Event/Datanode has a reference
+	 * to its incoming and and outgoing Sequence- or Dataflows and thereby a
 	 * reference to its predecessors and successors.
 	 * 
 	 * @param xmlFragmentString

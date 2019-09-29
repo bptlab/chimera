@@ -37,6 +37,10 @@ public class ActivityParser {
 		List<AbstractActivity> mailActivities = new ArrayList<>();
 		mailActivities.addAll(getEmailActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.addActivities(mailActivities);
+
+		List<AbstractActivity> resourceTasks = new ArrayList<>();
+		resourceTasks.addAll(getResourceTaskFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.addActivities(resourceTasks);
 		
 		List<AbstractActivity> webServiceTasks = new ArrayList<>();
 		webServiceTasks.addAll(getWebServiceTasksFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
@@ -55,7 +59,24 @@ public class ActivityParser {
 		fragment.addActivities(emptyActivities);
 	}
 
-	public static List<HumanTask> getHumanActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+    public static List<ResourceTask> getResourceTaskFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver){
+        List<ResourceTask> resourceTasksList = new ArrayList<>();
+
+        for(de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.ResourceTask resTask : fragXmlWrap.getResourceTasks()){
+            ResourceTask resourceTask = new ResourceTask();
+            ControlNodeParserHelper.parseDataControlNode(resourceTask, resTask, sfResolver, dfResolver);
+            NameValidation.validateName(resourceTask.getName());
+
+            /**
+             * Extra things to do here:
+             */
+            resourceTasksList.add(resourceTask);
+        }
+        return resourceTasksList;
+    }
+
+
+    public static List<HumanTask> getHumanActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
 		List<HumanTask> activityList = new ArrayList<>();
 
 		for (Task xmlTask : fragXmlWrap.getTasks()) {
@@ -82,7 +103,7 @@ public class ActivityParser {
 		return mailActivityList;
 	}
 
-	private static List<WebServiceTask> getWebServiceTasksFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+	private static List<WebServiceTask> getWebServiceTasksFromXmlWrapper(	FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
 		List<WebServiceTask> webServiceTasks = new ArrayList<>();
 
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.WebServiceTask xmlWebTask : fragXmlWrap.getWebServiceTasks()) {

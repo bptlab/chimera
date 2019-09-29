@@ -31,6 +31,9 @@ public class BpmnProcessXml {
 	@XmlElement(name = "bpmn:task")
 	private List<Task> tasks = new ArrayList<>();
 
+	@XmlElement(name = "resource:resourceTask")
+	private List<ResourceTask> resourceTasks = new ArrayList<>();
+
 	@XmlElement(name = "bpmn:serviceTask")
 	private List<WebServiceTask> webServiceTasks = new ArrayList<>();
 
@@ -110,6 +113,14 @@ public class BpmnProcessXml {
 
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
+	}
+
+	public List<ResourceTask> getResourceTasks(){
+		return resourceTasks;
+	}
+
+	public void setResourceTasks(List<ResourceTask> resourceTasks){
+		this.resourceTasks = resourceTasks;
 	}
 
 	public List<BpmnDataNode> getDataNodes() {

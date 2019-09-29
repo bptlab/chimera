@@ -39,10 +39,8 @@ public class ControlNodeInstanceFactory {
 
 	/**
 	 * Create a ControlNodeInstance of specific ControlNode. Therefore check
-	 * Class of ControlNode.
-	 * 
+	 * Class of ControlNode
 	 * @param controlNode
-	 * @param caseExecutioner
 	 * @param fragmentInstance
 	 * @return ControlNodeInstance
 	 */
@@ -76,6 +74,8 @@ public class ControlNodeInstanceFactory {
 			return new WebServiceTaskInstance((WebServiceTask) activity, fragmentInstance);
 		} else if (activity instanceof EmptyActivity) {
 			return new EmptyActivityInstance((EmptyActivity) activity, fragmentInstance);
+		} else if(activity instanceof ResourceTask){
+			return new ResourceTaskInstance((ResourceTask) activity, fragmentInstance);
 		} else {
 			throw new IllegalArgumentException(String.format("Unsupported type of Activity: %s", activity.getClass().getName()));
 		}

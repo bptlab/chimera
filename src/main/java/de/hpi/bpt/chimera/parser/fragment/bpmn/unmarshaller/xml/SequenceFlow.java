@@ -8,10 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * A class used to store Sequence Flow elements from standard BPMN.
  * Example xml String
- * <bpmn:sequenceFlow id="SequenceFlow_17mh7cg"
- * sourceRef="Task_0xjpfqa"
- * targetRef="ExclusiveGateway_0ns9z26"
- * />
+ *
+ * <bpmn:sequenceFlow id="SequenceFlow_17mh7cg" sourceRef="Task_0xjpfqa" targetRef="ExclusiveGateway_0ns9z26"/>
  */
 @XmlRootElement(name = "bpmn:sequenceFlow")
 @XmlAccessorType(XmlAccessType.NONE)
