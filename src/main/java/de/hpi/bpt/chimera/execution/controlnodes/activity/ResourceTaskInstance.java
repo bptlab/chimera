@@ -17,4 +17,8 @@ public class ResourceTaskInstance extends AbstractActivityInstance {
         super(activity, fragmentInstance);
     }
 
+    @Override
+    public ResourceTask getControlNode() {
+        return (ResourceTask) super.getControlNode();
+    }
 }
