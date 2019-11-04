@@ -1,0 +1,48 @@
+<div ng-repeat="dataobject in instanceCtrl.instanceDetails.dataobjects"
+     id="{{'modalInspectDataobject' + dataobject['id']}}" class="modal fade">
+    <!--div class="modal-backdrop fade in"></div-->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="color-line "></div>
+            <!-- Header of the Modal -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{dataobject['dataclass']}}</h4>
+            </div>
+            <!-- ./ panel header -->
+            <!-- Body of the Modal -->
+            <div class="modal-body">
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">{{dataobject['id']}}</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="attr in dataobject.attributes">
+                                <td>{{attr['name']}}</td>
+                                <td>{{attr['value']}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal body -->
+            <!-- Footer of the Modal -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            <!-- /.modal footer -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->

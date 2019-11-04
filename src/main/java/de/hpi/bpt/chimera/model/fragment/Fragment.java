@@ -34,6 +34,7 @@ public class Fragment {
 	private FragmentInstantiationPolicy policy;
 	private boolean hasBound;
 	private int instantiationLimit;
+	private boolean automaticActivation;
 
 	public String getId() {
 		return id;
@@ -83,6 +84,12 @@ public class Fragment {
 
 	public void setPolicy(FragmentInstantiationPolicy policy) {
 		this.policy = policy;
+	}
+
+	public boolean hasAutomaticActivation() { return automaticActivation; }
+
+	public void setAutomaticActivation(boolean automaticActivation) {
+		this.automaticActivation = automaticActivation;
 	}
 
 	public boolean getHasBound() {

@@ -59,27 +59,7 @@ public class EventSpawner {
 	}
 
 	private static List<DataObject> getInputObjects(AbstractEventInstance eventInstance) {
-		if (!eventInstance.getControlNode().hasUniquePreCondition()) {
-			throw new IllegalArgumentException("PreConditition of SendEvent is not unique.");
-		}
-
-		List<DataObject> possibleInputObjects = new ArrayList<>();
-		for (AtomicDataStateCondition condition : eventInstance.getControlNode().getPreCondition().getAtomicDataStateConditions()) {
-			if (!condition.getDataClass().isEvent()) {
-				throw new IllegalArgumentException("dataclass of input object is not an eventclass");
-			}
-
-			List<DataObject> availableDataObjects = new ArrayList<>(eventInstance.getDataManager().getAvailableDataObjects(condition));
-
-			if (availableDataObjects.size() == 1) {
-				DataObject dataObject = availableDataObjects.get(0);
-				possibleInputObjects.add(dataObject);
-			} else {
-				log.info(String.format("There is none or more than one possible DataObject with DataClass: %s and State: %s for the input of the event: %s", condition.getDataClassName(), condition.getStateName(), eventInstance.getControlNode().getId()));
-			}
-		}
-
-		return possibleInputObjects;
+		return eventInstance.getSelectedDataObjects();
 	}
 
 	private static Response buildAndSendEvent(DataObject inputObject) {
@@ -107,7 +87,7 @@ public class EventSpawner {
 	}
 
 	private static Document buildEventFromDataObject(DataObject inputObject) {
-		List<DataAttributeInstance> attributes = inputObject.getDataAttributeInstances();
+		List<DataAttributeInstance> attributes = inputObject.getNonEmptyDataAttributeInstances();
 		String state = inputObject.getObjectLifecycleState().getName();
 		String eventName = inputObject.getDataClass().getName();
 
