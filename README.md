@@ -1,17 +1,17 @@
 
 # Welcome to Chimera
 Chimera is an engine for executing fragment-based case models, an approach that allows for modelling flexible business processes.
-It is developed and maintained by the [Business Process Technology (BPT) group](http://bpt.hpi.uni-potsdam.de/Public/) at the Hasso Plattner Institute (HPI).
+It is developed and maintained by the [Business Process Technology (BPT) group](http://bpt.hpi.uni-potsdam.de/) at the Hasso Plattner Institute (HPI).
 
 Chimera is **not a modeling tool** for case models! Creation and deployment of case models is handled by the [Gryphon case modeler](https://github.com/bptlab/gryphon) also available at GitHub.
 
 #### Features of Chimera
 * Execution of [BPMN2](http://www.omg.org/spec/BPMN/2.0/) models based on data dependencies
-* Integration to external events via the Complex Event Processing engine [Unicorn](https://bpt.hpi.uni-potsdam.de/UNICORN)
+* Integration to external events via the Complex Event Processing engine Unicorn
 * Usage of external APIs via webservice tasks
 
 ## Getting started
-The easiest way to try out Chimera is using the publicly available instance at https://bpt-lab.org/chimera-demo, which contains several exemplary case models demonstrating the features of Chimera. Please refer to the [user guide](https://bptlab.github.io/chimera) on how to start and enact cases. For developers: the architecture of Chimera is explained in the [developer documentation in the wiki](https://github.com/bptlab/chimera/wiki/DevDoc).
+The easiest way to try out Chimera is using the publicly available instance at ~https://bpt-lab.org/chimera-demo~, which contains several exemplary case models demonstrating the features of Chimera. Please refer to the [user guide](https://bptlab.github.io/chimera) on how to start and enact cases.
 
 The following instructions will get the Chimera case engine up and running on your local machine.
 
