@@ -17,4 +17,39 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class ResourceTask extends AbstractDataControlNode{
 
+//    @XmlAttribute(name = "resource:host")
+    private String host = "https://rembrandt.voelker.dev/api";
+
+//    @XmlAttribute(name = "resource:ID")
+    private String ID = "5dcaa9c160966400118967aa";
+
+//    @XmlAttribute(name = "resource:contentType")
+    private String contentType = "application/vnd.api+json";
+
+//    @XmlAttribute(name = "resource:problemDefinition")
+    private String problemDefinition = "";
+
+//    @XmlAttribute(name = "resource:optimizationMethod")
+    private String optimizationMethod = "";
+
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public String getProblemDefinition() {
+        return problemDefinition;
+    }
+
+    public String getOptimizationMethod() {
+        return optimizationMethod;
+    }
 }

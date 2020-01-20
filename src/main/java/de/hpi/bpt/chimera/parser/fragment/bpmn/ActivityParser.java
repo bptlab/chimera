@@ -70,6 +70,11 @@ public class ActivityParser {
             /**
              * Extra things to do here:
              */
+            resourceTask.setHost(resTask.getHost());
+            resourceTask.setID(resTask.getID());
+            resourceTask.setContentType(resTask.getContentType());
+            resourceTask.setProblemDefinition(resTask.getProblemDefinition());
+            resourceTask.setOptimizationMethod(resTask.getOptimizationMethod());
             resourceTasksList.add(resourceTask);
         }
         return resourceTasksList;
@@ -103,7 +108,7 @@ public class ActivityParser {
 		return mailActivityList;
 	}
 
-	private static List<WebServiceTask> getWebServiceTasksFromXmlWrapper(	FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+	private static List<WebServiceTask> getWebServiceTasksFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
 		List<WebServiceTask> webServiceTasks = new ArrayList<>();
 
 		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.WebServiceTask xmlWebTask : fragXmlWrap.getWebServiceTasks()) {
